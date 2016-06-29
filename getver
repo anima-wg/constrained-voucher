@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sed -n -e'/docName/s,.*secure-join-\([0-9]*\).*,\1,p' $*
+
