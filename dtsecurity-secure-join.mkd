@@ -16,7 +16,7 @@
       6tisch Secure Join protocol
     </title>
     <author initials="M" surname="Richardson" fullname="Michael Richardson">
-      <organization>Sandelman Softoware Works</organization>
+      <organization>Sandelman Software Works</organization>
       <address>
         <email>mcr+ietf@sandelman.ca</email>
       </address>
