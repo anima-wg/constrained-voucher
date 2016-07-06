@@ -4,8 +4,8 @@
 
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                 Sandelman Softoware Works
-Intended status: Informational                             June 29, 2016
-Expires: December 31, 2016
+Intended status: Informational                             July 06, 2016
+Expires: January 7, 2017
 
 
                       6tisch Secure Join protocol
@@ -16,8 +16,6 @@ Abstract
    The WG will continue working on securing the join process and making
    that fit within the constraints of high latency, low throughput and
    small frame sizes that characterize IEEE802.15.4 TSCH.
-
-   Write abstract text once document is closer to finished.
 
 Status of This Memo
 
@@ -34,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 31, 2016.
+   This Internet-Draft will expire on January 7, 2017.
 
 Copyright Notice
 
@@ -53,9 +51,11 @@ Copyright Notice
 
 
 
-Richardson              Expires December 31, 2016               [Page 1]
+
+
+Richardson               Expires January 7, 2017                [Page 1]
 
-Internet-Draft                   STuPiD                        June 2016
+Internet-Draft         6tisch Secure Join protocol             July 2016
 
 
 Table of Contents
@@ -67,17 +67,18 @@ Table of Contents
      3.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   2
    4.  One-Touch Requirements  . . . . . . . . . . . . . . . . . . .   3
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   3
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   3
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .   3
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   3
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   3
 
 1.  Introduction
 
+   test
+
 1.1.  Motivation for Join Process
 
-2.  Basic Protocol Operation
+   test
 
+2.  Basic Protocol Operation
 
            STuPiD   ```````````````````````````````,
            Script   <----------------------------. ,
@@ -108,47 +109,25 @@ Table of Contents
 
 
 
-
-Richardson              Expires December 31, 2016               [Page 2]
+Richardson               Expires January 7, 2017                [Page 2]
 
-Internet-Draft                   STuPiD                        June 2016
+Internet-Draft         6tisch Secure Join protocol             July 2016
 
 
 4.  One-Touch Requirements
+
+   test
 
 5.  Security Considerations
 
    The security objectives of ....
 
-6.  References
-
-6.1.  Normative References
+6.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
-
-   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
-              Resource Identifier (URI): Generic Syntax", STD 66,
-              RFC 3986, DOI 10.17487/RFC3986, January 2005,
-              <http://www.rfc-editor.org/info/rfc3986>.
-
-   [RFC4086]  Eastlake 3rd, D., Schiller, J., and S. Crocker,
-              "Randomness Requirements for Security", BCP 106, RFC 4086,
-              DOI 10.17487/RFC4086, June 2005,
-              <http://www.rfc-editor.org/info/rfc4086>.
-
-   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
-              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
-              <http://www.rfc-editor.org/info/rfc4648>.
-
-6.2.  Informative References
-
-   [RFC5389]  Rosenberg, J., Mahy, R., Matthews, P., and D. Wing,
-              "Session Traversal Utilities for NAT (STUN)", RFC 5389,
-              DOI 10.17487/RFC5389, October 2008,
-              <http://www.rfc-editor.org/info/rfc5389>.
 
 Author's Address
 
@@ -165,4 +144,25 @@ Author's Address
 
 
 
-Richardson              Expires December 31, 2016               [Page 3]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson               Expires January 7, 2017                [Page 3]
