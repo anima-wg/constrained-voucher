@@ -42,9 +42,8 @@ The WG will continue working on securing the join process and making that fit wi
 
 --- middle
 
-# Introduction
-## Motivation for Join Process
-## Zero Touch Assumptions
+# Introduction        {#problems}
+
 ## Terminology          {#Terminology}
 
 In this document, the key words "MUST", "MUST NOT", "REQUIRED",
@@ -54,43 +53,81 @@ and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
 implementations.
 
 ### Credentials
+
 ## One-Touch Assumptions
+
 ### Factory provided credentials (if any)
+
 ### Credentials to be introduced
+
 ## Network Assumptions
+
 ### Security above and below IP
+
 #### Perfect Forward Secrecy
+
 ### Join network assumptions
+
 ### Number and cost of round trips
+
 ### Size of packets, number of fragments
+
 ## Target end-state for join process
+
 ## Diagram of Join Process
+
 ## Description of States in Join Process
+
 # Protocol Overview
+
 ## New node announcement
+
 ### use of EARO messages
+
 ## Proxy to JCE
+
 ## JCE initiates to new node
+
 # Security Details (Security protocol? Security process?)
+
 ## Security options
+
 ### EDHOC and OSCOAP
+
 ### DTLS/CoAP
+
 ### ???-insert-yours
+
 ## Forward Secrecy
+
 ### Rekeying of networks
+
 ### Rekeying of nodes
+
 ### Per-link key
+
 ## Node decommissioning
+
 ### Voluntary Revocation
+
 ### Emergency Revocation
+
 ### Expulsion of hostile node
+
 # Certificates and Authorizations
+
 ## Assymetric credentials
+
 ### chain of certificates from vendor trust anchor to network operator
+
 ## possession of public key (duckling model)
+
 ## Symmetric credentials
+
 ## Use of ACE Token for Ownership
+
 # Security Considerations
+
 # IANA Considerations
 
 # Protocol Definition
