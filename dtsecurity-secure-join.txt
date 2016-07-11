@@ -4,8 +4,8 @@
 
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                 Sandelman Softoware Works
-Intended status: Informational                             July 06, 2016
-Expires: January 7, 2017
+Intended status: Informational                             July 11, 2016
+Expires: January 12, 2017
 
 
                       6tisch Secure Join protocol
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 7, 2017.
+   This Internet-Draft will expire on January 12, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Richardson               Expires January 7, 2017                [Page 1]
+Richardson              Expires January 12, 2017                [Page 1]
 
 Internet-Draft         6tisch Secure Join protocol             July 2016
 
@@ -72,11 +72,7 @@ Table of Contents
 
 1.  Introduction
 
-   test
-
 1.1.  Motivation for Join Process
-
-   test
 
 2.  Basic Protocol Operation
 
@@ -109,14 +105,16 @@ Table of Contents
 
 
 
-Richardson               Expires January 7, 2017                [Page 2]
+
+
+
+
+Richardson              Expires January 12, 2017                [Page 2]
 
 Internet-Draft         6tisch Secure Join protocol             July 2016
 
 
 4.  One-Touch Requirements
-
-   test
 
 5.  Security Considerations
 
@@ -165,4 +163,6 @@ Author's Address
 
 
 
-Richardson               Expires January 7, 2017                [Page 3]
+
+
+Richardson              Expires January 12, 2017                [Page 3]
