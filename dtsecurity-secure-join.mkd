@@ -72,7 +72,7 @@ informative:
   I-D.ietf-ace-actors:
   PFS:
     title: "Forward Secrecy"
-    target: "https://en.wikipedia.org/w/index.php?title=Forward_secrecy&amp;oldid=731318899"
+    target: "https://en.wikipedia.org/w/index.php?title=Forward_secrecy&oldid=731318899"
     author:
       -
         name: Wikipedia
