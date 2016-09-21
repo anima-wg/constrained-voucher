@@ -4,12 +4,14 @@
 
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!ENTITY RFC2119 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY I-D.ietf-6lo-privacy-considerations SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6lo-privacy-considerations.xml">
 <!ENTITY RFC7228 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7228.xml">
 <!ENTITY I-D.ietf-anima-bootstrapping-keyinfra SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-bootstrapping-keyinfra.xml">
 <!ENTITY I-D.ietf-6tisch-minimal SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6tisch-minimal.xml">
 <!ENTITY I-D.ietf-netconf-zerotouch SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-netconf-zerotouch.xml">
 <!ENTITY RFC4655 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4655.xml">
 <!ENTITY RFC7554 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7554.xml">
+<!ENTITY RFC4191 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4191.xml">
 <!ENTITY I-D.ietf-ace-actors SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ace-actors.xml">
 ]>
 
@@ -29,7 +31,7 @@
       </address>
     </author>
 
-    <date year="2016" month="September" day="16"/>
+    <date year="2016" month="September" day="20"/>
 
     <area>Internet</area>
     <workgroup>6tisch Working Group</workgroup>
@@ -256,8 +258,82 @@ the key changing process will find itself no longer connected.</t>
 </section>
 <section anchor="diagram-of-join-process" title="Diagram of Join Process">
 
+<t>This time sequence diagram intentionally shows additional layer-2 and layer-3
+interactions, in order to put the entire process into context.</t>
+
+<t><list style="numbers">
+  <t>extended beacon</t>
+</list></t>
+
 </section>
 <section anchor="description-of-states-in-join-process" title="Description of States in Join Process">
+
+</section>
+</section>
+<section anchor="privacy-considerations" title="Privacy Considerations">
+
+<t><xref target="I-D.ietf-6lo-privacy-considerations"/> details a number of privacy
+considerations important in Resource Constrained nodes.  There are two
+networks and three sets of constrained nodes to consider. They are:
+1. the production nodes on the production network.
+2. the new pledges, which have yet to enroll, and which are on a join
+network.
+3. the production nodes which are also acting as proxy nodes.</t>
+
+<section anchor="privacy-considerations-for-production-network" title="Privacy Considerations for Production network">
+
+<t>The details of this are out of scope for this document.</t>
+
+</section>
+<section anchor="privacy-considerations-for-new-pledges" title="Privacy Considerations for New Pledges">
+
+<t>New Pledges do not yet receive Router Advertisements with PIO options, and so
+configure link-local addresses only based upon layer-2 addresses using the
+normal SLAAC mechanisms described in <xref target="RFC4191"/>.</t>
+
+<t>These link-local addresses are visible to any on-link eavesdropper (who is
+synchronized to the same Join Assistant), so regardless of what is chosen
+they can be seen.  This link-layer traffic is encapsulated by the Join
+Assistant into IPIP packets and carried to the JCE.  The traffic SHOULD never
+leave the operator's network, and no outside traffic should enter, so it
+should not be possible to do any ICMP scanning as described in
+<xref target="I-D.ietf-6lo-privacy-considerations"/>.</t>
+
+<t>The join process described herein requires that some identifier meaningful to
+the network operator be communicated to the JCE via the Neighbor
+Advertisement's ARO option.  This need not be a manufacturer created EUI-64
+as assigned by IEEE; it could be another value with higher entropy and less
+interesting vendor/device information.  Regardless of what is chosen, it can
+be used to track where the device attaches.</t>
+
+<t>For most constrained device, network attachment occurs very infrequently,
+often only once in their lifetime, so tracking opportunities may be rare.</t>
+
+<t>Further, during the enrollment process, a DTLS connection
+connection will be created.  Unless TLS1.3 is used, the device identity will
+be visible to passive observers in the 802.11AR IDevID certificate that is
+sent.  Even when TLS1.3 is used, an active attacker could collect the
+information by simply connecting to the device; it would not have to
+successful complete the negotiation either, or even attempt to
+Man-In-The-Middle the device.</t>
+
+<t>There is, at the same time, significant value in avoiding a link-local DAD
+process by using an IEEE assigned EUI-64, and there is also significant
+advantage to the operator being able to see what the vendor of the new device
+is.</t>
+
+<section anchor="eui-64-derived-address-for-join-time-iid" title="EUI-64 derived address for join time IID">
+
+<t>It is therefore suggested that the IID used in the link-local address
+used during the join process be a vendor assigned EUI-64.  After the join
+process has concluded, the device SHOULD be assigned a unique randomly
+generated long address, and a unique short address (not based upon the
+vendor EUI-64) for use at link-layer. At that point, all layer-3 content
+is encrypted by the layer-2 key.</t>
+
+</section>
+</section>
+<section anchor="privacy-considerations-for-join-assistant" title="Privacy Considerations for Join Assistant">
 
 </section>
 </section>
@@ -279,6 +355,7 @@ the key changing process will find itself no longer connected.</t>
     <references title='Normative References'>
 
 &RFC2119;
+&I-D.ietf-6lo-privacy-considerations;
 &RFC7228;
 &I-D.ietf-anima-bootstrapping-keyinfra;
 &I-D.ietf-6tisch-minimal;
@@ -336,6 +413,7 @@ the key changing process will find itself no longer connected.</t>
 
 &RFC4655;
 &RFC7554;
+&RFC4191;
 &I-D.ietf-ace-actors;
 <reference anchor="PFS" target="https://en.wikipedia.org/w/index.php?title=Forward_secrecy&amp;oldid=731318899">
   <front>

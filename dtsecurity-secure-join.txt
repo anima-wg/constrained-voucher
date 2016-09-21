@@ -4,8 +4,8 @@
 
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                  Sandelman Software Works
-Intended status: Informational                        September 16, 2016
-Expires: March 20, 2017
+Intended status: Informational                        September 20, 2016
+Expires: March 24, 2017
 
 
                       6tisch Secure Join protocol
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 20, 2017.
+   This Internet-Draft will expire on March 24, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Richardson               Expires March 20, 2017                 [Page 1]
+Richardson               Expires March 24, 2017                 [Page 1]
 
 Internet-Draft         6tisch Secure Join protocol        September 2016
 
@@ -64,24 +64,29 @@ Table of Contents
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
      1.2.  Credentials . . . . . . . . . . . . . . . . . . . . . . .   4
        1.2.1.  One-Touch Assumptions . . . . . . . . . . . . . . . .   4
-       1.2.2.  Factory provided credentials (if any) . . . . . . . .   4
+       1.2.2.  Factory provided credentials (if any) . . . . . . . .   5
        1.2.3.  Credentials to be introduced  . . . . . . . . . . . .   5
      1.3.  Network Assumptions . . . . . . . . . . . . . . . . . . .   5
        1.3.1.  Security above and below IP . . . . . . . . . . . . .   5
        1.3.2.  Join network assumptions  . . . . . . . . . . . . . .   6
-       1.3.3.  Number and cost of round trips  . . . . . . . . . . .   6
-       1.3.4.  Size of packets, number of fragments  . . . . . . . .   6
-     1.4.  Target end-state for join process . . . . . . . . . . . .   6
-     1.5.  Diagram of Join Process . . . . . . . . . . . . . . . . .   6
+       1.3.3.  Number and cost of round trips  . . . . . . . . . . .   7
+       1.3.4.  Size of packets, number of fragments  . . . . . . . .   7
+     1.4.  Target end-state for join process . . . . . . . . . . . .   7
+     1.5.  Diagram of Join Process . . . . . . . . . . . . . . . . .   7
      1.6.  Description of States in Join Process . . . . . . . . . .   7
-   2.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   3.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Protocol Definition . . . . . . . . . . . . . . . . . . . . .   7
-   5.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     5.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     5.2.  Informative References  . . . . . . . . . . . . . . . . .   8
-   Appendix A.  appendix . . . . . . . . . . . . . . . . . . . . . .   9
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
+   2.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
+     2.1.  Privacy Considerations for Production network . . . . . .   7
+     2.2.  Privacy Considerations for New Pledges  . . . . . . . . .   7
+       2.2.1.  EUI-64 derived address for join time IID  . . . . . .   8
+     2.3.  Privacy Considerations for Join Assistant . . . . . . . .   8
+   3.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   5.  Protocol Definition . . . . . . . . . . . . . . . . . . . . .   8
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   Appendix A.  appendix . . . . . . . . . . . . . . . . . . . . . .  11
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -101,19 +106,19 @@ Table of Contents
 
    In other installations (such as some factory/industrial settings, and
    for some utilities), it is possible to pass devices through a
+
+
+
+Richardson               Expires March 24, 2017                 [Page 2]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
+
    "provisioning" room of some kind where the device in factory default
    state may be touched once (via a cable, or a push button, or by being
    placed in a faraday cage, etc.) such that the devices can be
    initialized in a way specific to that installation.  The devices are
    then returned to inventory, and may be deployed at some future time.
-
-
-
-Richardson               Expires March 20, 2017                 [Page 2]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
    The node is not provisioned with the current keying material, as the
    network will need to be regularly rekeyed (even the algorithms may
    change!), so in the one-touch provisioning case, the goal is simply
@@ -156,20 +161,21 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
 
    pledge  the prospective device, which has the identity provided to at
       the factory.  Neither the device nor the network knows if the
+
+
+
+
+Richardson               Expires March 24, 2017                 [Page 3]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
+
       device yet knows if this device belongs with this network.  This
       is definition 6, according to [pledge].
 
    Audit Token  A signed token from the manufacturer authorized signing
       authority indicating that the bootstrapping event has been
       successfully logged.  This has been referred to as an
-
-
-
-Richardson               Expires March 20, 2017                 [Page 3]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
       "authorization token" indicating that it authorizes bootstrapping
       to proceed.
 
@@ -208,6 +214,18 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    Coordination Entity, and the Pledge, and that the two devices can
    exchange some trusted bytes of information.
 
+
+
+
+
+
+
+
+Richardson               Expires March 24, 2017                 [Page 4]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
+
 1.2.2.  Factory provided credentials (if any)
 
    When a manufacturer installed certificate is provided as the IDevID,
@@ -218,14 +236,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    A manufacturer unique serial number MUST be provided in the
    serialNumber SubjectAltName extension, and MAY be repeated in the
    Common Name.  There are no sequential or numeric requirements on the
-
-
-
-Richardson               Expires March 20, 2017                 [Page 4]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
    serialNumber, it may be any unique value that the manufacturer wants
    to use.  The serialNumber SHOULD be printed on the packaging and/or
    on the device in a discrete way.
@@ -264,6 +274,14 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    o  a series of network keys that are shared (agreed to) between pairs
       of nodes (the per-peer key)
 
+
+
+
+Richardson               Expires March 24, 2017                 [Page 5]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
+
    o  a network key that is shared with all nodes (through a group key
       management system), and is used for multicast traffic only
 
@@ -273,14 +291,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
 
    Security is required above the IP layer: there are three aspects
    which the credentials in the previous section are to be used.
-
-
-
-
-Richardson               Expires March 20, 2017                 [Page 5]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
 
    o  to provide for secure connection with a Path Computation Element
       [RFC4655], or other LLC (see ({RFC7554}} section 3).
@@ -318,6 +328,16 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    o  a known K1 key, as described in [I-D.ietf-6tisch-minimal] section
       10, and used for reasons similar to [iec62591].
 
+
+
+
+
+
+Richardson               Expires March 24, 2017                 [Page 6]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
+
 1.3.3.  Number and cost of round trips
 
 1.3.4.  Size of packets, number of fragments
@@ -326,34 +346,114 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
 
 1.5.  Diagram of Join Process
 
+   This time sequence diagram intentionally shows additional layer-2 and
+   layer-3 interactions, in order to put the entire process into
+   context.
+
+   1.  extended beacon
+
+1.6.  Description of States in Join Process
+
+2.  Privacy Considerations
+
+   [I-D.ietf-6lo-privacy-considerations] details a number of privacy
+   considerations important in Resource Constrained nodes.  There are
+   two networks and three sets of constrained nodes to consider.  They
+   are: 1. the production nodes on the production network.  2. the new
+   pledges, which have yet to enroll, and which are on a join network.
+   3. the production nodes which are also acting as proxy nodes.
+
+2.1.  Privacy Considerations for Production network
+
+   The details of this are out of scope for this document.
+
+2.2.  Privacy Considerations for New Pledges
+
+   New Pledges do not yet receive Router Advertisements with PIO
+   options, and so configure link-local addresses only based upon
+   layer-2 addresses using the normal SLAAC mechanisms described in
+   [RFC4191].
+
+   These link-local addresses are visible to any on-link eavesdropper
+   (who is synchronized to the same Join Assistant), so regardless of
+   what is chosen they can be seen.  This link-layer traffic is
+   encapsulated by the Join Assistant into IPIP packets and carried to
+   the JCE.  The traffic SHOULD never leave the operator's network, and
+   no outside traffic should enter, so it should not be possible to do
+   any ICMP scanning as described in
+   [I-D.ietf-6lo-privacy-considerations].
+
+   The join process described herein requires that some identifier
+   meaningful to the network operator be communicated to the JCE via the
+   Neighbor Advertisement's ARO option.  This need not be a manufacturer
 
 
 
-
-
-
-
-Richardson               Expires March 20, 2017                 [Page 6]
+Richardson               Expires March 24, 2017                 [Page 7]
 
 Internet-Draft         6tisch Secure Join protocol        September 2016
 
 
-1.6.  Description of States in Join Process
+   created EUI-64 as assigned by IEEE; it could be another value with
+   higher entropy and less interesting vendor/device information.
+   Regardless of what is chosen, it can be used to track where the
+   device attaches.
 
-2.  Security Considerations
+   For most constrained device, network attachment occurs very
+   infrequently, often only once in their lifetime, so tracking
+   opportunities may be rare.
 
-3.  IANA Considerations
+   Further, during the enrollment process, a DTLS connection connection
+   will be created.  Unless TLS1.3 is used, the device identity will be
+   visible to passive observers in the 802.11AR IDevID certificate that
+   is sent.  Even when TLS1.3 is used, an active attacker could collect
+   the information by simply connecting to the device; it would not have
+   to successful complete the negotiation either, or even attempt to
+   Man-In-The-Middle the device.
 
-4.  Protocol Definition
+   There is, at the same time, significant value in avoiding a link-
+   local DAD process by using an IEEE assigned EUI-64, and there is also
+   significant advantage to the operator being able to see what the
+   vendor of the new device is.
 
-5.  References
+2.2.1.  EUI-64 derived address for join time IID
 
-5.1.  Normative References
+   It is therefore suggested that the IID used in the link-local address
+   used during the join process be a vendor assigned EUI-64.  After the
+   join process has concluded, the device SHOULD be assigned a unique
+   randomly generated long address, and a unique short address (not
+   based upon the vendor EUI-64) for use at link-layer.  At that point,
+   all layer-3 content is encrypted by the layer-2 key.
+
+2.3.  Privacy Considerations for Join Assistant
+
+3.  Security Considerations
+
+4.  IANA Considerations
+
+5.  Protocol Definition
+
+6.  References
+
+6.1.  Normative References
 
    [cullenCiscoPhoneDeploy]
               Jennings, C., "Transitive Trust Enrollment for Constrained
               Devices", 2012, <http://www.lix.polytechnique.fr/hipercom/
               SmartObjectSecurity/papers/CullenJennings.pdf>.
+
+
+
+
+Richardson               Expires March 24, 2017                 [Page 8]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
+
+   [I-D.ietf-6lo-privacy-considerations]
+              Thaler, D., "Privacy Considerations for IPv6 over Networks
+              of Resource-Constrained Nodes", draft-ietf-6lo-privacy-
+              considerations-03 (work in progress), September 2016.
 
    [I-D.ietf-6tisch-minimal]
               Vilajosana, X. and K. Pister, "Minimal 6TiSCH
@@ -382,18 +482,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
               2009, <http://standards.ieee.org/findstds/
               standard/802.1AR-2009.html>.
 
-
-
-
-
-
-
-
-Richardson               Expires March 20, 2017                 [Page 7]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
    [ieee802154]
               IEEE Standard, ., "802.15.4-2015 - IEEE Standard for Low-
               Rate Wireless Personal Area Networks (WPANs)", 2015,
@@ -407,6 +495,17 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
               <http://standards.ieee.org/findstds/
               standard/802.15.9-2016.html>.
 
+
+
+
+
+
+
+Richardson               Expires March 24, 2017                 [Page 9]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -417,7 +516,7 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
 
-5.2.  Informative References
+6.2.  Informative References
 
    [duckling]
               Stajano, F. and R. Anderson, "The resurrecting duckling:
@@ -438,23 +537,30 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    [pledge]   Dictionary.com, ., "Dictionary.com Unabridged", 2015,
               <http://dictionary.reference.com/browse/pledge>.
 
+   [RFC4191]  Draves, R. and D. Thaler, "Default Router Preferences and
+              More-Specific Routes", RFC 4191, DOI 10.17487/RFC4191,
+              November 2005, <http://www.rfc-editor.org/info/rfc4191>.
+
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
               <http://www.rfc-editor.org/info/rfc4655>.
-
-
-
-Richardson               Expires March 20, 2017                 [Page 8]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
 
    [RFC7554]  Watteyne, T., Ed., Palattella, M., and L. Grieco, "Using
               IEEE 802.15.4e Time-Slotted Channel Hopping (TSCH) in the
               Internet of Things (IoT): Problem Statement", RFC 7554,
               DOI 10.17487/RFC7554, May 2015,
               <http://www.rfc-editor.org/info/rfc7554>.
+
+
+
+
+
+
+Richardson               Expires March 24, 2017                [Page 10]
+
+Internet-Draft         6tisch Secure Join protocol        September 2016
+
 
 Appendix A.  appendix
 
@@ -501,4 +607,10 @@ Author's Address
 
 
 
-Richardson               Expires March 20, 2017                 [Page 9]
+
+
+
+
+
+
+Richardson               Expires March 24, 2017                [Page 11]
