@@ -300,6 +300,12 @@ The network which the new pledge will connect to will have to have the following
 
 ## Diagram of Join Process
 
+This time sequence diagram intentionally shows additional layer-2 and layer-3
+interactions, in order to put the entire process into context.
+
+1. extended beacon
+
+
 ## Description of States in Join Process
 
 # Security Considerations
