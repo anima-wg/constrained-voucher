@@ -1,7 +1,7 @@
 ---
 title: 6tisch Secure Join protocol
 # abbrev: 6tisch-Secure-Join
-docname: draft-richardson-6tisch-dtsecurity-secure-join-00
+docname: draft-richardson-6tisch-dtsecurity-secure-join-01
 
 # stand_alone: true
 
@@ -72,6 +72,10 @@ informative:
   RFC7554:
   RFC4191:
   I-D.ietf-ace-actors:
+  ISA100:
+    target:  "http://www.isa100wci.org/Documents/PDF/The-Technology-Behind-ISA100-11a-v-3_pptx"
+    title: "The Technology Behind the ISA100.11a Standard "
+    date: 2010-06-15
   PFS:
     title: "Forward Secrecy"
     target: "https://en.wikipedia.org/w/index.php?title=Forward_secrecy&oldid=731318899"
@@ -379,6 +383,10 @@ is encrypted by the layer-2 key.
 # IANA Considerations
 
 # Protocol Definition
+
+# Acknwoledgements
+
+Kristofer Pister helped with many non-IETF references.
 
 --- back
 

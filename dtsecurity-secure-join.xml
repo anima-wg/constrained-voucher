@@ -19,7 +19,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-richardson-6tisch-dtsecurity-secure-join-00" category="info">
+<rfc ipr="trust200902" docName="draft-richardson-6tisch-dtsecurity-secure-join-01" category="info">
 
   <front>
     <title>6tisch Secure Join protocol</title>
@@ -31,7 +31,7 @@
       </address>
     </author>
 
-    <date year="2016" month="September" day="20"/>
+    <date year="2016" month="September" day="27"/>
 
     <area>Internet</area>
     <workgroup>6tisch Working Group</workgroup>
@@ -346,6 +346,11 @@ is encrypted by the layer-2 key.</t>
 <section anchor="protocol-definition" title="Protocol Definition">
 
 </section>
+<section anchor="acknwoledgements" title="Acknwoledgements">
+
+<t>Kristofer Pister helped with many non-IETF references.</t>
+
+</section>
 
 
   </middle>
@@ -415,6 +420,15 @@ is encrypted by the layer-2 key.</t>
 &RFC7554;
 &RFC4191;
 &I-D.ietf-ace-actors;
+<reference anchor="ISA100" target="http://www.isa100wci.org/Documents/PDF/The-Technology-Behind-ISA100-11a-v-3_pptx">
+  <front>
+    <title>The Technology Behind the ISA100.11a Standard</title>
+    <author >
+      <organization></organization>
+    </author>
+    <date year="2010" month="June" day="15"/>
+  </front>
+</reference>
 <reference anchor="PFS" target="https://en.wikipedia.org/w/index.php?title=Forward_secrecy&amp;oldid=731318899">
   <front>
     <title>Forward Secrecy</title>
