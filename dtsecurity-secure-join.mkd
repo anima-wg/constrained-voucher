@@ -309,7 +309,20 @@ The network which the new pledge will connect to will have to have the following
 This time sequence diagram intentionally shows additional layer-2 and layer-3
 interactions, in order to put the entire process into context.
 
-1. extended beacon
+
+    PLEDGE(JN)       JOIN ASSISTANT(JA)        JCE
+        <--------------- BEACON-L2                   (1)
+        <-------RA ------                            (1B)
+        ---- NS w/ARO --->                           (2)
+                               ------- QUERY---->    (3)
+                               <------ REPLY-----    (4)
+        <--- NA answer----                           (5)
+
+                    some time later
+        <-----coaps--------<=======IPIP-COAPS====    (6)
+                    multiple trips
+        ------------------->====================>    (7)
+        
 
 
 ## Description of States in Join Process
