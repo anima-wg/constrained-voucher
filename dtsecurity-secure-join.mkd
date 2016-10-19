@@ -66,6 +66,9 @@ normative:
       ins: "C. Jennings"
       org: Cisco
     date: 2012
+  RFC7217:
+  I-D.richardson-6lo-ra-in-ie:
+  RFC6775:
 
 informative:
   RFC4655:
@@ -318,10 +321,112 @@ interactions, in order to put the entire process into context.
         <-----coaps--------<=======IPIP-COAPS====    (6)
                     multiple trips
         ------------------->====================>    (7)
-        
 
 
-## Description of States in Join Process
+
+## Description of Pledge States in Join Process
+
+### (1) Layer-2 Enhanced Beacon
+
+A new pledge must listen for a beacon for a period of at least 2s on each of the 16 possible
+channels.  The pledge SHOULD collect all beacons from heard on all channels before selecting
+a beacon to start with.   If the pledge is unable to record all of the beacons that it
+hears due to limitations on volatile storage, then it should at least attempt to record
+the detail as to how to find that beacon again (channel, time sequence).
+
+This search process entails having the pledge keep the receiver portion of it's
+radio active for the entire period of time.
+
+The selection of which beacon to start with is outside the scope of this document.
+Implementers SHOULD make use of information such as: whether the L2 address of the
+Beacon has been tried before, whether a Router Advertisement IE is present,
+any Network Identifier {{I-D.richardson-6lo-ra-in-ie}} seen, and the strength of the signal.
+
+Once a candidate network has been selected, the pledge can transition into a low-power duty
+cycle, waking only when the provided schedule indicates ALOHA slots which the pledge
+may use for the join process.
+
+### (1B) Layer-3 Router Advertisement
+
+If {{I-D.richardson-6lo-ra-in-ie}} has not been used to embed a router advertisement
+in the Enhanced Beacon, then the pledge MUST wait to hear a Router Advertisement to know
+the layer-3 address of the adjacent router.  These will be broadcast periodically during
+the ALOHA slot.
+
+A pledge MAY timeout and send a layer-2 unicast Router Solicitation (to the layer-2 of the
+Enhanced Beacon) to the layer-3 all-routers address.  A pledge MAY also take this timeout to
+mean that this router is unwilling to perform Join Assistant activities and the pledge should
+move on to another Enhanced Beacon.
+
+### (2) Pledge sends (unicast) Neighbor Solicitation to Join Assistant
+
+This NS message is formed much like a Duplicate Address Detection (DAD) message described in
+{{RFC6775}} section-4.3: it is a solicitation by the pledge for it's own address.
+{{RFC6775}} does not describe doing DAD for link-local address however, so this aspect is new.
+
+The Join Assistant will not validate the uniqueness using the DAR/DAC mechanism, but will
+otherwise process the NS as per normal: populating neighbor cache entries.  The Join Assistant
+will take extra care with expiring neighbor cache entries: unsecured NS should never
+push secured NCE entries out of the cache or overwrite them.  There are two equivalent
+ways to do this:
+
+1. marking the origin of the NCE and limiting unsecured ones to some portion of the entries;
+2. by considering unsecured NS to be arriving from a different virtual interface (different if_index) than secured ones. NCEs from different interfaces SHOULD already not be mixed.
+
+The pledge SHOULD NOT have configured a short Layer-2 address as it has no way to
+allocate a non-duplicate short address. It SHOULD have
+formed a standard 64-bit layer-3 link-local address using a built-in IID.
+This IID MUST be placed into the Address Resolution option (ARO) option in the
+Neighbor Soliciation, as it serves as the index by which the domain registrar will use
+to identify the device.
+
+The IID MAY be related to the layer-2 address, but privacy considerations recommend that
+the IID SHOULD instead be a form a stable privacy address {{RFC7217}}.  Whichever method is
+used MUST be decided at manufacturing time, as the IID is also repeated as the SerialNumber
+in the Manufacturer Installed Certificate (MIC), also referred to as the 802.1AR IDevID.
+
+### (3) Join Assistant sends Query to Registar
+
+This step does not involve the pledge, and it is described in section (#jastates).
+
+### (4) Join Assistant receives Acceptance response from Registrar
+
+This step does not involve the pledge, and it is described in section (#jastates).
+
+### (5) Pledge receives (unicast) Neighbor Advertisement from join assistant
+
+This NA message is again identical to the Duplicate Address Detection mechanism described
+in {{RFC6775}}.  The status field of the ARO is extended (see (#ianaconsiderations)) to
+include an additional status value ND_NS_JOIN_DECLINED.
+
+The pledge, upon receipt of ND_NS_JOIN_DECLINED considers that this network
+is not an appropriate network to join, and SHOULD move on to attempt other
+networks.  The pledge MUST also realize that this NA message MAY have been
+forced, and it SHOULD attempt joining this network again at a future time,
+but MUST NOT repeatedly attempt to join the same network.
+
+The pledge, upon receipt of a Neighbor Cache Full response SHOULD attempt to
+join using a different join assistant on the same network.
+
+The pledge, upon receipt of a Duplicate Address response SHOULD attempt to
+join using a different join assistant on a different network, if it has such
+offers.  If it has no such offers, it should wait at least NEIGHBOR-CACHE
+TIMEOUT, and then retry.  This may be a sign of a Denial of Service attack,
+or it may be a non-malicious mis-configuration.
+
+Upon receive of a successful NA, the pledge SHOULD consider that it is now in
+enrolled in a join queue.  The pledge SHOULD resend Neighbor Soliciation
+(NUD) messages periodically as described in {{RFC6775}} to maintain the
+neighbor cache entry.
+
+A pledge with other Join Assistant offers MAY abandon this Join Assistant
+after a period of XXX minutes and attempt to join using a different Join
+Assistant.
+
+
+## Join process state machine for pledge
+
+## Description of Join Assistant States in Join Process {#jastates}
 
 # Privacy Considerations
 
@@ -390,6 +495,12 @@ is encrypted by the layer-2 key.
 # Security Considerations
 
 # IANA Considerations
+
+This document allocates one value from the subregistry "Address Registration
+Option Status Values":
+     ND_NS_JOIN_DECLINED  Join Assistant, JOIN DECLINED   (TBD-AA)
+
+
 
 # Protocol Definition
 
