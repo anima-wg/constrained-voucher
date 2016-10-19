@@ -303,6 +303,11 @@ The network which the new pledge will connect to will have to have the following
 
 ## Target end-state for join process
 
+# Join Protocol
+
+This section describes the interaction between a new pledge and the Join
+Assistant.
+
 ## Diagram of Join Process
 
 This time sequence diagram intentionally shows additional layer-2 and layer-3
@@ -328,8 +333,9 @@ interactions, in order to put the entire process into context.
 
 ### (1) Layer-2 Enhanced Beacon
 
-A new pledge must listen for a beacon for a period of at least 2s on each of the 16 possible
-channels.  The pledge SHOULD collect all beacons from heard on all channels before selecting
+A new pledge must listen for a beacon for a period of at least 2s (HELP) on
+each of the 16 possible channels.  The pledge SHOULD collect all beacons from
+heard on all channels before selecting
 a beacon to start with.   If the pledge is unable to record all of the beacons that it
 hears due to limitations on volatile storage, then it should at least attempt to record
 the detail as to how to find that beacon again (channel, time sequence).
@@ -426,7 +432,149 @@ Assistant.
 
 ## Join process state machine for pledge
 
+          +----------------+         +----------+
+          |  collecting    |-------->| sleep 1m |
+          |    beacons     |<-----   +~~~~~~~~~~+
+          +----------------+      \______/    ^
+                  |                           |
+                  V                           | no beacons
+          +-----------------+                 | remain
+          |  try next/first |                 |
+          |   beacon/sched  |-----------------/
+          +-----------------+<____________ timeout
+                  |                       \--.<--.
+                  | send NS/DAD <-------.    |   |
+        /-------->|  w/ARO              |    |   |
+        |         |              timeout|    |   |
+        |         V           retries<3 |    |   |
+        | +-----------------+           |    |   |
+        | |  waiting for    |           |    |   |
+        | |   NA w/ARO      |----------->---->   |
+        | +-----------------+   or invalid NA    |
+        |         |                              |
+        |         |                              |
+        |         |                              |
+        |         V                              |
+        | +-----------------+   DTLS failure     |
+        | |  open DTLS 6p   |--------------------/
+        | |  for system     |                    ^
+        | |   keychain      |<--------\          |
+        | +-----------------+         |          |
+        |         |                   | conclude |
+        |         |         kill DTLS |  not net |
+        |         |         try again |  looking |
+        |         |         retries<3 |      for |
+        |         V                   |          |
+        | +-----------------+         |          |
+        | | validate audit  |---------/----------/
+        | |token posted to  |  does not validate
+        | | proper URL      |
+        | +-----------------+
+        |         |
+        |too long | validate
+        |try      |  audit
+        |again    |  token
+        |         V
+        | +-----------------+
+        \-| accept 6p trans-|
+          | actions for new |
+          | certificate     |
+          +-----------------+
+                  |
+                  | receive new certificate,
+                  V  restart with beacon
+                  X  run appropriate KMP
+
+
+
+
+
+
+
 ## Description of Join Assistant States in Join Process {#jastates}
+
+The Join Assistant is a standard 6LR.  It processes packets as described in
+{{RFC6775}}, {{I-D.ietf-6tisch-minimal}} from secured (encrypted) sources.
+
+In particular the maintenance of Neighbor Cache Entries as described in
+{{RFC6775}} section 3.5.  The Join Assistant maintains two sets of NCE for each
+physical interface that it has: one set is for secured neighbors, and
+the other is for new pledges that wish to join.  The storage allocated for
+pledges will generally be a small fraction of available space.  The Join
+Assistant will garbage collect the different caches according to different
+thresholds.  It MAY chose to free space from the insecure cache to make space
+for additional secure entries, but it MUST NOT do the opposite.
+
+It sends Enhanced Beacons which are authenticated with the network-wide key
+("K2"), but it does not encrypt the Beacons.
+
+In addition, it listen for packets "encrypted" with the well-known "K1" key,
+and when it receives them, it considers them to be as "Insecure Packets".
+It MAY also accept unencrypted, unauthenticated packets as being "Insecure Packets"
+
+Non-Join Assistant 6LRs would never accept K1 packets, nor unauthenticated
+packets.  Normal 6LRs and hosts MUST accept unencrypted Enhanced Beacons
+which can be authenticated with the "K2" key.
+
+In addition to seperating the secured and insecured packets for inbound
+processing, the Join Assistant also allocates a unique IID for the insecured
+interface.  This IID is used to configure the Link Local address on that
+virtual interface.
+
+In addition, this IID is combined with the global prefix(es) (as found in
+various PIO(s) from the routing protocols).  This additional address is
+configured as an alias on the loopback interface such that the Join Assistant
+can receive packets to this address via secured network.  This activity
+SHOULD generate a routing protocol update (such as an updated DAO).
+This IID SHOULD be generated using a stable privacy address mechanism as
+described in {{RFC7217}}.  The easiest is to assign the insecure virtual
+interface a unique if_index.
+
+### Processing of Insecure Packets
+
+Only the following insecure packets are to be accepted by the Join Assistant:
+
+1. Unicast Neighbor Solicitations.
+2. Unicast Link-Local UDP packets with a destination port that map to the
+Join Assistant's IPIP proxy.
+
+#### Processing of Insecure Neighbor Solicitation packets
+
+Upon receipt of an insecure unicast NS with an ARO option, the Join Assistant
+looks up an NCE by the IID contained in the ARO in the insecure cache.  If it
+finds an existing there are three possibilities:
+
+1. a lookup for this entry has previously been completed, and has resulted in a
+   negative result.  In this case, a negative ND_NS_JOIN_DECLINED NA is
+   returned.  The Join Assistant SHOULD rate limit the number of these
+   messages that it is willing to return.
+2. a lookup for this entry has previously been done, and has resulted in a
+   positive result.  The NCE entry should be "refresh", to keep it in the
+   cache for a longer period of time, and a new NA returned with a positive
+   status.
+3. a lookup for this entry has previously been started, but no result has
+   been received.  In this case the Join Assistant SHOULD remain silent. The
+   Join Assistant may wish to send a GRASP M_NOOP message to verify that the
+   connection is still useable if it has not receive any traffic in some
+   time.
+
+If it does not find an existing entry, and there is space for another entry,
+(or it can make space via garbage collection), then a new entry is created,
+marked to be "in progress", and a new GRASP 6JOIN query is initiated, see
+section (#6joingrasp).
+
+# Join Assistant to Registrar protocol
+
+There are three aspects to the protocols that the Join Assistant uses to
+communicate about its needs.  They are:
+
+1. Discovery of Registrar
+2. Notification of new pledge to Registrar
+3. Passing of traffic from Pledge to Registar
+
+
+
+
 
 # Privacy Considerations
 
