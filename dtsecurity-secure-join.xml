@@ -26,7 +26,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-richardson-6tisch-dtsecurity-secure-join-00" category="info">
+<rfc ipr="trust200902" docName="draft-richardson-6tisch-dtsecurity-secure-join-01" category="info">
 
   <front>
     <title>6tisch Secure Join protocol</title>
@@ -38,7 +38,7 @@
       </address>
     </author>
 
-    <date year="2016" month="October" day="19"/>
+    <date year="2016" month="October" day="20"/>
 
     <area>Internet</area>
     <workgroup>6tisch Working Group</workgroup>

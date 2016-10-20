@@ -4,8 +4,8 @@
 
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                  Sandelman Software Works
-Intended status: Informational                          October 19, 2016
-Expires: April 22, 2017
+Intended status: Informational                          October 20, 2016
+Expires: April 23, 2017
 
 
                       6tisch Secure Join protocol
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 22, 2017.
+   This Internet-Draft will expire on April 23, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Richardson               Expires April 22, 2017                 [Page 1]
+Richardson               Expires April 23, 2017                 [Page 1]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Richardson               Expires April 22, 2017                 [Page 2]
+Richardson               Expires April 23, 2017                 [Page 2]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -165,7 +165,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                 [Page 3]
+Richardson               Expires April 23, 2017                 [Page 3]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -221,7 +221,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                 [Page 4]
+Richardson               Expires April 23, 2017                 [Page 4]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -277,7 +277,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                 [Page 5]
+Richardson               Expires April 23, 2017                 [Page 5]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -333,7 +333,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                 [Page 6]
+Richardson               Expires April 23, 2017                 [Page 6]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -389,7 +389,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                 [Page 7]
+Richardson               Expires April 23, 2017                 [Page 7]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -445,7 +445,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                 [Page 8]
+Richardson               Expires April 23, 2017                 [Page 8]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -501,7 +501,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                 [Page 9]
+Richardson               Expires April 23, 2017                 [Page 9]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -557,7 +557,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 10]
+Richardson               Expires April 23, 2017                [Page 10]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -613,7 +613,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 11]
+Richardson               Expires April 23, 2017                [Page 11]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -669,7 +669,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 12]
+Richardson               Expires April 23, 2017                [Page 12]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -725,7 +725,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 13]
+Richardson               Expires April 23, 2017                [Page 13]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -781,7 +781,7 @@ IID = bytes .size 8
 
 
 
-Richardson               Expires April 22, 2017                [Page 14]
+Richardson               Expires April 23, 2017                [Page 14]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -837,7 +837,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 15]
+Richardson               Expires April 23, 2017                [Page 15]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -893,7 +893,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 16]
+Richardson               Expires April 23, 2017                [Page 16]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -949,7 +949,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 17]
+Richardson               Expires April 23, 2017                [Page 17]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -961,9 +961,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               2016.
 
    [I-D.richardson-anima-6join-discovery]
-              Richardson, M., "6tisch Secure Join protocol", draft-
-              richardson-anima-6join-discovery-00 (work in progress),
-              September 2016.
+              Richardson, M., "GRASP discovery of Registrar by Join
+              Assistant", draft-richardson-anima-6join-discovery-00
+              (work in progress), October 2016.
 
    [iec62591]
               IEC, ., "62591:2016 Industrial networks - Wireless
@@ -1005,7 +1005,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 18]
+Richardson               Expires April 23, 2017                [Page 18]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 22, 2017                [Page 19]
+Richardson               Expires April 23, 2017                [Page 19]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
@@ -1117,4 +1117,4 @@ Author's Address
 
 
 
-Richardson               Expires April 22, 2017                [Page 20]
+Richardson               Expires April 23, 2017                [Page 20]
