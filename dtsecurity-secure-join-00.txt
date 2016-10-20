@@ -4,8 +4,8 @@
 
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                  Sandelman Software Works
-Intended status: Informational                        September 20, 2016
-Expires: March 24, 2017
+Intended status: Informational                          October 19, 2016
+Expires: April 22, 2017
 
 
                       6tisch Secure Join protocol
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 24, 2017.
+   This Internet-Draft will expire on April 22, 2017.
 
 Copyright Notice
 
@@ -53,40 +53,66 @@ Copyright Notice
 
 
 
-Richardson               Expires March 24, 2017                 [Page 1]
+Richardson               Expires April 22, 2017                 [Page 1]
 
-Internet-Draft         6tisch Secure Join protocol        September 2016
+Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.1.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
      1.2.  Credentials . . . . . . . . . . . . . . . . . . . . . . .   4
        1.2.1.  One-Touch Assumptions . . . . . . . . . . . . . . . .   4
        1.2.2.  Factory provided credentials (if any) . . . . . . . .   5
        1.2.3.  Credentials to be introduced  . . . . . . . . . . . .   5
      1.3.  Network Assumptions . . . . . . . . . . . . . . . . . . .   5
-       1.3.1.  Security above and below IP . . . . . . . . . . . . .   5
-       1.3.2.  Join network assumptions  . . . . . . . . . . . . . .   6
+       1.3.1.  Security above and below IP . . . . . . . . . . . . .   6
+       1.3.2.  Join network assumptions  . . . . . . . . . . . . . .   7
        1.3.3.  Number and cost of round trips  . . . . . . . . . . .   7
        1.3.4.  Size of packets, number of fragments  . . . . . . . .   7
      1.4.  Target end-state for join process . . . . . . . . . . . .   7
-     1.5.  Diagram of Join Process . . . . . . . . . . . . . . . . .   7
-     1.6.  Description of States in Join Process . . . . . . . . . .   7
-   2.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .   7
-     2.1.  Privacy Considerations for Production network . . . . . .   7
-     2.2.  Privacy Considerations for New Pledges  . . . . . . . . .   7
-       2.2.1.  EUI-64 derived address for join time IID  . . . . . .   8
-     2.3.  Privacy Considerations for Join Assistant . . . . . . . .   8
-   3.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
-   5.  Protocol Definition . . . . . . . . . . . . . . . . . . . . .   8
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  10
-   Appendix A.  appendix . . . . . . . . . . . . . . . . . . . . . .  11
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  11
+   2.  Join Protocol . . . . . . . . . . . . . . . . . . . . . . . .   7
+     2.1.  Diagram of Join Process . . . . . . . . . . . . . . . . .   7
+     2.2.  Description of Pledge States in Join Process  . . . . . .   8
+       2.2.1.  (1) Layer-2 Enhanced Beacon . . . . . . . . . . . . .   8
+       2.2.2.  (1B) Layer-3 Router Advertisement . . . . . . . . . .   8
+       2.2.3.  (2) Pledge sends (unicast) Neighbor Solicitation to
+               Join Assistant  . . . . . . . . . . . . . . . . . . .   8
+       2.2.4.  (3) Join Assistant sends Query to Registar  . . . . .   9
+       2.2.5.  (4) Join Assistant receives Acceptance response from
+               Registrar . . . . . . . . . . . . . . . . . . . . . .   9
+       2.2.6.  (5) Pledge receives (unicast) Neighbor Advertisement
+               from join assistant . . . . . . . . . . . . . . . . .   9
+     2.3.  Join process state machine for pledge . . . . . . . . . .  10
+     2.4.  Description of Join Assistant States in Join Process  . .  11
+       2.4.1.  Processing of Insecure Packets  . . . . . . . . . . .  12
+   3.  Join Assistant to Registrar protocol  . . . . . . . . . . . .  13
+   4.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  13
+     4.1.  Privacy Considerations for Production network . . . . . .  13
+     4.2.  Privacy Considerations for New Pledges  . . . . . . . . .  13
+       4.2.1.  EUI-64 derived address for join time IID  . . . . . .  14
+     4.3.  Privacy Considerations for Join Assistant . . . . . . . .  15
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+   7.  Protocol Definition . . . . . . . . . . . . . . . . . . . . .  15
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  17
+   Appendix A.  appendix . . . . . . . . . . . . . . . . . . . . . .  17
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  17
+
+
+
+
+
+
+
+
+Richardson               Expires April 22, 2017                 [Page 2]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
 
 1.  Introduction
 
@@ -106,14 +132,6 @@ Table of Contents
 
    In other installations (such as some factory/industrial settings, and
    for some utilities), it is possible to pass devices through a
-
-
-
-Richardson               Expires March 24, 2017                 [Page 2]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
    "provisioning" room of some kind where the device in factory default
    state may be touched once (via a cable, or a push button, or by being
    placed in a faraday cage, etc.) such that the devices can be
@@ -143,6 +161,15 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
       touch scenarios there is no staging or pre-configuration during
       drop-ship.
 
+
+
+
+
+Richardson               Expires April 22, 2017                 [Page 3]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
    imprint  the process where a device obtains the cryptographic key
       material to identity and trust future interactions with a network.
       This term is taken from Konrad Lorenz's work in biology with new
@@ -161,15 +188,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
 
    pledge  the prospective device, which has the identity provided to at
       the factory.  Neither the device nor the network knows if the
-
-
-
-
-Richardson               Expires March 24, 2017                 [Page 3]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
       device yet knows if this device belongs with this network.  This
       is definition 6, according to [pledge].
 
@@ -200,6 +218,14 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    In a one-touch scenario, devices would be provided with some
    mechanism by which a secure association may be made in a controlled
    environment.  There are many ways in which this might be done, and
+
+
+
+Richardson               Expires April 22, 2017                 [Page 4]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
    detailing any of them is out of scope for this document.  But, some
    notion of how this might be done is important so that the underlying
    assumptions can be reasoned about.
@@ -213,18 +239,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    there can be a secure, private conversation between the Join
    Coordination Entity, and the Pledge, and that the two devices can
    exchange some trusted bytes of information.
-
-
-
-
-
-
-
-
-Richardson               Expires March 24, 2017                 [Page 4]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
 
 1.2.2.  Factory provided credentials (if any)
 
@@ -260,6 +274,14 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    This document is about enrollment of constrained devices [RFC7228] to
    a constrained network.  Constrained networks is such as [ieee802154],
    and in particular the time-slotted, channel hopping (tsch) mode,
+
+
+
+Richardson               Expires April 22, 2017                 [Page 5]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
    feature low bandwidths, and limited opportunities to transmit.  A key
    feature of these networks is that receivers are only listening at
    certain times.
@@ -273,14 +295,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
 
    o  a series of network keys that are shared (agreed to) between pairs
       of nodes (the per-peer key)
-
-
-
-
-Richardson               Expires March 24, 2017                 [Page 5]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
 
    o  a network key that is shared with all nodes (through a group key
       management system), and is used for multicast traffic only
@@ -313,6 +327,17 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    participated in the key changing process will find itself no longer
    connected.
 
+
+
+
+
+
+
+Richardson               Expires April 22, 2017                 [Page 6]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
 1.3.2.  Join network assumptions
 
    The network which the new pledge will connect to will have to have
@@ -328,33 +353,358 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    o  a known K1 key, as described in [I-D.ietf-6tisch-minimal] section
       10, and used for reasons similar to [iec62591].
 
-
-
-
-
-
-Richardson               Expires March 24, 2017                 [Page 6]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
 1.3.3.  Number and cost of round trips
 
 1.3.4.  Size of packets, number of fragments
 
 1.4.  Target end-state for join process
 
-1.5.  Diagram of Join Process
+2.  Join Protocol
+
+   This section describes the interaction between a new pledge and the
+   Join Assistant.
+
+2.1.  Diagram of Join Process
 
    This time sequence diagram intentionally shows additional layer-2 and
    layer-3 interactions, in order to put the entire process into
    context.
 
-   1.  extended beacon
+   PLEDGE(JN)       JOIN ASSISTANT(JA)        JCE
+       <--------------- BEACON-L2                   (1)
+       <-------RA ------                            (1B)
+       ---- NS w/ARO --->                           (2)
+                              ------- QUERY---->    (3)
+                              <------ REPLY-----    (4)
+       <--- NA answer----                           (5)
 
-1.6.  Description of States in Join Process
+                   some time later
+       <-----coaps--------<=======IPIP-COAPS====    (6)
+                   multiple trips
+       ------------------->====================>    (7)
 
-2.  Privacy Considerations
+
+
+
+
+
+
+Richardson               Expires April 22, 2017                 [Page 7]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+2.2.  Description of Pledge States in Join Process
+
+2.2.1.  (1) Layer-2 Enhanced Beacon
+
+   A new pledge must listen for a beacon for a period of at least 2s
+   (HELP) on each of the 16 possible channels.  The pledge SHOULD
+   collect all beacons from heard on all channels before selecting a
+   beacon to start with.  If the pledge is unable to record all of the
+   beacons that it hears due to limitations on volatile storage, then it
+   should at least attempt to record the detail as to how to find that
+   beacon again (channel, time sequence).
+
+   This search process entails having the pledge keep the receiver
+   portion of it's radio active for the entire period of time.
+
+   The selection of which beacon to start with is outside the scope of
+   this document.  Implementers SHOULD make use of information such as:
+   whether the L2 address of the Beacon has been tried before, whether a
+   Router Advertisement IE is present, any Network Identifier
+   [I-D.richardson-6lo-ra-in-ie] seen, and the strength of the signal.
+
+   Once a candidate network has been selected, the pledge can transition
+   into a low-power duty cycle, waking only when the provided schedule
+   indicates ALOHA slots which the pledge may use for the join process.
+
+2.2.2.  (1B) Layer-3 Router Advertisement
+
+   If [I-D.richardson-6lo-ra-in-ie] has not been used to embed a router
+   advertisement in the Enhanced Beacon, then the pledge MUST wait to
+   hear a Router Advertisement to know the layer-3 address of the
+   adjacent router.  These will be broadcast periodically during the
+   ALOHA slot.
+
+   A pledge MAY timeout and send a layer-2 unicast Router Solicitation
+   (to the layer-2 of the Enhanced Beacon) to the layer-3 all-routers
+   address.  A pledge MAY also take this timeout to mean that this
+   router is unwilling to perform Join Assistant activities and the
+   pledge should move on to another Enhanced Beacon.
+
+2.2.3.  (2) Pledge sends (unicast) Neighbor Solicitation to Join
+        Assistant
+
+   This NS message is formed much like a Duplicate Address Detection
+   (DAD) message described in [RFC6775] section-4.3: it is a
+   solicitation by the pledge for it's own address.  [RFC6775] does not
+   describe doing DAD for link-local address however, so this aspect is
+   new.
+
+
+
+
+Richardson               Expires April 22, 2017                 [Page 8]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+   The Join Assistant will not validate the uniqueness using the DAR/DAC
+   mechanism, but will otherwise process the NS as per normal:
+   populating neighbor cache entries.  The Join Assistant will take
+   extra care with expiring neighbor cache entries: unsecured NS should
+   never push secured NCE entries out of the cache or overwrite them.
+   There are two equivalent ways to do this:
+
+   1.  marking the origin of the NCE and limiting unsecured ones to some
+       portion of the entries;
+
+   2.  by considering unsecured NS to be arriving from a different
+       virtual interface (different if_index) than secured ones.  NCEs
+       from different interfaces SHOULD already not be mixed.
+
+   The pledge SHOULD NOT have configured a short Layer-2 address as it
+   has no way to allocate a non-duplicate short address.  It SHOULD have
+   formed a standard 64-bit layer-3 link-local address using a built-in
+   IID.  This IID MUST be placed into the Address Resolution option
+   (ARO) option in the Neighbor Soliciation, as it serves as the index
+   by which the domain registrar will use to identify the device.
+
+   The IID MAY be related to the layer-2 address, but privacy
+   considerations recommend that the IID SHOULD instead be a form a
+   stable privacy address [RFC7217].  Whichever method is used MUST be
+   decided at manufacturing time, as the IID is also repeated as the
+   SerialNumber in the Manufacturer Installed Certificate (MIC), also
+   referred to as the 802.1AR IDevID.
+
+2.2.4.  (3) Join Assistant sends Query to Registar
+
+   This step does not involve the pledge, and it is described in section
+   (#jastates).
+
+2.2.5.  (4) Join Assistant receives Acceptance response from Registrar
+
+   This step does not involve the pledge, and it is described in section
+   (#jastates).
+
+2.2.6.  (5) Pledge receives (unicast) Neighbor Advertisement from join
+        assistant
+
+   This NA message is again identical to the Duplicate Address Detection
+   mechanism described in [RFC6775].  The status field of the ARO is
+   extended (see (#ianaconsiderations)) to include an additional status
+   value ND_NS_JOIN_DECLINED.
+
+   The pledge, upon receipt of ND_NS_JOIN_DECLINED considers that this
+   network is not an appropriate network to join, and SHOULD move on to
+
+
+
+Richardson               Expires April 22, 2017                 [Page 9]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+   attempt other networks.  The pledge MUST also realize that this NA
+   message MAY have been forced, and it SHOULD attempt joining this
+   network again at a future time, but MUST NOT repeatedly attempt to
+   join the same network.
+
+   The pledge, upon receipt of a Neighbor Cache Full response SHOULD
+   attempt to join using a different join assistant on the same network.
+
+   The pledge, upon receipt of a Duplicate Address response SHOULD
+   attempt to join using a different join assistant on a different
+   network, if it has such offers.  If it has no such offers, it should
+   wait at least NEIGHBOR-CACHE TIMEOUT, and then retry.  This may be a
+   sign of a Denial of Service attack, or it may be a non-malicious mis-
+   configuration.
+
+   Upon receive of a successful NA, the pledge SHOULD consider that it
+   is now in enrolled in a join queue.  The pledge SHOULD resend
+   Neighbor Soliciation (NUD) messages periodically as described in
+   [RFC6775] to maintain the neighbor cache entry.
+
+   A pledge with other Join Assistant offers MAY abandon this Join
+   Assistant after a period of XXX minutes and attempt to join using a
+   different Join Assistant.
+
+2.3.  Join process state machine for pledge
+
+         +----------------+         +----------+
+         |  collecting    |-------->| sleep 1m |
+         |    beacons     |<-----   +~~~~~~~~~~+
+         +----------------+      \______/    ^
+                 |                           |
+                 V                           | no beacons
+         +-----------------+                 | remain
+         |  try next/first |                 |
+         |   beacon/sched  |-----------------/
+         +-----------------+<____________ timeout
+                 |                       \--.<--.
+                 | send NS/DAD <-------.    |   |
+       /-------->|  w/ARO              |    |   |
+       |         |              timeout|    |   |
+       |         V           retries<3 |    |   |
+       | +-----------------+           |    |   |
+       | |  waiting for    |           |    |   |
+       | |   NA w/ARO      |----------->---->   |
+       | +-----------------+   or invalid NA    |
+       |         |                              |
+       |         |                              |
+       |         |                              |
+
+
+
+Richardson               Expires April 22, 2017                [Page 10]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+       |         V                              |
+       | +-----------------+   DTLS failure     |
+       | |  open DTLS 6p   |--------------------/
+       | |  for system     |                    ^
+       | |   keychain      |<--------\          |
+       | +-----------------+         |          |
+       |         |                   | conclude |
+       |         |         kill DTLS |  not net |
+       |         |         try again |  looking |
+       |         |         retries<3 |      for |
+       |         V                   |          |
+       | +-----------------+         |          |
+       | | validate audit  |---------/----------/
+       | |token posted to  |  does not validate
+       | | proper URL      |
+       | +-----------------+
+       |         |
+       |too long | validate
+       |try      |  audit
+       |again    |  token
+       |         V
+       | +-----------------+
+       \-| accept 6p trans-|
+         | actions for new |
+         | certificate     |
+         +-----------------+
+                 |
+                 | receive new certificate,
+                 V  restart with beacon
+                 X  run appropriate KMP
+
+2.4.  Description of Join Assistant States in Join Process
+
+   The Join Assistant is a standard 6LR.  It processes packets as
+   described in [RFC6775], [I-D.ietf-6tisch-minimal] from secured
+   (encrypted) sources.
+
+   In particular the maintenance of Neighbor Cache Entries as described
+   in [RFC6775] section 3.5.  The Join Assistant maintains two sets of
+   NCE for each physical interface that it has: one set is for secured
+   neighbors, and the other is for new pledges that wish to join.  The
+   storage allocated for pledges will generally be a small fraction of
+   available space.  The Join Assistant will garbage collect the
+   different caches according to different thresholds.  It MAY chose to
+   free space from the insecure cache to make space for additional
+   secure entries, but it MUST NOT do the opposite.
+
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 11]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+   It sends Enhanced Beacons which are authenticated with the network-
+   wide key ("K2"), but it does not encrypt the Beacons.
+
+   In addition, it listen for packets "encrypted" with the well-known
+   "K1" key, and when it receives them, it considers them to be as
+   "Insecure Packets".  It MAY also accept unencrypted, unauthenticated
+   packets as being "Insecure Packets"
+
+   Non-Join Assistant 6LRs would never accept K1 packets, nor
+   unauthenticated packets.  Normal 6LRs and hosts MUST accept
+   unencrypted Enhanced Beacons which can be authenticated with the "K2"
+   key.
+
+   In addition to seperating the secured and insecured packets for
+   inbound processing, the Join Assistant also allocates a unique IID
+   for the insecured interface.  This IID is used to configure the Link
+   Local address on that virtual interface.
+
+   In addition, this IID is combined with the global prefix(es) (as
+   found in various PIO(s) from the routing protocols).  This additional
+   address is configured as an alias on the loopback interface such that
+   the Join Assistant can receive packets to this address via secured
+   network.  This activity SHOULD generate a routing protocol update
+   (such as an updated DAO).  This IID SHOULD be generated using a
+   stable privacy address mechanism as described in [RFC7217].  The
+   easiest is to assign the insecure virtual interface a unique
+   if_index.
+
+2.4.1.  Processing of Insecure Packets
+
+   Only the following insecure packets are to be accepted by the Join
+   Assistant:
+
+   1.  Unicast Neighbor Solicitations.
+
+   2.  Unicast Link-Local UDP packets with a destination port that map
+       to the Join Assistant's IPIP proxy.
+
+2.4.1.1.  Processing of Insecure Neighbor Solicitation packets
+
+   Upon receipt of an insecure unicast NS with an ARO option, the Join
+   Assistant looks up an NCE by the IID contained in the ARO in the
+   insecure cache.  If it finds an existing there are three
+   possibilities:
+
+   1.  a lookup for this entry has previously been completed, and has
+       resulted in a negative result.  In this case, a negative
+       ND_NS_JOIN_DECLINED NA is returned.  The Join Assistant SHOULD
+
+
+
+Richardson               Expires April 22, 2017                [Page 12]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+       rate limit the number of these messages that it is willing to
+       return.
+
+   2.  a lookup for this entry has previously been done, and has
+       resulted in a positive result.  The NCE entry should be
+       "refresh", to keep it in the cache for a longer period of time,
+       and a new NA returned with a positive status.
+
+   3.  a lookup for this entry has previously been started, but no
+       result has been received.  In this case the Join Assistant SHOULD
+       remain silent.  The Join Assistant may wish to send a GRASP
+       M_NOOP message to verify that the connection is still useable if
+       it has not receive any traffic in some time.
+
+   If it does not find an existing entry, and there is space for another
+   entry, (or it can make space via garbage collection), then a new
+   entry is created, marked to be "in progress", and a new GRASP 6JOIN
+   query is initiated, see section (#6joingrasp).
+
+3.  Join Assistant to Registrar protocol
+
+   There are three aspects to the protocols that the Join Assistant uses
+   to communicate about its needs.  They are:
+
+   1.  Discovery of Registrar
+
+   2.  Notification of new pledge to Registrar
+
+   3.  Passing of traffic from Pledge to Registar
+
+4.  Privacy Considerations
 
    [I-D.ietf-6lo-privacy-considerations] details a number of privacy
    considerations important in Resource Constrained nodes.  There are
@@ -363,14 +713,23 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    pledges, which have yet to enroll, and which are on a join network.
    3. the production nodes which are also acting as proxy nodes.
 
-2.1.  Privacy Considerations for Production network
+4.1.  Privacy Considerations for Production network
 
    The details of this are out of scope for this document.
 
-2.2.  Privacy Considerations for New Pledges
+4.2.  Privacy Considerations for New Pledges
 
    New Pledges do not yet receive Router Advertisements with PIO
    options, and so configure link-local addresses only based upon
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 13]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
    layer-2 addresses using the normal SLAAC mechanisms described in
    [RFC4191].
 
@@ -386,14 +745,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    The join process described herein requires that some identifier
    meaningful to the network operator be communicated to the JCE via the
    Neighbor Advertisement's ARO option.  This need not be a manufacturer
-
-
-
-Richardson               Expires March 24, 2017                 [Page 7]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
    created EUI-64 as assigned by IEEE; it could be another value with
    higher entropy and less interesting vendor/device information.
    Regardless of what is chosen, it can be used to track where the
@@ -416,7 +767,7 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    significant advantage to the operator being able to see what the
    vendor of the new device is.
 
-2.2.1.  EUI-64 derived address for join time IID
+4.2.1.  EUI-64 derived address for join time IID
 
    It is therefore suggested that the IID used in the link-local address
    used during the join process be a vendor assigned EUI-64.  After the
@@ -425,30 +776,36 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
    based upon the vendor EUI-64) for use at link-layer.  At that point,
    all layer-3 content is encrypted by the layer-2 key.
 
-2.3.  Privacy Considerations for Join Assistant
 
-3.  Security Considerations
 
-4.  IANA Considerations
 
-5.  Protocol Definition
 
-6.  References
 
-6.1.  Normative References
+Richardson               Expires April 22, 2017                [Page 14]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+4.3.  Privacy Considerations for Join Assistant
+
+5.  Security Considerations
+
+6.  IANA Considerations
+
+   This document allocates one value from the subregistry "Address
+   Registration Option Status Values": ND_NS_JOIN_DECLINED Join
+   Assistant, JOIN DECLINED (TBD-AA)
+
+7.  Protocol Definition
+
+8.  References
+
+8.1.  Normative References
 
    [cullenCiscoPhoneDeploy]
               Jennings, C., "Transitive Trust Enrollment for Constrained
               Devices", 2012, <http://www.lix.polytechnique.fr/hipercom/
               SmartObjectSecurity/papers/CullenJennings.pdf>.
-
-
-
-
-Richardson               Expires March 24, 2017                 [Page 8]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
 
    [I-D.ietf-6lo-privacy-considerations]
               Thaler, D., "Privacy Considerations for IPv6 over Networks
@@ -470,6 +827,20 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
               Watsen, K. and M. Abrahamsson, "Zero Touch Provisioning
               for NETCONF or RESTCONF based Management", draft-ietf-
               netconf-zerotouch-09 (work in progress), July 2016.
+
+   [I-D.richardson-6lo-ra-in-ie]
+              Richardson, M., "802.15.4 Informational Element
+              encapsulation of ICMPv6 Router Advertisements", draft-
+              richardson-6lo-ra-in-ie-00 (work in progress), October
+              2016.
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 15]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
 
    [iec62591]
               IEC, ., "62591:2016 Industrial networks - Wireless
@@ -495,28 +866,39 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
               <http://standards.ieee.org/findstds/
               standard/802.15.9-2016.html>.
 
-
-
-
-
-
-
-Richardson               Expires March 24, 2017                 [Page 9]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC6775]  Shelby, Z., Ed., Chakrabarti, S., Nordmark, E., and C.
+              Bormann, "Neighbor Discovery Optimization for IPv6 over
+              Low-Power Wireless Personal Area Networks (6LoWPANs)",
+              RFC 6775, DOI 10.17487/RFC6775, November 2012,
+              <http://www.rfc-editor.org/info/rfc6775>.
+
+   [RFC7217]  Gont, F., "A Method for Generating Semantically Opaque
+              Interface Identifiers with IPv6 Stateless Address
+              Autoconfiguration (SLAAC)", RFC 7217,
+              DOI 10.17487/RFC7217, April 2014,
+              <http://www.rfc-editor.org/info/rfc7217>.
 
    [RFC7228]  Bormann, C., Ersue, M., and A. Keranen, "Terminology for
               Constrained-Node Networks", RFC 7228,
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
 
-6.2.  Informative References
+
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 16]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+8.2.  Informative References
 
    [duckling]
               Stajano, F. and R. Anderson, "The resurrecting duckling:
@@ -552,16 +934,6 @@ Internet-Draft         6tisch Secure Join protocol        September 2016
               DOI 10.17487/RFC7554, May 2015,
               <http://www.rfc-editor.org/info/rfc7554>.
 
-
-
-
-
-
-Richardson               Expires March 24, 2017                [Page 10]
-
-Internet-Draft         6tisch Secure Join protocol        September 2016
-
-
 Appendix A.  appendix
 
    insert appendix here
@@ -577,40 +949,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson               Expires March 24, 2017                [Page 11]
+Richardson               Expires April 22, 2017                [Page 17]
