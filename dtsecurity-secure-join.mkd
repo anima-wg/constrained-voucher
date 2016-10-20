@@ -34,6 +34,8 @@ normative:
   RFC7228:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-6tisch-minimal:
+  I-D.ietf-anima-grasp:
+  I-D.richardson-anima-6join-discovery:
   iec62591:
     target: "https://webstore.iec.ch/publication/24433"
     title: "62591:2016 Industrial networks - Wireless communication network and communication profiles - WirelessHART"
@@ -74,7 +76,8 @@ informative:
   RFC4655:
   RFC7554:
   RFC4191:
-  I-D.ietf-roll-useofrpi:
+  RFC7731:
+  I-D.ietf-roll-useofrplinfo:
   I-D.ietf-ace-actors:
   PFS:
     title: "Forward Secrecy"
@@ -649,7 +652,7 @@ above, and knows the Link Local of the pledge from the IID in the objective mess
 
 The Join Assistant, upon receipt of the IPIP traffic from the Registar on
 it's PTEPA, then decapsulates it and forwards it on the appropriate.  (This is
-identical code to decapsulation of IPIP headers as specified in {{I-D.ietf-roll-useofrpi}}.
+identical code to decapsulation of IPIP headers as specified in {{I-D.ietf-roll-useofrplinfo}}.
 
 The Join Assistant, upon receiving traffic from the pledge to the IJALL, it
 encapsulates it into an IPIP header, setting the source of this outer header

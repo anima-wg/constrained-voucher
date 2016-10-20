@@ -88,22 +88,22 @@ Table of Contents
      2.4.  Description of Join Assistant States in Join Process  . .  11
        2.4.1.  Processing of Insecure Packets  . . . . . . . . . . .  12
    3.  Join Assistant to Registrar protocol  . . . . . . . . . . . .  13
-   4.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  13
-     4.1.  Privacy Considerations for Production network . . . . . .  13
-     4.2.  Privacy Considerations for New Pledges  . . . . . . . . .  13
-       4.2.1.  EUI-64 derived address for join time IID  . . . . . .  14
-     4.3.  Privacy Considerations for Join Assistant . . . . . . . .  15
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
-   7.  Protocol Definition . . . . . . . . . . . . . . . . . . . . .  15
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  17
-   Appendix A.  appendix . . . . . . . . . . . . . . . . . . . . . .  17
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  17
-
-
-
+     3.1.  Discovery of Registrar  . . . . . . . . . . . . . . . . .  13
+     3.2.  Notification of a new pledge to Registar  . . . . . . . .  14
+     3.3.  Passing of traffic from Pledge to Registar  . . . . . . .  14
+   4.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  15
+     4.1.  Privacy Considerations for Production network . . . . . .  15
+     4.2.  Privacy Considerations for New Pledges  . . . . . . . . .  15
+       4.2.1.  EUI-64 derived address for join time IID  . . . . . .  16
+     4.3.  Privacy Considerations for Join Assistant . . . . . . . .  16
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
+   7.  Protocol Definition . . . . . . . . . . . . . . . . . . . . .  17
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  17
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  19
+   Appendix A.  appendix . . . . . . . . . . . . . . . . . . . . . .  20
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  20
 
 
 
@@ -634,7 +634,8 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
    In addition to seperating the secured and insecured packets for
    inbound processing, the Join Assistant also allocates a unique IID
    for the insecured interface.  This IID is used to configure the Link
-   Local address on that virtual interface.
+   Local address on that virtual interface.  This Link Local address is
+   called the Insecure Join Assistant Link Local, or IJALL.
 
    In addition, this IID is combined with the global prefix(es) (as
    found in various PIO(s) from the routing protocols).  This additional
@@ -644,7 +645,8 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
    (such as an updated DAO).  This IID SHOULD be generated using a
    stable privacy address mechanism as described in [RFC7217].  The
    easiest is to assign the insecure virtual interface a unique
-   if_index.
+   if_index.  This new address is called the Pledge Tunnel End Point
+   Address, or PTEPA.
 
 2.4.1.  Processing of Insecure Packets
 
@@ -663,9 +665,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
    insecure cache.  If it finds an existing there are three
    possibilities:
 
-   1.  a lookup for this entry has previously been completed, and has
-       resulted in a negative result.  In this case, a negative
-       ND_NS_JOIN_DECLINED NA is returned.  The Join Assistant SHOULD
+
 
 
 
@@ -674,6 +674,9 @@ Richardson               Expires April 22, 2017                [Page 12]
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
+   1.  a lookup for this entry has previously been completed, and has
+       resulted in a negative result.  In this case, a negative
+       ND_NS_JOIN_DECLINED NA is returned.  The Join Assistant SHOULD
        rate limit the number of these messages that it is willing to
        return.
 
@@ -704,6 +707,113 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
    3.  Passing of traffic from Pledge to Registar
 
+3.1.  Discovery of Registrar
+
+   The address of the registrar MAY be determined by other protocols,
+   such as DHCP, RA or RPL extensions, or provisioned into the Join
+   Assistant via other configuration protocol such as 6p.
+
+   In order to support fully autonomic operations, the Join Assistant
+   MAY use a GRASP discovery ([I-D.ietf-anima-grasp]) to find the
+   address of the Registrar.  [I-D.richardson-anima-6join-discovery]
+   describes the details of the process.
+
+   In 6tisch networks multicast is not always available, requiring
+   additional protocol [RFC7731] effort.  Instead of doing a multicast
+   GRASP discovery, the Join Assistant SHOULD instead to a TCP connect
+   to the GRASP_LISTEN_PORT on the IP address of the DODAG root (when
+
+
+
+Richardson               Expires April 22, 2017                [Page 13]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+   RPL is used as the routing protocol for 6tisch), or the ABRO address
+   when another protocol is used.  The Join Assistant should then issue
+   the appropriate M_DISCOVERY method using the 6JOIN objective.  The
+   GRASP discovery will then reply using the same TCP connection as per
+   Unicast Discovery in [I-D.ietf-anima-grasp] section TBD.
+
+3.2.  Notification of a new pledge to Registar
+
+   As illustrated in (#joindiagram), when the Join Assistant receives a
+   Neighbor Solication from a pledge, it must notify the Registar of the
+   pledge, indicating to it how to reach the new pledge.  The Registrar
+   will respond with a positive acknowledgement if the Registrar is
+   willing/able to accept the pledge.  The Registrar will respond with a
+   negative acknowledgement if the provided pledge identity (the IID in
+   the ARO) is not one that the Registrar recognizes as belonging to
+   this network.
+
+   The Registrar runs an ASA which is called the 6JOIN ASA (which can be
+   discovered above).  This query/response is done using GRASP with the
+   discovered ASA process.
+
+   The query process is described in CDDL as:
+
+request-6join-query = [M_REQ_NEG, session-id, "6JOIN", [IID, "6p-ipip"]]
+IID = bytes .size 8
+
+   The response from the Registrar is describe as:
+
+   response-6join-query = [M_END, session-id, [O_ACCEPT]]
+
+   or for a negative response:
+
+   response-6join-query = [M_END, session-id, [O_DECLINE]]
+
+   for the 6p-ipip, the Registrar will need to know where to send the
+   IPIP packets to.  The Join Assistant will initiate the TCP connection
+   to the Registrar's ASA using the IPv6 address associated with the
+   insecure interface on which the pledge is located, i.e. using the
+   PTEPA.
+
+3.3.  Passing of traffic from Pledge to Registar
+
+   When the Registrar is ready to initiate the pledge into the domain,
+   the Registrar will reach out to the pledge using a secure CoAP
+   protocol (6p).  The security is provided using DTLS or EDHOC.  As the
+   pledge has only a link-local address, and the Registrar is not co-
+   located on the same layer-2 as the pledge, the traffic must be
+   relayed through the Join Assistant.
+
+
+
+Richardson               Expires April 22, 2017                [Page 14]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
+   To do this the Registrar needs to configure a Link Local address on a
+   virtual inteface which is the same as the PTEPA derived address.
+
+   The Registrar then sends it's traffic (UDP packets with CoAPS
+   inside), inside of an IPIP header to the Join Assistant.  The outer
+   IP header is from the Registrar to the PTEPA.  The inner IP is from
+   the link local address configured above, and the destination is the
+   Link Local address of the pledge.
+
+   The Registrar knows the IJALL by taking the IID from the connection
+   address above, and knows the Link Local of the pledge from the IID in
+   the objective message.
+
+   The Join Assistant, upon receipt of the IPIP traffic from the
+   Registar on it's PTEPA, then decapsulates it and forwards it on the
+   appropriate.  (This is identical code to decapsulation of IPIP
+   headers as specified in [I-D.ietf-roll-useofrplinfo].
+
+   The Join Assistant, upon receiving traffic from the pledge to the
+   IJALL, it encapsulates it into an IPIP header, setting the source of
+   this outer header to the PTEPA, and the destination being the
+   Registrar.
+
+   The Join Assistant can do this for as many pledges as the Registrar
+   decides to communicate with, without using any additional per-pledge
+   state other than the obligatory Neighbor Cache Entries needed to
+   translate L3 addresses to L2 addresses.
+
 4.  Privacy Considerations
 
    [I-D.ietf-6lo-privacy-considerations] details a number of privacy
@@ -721,17 +831,16 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
    New Pledges do not yet receive Router Advertisements with PIO
    options, and so configure link-local addresses only based upon
+   layer-2 addresses using the normal SLAAC mechanisms described in
+   [RFC4191].
 
 
 
 
-Richardson               Expires April 22, 2017                [Page 13]
+Richardson               Expires April 22, 2017                [Page 15]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
-
-   layer-2 addresses using the normal SLAAC mechanisms described in
-   [RFC4191].
 
    These link-local addresses are visible to any on-link eavesdropper
    (who is synchronized to the same Join Assistant), so regardless of
@@ -776,17 +885,18 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
    based upon the vendor EUI-64) for use at link-layer.  At that point,
    all layer-3 content is encrypted by the layer-2 key.
 
+4.3.  Privacy Considerations for Join Assistant
 
 
 
 
 
-Richardson               Expires April 22, 2017                [Page 14]
+
+
+Richardson               Expires April 22, 2017                [Page 16]
 
 Internet-Draft         6tisch Secure Join protocol          October 2016
 
-
-4.3.  Privacy Considerations for Join Assistant
 
 5.  Security Considerations
 
@@ -823,10 +933,26 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               Infrastructures (BRSKI)", draft-ietf-anima-bootstrapping-
               keyinfra-03 (work in progress), June 2016.
 
+   [I-D.ietf-anima-grasp]
+              Bormann, C., Carpenter, B., and B. Liu, "A Generic
+              Autonomic Signaling Protocol (GRASP)", draft-ietf-anima-
+              grasp-07 (work in progress), September 2016.
+
    [I-D.ietf-netconf-zerotouch]
               Watsen, K. and M. Abrahamsson, "Zero Touch Provisioning
               for NETCONF or RESTCONF based Management", draft-ietf-
               netconf-zerotouch-09 (work in progress), July 2016.
+
+
+
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 17]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
 
    [I-D.richardson-6lo-ra-in-ie]
               Richardson, M., "802.15.4 Informational Element
@@ -834,13 +960,10 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               richardson-6lo-ra-in-ie-00 (work in progress), October
               2016.
 
-
-
-
-Richardson               Expires April 22, 2017                [Page 15]
-
-Internet-Draft         6tisch Secure Join protocol          October 2016
-
+   [I-D.richardson-anima-6join-discovery]
+              Richardson, M., "6tisch Secure Join protocol", draft-
+              richardson-anima-6join-discovery-00 (work in progress),
+              September 2016.
 
    [iec62591]
               IEC, ., "62591:2016 Industrial networks - Wireless
@@ -877,6 +1000,16 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               RFC 6775, DOI 10.17487/RFC6775, November 2012,
               <http://www.rfc-editor.org/info/rfc6775>.
 
+
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 18]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
    [RFC7217]  Gont, F., "A Method for Generating Semantically Opaque
               Interface Identifiers with IPv6 Stateless Address
               Autoconfiguration (SLAAC)", RFC 7217,
@@ -887,16 +1020,6 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               Constrained-Node Networks", RFC 7228,
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
-
-
-
-
-
-
-Richardson               Expires April 22, 2017                [Page 16]
-
-Internet-Draft         6tisch Secure Join protocol          October 2016
-
 
 8.2.  Informative References
 
@@ -911,6 +1034,11 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               architecture for authorization in constrained
               environments", draft-ietf-ace-actors-04 (work in
               progress), September 2016.
+
+   [I-D.ietf-roll-useofrplinfo]
+              Robles, I., Richardson, M., and P. Thubert, "When to use
+              RFC 6553, 6554 and IPv6-in-IPv6", draft-ietf-roll-
+              useofrplinfo-08 (work in progress), September 2016.
 
    [PFS]      Wikipedia, ., "Forward Secrecy", August 2016,
               <https://en.wikipedia.org/w/
@@ -928,11 +1056,25 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               DOI 10.17487/RFC4655, August 2006,
               <http://www.rfc-editor.org/info/rfc4655>.
 
+
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 19]
+
+Internet-Draft         6tisch Secure Join protocol          October 2016
+
+
    [RFC7554]  Watteyne, T., Ed., Palattella, M., and L. Grieco, "Using
               IEEE 802.15.4e Time-Slotted Channel Hopping (TSCH) in the
               Internet of Things (IoT): Problem Statement", RFC 7554,
               DOI 10.17487/RFC7554, May 2015,
               <http://www.rfc-editor.org/info/rfc7554>.
+
+   [RFC7731]  Hui, J. and R. Kelsey, "Multicast Protocol for Low-Power
+              and Lossy Networks (MPL)", RFC 7731, DOI 10.17487/RFC7731,
+              February 2016, <http://www.rfc-editor.org/info/rfc7731>.
 
 Appendix A.  appendix
 
@@ -949,4 +1091,30 @@ Author's Address
 
 
 
-Richardson               Expires April 22, 2017                [Page 17]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson               Expires April 22, 2017                [Page 20]
