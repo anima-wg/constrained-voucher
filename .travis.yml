@@ -1,3 +1,5 @@
+dist: trusty
+
 python:
   - "2.7"
 
