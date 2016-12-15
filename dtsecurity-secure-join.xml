@@ -8,10 +8,17 @@
 <!ENTITY RFC7228 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7228.xml">
 <!ENTITY I-D.ietf-anima-bootstrapping-keyinfra SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-bootstrapping-keyinfra.xml">
 <!ENTITY I-D.ietf-6tisch-minimal SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6tisch-minimal.xml">
+<!ENTITY I-D.ietf-anima-grasp SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-anima-grasp.xml">
+<!ENTITY I-D.richardson-anima-6join-discovery SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.richardson-anima-6join-discovery.xml">
+<!ENTITY RFC7217 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7217.xml">
+<!ENTITY I-D.richardson-6lo-ra-in-ie SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.richardson-6lo-ra-in-ie.xml">
+<!ENTITY RFC6775 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6775.xml">
 <!ENTITY I-D.ietf-netconf-zerotouch SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-netconf-zerotouch.xml">
 <!ENTITY RFC4655 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4655.xml">
 <!ENTITY RFC7554 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7554.xml">
 <!ENTITY RFC4191 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4191.xml">
+<!ENTITY RFC7731 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7731.xml">
+<!ENTITY I-D.ietf-roll-useofrplinfo SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-roll-useofrplinfo.xml">
 <!ENTITY I-D.ietf-ace-actors SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ace-actors.xml">
 ]>
 
@@ -19,7 +26,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-richardson-6tisch-dtsecurity-secure-join-01" category="info">
+<rfc ipr="trust200902" docName="draft-ietf-6tisch-dtsecurity-secure-join-00" category="info">
 
   <front>
     <title>6tisch Secure Join protocol</title>
@@ -31,7 +38,7 @@
       </address>
     </author>
 
-    <date year="2016" month="September" day="27"/>
+    <date year="2016" month="December" day="15"/>
 
     <area>Internet</area>
     <workgroup>6tisch Working Group</workgroup>
@@ -256,17 +263,384 @@ the key changing process will find itself no longer connected.</t>
 <section anchor="target-end-state-for-join-process" title="Target end-state for join process">
 
 </section>
-<section anchor="diagram-of-join-process" title="Diagram of Join Process">
+</section>
+<section anchor="join-protocol" title="Join Protocol">
+
+<t>This section describes the interaction between a new pledge and the Join
+Assistant.</t>
+
+<section anchor="joindiagram" title="Diagram of Join Process">
 
 <t>This time sequence diagram intentionally shows additional layer-2 and layer-3
 interactions, in order to put the entire process into context.</t>
 
-<t><list style="numbers">
-  <t>extended beacon</t>
-</list></t>
+<figure><artwork><![CDATA[
+PLEDGE(JN)       JOIN ASSISTANT(JA)        JCE
+    <--------------- BEACON-L2                   (1)
+    <-------RA ------                            (1B)
+    ---- NS w/ARO --->                           (2)
+                           ------- QUERY---->    (3)
+                           <------ REPLY-----    (4)
+    <--- NA answer----                           (5)
+
+                some time later
+    <-----coaps--------<=======IPIP-COAPS====    (6)
+                multiple trips
+    ------------------->====================>    (7)
+]]></artwork></figure>
 
 </section>
-<section anchor="description-of-states-in-join-process" title="Description of States in Join Process">
+<section anchor="description-of-pledge-states-in-join-process" title="Description of Pledge States in Join Process">
+
+<section anchor="layer-2-enhanced-beacon" title="(1) Layer-2 Enhanced Beacon">
+
+<t>A new pledge must listen for a beacon for a period of at least 2s (HELP) on
+each of the 16 possible channels.  The pledge SHOULD collect all beacons from
+heard on all channels before selecting
+a beacon to start with.   If the pledge is unable to record all of the beacons that it
+hears due to limitations on volatile storage, then it should at least attempt to record
+the detail as to how to find that beacon again (channel, time sequence).</t>
+
+<t>This search process entails having the pledge keep the receiver portion of it's
+radio active for the entire period of time.</t>
+
+<t>The selection of which beacon to start with is outside the scope of this document.
+Implementers SHOULD make use of information such as: whether the L2 address of the
+Beacon has been tried before, whether a Router Advertisement IE is present,
+any Network Identifier <xref target="I-D.richardson-6lo-ra-in-ie"/> seen, and the strength of the signal.</t>
+
+<t>Once a candidate network has been selected, the pledge can transition into a low-power duty
+cycle, waking only when the provided schedule indicates ALOHA slots which the pledge
+may use for the join process.</t>
+
+</section>
+<section anchor="b-layer-3-router-advertisement" title="(1B) Layer-3 Router Advertisement">
+
+<t>If <xref target="I-D.richardson-6lo-ra-in-ie"/> has not been used to embed a router advertisement
+in the Enhanced Beacon, then the pledge MUST wait to hear a Router Advertisement to know
+the layer-3 address of the adjacent router.  These will be broadcast periodically during
+the ALOHA slot.</t>
+
+<t>A pledge MAY timeout and send a layer-2 unicast Router Solicitation (to the layer-2 of the
+Enhanced Beacon) to the layer-3 all-routers address.  A pledge MAY also take this timeout to
+mean that this router is unwilling to perform Join Assistant activities and the pledge should
+move on to another Enhanced Beacon.</t>
+
+</section>
+<section anchor="pledge-sends-unicast-neighbor-solicitation-to-join-assistant" title="(2) Pledge sends (unicast) Neighbor Solicitation to Join Assistant">
+
+<t>This NS message is formed much like a Duplicate Address Detection (DAD) message described in
+<xref target="RFC6775"/> section-4.3: it is a solicitation by the pledge for it's own address.
+<xref target="RFC6775"/> does not describe doing DAD for link-local address however, so this aspect is new.</t>
+
+<t>The Join Assistant will not validate the uniqueness using the DAR/DAC mechanism, but will
+otherwise process the NS as per normal: populating neighbor cache entries.  The Join Assistant
+will take extra care with expiring neighbor cache entries: unsecured NS should never
+push secured NCE entries out of the cache or overwrite them.  There are two equivalent
+ways to do this:</t>
+
+<t><list style="numbers">
+  <t>marking the origin of the NCE and limiting unsecured ones to some portion of the entries;</t>
+  <t>by considering unsecured NS to be arriving from a different virtual interface (different if_index) than secured ones. NCEs from different interfaces SHOULD already not be mixed.</t>
+</list></t>
+
+<t>The pledge SHOULD NOT have configured a short Layer-2 address as it has no way to
+allocate a non-duplicate short address. It SHOULD have
+formed a standard 64-bit layer-3 link-local address using a built-in IID.
+This IID MUST be placed into the Address Resolution option (ARO) option in the
+Neighbor Soliciation, as it serves as the index by which the domain registrar will use
+to identify the device.</t>
+
+<t>The IID MAY be related to the layer-2 address, but privacy considerations recommend that
+the IID SHOULD instead be a form a stable privacy address <xref target="RFC7217"/>.  Whichever method is
+used MUST be decided at manufacturing time, as the IID is also repeated as the SerialNumber
+in the Manufacturer Installed Certificate (MIC), also referred to as the 802.1AR IDevID.</t>
+
+</section>
+<section anchor="join-assistant-sends-query-to-registar" title="(3) Join Assistant sends Query to Registar">
+
+<t>This step does not involve the pledge, and it is described in section (#jastates).</t>
+
+</section>
+<section anchor="join-assistant-receives-acceptance-response-from-registrar" title="(4) Join Assistant receives Acceptance response from Registrar">
+
+<t>This step does not involve the pledge, and it is described in section (#jastates).</t>
+
+</section>
+<section anchor="pledge-receives-unicast-neighbor-advertisement-from-join-assistant" title="(5) Pledge receives (unicast) Neighbor Advertisement from join assistant">
+
+<t>This NA message is again identical to the Duplicate Address Detection mechanism described
+in <xref target="RFC6775"/>.  The status field of the ARO is extended (see (#ianaconsiderations)) to
+include an additional status value ND_NS_JOIN_DECLINED.</t>
+
+<t>The pledge, upon receipt of ND_NS_JOIN_DECLINED considers that this network
+is not an appropriate network to join, and SHOULD move on to attempt other
+networks.  The pledge MUST also realize that this NA message MAY have been
+forced, and it SHOULD attempt joining this network again at a future time,
+but MUST NOT repeatedly attempt to join the same network.</t>
+
+<t>The pledge, upon receipt of a Neighbor Cache Full response SHOULD attempt to
+join using a different join assistant on the same network.</t>
+
+<t>The pledge, upon receipt of a Duplicate Address response SHOULD attempt to
+join using a different join assistant on a different network, if it has such
+offers.  If it has no such offers, it should wait at least NEIGHBOR-CACHE
+TIMEOUT, and then retry.  This may be a sign of a Denial of Service attack,
+or it may be a non-malicious mis-configuration.</t>
+
+<t>Upon receive of a successful NA, the pledge SHOULD consider that it is now in
+enrolled in a join queue.  The pledge SHOULD resend Neighbor Soliciation
+(NUD) messages periodically as described in <xref target="RFC6775"/> to maintain the
+neighbor cache entry.</t>
+
+<t>A pledge with other Join Assistant offers MAY abandon this Join Assistant
+after a period of XXX minutes and attempt to join using a different Join
+Assistant.</t>
+
+</section>
+</section>
+<section anchor="join-process-state-machine-for-pledge" title="Join process state machine for pledge">
+
+<figure><artwork><![CDATA[
+      +----------------+         +----------+
+      |  collecting    |-------->| sleep 1m |
+      |    beacons     |<-----   +~~~~~~~~~~+
+      +----------------+      \______/    ^
+              |                           |
+              V                           | no beacons
+      +-----------------+                 | remain
+      |  try next/first |                 |
+      |   beacon/sched  |-----------------/
+      +-----------------+<____________ timeout
+              |                       \--.<--.
+              | send NS/DAD <-------.    |   |
+    /-------->|  w/ARO              |    |   |
+    |         |              timeout|    |   |
+    |         V           retries<3 |    |   |
+    | +-----------------+           |    |   |
+    | |  waiting for    |           |    |   |
+    | |   NA w/ARO      |----------->---->   |
+    | +-----------------+   or invalid NA    |
+    |         |                              |
+    |         |                              |
+    |         |                              |
+    |         V                              |
+    | +-----------------+   DTLS failure     |
+    | |  open DTLS 6p   |--------------------/
+    | |  for system     |                    ^
+    | |   keychain      |<--------\          |
+    | +-----------------+         |          |
+    |         |                   | conclude |
+    |         |         kill DTLS |  not net |
+    |         |         try again |  looking |
+    |         |         retries<3 |      for |
+    |         V                   |          |
+    | +-----------------+         |          |
+    | | validate audit  |---------/----------/
+    | |token posted to  |  does not validate
+    | | proper URL      |
+    | +-----------------+
+    |         |
+    |too long | validate
+    |try      |  audit
+    |again    |  token
+    |         V
+    | +-----------------+
+    \-| accept 6p trans-|
+      | actions for new |
+      | certificate     |
+      +-----------------+
+              |
+              | receive new certificate,
+              V  restart with beacon
+              X  run appropriate KMP
+]]></artwork></figure>
+
+</section>
+<section anchor="jastates" title="Description of Join Assistant States in Join Process">
+
+<t>The Join Assistant is a standard 6LR.  It processes packets as described in
+<xref target="RFC6775"/>, <xref target="I-D.ietf-6tisch-minimal"/> from secured (encrypted) sources.</t>
+
+<t>In particular the maintenance of Neighbor Cache Entries as described in
+<xref target="RFC6775"/> section 3.5.  The Join Assistant maintains two sets of NCE for each
+physical interface that it has: one set is for secured neighbors, and
+the other is for new pledges that wish to join.  The storage allocated for
+pledges will generally be a small fraction of available space.  The Join
+Assistant will garbage collect the different caches according to different
+thresholds.  It MAY chose to free space from the insecure cache to make space
+for additional secure entries, but it MUST NOT do the opposite.</t>
+
+<t>It sends Enhanced Beacons which are authenticated with the network-wide key
+("K2"), but it does not encrypt the Beacons.</t>
+
+<t>In addition, it listen for packets "encrypted" with the well-known "K1" key,
+and when it receives them, it considers them to be as "Insecure Packets".
+It MAY also accept unencrypted, unauthenticated packets as being "Insecure Packets"</t>
+
+<t>Non-Join Assistant 6LRs would never accept K1 packets, nor unauthenticated
+packets.  Normal 6LRs and hosts MUST accept unencrypted Enhanced Beacons
+which can be authenticated with the "K2" key.</t>
+
+<t>In addition to seperating the secured and insecured packets for inbound
+processing, the Join Assistant also allocates a unique IID for the insecured
+interface.  This IID is used to configure the Link Local address on that
+virtual interface.  This Link Local address is called the Insecure Join
+Assistant Link Local, or IJALL.</t>
+
+<t>In addition, this IID is combined with the global prefix(es) (as found in
+various PIO(s) from the routing protocols).  This additional address is
+configured as an alias on the loopback interface such that the Join Assistant
+can receive packets to this address via secured network.  This activity
+SHOULD generate a routing protocol update (such as an updated DAO).
+This IID SHOULD be generated using a stable privacy address mechanism as
+described in <xref target="RFC7217"/>.  The easiest is to assign the insecure virtual
+interface a unique if_index.  This new address is called the Pledge Tunnel
+End Point Address, or PTEPA.</t>
+
+<section anchor="processing-of-insecure-packets" title="Processing of Insecure Packets">
+
+<t>Only the following insecure packets are to be accepted by the Join Assistant:</t>
+
+<t><list style="numbers">
+  <t>Unicast Neighbor Solicitations.</t>
+  <t>Unicast Link-Local UDP packets with a destination port that map to the
+Join Assistant's IPIP proxy.</t>
+</list></t>
+
+<section anchor="processing-of-insecure-neighbor-solicitation-packets" title="Processing of Insecure Neighbor Solicitation packets">
+
+<t>Upon receipt of an insecure unicast NS with an ARO option, the Join Assistant
+looks up an NCE by the IID contained in the ARO in the insecure cache.  If it
+finds an existing there are three possibilities:</t>
+
+<t><list style="numbers">
+  <t>a lookup for this entry has previously been completed, and has resulted in a
+negative result.  In this case, a negative ND_NS_JOIN_DECLINED NA is
+returned.  The Join Assistant SHOULD rate limit the number of these
+messages that it is willing to return.</t>
+  <t>a lookup for this entry has previously been done, and has resulted in a
+positive result.  The NCE entry should be "refresh", to keep it in the
+cache for a longer period of time, and a new NA returned with a positive
+status.</t>
+  <t>a lookup for this entry has previously been started, but no result has
+been received.  In this case the Join Assistant SHOULD remain silent. The
+Join Assistant may wish to send a GRASP M_NOOP message to verify that the
+connection is still useable if it has not receive any traffic in some
+time.</t>
+</list></t>
+
+<t>If it does not find an existing entry, and there is space for another entry,
+(or it can make space via garbage collection), then a new entry is created,
+marked to be "in progress", and a new GRASP 6JOIN query is initiated, see
+section (#6joingrasp).</t>
+
+</section>
+</section>
+</section>
+</section>
+<section anchor="join-assistant-to-registrar-protocol" title="Join Assistant to Registrar protocol">
+
+<t>There are three aspects to the protocols that the Join Assistant uses to
+communicate about its needs.  They are:</t>
+
+<t><list style="numbers">
+  <t>Discovery of Registrar</t>
+  <t>Notification of new pledge to Registrar</t>
+  <t>Passing of traffic from Pledge to Registar</t>
+</list></t>
+
+<section anchor="discovery-of-registrar" title="Discovery of Registrar">
+
+<t>The address of the registrar MAY be determined by other protocols, such as
+DHCP, RA or RPL extensions, or provisioned into the Join Assistant via other
+configuration protocol such as 6p.</t>
+
+<t>In order to support fully autonomic operations, the Join Assistant MAY use a
+GRASP discovery (<xref target="I-D.ietf-anima-grasp"/>) to find the address of the
+Registrar.  <xref target="I-D.richardson-anima-6join-discovery"/> describes the details of
+the process.</t>
+
+<t>In 6tisch networks multicast is not always available, requiring additional
+protocol <xref target="RFC7731"/> effort.  Instead of doing a multicast GRASP discovery,
+the Join Assistant SHOULD instead to a TCP connect to the GRASP_LISTEN_PORT
+on the IP address of the DODAG root (when RPL is used as the routing protocol
+for 6tisch), or the ABRO address when another protocol is used.  The Join
+Assistant should then issue the appropriate M_DISCOVERY method using the
+6JOIN objective.  The GRASP discovery will then reply using the same TCP
+connection as per Unicast Discovery in <xref target="I-D.ietf-anima-grasp"/> section TBD.</t>
+
+</section>
+<section anchor="notification-of-a-new-pledge-to-registar" title="Notification of a new pledge to Registar">
+
+<t>As illustrated in (#joindiagram), when the Join Assistant receives a Neighbor
+Solication from a pledge, it must notify the Registar of the pledge,
+indicating to it how to reach the new pledge.  The Registrar will respond
+with a positive acknowledgement if the Registrar is willing/able to accept
+the pledge.  The Registrar will respond with a negative acknowledgement if
+the provided pledge identity (the IID in the ARO) is not one that the
+Registrar recognizes as belonging to this network.</t>
+
+<t>The Registrar runs an ASA which is called the 6JOIN ASA (which can be
+discovered above).  This query/response is done using GRASP with the
+discovered ASA process.</t>
+
+<t>The query process is described in CDDL as:</t>
+
+<figure><artwork><![CDATA[
+request-6join-query = [M_REQ_NEG, session-id, "6JOIN", [IID, "6p-ipip"]]
+IID = bytes .size 8
+]]></artwork></figure>
+
+<t>The response from the Registrar is describe as:</t>
+
+<figure><artwork><![CDATA[
+response-6join-query = [M_END, session-id, [O_ACCEPT]]
+]]></artwork></figure>
+
+<t>or for a negative response:</t>
+
+<figure><artwork><![CDATA[
+response-6join-query = [M_END, session-id, [O_DECLINE]]
+]]></artwork></figure>
+
+<t>for the 6p-ipip, the Registrar will need to know where to send the IPIP
+packets to. The Join Assistant will initiate the TCP connection to the
+Registrar's ASA using the IPv6 address associated with the insecure interface
+on which the pledge is located, i.e. using the PTEPA.</t>
+
+</section>
+<section anchor="passing-of-traffic-from-pledge-to-registar" title="Passing of traffic from Pledge to Registar">
+
+<t>When the Registrar is ready to initiate the pledge into the domain, the
+Registrar will reach out to the pledge using a secure CoAP protocol (6p).
+The security is provided using DTLS or EDHOC.  As the pledge has only a
+link-local address, and the Registrar is not co-located on the same layer-2
+as the pledge, the traffic must be relayed through the Join Assistant.</t>
+
+<t>To do this the Registrar needs to configure a Link Local address on a virtual
+inteface which is the same as the PTEPA derived address.</t>
+
+<t>The Registrar then sends it's traffic (UDP packets with CoAPS
+inside), inside of an IPIP header to the Join Assistant.  The outer IP
+header is from the Registrar to the PTEPA.  The inner IP is from the link
+local address configured above, and the destination is the Link Local address
+of the pledge.</t>
+
+<t>The Registrar knows the IJALL by taking the IID from the connection address
+above, and knows the Link Local of the pledge from the IID in the objective message.</t>
+
+<t>The Join Assistant, upon receipt of the IPIP traffic from the Registar on
+it's PTEPA, then decapsulates it and forwards it on the appropriate.  (This is
+identical code to decapsulation of IPIP headers as specified in <xref target="I-D.ietf-roll-useofrplinfo"/>.</t>
+
+<t>The Join Assistant, upon receiving traffic from the pledge to the IJALL, it
+encapsulates it into an IPIP header, setting the source of this outer header
+to the PTEPA, and the destination being the Registrar.</t>
+
+<t>The Join Assistant can do this for as many pledges as the Registrar decides
+to communicate with, without using any additional per-pledge state other than the
+obligatory Neighbor Cache Entries needed to translate L3 addresses to L2 addresses.</t>
 
 </section>
 </section>
@@ -342,6 +716,10 @@ is encrypted by the layer-2 key.</t>
 </section>
 <section anchor="iana-considerations" title="IANA Considerations">
 
+<t>This document allocates one value from the subregistry "Address Registration
+Option Status Values":
+     ND_NS_JOIN_DECLINED  Join Assistant, JOIN DECLINED   (TBD-AA)</t>
+
 </section>
 <section anchor="protocol-definition" title="Protocol Definition">
 
@@ -364,6 +742,8 @@ is encrypted by the layer-2 key.</t>
 &RFC7228;
 &I-D.ietf-anima-bootstrapping-keyinfra;
 &I-D.ietf-6tisch-minimal;
+&I-D.ietf-anima-grasp;
+&I-D.richardson-anima-6join-discovery;
 <reference anchor="iec62591" target="https://webstore.iec.ch/publication/24433">
   <front>
     <title>62591:2016 Industrial networks - Wireless communication network and communication profiles - WirelessHART</title>
@@ -409,6 +789,9 @@ is encrypted by the layer-2 key.</t>
     <date year="2012"/>
   </front>
 </reference>
+&RFC7217;
+&I-D.richardson-6lo-ra-in-ie;
+&RFC6775;
 &I-D.ietf-netconf-zerotouch;
 
 
@@ -419,6 +802,8 @@ is encrypted by the layer-2 key.</t>
 &RFC4655;
 &RFC7554;
 &RFC4191;
+&RFC7731;
+&I-D.ietf-roll-useofrplinfo;
 &I-D.ietf-ace-actors;
 <reference anchor="ISA100" target="http://www.isa100wci.org/Documents/PDF/The-Technology-Behind-ISA100-11a-v-3_pptx">
   <front>
