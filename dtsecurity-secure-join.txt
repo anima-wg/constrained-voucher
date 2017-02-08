@@ -4,12 +4,12 @@
 
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                  Sandelman Software Works
-Intended status: Informational                          October 20, 2016
-Expires: April 23, 2017
+Intended status: Informational                         December 15, 2016
+Expires: June 18, 2017
 
 
                       6tisch Secure Join protocol
-           draft-richardson-6tisch-dtsecurity-secure-join-01
+              draft-ietf-6tisch-dtsecurity-secure-join-00
 
 Abstract
 
@@ -32,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 23, 2017.
+   This Internet-Draft will expire on June 18, 2017.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Richardson               Expires April 23, 2017                 [Page 1]
+Richardson                Expires June 18, 2017                 [Page 1]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
 Table of Contents
@@ -99,19 +99,19 @@ Table of Contents
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
    7.  Protocol Definition . . . . . . . . . . . . . . . . . . . . .  17
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  17
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  19
+   8.  Acknwoledgements  . . . . . . . . . . . . . . . . . . . . . .  17
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  17
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  19
    Appendix A.  appendix . . . . . . . . . . . . . . . . . . . . . .  20
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  20
 
 
 
 
-
-Richardson               Expires April 23, 2017                 [Page 2]
+Richardson                Expires June 18, 2017                 [Page 2]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                 [Page 3]
+Richardson                Expires June 18, 2017                 [Page 3]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    imprint  the process where a device obtains the cryptographic key
@@ -221,9 +221,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                 [Page 4]
+Richardson                Expires June 18, 2017                 [Page 4]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    detailing any of them is out of scope for this document.  But, some
@@ -277,9 +277,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                 [Page 5]
+Richardson                Expires June 18, 2017                 [Page 5]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    feature low bandwidths, and limited opportunities to transmit.  A key
@@ -333,9 +333,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                 [Page 6]
+Richardson                Expires June 18, 2017                 [Page 6]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
 1.3.2.  Join network assumptions
@@ -389,9 +389,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                 [Page 7]
+Richardson                Expires June 18, 2017                 [Page 7]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
 2.2.  Description of Pledge States in Join Process
@@ -445,9 +445,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                 [Page 8]
+Richardson                Expires June 18, 2017                 [Page 8]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    The Join Assistant will not validate the uniqueness using the DAR/DAC
@@ -501,9 +501,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                 [Page 9]
+Richardson                Expires June 18, 2017                 [Page 9]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    attempt other networks.  The pledge MUST also realize that this NA
@@ -557,9 +557,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                [Page 10]
+Richardson                Expires June 18, 2017                [Page 10]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
        |         V                              |
@@ -613,9 +613,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                [Page 11]
+Richardson                Expires June 18, 2017                [Page 11]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    It sends Enhanced Beacons which are authenticated with the network-
@@ -669,9 +669,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                [Page 12]
+Richardson                Expires June 18, 2017                [Page 12]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    1.  a lookup for this entry has previously been completed, and has
@@ -725,9 +725,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                [Page 13]
+Richardson                Expires June 18, 2017                [Page 13]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    RPL is used as the routing protocol for 6tisch), or the ABRO address
@@ -781,9 +781,9 @@ IID = bytes .size 8
 
 
 
-Richardson               Expires April 23, 2017                [Page 14]
+Richardson                Expires June 18, 2017                [Page 14]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    To do this the Registrar needs to configure a Link Local address on a
@@ -837,9 +837,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                [Page 15]
+Richardson                Expires June 18, 2017                [Page 15]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    These link-local addresses are visible to any on-link eavesdropper
@@ -893,9 +893,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                [Page 16]
+Richardson                Expires June 18, 2017                [Page 16]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
 5.  Security Considerations
@@ -908,9 +908,13 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 7.  Protocol Definition
 
-8.  References
+8.  Acknwoledgements
 
-8.1.  Normative References
+   Kristofer Pister helped with many non-IETF references.
+
+9.  References
+
+9.1.  Normative References
 
    [cullenCiscoPhoneDeploy]
               Jennings, C., "Transitive Trust Enrollment for Constrained
@@ -918,40 +922,36 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               SmartObjectSecurity/papers/CullenJennings.pdf>.
 
    [I-D.ietf-6lo-privacy-considerations]
-              Thaler, D., "Privacy Considerations for IPv6 over Networks
-              of Resource-Constrained Nodes", draft-ietf-6lo-privacy-
-              considerations-03 (work in progress), September 2016.
+              Thaler, D., "Privacy Considerations for IPv6 Adaptation
+              Layer Mechanisms", draft-ietf-6lo-privacy-
+              considerations-04 (work in progress), October 2016.
 
    [I-D.ietf-6tisch-minimal]
               Vilajosana, X. and K. Pister, "Minimal 6TiSCH
-              Configuration", draft-ietf-6tisch-minimal-16 (work in
-              progress), June 2016.
+              Configuration", draft-ietf-6tisch-minimal-17 (work in
+              progress), November 2016.
 
    [I-D.ietf-anima-bootstrapping-keyinfra]
-              Pritikin, M., Richardson, M., Behringer, M., and S.
-              Bjarnason, "Bootstrapping Remote Secure Key
+              Pritikin, M., Richardson, M., Behringer, M., Bjarnason,
+              S., and K. Watsen, "Bootstrapping Remote Secure Key
               Infrastructures (BRSKI)", draft-ietf-anima-bootstrapping-
-              keyinfra-03 (work in progress), June 2016.
+              keyinfra-04 (work in progress), October 2016.
 
    [I-D.ietf-anima-grasp]
               Bormann, C., Carpenter, B., and B. Liu, "A Generic
               Autonomic Signaling Protocol (GRASP)", draft-ietf-anima-
-              grasp-07 (work in progress), September 2016.
+              grasp-08 (work in progress), October 2016.
 
    [I-D.ietf-netconf-zerotouch]
               Watsen, K. and M. Abrahamsson, "Zero Touch Provisioning
               for NETCONF or RESTCONF based Management", draft-ietf-
-              netconf-zerotouch-09 (work in progress), July 2016.
+              netconf-zerotouch-11 (work in progress), October 2016.
 
 
 
-
-
-
-
-Richardson               Expires April 23, 2017                [Page 17]
+Richardson                Expires June 18, 2017                [Page 17]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    [I-D.richardson-6lo-ra-in-ie]
@@ -1005,9 +1005,9 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
 
 
 
-Richardson               Expires April 23, 2017                [Page 18]
+Richardson                Expires June 18, 2017                [Page 18]
 
-Internet-Draft         6tisch Secure Join protocol          October 2016
+Internet-Draft         6tisch Secure Join protocol         December 2016
 
 
    [RFC7217]  Gont, F., "A Method for Generating Semantically Opaque
@@ -1021,7 +1021,7 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
 
-8.2.  Informative References
+9.2.  Informative References
 
    [duckling]
               Stajano, F. and R. Anderson, "The resurrecting duckling:
@@ -1038,7 +1038,11 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
    [I-D.ietf-roll-useofrplinfo]
               Robles, I., Richardson, M., and P. Thubert, "When to use
               RFC 6553, 6554 and IPv6-in-IPv6", draft-ietf-roll-
-              useofrplinfo-08 (work in progress), September 2016.
+              useofrplinfo-10 (work in progress), December 2016.
+
+   [ISA100]   "The Technology Behind the ISA100.11a Standard", June
+              2010, <http://www.isa100wci.org/Documents/PDF/
+              The-Technology-Behind-ISA100-11a-v-3_pptx>.
 
    [PFS]      Wikipedia, ., "Forward Secrecy", August 2016,
               <https://en.wikipedia.org/w/
@@ -1051,20 +1055,21 @@ Internet-Draft         6tisch Secure Join protocol          October 2016
               More-Specific Routes", RFC 4191, DOI 10.17487/RFC4191,
               November 2005, <http://www.rfc-editor.org/info/rfc4191>.
 
+
+
+
+
+
+
+Richardson                Expires June 18, 2017                [Page 19]
+
+Internet-Draft         6tisch Secure Join protocol         December 2016
+
+
    [RFC4655]  Farrel, A., Vasseur, J., and J. Ash, "A Path Computation
               Element (PCE)-Based Architecture", RFC 4655,
               DOI 10.17487/RFC4655, August 2006,
               <http://www.rfc-editor.org/info/rfc4655>.
-
-
-
-
-
-
-Richardson               Expires April 23, 2017                [Page 19]
-
-Internet-Draft         6tisch Secure Join protocol          October 2016
-
 
    [RFC7554]  Watteyne, T., Ed., Palattella, M., and L. Grieco, "Using
               IEEE 802.15.4e Time-Slotted Channel Hopping (TSCH) in the
@@ -1112,9 +1117,4 @@ Author's Address
 
 
 
-
-
-
-
-
-Richardson               Expires April 23, 2017                [Page 20]
+Richardson                Expires June 18, 2017                [Page 20]

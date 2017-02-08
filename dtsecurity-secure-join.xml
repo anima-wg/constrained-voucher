@@ -26,7 +26,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-richardson-6tisch-dtsecurity-secure-join-01" category="info">
+<rfc ipr="trust200902" docName="draft-ietf-6tisch-dtsecurity-secure-join-00" category="info">
 
   <front>
     <title>6tisch Secure Join protocol</title>
@@ -38,7 +38,7 @@
       </address>
     </author>
 
-    <date year="2016" month="October" day="20"/>
+    <date year="2016" month="December" day="15"/>
 
     <area>Internet</area>
     <workgroup>6tisch Working Group</workgroup>
@@ -724,6 +724,11 @@ Option Status Values":
 <section anchor="protocol-definition" title="Protocol Definition">
 
 </section>
+<section anchor="acknwoledgements" title="Acknwoledgements">
+
+<t>Kristofer Pister helped with many non-IETF references.</t>
+
+</section>
 
 
   </middle>
@@ -800,6 +805,15 @@ Option Status Values":
 &RFC7731;
 &I-D.ietf-roll-useofrplinfo;
 &I-D.ietf-ace-actors;
+<reference anchor="ISA100" target="http://www.isa100wci.org/Documents/PDF/The-Technology-Behind-ISA100-11a-v-3_pptx">
+  <front>
+    <title>The Technology Behind the ISA100.11a Standard</title>
+    <author >
+      <organization></organization>
+    </author>
+    <date year="2010" month="June" day="15"/>
+  </front>
+</reference>
 <reference anchor="PFS" target="https://en.wikipedia.org/w/index.php?title=Forward_secrecy&amp;oldid=731318899">
   <front>
     <title>Forward Secrecy</title>
