@@ -1,9 +1,7 @@
 ---
 title: 6tisch Secure Join protocol
-# abbrev: 6tisch-Secure-Join
+abbrev: 6tisch-secure-join
 docname: draft-ietf-6tisch-dtsecurity-secure-join-01
-
-# stand_alone: true
 
 ipr: trust200902
 area: Internet
@@ -13,9 +11,6 @@ cat: info
 
 coding: us-ascii
 pi:    # can use array (if all yes) or hash here
-#  - toc
-#  - sortrefs
-#  - symrefs
   toc: yes
   sortrefs:   # defaults to yes
   symrefs: yes
@@ -32,10 +27,12 @@ normative:
   RFC2119:
   I-D.ietf-6lo-privacy-considerations:
   RFC7228:
+  RFC7030:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-6tisch-minimal:
   I-D.ietf-anima-grasp:
   I-D.richardson-anima-6join-discovery:
+  I-D.richardson-6tisch-minimal-rekey:
   I-D.ietf-6tisch-minimal-security:
   I-D.ietf-core-object-security:
   I-D.ietf-6tisch-terminology:
@@ -151,12 +148,14 @@ node in a running network, so a device which has received a network-specific "on
 setup, but which is located in another network, and is capable of "zero-touch" operation could
 discovery this fact and operate in other mode.
 
-Many of the zero-touch mechanisms described here are in common
+Many of the components of the zero-touch mechanisms described here are in common
 with {{I-D.ietf-anima-bootstrapping-keyinfra}} and {{!I-D.ietf-netconf-zerotouch}}.
 The on-the-wire pledge to join registrar protocols are different in this protocol from
-those described in ANIMA, but conceptually operate identically.   It is expected that
-the back-end network operator infrastructure would be able to bootstrap ANIMA-type devices
-over ethernet, while also being able bootstrap 6tisch devices over 802.15.4 with few changes.
+those described in ANIMA, but conceptually operate identically.
+The vouchers are identical.
+It is expected that the back-end network operator infrastructure would be
+able to bootstrap ANIMA-type devices over ethernet, while also being able
+bootstrap 6tisch devices over 802.15.4 with few changes.
 
 ## Terminology          {#Terminology}
 
@@ -320,123 +319,114 @@ situation:
 * the network asserts an identity that the pledge does not recognize.
 
 All of these conditions MUST be true.  If any of these are not true, then the pledge has either been
-connected to the wrong network, or it has already been bootstrapped into a different network.
+connected to the wrong network, or it has already been bootstrapped into a
+different network, and it should wait until it finds that network.
+
+The zero-touch process consists of three stages:
+
+1. the key agreement process
+2. the provisional enrollment process
+3. the key distribution process
+
+## Key Agreement process
+
+The key agreement process is identical to {{I-D.ietf-6tisch-minimal-security}}.
+The process uses EDHOC with certificates.
+
+The pledge will have to trust the JRC provisionally, as described
+in {{I-D.ietf-anima-bootstrapping-keyinfra}}, section 3.1.2, and
+in section 4.1.1 of {{RFC7030}}.
+
+The JRC will be able to validate the IDevID of the pledge using the
+manufacturer's CA.
+
+The pledge may not know if it is in a zero-touch or one-touch situation: the
+pledge may be able to verify the JRC based upon trust anchors that were
+installed at manufacturing time.  In that case, the pledge runs the
+simplified one-touch process.
+
+The pledge signals in the EDHOC message_2 if it has accepted the JRC
+certificate.  The JRC will in general, not trust the pledge with the network
+keys until it has provided the pledge with a voucher.  The pledge will notice
+the absence of the provisioning keys.
+
+XXX - there could be some disconnect here.  May need additional signals here.
+
+## Provisional Enrollment process
+
+When the pledge determines that it can not verify the certificate of the JRC
+using built-in trust anchors, then it enters a provisional state.  In this
+state, it keeps the channel created by EDHOC open.
+
+A new EDHOC key derivation is done by the JRC and pledge using a new label,
+"6tisch-provisional".
+
+The pledge runs as a passive CoMI server, leaving the JRC to drive the
+enrollment process.   The JRC can interrogate the pledge in a variety of
+fashions as shown below: the process terminates when the JRC provides
+the pledge with an ownership voucher and the pledge leaves the provisional
+state.
+
+A typical interaction involves the following requests:
+
+~~~~~~~~
+    +-----------+ +----------+ +-----------+ +----------+
+    |           | |          | | Circuit   | | New      |
+    |  Vendor   | | Registrar| |  Proxy    | | Entity   |
+    |  (MASA)   | |          | |           | |          |
+    ++----------+ +--+-------+ +-----------+ +----------+
+     |               |     GET  request voucher       |
+     |               |-------------------------------->
+     |               <----------voucher-token---------|
+     |/requestvoucher|                                |
+     <---------------+                                |
+     +--------------->                                |
+     |/requestlog    |                                |
+     <---------------+                                |
+     +--------------->                                |
+     |               |        POST voucher            |
+     |               |-------------------------------->
+     |               <------------2.05 OK ------------+
+     |               |                                |
+     |               |        POST csr attributes     |
+     |               |-------------------------------->
+     |               <------------2.05 OK ------------+
+     |               |                                |
+     |               |        GET  cert request       |
+     |               |-------------------------------->
+     |     ????      <------------2.05 OK ------------+
+     |<--------------|              CSR               |
+     |-------------->|                                |
+     |               |        POST certificate        |
+     |               |-------------------------------->
+     |               <------------2.05 OK ------------+
+     |               |                                |
+~~~~~~~~
+
+
+
+## Key Distribution Process
+
+The key distribution process utilizes the protocol described
+{{I-D.richardson-6tisch-minimal-rekey}}.  The process starts with the initial
+key, rather than an actual rekey.
+
+This protocol remains active for subsequent rekey operations.
+
+# YANG model for BRSKI objects
+
+{::include ietf-6tisch-brski.yang}
 
 ## Description of Pledge States in Join Process
 
-# Join Assistant to Registrar protocol
+TBD
 
-In smaller one-touch scenarios the pledge may know quickly if it has found the right
-network to join as it can be configured with the network-ID (see {{I-D.richardson-6tisch-join-enhanced-beacon}}) along with the key.
-
-In zero-touch scenarios, there may be a myrid of possible networks to join, and the pledge
-may know which network it should join, and for how long it should wait.  {{I-D.richardson-6tisch-join-enhanced-beacon}} provides for a mechanism where the Join Assistant may indicate to the pledge
-that it should remain silence, and wait to be contacted. ("Don't call us, we'll call you")
-
-As part of the waiting protocol described in {{I-D.ietf-6tisch-minimal-security}} section WAITING,
-the pledge will do a Duplicate Address Detection as described
-in {{RFC6775}}.  The pledge should include an ARO with it's EUI-64.
-The status field of the ARO is extended (see (#ianaconsiderations)) to include an additional
-status value ND_NS_JOIN_DECLINED.   This provides for a way for a non-malicious to either accept
-or deny a new pledge.  This mechanism is not secure, and the pledge SHOULD be suspicious about
-such declarations.
-
-The pledge however, needs to refresh it's address with the Join Proxy, keeping the Neighbor
-Cache on the Join Proxy current.
-
-This section describes an optional protocol that the Join Proxy can use to make a determination
-with the JRC as to eligibility of the new pledge.
-
-XXXX
-
-There are three aspects to the protocols that the Join Proxy uses to
-communicate about its needs.  They are:
-
-1. Discovery of Registrar
-2. Notification of new pledge to Registrar
-3. Passing of traffic from Pledge to Registar
-
-## Discovery of Registrar
-
-The address of the registrar MAY be determined by other protocols, such as
-DHCP, RA or RPL extensions, or provisioned into the Join Assistant via other
-configuration protocol such as 6p.
-
-In order to support fully autonomic operations, the Join Assistant MAY use a
-GRASP discovery ({{I-D.ietf-anima-grasp}}) to find the address of the
-Registrar.  {{I-D.richardson-anima-6join-discovery}} describes the details of
-the process.
-
-XXX - wish to replace this something that does not use TCP.
-
-In 6tisch networks multicast is not always available, requiring additional
-protocol {{RFC7731}} effort.  Instead of doing a multicast GRASP discovery,
-the Join Assistant SHOULD instead to a TCP connect to the GRASP_LISTEN_PORT
-on the IP address of the DODAG root (when RPL is used as the routing protocol
-for 6tisch), or the ABRO address when another protocol is used.  The Join
-Assistant should then issue the appropriate M_DISCOVERY method using the
-6JOIN objective.  The GRASP discovery will then reply using the same TCP
-connection as per Unicast Discovery in {{I-D.ietf-anima-grasp}} section TBD.
-
-## Notification of a new pledge to Registar
-
-As illustrated in (#joindiagram), when the Join Assistant receives a Neighbor
-Solication from a pledge, it must notify the Registar of the pledge,
-indicating to it how to reach the new pledge.  The Registrar will respond
-with a positive acknowledgement if the Registrar is willing/able to accept
-the pledge.  The Registrar will respond with a negative acknowledgement if
-the provided pledge identity (the IID in the ARO) is not one that the
-Registrar recognizes as belonging to this network.
-
-The Registrar runs an ASA which is called the 6JOIN ASA (which can be
-discovered above).  This query/response is done using GRASP with the
-discovered ASA process.
-
-### IPIP Query for Registrar
-
-The query process is described in CDDL as:
-
-    request-6join-query = [M_REQ_NEG, session-id, "6JOIN", [IID, "6p-ipip"]]
-    IID = bytes .size 8
-
-The response from the Registrar is describe as:
-
-    response-6join-query = [M_END, session-id, [O_ACCEPT]]
-
-or for a negative response:
-
-    response-6join-query = [M_END, session-id, [O_DECLINE]]
-
-for the 6p-ipip, the Registrar will need to know where to send the IPIP
-packets to. The Join Assistant will initiate the TCP connection to the
-Registrar's ASA using the IPv6 address associated with the insecure interface
-on which the pledge is located, i.e. using the PTEPA.
-
-### CoAP OSCOAP query for Registrar
-
-The query process is described in CDDL as:
-
-    request-6join-query = [M_REQ_NEG, session-id, "6JOIN", [IID, "6p-coap"]]
-    IID = bytes .size 8
-
-The response from the Registrar is describe as:
-
-    response-6join-query = [M_END, session-id, [O_ACCEPT]]
-
-or for a negative response:
-
-    response-6join-query = [M_END, session-id, [O_DECLINE]]
-
-for the 6p-coap, the Registrar will need to know where to send the IPIP
-packets to. The Join Assistant will initiate the TCP connection to the
-Registrar's ASA using the IPv6 address associated with the insecure interface
-on which the pledge is located, i.e. using the PTEPA.
 
 # Definition of managed objects for zero-touch bootstrap
 
 The following is relevant YANG for use in the bootstrap protocol.
 The objects identified are identical in format to the named objects
-from {{I-D.ietf-anima-bootstrap-keyinfra}}.
+from {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 
 
