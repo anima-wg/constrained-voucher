@@ -47,6 +47,7 @@ normative:
   I-D.ietf-6tisch-terminology:
   I-D.ietf-netconf-keystore:
   I-D.ietf-core-comi:
+  I-D.ietf-ace-cbor-web-token:
   iec62591:
     target: "https://webstore.iec.ch/publication/24433"
     title: "62591:2016 Industrial networks - Wireless communication network and communication profiles - WirelessHART"
@@ -243,15 +244,44 @@ provides a strong connection that the operator of the network is the legitimate 
 
 # Architectural Overview
 
-XXX
+Section 2 of BRSKI has a diagram with all of the components shown together.
+There are no significant changes to the diagram.
+
+The use of a circuit proxy is not mandated. Instead the IPIP mechanism described in appendix C
+("IPIP Join Proxy mechanism") SHOULD be be used instead as it supports both DTLS, EDHOC and OSCOAP mechanisms.
+The CoAP proxy mechanism MAY be implemented instead: the decision depends upon the capabilities of
+the Registrar and the proxy.  A mechanism is included for the Registrar to announce it's capabilities (XXX).
 
 ## Secure Imprinting using Vouchers
 
-XXX
+As in BRSKI, the format and cryptographic mechansim of vouchers is described in detail 
+in {{I-D.ietf-anima-voucher}}.  As described in section YYY, the physical format for vouchers
+in this document differs from that of BRSKI, in that it uses {{I-D.ietf-ace-cbor-web-token}}
+to encode the voucher and to sign it.
 
 ## Initial Device Identifier
 
-XXX
+The essential component of the zero-touch operation is that the pledge is provisioned
+with an 802.1AR (PKIX) certificate installed during the manufacturing process.
+
+It is expected that constrained devices will use a signature algorithm corresponding to the
+hardware acceleration that they have, if they have any.  The anticipated algorithms are
+the ECDSA P-256 (secp256p1) as SHOULD-, while newer devices SHOLD+ begin to appear using 
+EdDSA curves using the 25519 curves. (EDNOTE details here)
+
+There are a number of simplications detailed later on in this document designed to eliminate the
+need for an ASN.1 parser in the pledge.
+
+The pledge should consider it's 802.1AR certificate to be an opaque blob of bytes, to be inserted into
+protocols at appropriate places.  The pledge SHOULD have access to it's public and private keys in
+the most useable native format for computation.
+
+The pledge MUST have the public key of the MASA built in a manufacturer time.  This is a seemingly 
+identical requirement as for BRSKI, but rather than being an abstract trust anchor that can be augmented 
+with a certificate chain, the pledge MUST be provided with the Raw Public Key that the MASA will use to
+sign vouchers for that pledge.
+
+There are a number of security concerns with use of a single MASA signing key, and section {{masaprivatekey}} addresses some of them with some operational suggestions.
 
 ## Protocol Flow
 
@@ -363,7 +393,7 @@ XXX
 
 # Security Considerations
 
-XXX
+## Security of MASA voucher signing key(s) {#masaprivatekey}
 
 # Privacy Considerations
 
