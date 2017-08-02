@@ -283,13 +283,90 @@ sign vouchers for that pledge.
 
 There are a number of security concerns with use of a single MASA signing key, and section {{masaprivatekey}} addresses some of them with some operational suggestions.
 
+BRSKI places some clear requirements upon the contents of the IDevID, but leaves the exact
+origin of the voucher serial-number open.  This document restricts the process to being
+the hwSerialNum OCTET STRING.  As CWT can handle binary formats, no base64 encoding is
+necessary.
+
+The use of the MASA-URL extension is encouraged if the certificate is sent at all.
+
+[[EDNOTE here belongs text about sending only a reference to the IDevID rather than the
+entire certificate]]
+
 ## Protocol Flow
 
-XXX
+The diagram from BRSKI is reproduced with some edits:
+
+       +--------+         +---------+    +------------+     +------------+   
+       | Pledge |         | IPIP    |    | Domain     |     | Vendor     |   
+       |        |         | Proxy   |    | Registrar  |     | Service    |   
+       |        |         |         |    |            |     | (Internet  |   
+       +--------+         +---------+    +------------+     +------------+   
+         |                     |                   |                    |    
+         |<-RFC4862 IPv6 adr   |                   |                    |    
+         |                     |                   |                    |    
+         |<--------------------|                   |                    |    
+         | Enhanced Beacon     |                   |                    |    
+         |   periodic broadcast|                   |                    |    
+         |                     |                   |                    |    
+         |<------------------->C<----------------->|                    |    
+         |             DTLS via the IPIP    Proxy  |                    |    
+         |<--Registrar DTLS server authentication--|                    |    
+       [PROVISIONAL accept of server cert]         |                    |    
+         P---X.509 client authentication---------->|                    |    
+         P                     |                   |                    |    
+         P---Voucher Request (include nonce)------>|                    |    
+         P                     |                   |                    |    
+         P                     |                   |                    |    
+         P                     |              [accept device?]          |    
+         P                     |              [contact Vendor]          |    
+         P                     |                   |--Pledge ID-------->|    
+         P                     |                   |--Domain ID-------->|    
+         P                     |                   |--nonce------------>|    
+         P                     |                   |     [extract DomainID]  
+         P                     |                   |                    |    
+         P                     |                   |     [update audit log]  
+         P                     |                   |                    |    
+         P                     |                   |                    |    
+         P                     |                   |                    |    
+         P                     |                   |                    |    
+         P                     |                   |                    |    
+         P                     |                   |<-device audit log--|    
+         P                     |                   |<- voucher ---------|    
+         P                     |                   |                    |    
+         P                     |                   |                    |    
+         P                     |       [verify audit log and voucher]   |    
+         P                     |                   |                    |    
+         P<------voucher---------------------------|                    |    
+       [verify voucher ]       |                   |                    |    
+       [verify provisional cert|                   |                    |    
+         |                     |                   |                    |    
+         |<--------------------------------------->|                    |    
+         | Continue with RFC7030 enrollment        |                    |    
+         | using now bidirectionally authenticated |                    |    
+         | DTLS session.       |                   |                    |    
+         |                     |                   |                    |    
+         |                     |                   |                    |    
+         |                     |                   |                    |    
+
+Noteable changes are:
+
+1. no IPv4 support/options.
+2. no mDNS steps, 6tisch only uses Enhanced Beacon
+3. nonce-full option is always recommended
 
 ## Lack of realtime clock
 
-XXX
+For the constrained situation it is assumed that devices have no real time clock.
+These nodes do have access to a monotonically increasing clock that will not go backwards
+in the form of the Absolute Sequence Number.   Synchronization to the ASN is required in
+order to transmit/receive data and most nodes will maintain it in hardware.
+
+The heuristic described in BRSKI under this section SHOULD be applied if there
+are dates in the CWT format voucher.
+
+Voucher requests SHOULD include a nonce.  For devices intended for off-line deployment,
+the vouchers will have been generated in advance and no nonce-ful operation will not be possible.
 
 ## Cloud Registrar
 
@@ -702,3 +779,4 @@ Kristofer Pister helped with many non-IETF references.
 
 
 --- fluff
+
