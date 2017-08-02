@@ -1,4 +1,4 @@
-DRAFT:=dtsecurity-secure-join
+DRAFT:=dtsecurity-zerotouch-join
 VERSION:=$(shell ./getver ${DRAFT}.mkd )
 
 ${DRAFT}-${VERSION}.txt: ${DRAFT}.txt
@@ -19,3 +19,4 @@ ${DRAFT}-${VERSION}.txt: ${DRAFT}.txt
 version:
 	echo Version: ${VERSION}
 
+.PRECIOUS: ${DRAFT}.xml

@@ -1,7 +1,9 @@
 ---
-title: 6tisch Secure Join protocol
-abbrev: 6tisch-secure-join
-docname: draft-ietf-6tisch-dtsecurity-secure-join-01
+title: 6tisch Zero-Touch Secure Join protocol
+# abbrev: 6tisch-Secure-Join
+docname: draft-ietf-6tisch-dtsecurity-zerotouch-join-00
+
+# stand_alone: true
 
 ipr: trust200902
 area: Internet
@@ -22,6 +24,12 @@ author:
         org: Sandelman Software Works
         email: mcr+ietf@sandelman.ca
 
+      -
+        ins: B. Damm
+        name: Benjamin Damm
+        org: Silver Spring Networks
+        email: bdamm@ssni.com
+
 
 normative:
   RFC2119:
@@ -31,6 +39,7 @@ normative:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-6tisch-minimal:
   I-D.ietf-anima-grasp:
+  I-D.ietf-6tisch-minimal-security:
   I-D.richardson-anima-6join-discovery:
   I-D.richardson-6tisch-minimal-rekey:
   I-D.ietf-6tisch-minimal-security:
@@ -114,7 +123,6 @@ informative:
         name: Ross Anderson
     date: 1999
 
-#  RFC5389:
 
 --- abstract
 
@@ -126,7 +134,157 @@ describe her is an augmentation to the one-touch mechanism described in {{I-D.ie
 
 --- middle
 
-# Introduction        {#problems}
+# Introduction
+
+XXX
+
+## Other Bootstrapping Approaches
+
+XXX
+
+## Terminology
+
+XXX
+
+## Scope of solution
+
+XXX
+
+# Architectural Overview
+
+XXX
+
+## Secure Imprinting using Vouchers
+
+XXX
+
+## Initial Device Identifier
+
+XXX
+
+## Protocol Flow
+
+XXX
+
+## Lack of realtime clock
+
+XXX
+
+## Cloud Registrar
+
+XXX
+
+# Protocol Details
+
+XXX
+
+## Discovery
+
+XXX
+
+### Proxy Discovery Protocol Details
+
+XXX
+
+### Registrar Discovery Protocol Details
+
+XXX
+
+## Request Voucher from the Registrar
+
+XXX
+
+## Request Voucher from MASA
+
+XXX
+
+## Voucher Response
+
+XXX
+
+### Completing authentication of Provisional TLS connection
+
+XXX
+
+## Voucher Status Telemetry
+
+XXX
+
+## MASA authorization log Request
+
+XXX
+
+### MASA authorization log Response
+
+XXX
+
+## EST Integration for PKI bootstrapping
+
+XXX
+
+### EST Distribution of CA Certificates
+
+XXX
+
+### EST CSR Attributes
+
+XXX
+
+### EST Client Certificate Request
+
+XXX
+
+### Enrollment Status Telemetry
+
+XXX
+
+### EST over CoAP
+
+XXX
+
+# Reduced security operational modes
+
+XXX
+
+## Trust Model
+
+XXX
+
+## Pledge security reductions
+
+XXX
+
+## Registrar security reductions
+
+XXX
+
+## MASA security reductions
+
+XXX
+
+# IANA Considerations
+
+XXX
+
+## MIME-Type Registry
+
+XXX
+
+# Security Considerations
+
+XXX
+
+# Privacy Considerations
+
+XXX
+
+# Acknowledgements
+
+XXX
+
+--- back
+
+# Old Introduction
 
 Enrollment of new nodes into LLNs present unique challenges.
 The constrained nodes has no user interfaces, and even if they did,
@@ -510,10 +668,5 @@ Option Status Values":
 
 Kristofer Pister helped with many non-IETF references.
 
---- back
-
-# appendix
-
-insert appendix here
 
 --- fluff
