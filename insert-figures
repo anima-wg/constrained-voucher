@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+while(<>) {
+    if(/INSERT_TEXT_FROM_FILE (.*) END/) {
+        open(FILE, $1) || die "Can not open $1: $!\n";
+        print "<figure><artwork><![CDATA[\n";
+        while(<FILE>) {
+            print;
+        }
+        close(FILE);
+        print "]]></artwork></figure>\n";
+    } else {
+        print;
+    }
+}
+

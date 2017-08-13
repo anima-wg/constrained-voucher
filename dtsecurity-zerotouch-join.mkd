@@ -50,6 +50,7 @@ normative:
   I-D.ietf-core-comi:
   I-D.ietf-ace-cbor-web-token:
   I-D.vanderstok-ace-coap-est:
+  I-D.ietf-core-yang-cbor:
   iec62591:
     target: "https://webstore.iec.ch/publication/24433"
     title: "62591:2016 Industrial networks - Wireless communication network and communication profiles - WirelessHART"
@@ -174,7 +175,7 @@ Otherwise, this document follows BRSKI with the following high-level changes:
 
 * HTTP is replaced with CoAP.
 * TLS (HTTPS) is replaced with either DTLS+CoAP, or EDHOC/OSCOAP+CoAP
-* the domain-registrar anchor certificate is replaced with a Raw Public Key (RPK)
+* the domain-registrar anchor certificate is replaced with a Raw Public Key (RPK) using {{RFC7250}}.
 * the PKCS7 signed JSON voucher format is replaced with CWT
 * the GRASP discovery mechanism for the Proxy is replaced with an announcement in the Enhanced Beacon {{I-D.richardson-6tisch-join-enhanced-beacon}}
 * the TCP circuit proxy mechanism is not used.  The IPIP mechanism if mandatory to implement when deployed with DTLS, while the CoAP based stateless proxy mechanism is used for OSCOAP/EDHOC.
@@ -428,9 +429,21 @@ DODAG root, which is well known in the 6tisch's use of the RPL protocol.
 ## Pledge Requests Voucher from the Registrar
 
 The voucher request and response as defined by BRSKI is modified slightly.
-In order to
+In order to simplify the pledge, the use of a certificate (and chain) for the Registrar is not
+supported.  Instead the newly defined pinned-domain-subject-public-key-info must contain
+the (raw) public key info for the Registrar.  It MUST be byte for byte identical to that
+which is transmitted by the Registrar during the TLS ServerCertificate handshake.
+
+BRSKI permits the voucher request to be signed or unsigned.  This document defines the
+voucher request to be unsigned.
 
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
+
+This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}} produces the
+following CDDL for an unsigned voucher (request):
+
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher.cddl END
+
 
 ## Registrar Requests Voucher from MASA
 

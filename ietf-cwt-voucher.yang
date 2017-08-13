@@ -44,6 +44,7 @@ module ietf-cwt-voucher {
   }
 
   augment "/v:voucher-artifact" {
+    description "Base the CWT voucher upon the regular one";
     leaf pinned-domain-subject-public-key-info {
       type binary;
       description
