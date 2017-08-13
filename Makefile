@@ -5,8 +5,11 @@ ${DRAFT}-${VERSION}.txt: ${DRAFT}.txt
 	cp ${DRAFT}.txt ${DRAFT}-${VERSION}.txt
 	git add ${DRAFT}-${VERSION}.txt ${DRAFT}.txt
 
-%.xml: %.mkd
-	kramdown-rfc2629 ${DRAFT}.mkd >${DRAFT}.xml
+ietf-cwt-voucher-tree.txt: ietf-cwt-voucher.yang
+	pyang -f tree --tree-print-groupings ietf-cwt-voucher.yang > ietf-cwt-voucher-tree.txt
+
+%.xml: %.mkd ietf-cwt-voucher.yang ietf-cwt-voucher-tree.txt
+	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
 	git add ${DRAFT}.xml
 
 %.txt: %.xml

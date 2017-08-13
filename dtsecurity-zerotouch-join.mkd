@@ -34,8 +34,9 @@ author:
 normative:
   RFC2119:
   I-D.ietf-6lo-privacy-considerations:
-  RFC7228:
   RFC7030:
+  RFC7228:
+  RFC7250:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-6tisch-minimal:
   I-D.ietf-anima-grasp:
@@ -48,6 +49,7 @@ normative:
   I-D.ietf-netconf-keystore:
   I-D.ietf-core-comi:
   I-D.ietf-ace-cbor-web-token:
+  I-D.vanderstok-ace-coap-est:
   iec62591:
     target: "https://webstore.iec.ch/publication/24433"
     title: "62591:2016 Industrial networks - Wireless communication network and communication profiles - WirelessHART"
@@ -84,11 +86,14 @@ normative:
   I-D.richardson-6tisch-join-enhanced-beacon:
   RFC6775:
   RFC7252:
+  I-D.selander-ace-cose-ecdhe:
 
 informative:
   RFC4655:
   RFC7554:
   RFC4191:
+  RFC5056:
+  RFC7641:
   RFC7731:
   I-D.ietf-roll-useofrplinfo:
   I-D.ietf-ace-actors:
@@ -149,18 +154,21 @@ chance, but requires coordination between the manufacturer of the node, the
 service operator running the LLN, and the installers actually taking the
 devices out of the shipping boxes.
 
-This document is a constrained profile of {{I-D.ietf-anima-bootstrapping-keyinfra}}.  The above 
+This document is a constrained profile of {{I-D.ietf-anima-bootstrapping-keyinfra}}.  The above
 document/protocol is referred by by it's acronym: BRSKI. The pronounciation of which is
 "brew-ski", a common north american slang for beer with a pseudo-polish ending.
 
 This document follows the same structure as it's parent in order to emphasize the similarities,
 but specializes a number of things to constrained networks of constrained devices.
-Like ANIMA's BRSKI, the networks which are in scope for this protocol are deployed by a 
+Like ANIMA's BRSKI, the networks which are in scope for this protocol are deployed by a
 professional operator.  The deterministic mechanisms which have been designed into 6tisch
 have been created to satisfy the operational needs of industrial settings.
 
 This document builds upon the "one-touch" provisioning described in {{I-D.ietf-6tisch-minimal-security}},
 reusing the OSCOAP Join Request mechanism when appropriate.
+In addition, it uses the CoAP adaption of EST defined in {{I-D.vanderstok-ace-coap-est}}
+in an identical way.
+
 
 Otherwise, this document follows BRSKI with the following high-level changes:
 
@@ -173,7 +181,7 @@ Otherwise, this document follows BRSKI with the following high-level changes:
 * real time clocks are assumed to be impossible, so expiry dates in ownership vouchers are never used
 * nonce-full vouchers are encouraged, but off-line nonce-less operation is also supported
 
-802.1AR Client certificates are retained, but optionally are specified by reference rather than value. 
+802.1AR Client certificates are retained, but optionally are specified by reference rather than value.
 
 It is expected that the back-end network operator infrastructure would be
 able to bootstrap ANIMA BRSKI-type devices over ethernet, while also being able
@@ -229,9 +237,9 @@ MIC
 BRSKI describes a more general, more flexible approach for bootstrapping devices into an ISP or Enterprise
 network.
 
-{{I-D.ietf-6tisch-minimal-security}} provides an extremely streamlined approach to enrolling from 
-hundreds to thousands of devices into a network, provided that a unique secret key can be installed 
-in each device. 
+{{I-D.ietf-6tisch-minimal-security}} provides an extremely streamlined approach to enrolling from
+hundreds to thousands of devices into a network, provided that a unique secret key can be installed
+in each device.
 
 ## Scope of solution
 
@@ -248,13 +256,13 @@ Section 2 of BRSKI has a diagram with all of the components shown together.
 There are no significant changes to the diagram.
 
 The use of a circuit proxy is not mandated. Instead the IPIP mechanism described in appendix C
-("IPIP Join Proxy mechanism") SHOULD be be used instead as it supports both DTLS, EDHOC and OSCOAP mechanisms.
+("IPIP Join Proxy mechanism") SHOULD be be used instead as it supports both DTLS, EDHOC and OSCOAP protocols.
 The CoAP proxy mechanism MAY be implemented instead: the decision depends upon the capabilities of
 the Registrar and the proxy.  A mechanism is included for the Registrar to announce it's capabilities (XXX).
 
 ## Secure Imprinting using Vouchers
 
-As in BRSKI, the format and cryptographic mechansim of vouchers is described in detail 
+As in BRSKI, the format and cryptographic mechansim of vouchers is described in detail
 in {{I-D.ietf-anima-voucher}}.  As described in section YYY, the physical format for vouchers
 in this document differs from that of BRSKI, in that it uses {{I-D.ietf-ace-cbor-web-token}}
 to encode the voucher and to sign it.
@@ -266,7 +274,7 @@ with an 802.1AR (PKIX) certificate installed during the manufacturing process.
 
 It is expected that constrained devices will use a signature algorithm corresponding to the
 hardware acceleration that they have, if they have any.  The anticipated algorithms are
-the ECDSA P-256 (secp256p1) as SHOULD-, while newer devices SHOLD+ begin to appear using 
+the ECDSA P-256 (secp256p1) as SHOULD-, while newer devices SHOLD+ begin to appear using
 EdDSA curves using the 25519 curves. (EDNOTE details here)
 
 There are a number of simplications detailed later on in this document designed to eliminate the
@@ -276,8 +284,8 @@ The pledge should consider it's 802.1AR certificate to be an opaque blob of byte
 protocols at appropriate places.  The pledge SHOULD have access to it's public and private keys in
 the most useable native format for computation.
 
-The pledge MUST have the public key of the MASA built in a manufacturer time.  This is a seemingly 
-identical requirement as for BRSKI, but rather than being an abstract trust anchor that can be augmented 
+The pledge MUST have the public key of the MASA built in a manufacturer time.  This is a seemingly
+identical requirement as for BRSKI, but rather than being an abstract trust anchor that can be augmented
 with a certificate chain, the pledge MUST be provided with the Raw Public Key that the MASA will use to
 sign vouchers for that pledge.
 
@@ -297,57 +305,57 @@ entire certificate]]
 
 The diagram from BRSKI is reproduced with some edits:
 
-       +--------+         +---------+    +------------+     +------------+   
-       | Pledge |         | IPIP    |    | Domain     |     | Vendor     |   
-       |        |         | Proxy   |    | Registrar  |     | Service    |   
-       |        |         |         |    |            |     | (Internet  |   
-       +--------+         +---------+    +------------+     +------------+   
-         |                     |                   |                    |    
-         |<-RFC4862 IPv6 adr   |                   |                    |    
-         |                     |                   |                    |    
-         |<--------------------|                   |                    |    
-         | Enhanced Beacon     |                   |                    |    
-         |   periodic broadcast|                   |                    |    
-         |                     |                   |                    |    
-         |<------------------->C<----------------->|                    |    
-         |             DTLS via the IPIP    Proxy  |                    |    
-         |<--Registrar DTLS server authentication--|                    |    
-       [PROVISIONAL accept of server cert]         |                    |    
-         P---X.509 client authentication---------->|                    |    
-         P                     |                   |                    |    
-         P---Voucher Request (include nonce)------>|                    |    
-         P                     |                   |                    |    
-         P                     |                   |                    |    
-         P                     |              [accept device?]          |    
-         P                     |              [contact Vendor]          |    
-         P                     |                   |--Pledge ID-------->|    
-         P                     |                   |--Domain ID-------->|    
-         P                     |                   |--nonce------------>|    
-         P                     |                   |     [extract DomainID]  
-         P                     |                   |                    |    
-         P                     |                   |     [update audit log]  
-         P                     |                   |                    |    
-         P                     |                   |                    |    
-         P                     |                   |                    |    
-         P                     |                   |                    |    
-         P                     |                   |                    |    
-         P                     |                   |<-device audit log--|    
-         P                     |                   |<- voucher ---------|    
-         P                     |                   |                    |    
-         P                     |                   |                    |    
-         P                     |       [verify audit log and voucher]   |    
-         P                     |                   |                    |    
-         P<------voucher---------------------------|                    |    
-       [verify voucher ]       |                   |                    |    
-       [verify provisional cert|                   |                    |    
-         |                     |                   |                    |    
-         |<--------------------------------------->|                    |    
-         | Continue with RFC7030 enrollment        |                    |    
-         | using now bidirectionally authenticated |                    |    
-         | DTLS session.       |                   |                    |    
-         |                     |                   |                    |    
-         |                     |                   |                    |    
-         |                     |                   |                    |    
+       +--------+         +---------+    +------------+     +------------+
+       | Pledge |         | IPIP    |    | Domain     |     | Vendor     |
+       |        |         | Proxy   |    | Registrar  |     | Service    |
+       |        |         |         |    |            |     | (Internet  |
+       +--------+         +---------+    +------------+     +------------+
+         |                     |                   |                    |
+         |<-RFC4862 IPv6 adr   |                   |                    |
+         |                     |                   |                    |
+         |<--------------------|                   |                    |
+         | Enhanced Beacon     |                   |                    |
+         |   periodic broadcast|                   |                    |
+         |                     |                   |                    |
+         |<------------------->C<----------------->|                    |
+         |             DTLS via the IPIP    Proxy  |                    |
+         |<--Registrar DTLS server authentication--|                    |
+       [PROVISIONAL accept of server cert]         |                    |
+         P---X.509 client authentication---------->|                    |
+         P                     |                   |                    |
+         P---Voucher Request (include nonce)------>|                    |
+         P                     |                   |                    |
+         P                     |                   |                    |
+         P                     |              [accept device?]          |
+         P                     |              [contact Vendor]          |
+         P                     |                   |--Pledge ID-------->|
+         P                     |                   |--Domain ID-------->|
+         P                     |                   |--nonce------------>|
+         P                     |                   |     [extract DomainID]
+         P                     |                   |                    |
+         P                     |                   |     [update audit log]
+         P                     |                   |                    |
+         P                     |                   |                    |
+         P                     |                   |                    |
+         P                     |                   |                    |
+         P                     |                   |                    |
+         P                     |                   |<-device audit log--|
+         P                     |                   |<- voucher ---------|
+         P                     |                   |                    |
+         P                     |                   |                    |
+         P                     |       [verify audit log and voucher]   |
+         P                     |                   |                    |
+         P<------voucher---------------------------|                    |
+       [verify voucher ]       |                   |                    |
+       [verify provisional cert|                   |                    |
+         |                     |                   |                    |
+         |<--------------------------------------->|                    |
+         | Continue with RFC7030 enrollment        |                    |
+         | using now bidirectionally authenticated |                    |
+         | DTLS session.       |                   |                    |
+         |                     |                   |                    |
+         |                     |                   |                    |
+         |                     |                   |                    |
 
 Noteable changes are:
 
@@ -370,39 +378,78 @@ the vouchers will have been generated in advance and no nonce-ful operation will
 
 ## Cloud Registrar
 
-XXX
+In 6tisch, the pledge never has network connectivity until it is enrolled, so no alternate
+registrar is ever possible.
 
 # Protocol Details
 
-XXX
+BRSKI is specified to run over HTTPS. This document respecifies it to run over CoAP with
+either DTLS or EDHOC-provided OSCOAP security.  There is an emerging (hybrid) possibility of
+DTLS-providing the OSCOAP security, but such a specification does not yet exist.
+
+{{I-D.vanderstok-ace-coap-est}} specifies that CoAP specifies
+the use of CoAP Block-Wise Transfer ("Block") {{!RFC7959}} to fragment EST messages at the
+application layer.
+
+BRSKI introduces the concept of a provisional state for EST. The same situation
+must also be added to DTLS: a situation where the connection is active but the identity of
+the Registar has not yet been confirmed.  The DTLS MUST validate that the exchange has
+been signed by the Raw Public Key that is presented by the Server, even though there is
+as yet no trust in that key.  Such a key is often available through APIs that provide for
+channel binding, such as described in {{RFC5056}}.
+
+As in {{I-D.vanderstok-ace-coap-est}}, support for Observe CoAP options {{RFC7641}} with
+BRSKI is not supported in the current BRSKI/EST message flows.
+Observe options could be used by the server to notify clients about a change in the cacerts
+or csr  attributes (resources) and might be an area of future work.
+
+Redirection as described in {{RFC7030}} section 3.2.1 is NOT supported.
+
 
 ## Discovery
 
-XXX
+Only IPv6 operations using Link-Local addresses are supported.
+Use of a temporary address is NOT encouraged as the critial resource on the
+Proxy device is the number of Neighbour Cache Entries that can be used for
+untrusted pledge entries.
 
 ### Proxy Discovery Protocol Details
 
-XXX
+The Proxy is discovered using the enhanced beacon defined in {{I-D.richardson-6tisch-join-enhanced-beacon}}.
 
 ### Registrar Discovery Protocol Details
 
-XXX
+The Registrar is not discovered by the Proxy.  Any device that is expected to be able to operate
+as a Registrar MAY be told the address of the Registrar when that device joins the network.
+The address MAY be included in the {{I-D.ietf-6tisch-minimal-security}} Join Response.
+If the address is NOT included, then Proxy may assume that the Registrar can be found at the
+DODAG root, which is well known in the 6tisch's use of the RPL protocol.
 
-## Request Voucher from the Registrar
+## Pledge Requests Voucher from the Registrar
 
-XXX
+The voucher request and response as defined by BRSKI is modified slightly.
+In order to
 
-## Request Voucher from MASA
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
 
-XXX
+## Registrar Requests Voucher from MASA
+
+There are no change from BRSKI, as this step is between two non-constrained devices.
+The format of the voucher is CWT, which implies changes to both the Registrar and the MASA,
+but semantically the content is the same.
+
+The manufacturer will know what algorithms are supported by the pledge, and will issue
+a 406 (Conflict) error to the Registrar if the Registar's public key format is not
+supported by the pledge.
 
 ## Voucher Response
 
-XXX
+The voucher response MUST have an additional header called: "pinned-domain-rpk".
+
 
 ### Completing authentication of Provisional TLS connection
 
-XXX
+In order to simplify the pledge as much as possible, the voucher response
 
 ## Voucher Status Telemetry
 
@@ -478,7 +525,7 @@ XXX
 
 # Acknowledgements
 
-XXX
+
 
 --- back
 
@@ -773,10 +820,13 @@ Option Status Values":
 
 # Protocol Definition
 
-# Acknwoledgements
+# Acknowledgements
 
 Kristofer Pister helped with many non-IETF references.
 
 
 --- fluff
 
+<!--- Local variables: --->
+<!--- mode: markdown --->
+<!--- End: --->
