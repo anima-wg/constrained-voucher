@@ -1,0 +1,20 @@
+
+This is a PLACEHOLDER for a CDDL definition derived from the YANG model.
+SID base XXX.
+
+dictionary keys are:
+XXX         assertion
++1       created-on
++2       domain-cert-revocation-checks
++3       expires-on
++4       idevid-issuer
++5       last-renewal-date
++6       nonce
++7       pinned-domain-cert
++8       pinned-domain-subject-public-key-info
++9       prior-signed-voucher
++10      serial-number
+
+
+
+

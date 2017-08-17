@@ -98,6 +98,7 @@ informative:
   RFC7731:
   I-D.ietf-roll-useofrplinfo:
   I-D.ietf-ace-actors:
+  I-D.ietf-core-sid:
   ISA100:
     target:  "http://www.isa100wci.org/Documents/PDF/The-Technology-Behind-ISA100-11a-v-3_pptx"
     title: "The Technology Behind the ISA100.11a Standard "
