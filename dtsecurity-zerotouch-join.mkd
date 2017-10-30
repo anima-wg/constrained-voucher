@@ -513,6 +513,19 @@ the vouchers will have been generated in advance and no nonce-ful operation will
 In 6tisch, the pledge never has network connectivity until it is enrolled, so no alternate
 registrar is ever possible.
 
+# Voucher-Request artifact
+
+## Tree Diagram
+## Examples
+## YANG Module
+
+# Proxy details
+## Pledge discovery of Proxy
+### Proxy Grasp announcements
+## CoAP connection to Registrar
+## HTTPS proxy connection to Registrar
+## Proxy discovery of Registrar
+
 # Protocol Details
 
 BRSKI is specified to run over HTTPS. This document respecifies it to run over CoAP with
