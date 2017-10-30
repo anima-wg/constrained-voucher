@@ -43,7 +43,6 @@ normative:
   I-D.ietf-6tisch-minimal-security:
   I-D.richardson-anima-6join-discovery:
   I-D.richardson-6tisch-minimal-rekey:
-  I-D.ietf-6tisch-minimal-security:
   I-D.ietf-core-object-security:
   I-D.ietf-6tisch-terminology:
   I-D.ietf-netconf-keystore:
@@ -513,18 +512,54 @@ the vouchers will have been generated in advance and no nonce-ful operation will
 In 6tisch, the pledge never has network connectivity until it is enrolled, so no alternate
 registrar is ever possible.
 
+## Determining the MASA to contact
+
+There are no changes from BRSKI: the IDevID provided by the pledge will contain a MASA URL
+extension.
+
 # Voucher-Request artifact
 
+The voucher request artifact is described in this document.
+The major change from BRSKI is that the voucher format is a CWT (see {{I-D.ietf-ace-cbor-web-token}}).
+
+
 ## Tree Diagram
+
+tree diagram.
+
 ## Examples
+
+examples.
+
 ## YANG Module
 
+This is the YANG for the CWT based voucher request.
+
 # Proxy details
+
+The role of the Proxy is to facilitate communication.
+In the constrained situation the proxy needs to be stateless.
+
 ## Pledge discovery of Proxy
-### Proxy Grasp announcements
+
+In BRSKI, the pledge discovers the proxy via use of a GRASP M_FLOOD messages
+sent by the proxy.  In 6tisch-zero-touch, the existence of the proxy is related
+by the Enhanced Beacon.
+
 ## CoAP connection to Registrar
+
+In BRSKI CoAP is future work.  This document represents this work.
+
 ## HTTPS proxy connection to Registrar
+
+HTTPS connections are not used.
+
 ## Proxy discovery of Registrar
+
+In BRSKI, the proxy autonomically discovers the Registrar by listening for GRASP messages.
+In the constrained network, the proxies are optionally configured with the address of the
+registrar by the Join Response in {{I-D.ietf-6tisch-minimal-security}} section XX.
+The address of the registrar otherwise defaults to be that of the DODAG root.
 
 # Protocol Details
 
