@@ -736,7 +736,7 @@ The join process described herein requires that some identifier meaningful to
 the network operator be communicated to the JRC.  The join request with this
 object occurs within a secured CoAP channel, although the link-local address configured
 by the pledge will be visible in either the CoAP stateless proxy option
-(section 5.1 of {{draft-ietf-6tisch-minimal-security}}), or in the equivalent
+(section 5.1 of {{I-D.ietf-6tisch-minimal-security}}), or in the equivalent
 DTLS stateless proxy option (reference TBD).
 
 This need not be a manufacturer created EUI-64 as assigned by IEEE; it could be another
