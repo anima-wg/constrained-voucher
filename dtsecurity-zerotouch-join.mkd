@@ -1,7 +1,7 @@
 ---
 title: 6tisch Zero-Touch Secure Join protocol
 # abbrev: 6tisch-Secure-Join
-docname: draft-ietf-6tisch-dtsecurity-zerotouch-join-00
+docname: draft-ietf-6tisch-dtsecurity-zerotouch-join-01
 
 # stand_alone: true
 
@@ -234,7 +234,15 @@ Ownership Voucher
 MIC
 :  manufacturer installed certificate. An {{ieee802-1AR}} identity. Not to be confused with a (cryptographic) "Message Integrity Check"
 
-## Other Bootstrapping Approaches
+## Scope of solution
+
+The solution described in this document is appropriate to enrolling between hundreds to hundreds of
+thousands of diverse devices into a network without any prior contact with the devices.  The devices
+could be shipped by the manufacturer directly to the customer site without ever being seen by the
+operator of the network.  As described in BRSKI, in the audit-mode of operation the device will be claimed
+by the first network that sees it. In the tracked owner mode of operation, sales channel integration
+provides a strong connection that the operator of the network is the
+legitimate owner of the device.
 
 BRSKI describes a more general, more flexible approach for bootstrapping devices into an ISP or Enterprise
 network.
@@ -243,24 +251,107 @@ network.
 hundreds to thousands of devices into a network, provided that a unique secret key can be installed
 in each device.
 
-## Scope of solution
+## Leveraging the new key infrastructure / next steps
 
-The solution described in this document is appropriate to enrolling between hundreds to hundreds of
-thousands of diverse devices into a network without any prior contact with the devices.  The devices
-could be shipped by the manufacturer directly to the customer site without ever being seen by the
-operator of the network.  As described in BRSKI, in the audit-mode of operation the device will be claimed
-by the first network that sees it. In the tracked owner mode of operation, sales channel integration
-provides a strong connection that the operator of the network is the legitimate owner of the device.
+In constrained networks, it is unlikely that an ACP be formed.
+This document does not preclude such a thing, but it is not mandated.
+
+The resulting secure channel MAY be used just to distribute network-wide
+keys using a protocol such as {{I-D.ietf-6tisch-minimal-security}}.
+(XXX -- do we need to signal this somehow?)
+
+The resulting secure channel MAY be instead used to do an enrollment
+of an LDevID as in BRSKI, but the resulting certificate is used to do
+per-pair keying such as described by {{ieee802159}.
+
 
 # Architectural Overview
 
 Section 2 of BRSKI has a diagram with all of the components shown together.
 There are no significant changes to the diagram.
 
-The use of a circuit proxy is not mandated. Instead the IPIP mechanism described in appendix C
-("IPIP Join Proxy mechanism") SHOULD be be used instead as it supports both DTLS, EDHOC and OSCOAP protocols.
-The CoAP proxy mechanism MAY be implemented instead: the decision depends upon the capabilities of
-the Registrar and the proxy.  A mechanism is included for the Registrar to announce it's capabilities (XXX).
+The use of a circuit proxy is not mandated. Instead the IPIP mechanism
+described in appendix C ("IPIP Join Proxy mechanism") SHOULD be be used
+instead as it supports both DTLS, EDHOC and OSCOAP protocols.
+
+The CoAP proxy mechanism MAY be implemented instead: the decision depends
+upon the capabilities of the Registrar and the proxy.  A mechanism is included for the
+Registrar to announce it's capabilities (XXX)
+
+## Behaviour of a Pledge
+
+The pledge goes through a series of steps which are outlined here at
+a high level.
+
+
+                    +--------------+
+                    |   Factory    |
+                    |   default    |
+                    +------+-------+
+                           |
+                    +------v-------+
+                    |  Discover    |
+       +------------>              |
+       |            +------+-------+
+       |                   |
+       |            +------v-------+
+       |            |  Identity    |
+       ^------------+              |
+       | rejected   +------+-------+
+       |                   |
+       |            +------v-------+
+       |            | Request      |
+       |            | Join         |
+       |            +------+-------+
+       |                   |
+       |            +------v-------+
+       |            |  Imprint     |   Optional
+       ^------------+              <--+Manual input (Appendix C)
+       | Bad Vendor +------+-------+
+       | response          |  send Voucher Status Telemetry
+       |            +------v-------+
+       |            |  Enroll      |
+       ^------------+              |
+       | Enroll     +------+-------+
+       | Failure           |
+       |            +------v-------+
+       |            |  Enrolled    |
+       ^------------+              |
+        Factory     +--------------+
+        reset
+
+
+State descriptions for the pledge are as follows:
+
+1.  Discover a communication channel to a Registrar.   This is done by
+    listening for beacons as described by {{I-D.richardson-anima-6join-discovery}}
+
+2.  Identify itself.  This is done by presenting an X.509 IDevID credential
+    to the discovered Registrar (via the Proxy) in a DTLS or EDHOC handshake.
+    (The Registrar credentials are only provisionally accepted at this time).
+
+    The registrar identifies itself using a raw public key, while the the
+    pledge identifies itself to the registrar using an IDevID credential.
+
+3.  Requests to Join the discovered Registrar.  A unique nonce can be
+    included ensuring that any responses can be associated with this
+    particular bootstrapping attempt.
+
+4.  Imprint on the Registrar.  This requires verification of the
+    vendor service (MASA) provided voucher.  A voucher contains sufficient
+    information for the Pledge to complete authentication of a
+    Registrar.  The voucher is signed by the vendor (MASA) using a raw public
+    key, previously installed into the pledge at manufacturing time.
+
+5.  Optionally Enroll.  By accepting the domain specific information from a
+       Registrar, and by obtaining a domain certificate from a Registrar
+       using a standard enrollment protocol, e.g.  Enrollment over
+       Secure Transport (EST) [RFC7030].
+
+6.  The Pledge is now a member of, and can be managed by, the domain
+       and will only repeat the discovery aspects of bootstrapping if it
+       is returned to factory default settings.
+
 
 ## Secure Imprinting using Vouchers
 
@@ -364,6 +455,45 @@ Noteable changes are:
 1. no IPv4 support/options.
 2. no mDNS steps, 6tisch only uses Enhanced Beacon
 3. nonce-full option is always recommended
+
+### Architectural component: Pledge
+
+   The Pledge is the device which is attempting to join.  Until the
+   pledge completes the enrollment process, it has network
+   connectivity only to the Proxy.
+
+### Architectural component: Stateless IPIP Proxy
+
+   The stateless CoAP or DTLS Proxy provides CoAP or DTLS connectivity (respectively)
+   between the pledge and the registrar.  The stateless CoAP proxy mechanism is described
+   in {{I-D.ietf-6tisch-minimal-security}} section 5.1.
+   The stateless DTLS mechanism is not yet described (XXX).
+
+### Architectural component: Domain Registrar
+
+   The Domain Registrar (having the formal name Join Registrar/
+   Coordinator (JRC)), operates as a CMC Registrar, terminating the EST
+   and BRSKI connections.  The Registrar is manually configured or
+   distributed with a list of trust anchors necessary to authenticate
+   any Pledge device expected on the network.  The Registrar
+   communicates with the Vendor supplied MASA to establish ownership.
+
+   The JRC is typically located on the 6LBR/DODAG root, but it may be
+   located elsewhere, provided IP level connectivity can be established.
+   The 6LBR may also provide a proxy or relay function to connect to the
+   actual registrar in addition to the IPIP proxy described above.
+   The existence of such an additional proxy is a private matter, and this
+   documents assumes without loss of generality that the registrar is co-located
+   with the 6LBR.
+
+### Architectural component: Vendor Service
+
+   The Vendor Service provides two logically seperate functions: the
+   Manufacturer Authorized Signing Authority (MASA), and an ownership
+   tracking/auditing function.
+   This function is identical to that used by BRSKI, except that
+   a different format voucher is used.
+
 
 ## Lack of realtime clock
 
