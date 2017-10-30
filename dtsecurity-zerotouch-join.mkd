@@ -646,8 +646,15 @@ There are no changes.  The connection from the Registrar to MASA is still HTTPS.
 
 ## Registrar Requests Voucher from MASA
 
-There are no changes from the BRSKI document.  The registrar voucher-request is
-in CWT format.
+There are no change from BRSKI, as this step is between two non-constrained devices.
+The format of the voucher is CWT, which implies changes to both the Registrar and the MASA,
+but semantically the content is the same.
+
+The manufacturer will know what algorithms are supported by the pledge, and will issue
+a 406 (Conflict) error to the Registrar if the Registar's public key format is not
+supported by the pledge.
+
+
 
 ## Voucher Response
 
@@ -1034,82 +1041,6 @@ as a Registrar MAY be told the address of the Registrar when that device joins t
 The address MAY be included in the {{I-D.ietf-6tisch-minimal-security}} Join Response.
 If the address is NOT included, then Proxy may assume that the Registrar can be found at the
 DODAG root, which is well known in the 6tisch's use of the RPL protocol.
-
-## Registrar Requests Voucher from MASA
-
-There are no change from BRSKI, as this step is between two non-constrained devices.
-The format of the voucher is CWT, which implies changes to both the Registrar and the MASA,
-but semantically the content is the same.
-
-The manufacturer will know what algorithms are supported by the pledge, and will issue
-a 406 (Conflict) error to the Registrar if the Registar's public key format is not
-supported by the pledge.
-
-## Voucher Response
-
-The voucher response MUST have an additional header called: "pinned-domain-rpk".
-
-
-### Completing authentication of Provisional TLS connection
-
-In order to simplify the pledge as much as possible, the voucher response
-
-## Voucher Status Telemetry
-
-XXX
-
-## MASA authorization log Request
-
-XXX
-
-### MASA authorization log Response
-
-XXX
-
-## EST Integration for PKI bootstrapping
-
-XXX
-
-### EST Distribution of CA Certificates
-
-XXX
-
-### EST CSR Attributes
-
-XXX
-
-### EST Client Certificate Request
-
-XXX
-
-### Enrollment Status Telemetry
-
-XXX
-
-### EST over CoAP
-
-XXX
-
-# Reduced security operational modes
-
-XXX
-
-## Trust Model
-
-XXX
-
-## Pledge security reductions
-
-XXX
-
-## Registrar security reductions
-
-XXX
-
-## MASA security reductions
-
-XXX
-
 
 
 --- fluff
