@@ -585,119 +585,108 @@ or csr  attributes (resources) and might be an area of future work.
 
 Redirection as described in {{RFC7030}} section 3.2.1 is NOT supported.
 
+## BRSKI-EST (D)TLS establishment details
 
-## Discovery
+Zerotouch Join does not use TLS.  The connection is either CoAP over DTLS,
+or CoAP with EDHOC security.
 
-Only IPv6 operations using Link-Local addresses are supported.
-Use of a temporary address is NOT encouraged as the critial resource on the
-Proxy device is the number of Neighbour Cache Entries that can be used for
-untrusted pledge entries.
+### BRSKI-EST CoAP/DTLS estasblishment details
 
-### Proxy Discovery Protocol Details
+The details in the BRSKI document apply directly to use of DTLS.
 
-The Proxy is discovered using the enhanced beacon defined in {{I-D.richardson-6tisch-join-enhanced-beacon}}.
+The registrar SHOULD authenticate itself with a raw public key.
 
-### Registrar Discovery Protocol Details
+The pledge SHOULD authenticate itself with the built-in IDevID certificate.
 
-The Registrar is not discovered by the Proxy.  Any device that is expected to be able to operate
-as a Registrar MAY be told the address of the Registrar when that device joins the network.
-The address MAY be included in the {{I-D.ietf-6tisch-minimal-security}} Join Response.
-If the address is NOT included, then Proxy may assume that the Registrar can be found at the
-DODAG root, which is well known in the 6tisch's use of the RPL protocol.
+### BRSKI-EST CoAP/EDHOC estasblishment details
+
+{{I-D.ietf-6tisch-minimal-security}} section YYY details how to setup EDHOC.
+
+The registrar SHOULD authenticate itself with a raw public key.
+
+The pledge SHOULD authenticate itself with the built-in IDevID certificate.
 
 ## Pledge Requests Voucher from the Registrar
 
-The voucher request and response as defined by BRSKI is modified slightly.
-In order to simplify the pledge, the use of a certificate (and chain) for the Registrar is not
-supported.  Instead the newly defined pinned-domain-subject-public-key-info must contain
-the (raw) public key info for the Registrar.  It MUST be byte for byte identical to that
-which is transmitted by the Registrar during the TLS ServerCertificate handshake.
+The pledge sends a CWT format voucher request.
 
-BRSKI permits the voucher request to be signed or unsigned.  This document defines the
-voucher request to be unsigned.
+## BRSKI-MASA TLS establishment details
 
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
-
-This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}} produces the
-following CDDL for an unsigned voucher (request):
-
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher.cddl END
-
+There are no changes.  The connection from the Registrar to MASA is still HTTPS.
 
 ## Registrar Requests Voucher from MASA
 
-There are no change from BRSKI, as this step is between two non-constrained devices.
-The format of the voucher is CWT, which implies changes to both the Registrar and the MASA,
-but semantically the content is the same.
-
-The manufacturer will know what algorithms are supported by the pledge, and will issue
-a 406 (Conflict) error to the Registrar if the Registar's public key format is not
-supported by the pledge.
+There are no changes from the BRSKI document.  The registrar voucher-request is
+in CWT format.
 
 ## Voucher Response
 
-The voucher response MUST have an additional header called: "pinned-domain-rpk".
-
+The format of the voucher is CWT as described in section YYY.
 
 ### Completing authentication of Provisional TLS connection
 
-In order to simplify the pledge as much as possible, the voucher response
+The BRSKI process uses the pinned-domain-cert field of the voucher to
+validate the registrar's ServerCertificate.  In the ZeroTouch case, the
+voucher will contain a pinned-domain-subject-public-key-info field containing
+the raw public key of the certificate.  It should match, byte-to-byte
+with the raw public key ServerCertificate.
 
 ## Voucher Status Telemetry
 
-XXX
+The voucher status telemetry report is communicated from the pledge to
+the registrar over CoAP channel.  The shortened URL is as described in table QQQ.
 
 ## MASA authorization log Request
 
-XXX
+There are no changes to the MASA audit log request.
 
 ### MASA authorization log Response
 
-XXX
+There are no changes to the MASA audit log response.
 
 ## EST Integration for PKI bootstrapping
 
-XXX
+There.
 
 ### EST Distribution of CA Certificates
 
-XXX
+TBD.
 
 ### EST CSR Attributes
 
-XXX
+TBD.
 
 ### EST Client Certificate Request
 
-XXX
+TBD.
 
 ### Enrollment Status Telemetry
 
-XXX
+There are no changes to the status telemetry between Registrar and MASA.
 
 ### EST over CoAP
 
-XXX
+This document and {{I-D.vanderstok-ace-coap-est}} detail how to run EST over CoAP.
 
 # Reduced security operational modes
 
-XXX
+TBD
 
 ## Trust Model
 
-XXX
+TBD
 
 ## Pledge security reductions
 
-XXX
+TBD
 
 ## Registrar security reductions
 
-XXX
+TBD
 
 ## MASA security reductions
 
-XXX
+TBD
 
 # IANA Considerations
 
@@ -706,6 +695,10 @@ XXX
 ## MIME-Type Registry
 
 XXX
+
+# IANA Considerations
+## PKIX Registry . . . . . . . . . . . . . . . . . . . . . .  46
+## Voucher Status Telemetry  . . . . . . . . . . . . . . . .  47
 
 # Security Considerations
 
@@ -1015,6 +1008,120 @@ Option Status Values":
 # Acknowledgements
 
 Kristofer Pister helped with many non-IETF references.
+
+## Discovery
+
+Only IPv6 operations using Link-Local addresses are supported.
+Use of a temporary address is NOT encouraged as the critial resource on the
+Proxy device is the number of Neighbour Cache Entries that can be used for
+untrusted pledge entries.
+
+### Proxy Discovery Protocol Details
+
+The Proxy is discovered using the enhanced beacon defined in {{I-D.richardson-6tisch-join-enhanced-beacon}}.
+
+### Registrar Discovery Protocol Details
+
+The Registrar is not discovered by the Proxy.  Any device that is expected to be able to operate
+as a Registrar MAY be told the address of the Registrar when that device joins the network.
+The address MAY be included in the {{I-D.ietf-6tisch-minimal-security}} Join Response.
+If the address is NOT included, then Proxy may assume that the Registrar can be found at the
+DODAG root, which is well known in the 6tisch's use of the RPL protocol.
+
+## Pledge Requests Voucher from the Registrar
+
+The voucher request and response as defined by BRSKI is modified slightly.
+In order to simplify the pledge, the use of a certificate (and chain) for the Registrar is not
+supported.  Instead the newly defined pinned-domain-subject-public-key-info must contain
+the (raw) public key info for the Registrar.  It MUST be byte for byte identical to that
+which is transmitted by the Registrar during the TLS ServerCertificate handshake.
+
+BRSKI permits the voucher request to be signed or unsigned.  This document defines the
+voucher request to be unsigned.
+
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
+
+This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}} produces the
+following CDDL for an unsigned voucher (request):
+
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher.cddl END
+
+
+## Registrar Requests Voucher from MASA
+
+There are no change from BRSKI, as this step is between two non-constrained devices.
+The format of the voucher is CWT, which implies changes to both the Registrar and the MASA,
+but semantically the content is the same.
+
+The manufacturer will know what algorithms are supported by the pledge, and will issue
+a 406 (Conflict) error to the Registrar if the Registar's public key format is not
+supported by the pledge.
+
+## Voucher Response
+
+The voucher response MUST have an additional header called: "pinned-domain-rpk".
+
+
+### Completing authentication of Provisional TLS connection
+
+In order to simplify the pledge as much as possible, the voucher response
+
+## Voucher Status Telemetry
+
+XXX
+
+## MASA authorization log Request
+
+XXX
+
+### MASA authorization log Response
+
+XXX
+
+## EST Integration for PKI bootstrapping
+
+XXX
+
+### EST Distribution of CA Certificates
+
+XXX
+
+### EST CSR Attributes
+
+XXX
+
+### EST Client Certificate Request
+
+XXX
+
+### Enrollment Status Telemetry
+
+XXX
+
+### EST over CoAP
+
+XXX
+
+# Reduced security operational modes
+
+XXX
+
+## Trust Model
+
+XXX
+
+## Pledge security reductions
+
+XXX
+
+## Registrar security reductions
+
+XXX
+
+## MASA security reductions
+
+XXX
+
 
 
 --- fluff
