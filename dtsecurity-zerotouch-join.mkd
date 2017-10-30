@@ -263,6 +263,12 @@ The resulting secure channel MAY be instead used to do an enrollment
 of an LDevID as in BRSKI, but the resulting certificate is used to do
 per-pair keying such as described by {{ieee802159}.
 
+### Key Distribution Process
+
+In addition to being used for the initial enrollment process, the secure
+channel may be kept open (and reversed) to use for network rekeying.
+Such a process is out of scope of this document, please see future work such
+as {{I-D.richardson-6tisch-minimal-rekey}}.
 
 # Architectural Overview
 
@@ -797,6 +803,11 @@ Kristofer Pister helped with many non-IETF references.
 
 --- back
 
+# Extra text
+
+The following text is from previous versions of this document.
+The document has been re-organized to match the flow of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+
 ### One-Touch Assumptions
 
 This document interacts with the one-touch solution described in {{I-D.ietf-6tisch-minimal-security}}.
@@ -986,34 +997,6 @@ A typical interaction involves the following requests:
 ~~~~~~~~
 
 
-
-## Key Distribution Process
-
-The key distribution process utilizes the protocol described
-{{I-D.richardson-6tisch-minimal-rekey}}.  The process starts with the initial
-key, rather than an actual rekey.
-
-This protocol remains active for subsequent rekey operations.
-
-# YANG model for BRSKI objects
-
-{::include ietf-6tisch-brski.yang}
-
-## Description of Pledge States in Join Process
-
-TBD
-
-
-# Definition of managed objects for zero-touch bootstrap
-
-The following is relevant YANG for use in the bootstrap protocol.
-The objects identified are identical in format to the named objects
-from {{I-D.ietf-anima-bootstrapping-keyinfra}}.
-
-
-
-
-# Security Considerations
 
 # IANA Considerations
 
