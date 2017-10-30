@@ -375,24 +375,28 @@ hardware acceleration that they have, if they have any.  The anticipated algorit
 the ECDSA P-256 (secp256p1) as SHOULD-, while newer devices SHOLD+ begin to appear using
 EdDSA curves using the 25519 curves. (EDNOTE details here)
 
-There are a number of simplications detailed later on in this document designed to eliminate the
-need for an ASN.1 parser in the pledge.
+There are a number of simplications detailed later on in this document
+designed to eliminate the need for an ASN.1 parser in the pledge.
 
-The pledge should consider it's 802.1AR certificate to be an opaque blob of bytes, to be inserted into
-protocols at appropriate places.  The pledge SHOULD have access to it's public and private keys in
-the most useable native format for computation.
+The pledge should consider it's 802.1AR certificate to be an opaque blob of
+bytes, to be inserted into protocols at appropriate places.  The pledge
+SHOULD have access to it's public and private keys in the most useable native
+format for computation.
 
-The pledge MUST have the public key of the MASA built in a manufacturer time.  This is a seemingly
-identical requirement as for BRSKI, but rather than being an abstract trust anchor that can be augmented
-with a certificate chain, the pledge MUST be provided with the Raw Public Key that the MASA will use to
+The pledge MUST have the public key of the MASA built in a manufacturer time.
+This is a seemingly identical requirement as for BRSKI, but rather than being
+an abstract trust anchor that can be augmented with a certificate chain, the
+pledge MUST be provided with the Raw Public Key that the MASA will use to
 sign vouchers for that pledge.
 
-There are a number of security concerns with use of a single MASA signing key, and section {{masaprivatekey}} addresses some of them with some operational suggestions.
+There are a number of security concerns with use of a single MASA signing
+key, and section {{masaprivatekey}} addresses some of them with some
+operational suggestions.
 
-BRSKI places some clear requirements upon the contents of the IDevID, but leaves the exact
-origin of the voucher serial-number open.  This document restricts the process to being
-the hwSerialNum OCTET STRING.  As CWT can handle binary formats, no base64 encoding is
-necessary.
+BRSKI places some clear requirements upon the contents of the IDevID, but
+leaves the exact origin of the voucher serial-number open.  This document
+restricts the process to being the hwSerialNum OCTET STRING.  As CWT can
+handle binary formats, no base64 encoding is necessary.
 
 The use of the MASA-URL extension is encouraged if the certificate is sent at all.
 
@@ -511,7 +515,8 @@ The heuristic described in BRSKI under this section SHOULD be applied if there
 are dates in the CWT format voucher.
 
 Voucher requests SHOULD include a nonce.  For devices intended for off-line deployment,
-the vouchers will have been generated in advance and no nonce-ful operation will not be possible.
+the vouchers will have been generated in advance and no nonce-ful operation will not be
+possible.
 
 ## Cloud Registrar
 
@@ -526,7 +531,8 @@ extension.
 # Voucher-Request artifact
 
 The voucher request artifact is described in this document.
-The major change from BRSKI is that the voucher format is a CWT (see {{I-D.ietf-ace-cbor-web-token}}).
+The major change from BRSKI is that the voucher format is a CWT
+(see {{I-D.ietf-ace-cbor-web-token}}).
 
 
 ## Tree Diagram
@@ -570,8 +576,8 @@ The address of the registrar otherwise defaults to be that of the DODAG root.
 # Protocol Details
 
 BRSKI is specified to run over HTTPS. This document respecifies it to run over CoAP with
-either DTLS or EDHOC-provided OSCOAP security.  There is an emerging (hybrid) possibility of
-DTLS-providing the OSCOAP security, but such a specification does not yet exist.
+either DTLS or EDHOC-provided OSCOAP security.  There is an emerging (hybrid) possibility
+of DTLS-providing the OSCOAP security, but such a specification does not yet exist.
 
 {{I-D.vanderstok-ace-coap-est}} specifies that CoAP specifies
 the use of CoAP Block-Wise Transfer ("Block") {{!RFC7959}} to fragment EST messages at the
@@ -806,11 +812,13 @@ Kristofer Pister helped with many non-IETF references.
 # Extra text
 
 The following text is from previous versions of this document.
-The document has been re-organized to match the flow of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+The document has been re-organized to match the flow
+of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 ### One-Touch Assumptions
 
-This document interacts with the one-touch solution described in {{I-D.ietf-6tisch-minimal-security}}.
+This document interacts with the one-touch solution
+described in {{I-D.ietf-6tisch-minimal-security}}.
 
 ### Factory provided credentials (if any)
 
