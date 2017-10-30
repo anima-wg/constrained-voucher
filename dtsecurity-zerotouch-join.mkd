@@ -400,8 +400,8 @@ handle binary formats, no base64 encoding is necessary.
 
 The use of the MASA-URL extension is encouraged if the certificate is sent at all.
 
-[[EDNOTE here belongs text about sending only a reference to the IDevID rather than the
-entire certificate]]
+EDNOTE: here belongs text about sending only a reference to the IDevID rather
+than the entire certificate
 
 ## Protocol Flow
 
@@ -553,9 +553,6 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request.yang END
 
 This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}}
 uses the
-
-###
-
 
 # Proxy details
 
@@ -740,7 +737,11 @@ XXX
 
 # Security Considerations
 
+TBD
+
 ## Security of MASA voucher signing key(s) {#masaprivatekey}
+
+TBD
 
 # Privacy Considerations
 
@@ -798,7 +799,7 @@ creating a rogue proxy.
 The use of a manufacturer assigned EUI64 (whether derived from IEEE assignment or
 created through another process during manufacturing time) is encouraged.
 
-#### EUI-64 derived address for join time IID
+### EUI-64 derived address for join time IID
 
 The IID used in the link-local address used during the join process be a
 vendor assigned EUI-64.  After the join process has concluded, the device
@@ -822,6 +823,8 @@ Kristofer Pister helped with many non-IETF references.
 The following text is from previous versions of this document.
 The document has been re-organized to match the flow
 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+
+## Assumptions
 
 ### One-Touch Assumptions
 
@@ -905,6 +908,8 @@ The network which the new pledge will connect to will have to have the following
 TBD.
 
 ### Size of packets, number of fragments
+
+TBD
 
 ## Target end-state for join process
 
