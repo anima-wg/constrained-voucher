@@ -1,4 +1,7 @@
 .refcache
 ietf-cwt-voucher-tree.txt
+ietf-cwt-voucher-request-tree.txt
 ietf-cwt-voucher@*.yang
 ietf-voucher-request-tree.txt
+ietf-cwt-voucher-request@*.yang
+ietf-cwt-voucher@*.yang

@@ -15,10 +15,10 @@ ${CWTDATE2}: ietf-cwt-voucher-request.yang
 	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-cwt-voucher-request.yang > ${CWTDATE2}
 
 ietf-cwt-voucher-tree.txt: ${CWTDATE1}
-	pyang --path=../../anima/voucher:../../anima/bootstrap -f tree --tree-print-groupings ${CWTDATE1} > ietf-voucher-tree.txt
+	pyang --path=../../anima/voucher:../../anima/bootstrap -f tree --tree-print-groupings ${CWTDATE1} > ietf-cwt-voucher-tree.txt
 
 ietf-cwt-voucher-request-tree.txt: ${CWTDATE2}
-	pyang --path=../../anima/voucher:../../anima/bootstrap -f tree --tree-print-groupings ${CWTDATE2} > ietf-voucher-request-tree.txt
+	pyang --path=../../anima/voucher:../../anima/bootstrap -f tree --tree-print-groupings ${CWTDATE2} > ietf-cwt-voucher-request-tree.txt
 
 %.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-cwt-voucher-tree.txt ietf-cwt-voucher-request-tree.txt
 	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
