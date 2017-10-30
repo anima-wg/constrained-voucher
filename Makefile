@@ -23,7 +23,8 @@ ietf-cwt-voucher-tree.txt: ${CWTDATE}
 %.html: %.xml
 	unset DISPLAY; XML_LIBRARY=$(XML_LIBRARY):./src xml2rfc --html -o $@ $?
 
-
+submit: ${DRAFT}.xml
+	curl -S -F "user=mcr+ietf@sandelman.ca" -F "xml=@${DRAFT}.xml" https://datatracker.ietf.org/api/submit
 
 
 version:
