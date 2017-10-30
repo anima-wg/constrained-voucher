@@ -792,6 +792,7 @@ TBD.
 
 # Acknowledgements
 
+Kristofer Pister helped with many non-IETF references.
 
 
 --- back
@@ -1023,10 +1024,6 @@ Option Status Values":
 
 
 # Protocol Definition
-
-# Acknowledgements
-
-Kristofer Pister helped with many non-IETF references.
 
 ## Discovery
 
