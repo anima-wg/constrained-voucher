@@ -608,7 +608,25 @@ The pledge SHOULD authenticate itself with the built-in IDevID certificate.
 
 ## Pledge Requests Voucher from the Registrar
 
-The pledge sends a CWT format voucher request.
+The voucher request and response as defined by BRSKI is modified slightly.
+
+In order to simplify the pledge, the use of a certificate (and chain) for the
+Registrar is not supported.  Instead the newly
+defined pinned-domain-subject-public-key-info must contain the (raw) public key
+info for the Registrar.  It MUST be byte for byte identical to that
+which is transmitted by the Registrar during the TLS ServerCertificate handshake.
+
+BRSKI permits the voucher request to be signed or unsigned.  This document defines the
+voucher request to be unsigned.
+
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
+
+This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}} produces the
+following CDDL for an unsigned voucher (request):
+
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher.cddl END
+
+
 
 ## BRSKI-MASA TLS establishment details
 
@@ -1028,25 +1046,6 @@ as a Registrar MAY be told the address of the Registrar when that device joins t
 The address MAY be included in the {{I-D.ietf-6tisch-minimal-security}} Join Response.
 If the address is NOT included, then Proxy may assume that the Registrar can be found at the
 DODAG root, which is well known in the 6tisch's use of the RPL protocol.
-
-## Pledge Requests Voucher from the Registrar
-
-The voucher request and response as defined by BRSKI is modified slightly.
-In order to simplify the pledge, the use of a certificate (and chain) for the Registrar is not
-supported.  Instead the newly defined pinned-domain-subject-public-key-info must contain
-the (raw) public key info for the Registrar.  It MUST be byte for byte identical to that
-which is transmitted by the Registrar during the TLS ServerCertificate handshake.
-
-BRSKI permits the voucher request to be signed or unsigned.  This document defines the
-voucher request to be unsigned.
-
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
-
-This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}} produces the
-following CDDL for an unsigned voucher (request):
-
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher.cddl END
-
 
 ## Registrar Requests Voucher from MASA
 
