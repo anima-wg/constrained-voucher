@@ -1,19 +1,26 @@
 DRAFT:=dtsecurity-zerotouch-join
 VERSION:=$(shell ./getver ${DRAFT}.mkd )
 YANGDATE=$(shell date +%Y-%m-%d)
-CWTDATE=ietf-cwt-voucher@${YANGDATE}.yang
+CWTDATE1=ietf-cwt-voucher@${YANGDATE}.yang
+CWTDATE2=ietf-cwt-voucher-request@${YANGDATE}.yang
 
 ${DRAFT}-${VERSION}.txt: ${DRAFT}.txt
 	cp ${DRAFT}.txt ${DRAFT}-${VERSION}.txt
 	git add ${DRAFT}-${VERSION}.txt ${DRAFT}.txt
 
-${CWTDATE}: ietf-cwt-voucher.yang
-	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-cwt-voucher.yang > ${CWTDATE}
+${CWTDATE1}: ietf-cwt-voucher.yang
+	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-cwt-voucher.yang > ${CWTDATE1}
 
-ietf-cwt-voucher-tree.txt: ${CWTDATE}
-	pyang --path=../../anima/voucher:../../anima/bootstrap -f tree --tree-print-groupings ${CWTDATE} > ietf-voucher-request-tree.txt
+${CWTDATE2}: ietf-cwt-voucher-request.yang
+	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-cwt-voucher-request.yang > ${CWTDATE2}
 
-%.xml: %.mkd ${CWTDATE} ietf-cwt-voucher-tree.txt
+ietf-cwt-voucher-tree.txt: ${CWTDATE1}
+	pyang --path=../../anima/voucher:../../anima/bootstrap -f tree --tree-print-groupings ${CWTDATE1} > ietf-voucher-tree.txt
+
+ietf-cwt-voucher-request-tree.txt: ${CWTDATE2}
+	pyang --path=../../anima/voucher:../../anima/bootstrap -f tree --tree-print-groupings ${CWTDATE2} > ietf-voucher-request-tree.txt
+
+%.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-cwt-voucher-tree.txt ietf-cwt-voucher-request-tree.txt
 	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
 	git add ${DRAFT}.xml
 

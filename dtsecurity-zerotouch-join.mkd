@@ -530,22 +530,32 @@ extension.
 
 # Voucher-Request artifact
 
-The voucher request artifact is described in this document.
-The major change from BRSKI is that the voucher format is a CWT
-(see {{I-D.ietf-ace-cbor-web-token}}).
+As in BRSKI, a voucher-request artifact is derived from the base voucher definition.
+The constrained version differs from the non-constrained version in two ways:
 
+1. it does not include the pinned-domain-cert, but rather than pinned-domain-subjet-public-key-info entry.  This accomodates the use of a raw public key to identify the registrar.
+
+2. the pledge voucher-request is never signed.
+
+An appendix shows detailed examples of CWT format voucher requests.
 
 ## Tree Diagram
 
-tree diagram.
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-tree.txt END
 
-## Examples
+## SID values
 
-examples.
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
 
 ## YANG Module
 
-This is the YANG for the CWT based voucher request.
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request.yang END
+
+This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}}
+uses the
+
+###
+
 
 # Proxy details
 
@@ -630,15 +640,6 @@ which is transmitted by the Registrar during the TLS ServerCertificate handshake
 
 BRSKI permits the voucher request to be signed or unsigned.  This document defines the
 voucher request to be unsigned.
-
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
-
-This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}} produces the
-following CDDL for an unsigned voucher (request):
-
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher.cddl END
-
-
 
 ## BRSKI-MASA TLS establishment details
 

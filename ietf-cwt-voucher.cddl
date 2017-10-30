@@ -1,6 +1,5 @@
 
-This is a PLACEHOLDER for a CDDL definition derived from the YANG model.
-SID experimental base 60100 is used.
+SID experimental base 60100 is used for voucher-requests.
 
 dictionary keys are:
 60100      ietf-cwt-voucher
