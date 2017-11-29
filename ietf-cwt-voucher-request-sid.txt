@@ -16,7 +16,7 @@ dictionary keys are:
 60111      serial-number
 60112      proximity-registrar-cert
 60113      proximity-registrar-subject-public-key-info
-60100      ietf-cwt-voucher-request
+60200      ietf-cwt-voucher-request
 
 
 
