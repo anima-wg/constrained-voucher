@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+# process the table SID output from pyang and make it fit into 70 columns.
+# do this by truncating the left-hand side of the third column.
+# first two columns are allocated 22 characters, so 70-22 = 48.
+
+while(<ARGV>) {
+    chomp;
+
+    next if(/^File/);
+    next if(/^Number/);
+
+    ($sid, $type, $object) = split;
+
+    if(length($object) > 48) {
+        $object = substr($object, -48);
+        # now actually align it on the /.
+        $object =~ s,.*(/[^/]+),...\1,;
+    }
+
+    print sprintf("%9s %s %s\n", $sid, $type, $object);
+}
+
+

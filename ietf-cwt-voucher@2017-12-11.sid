@@ -1,0 +1,87 @@
+{
+  "assignment-ranges": [
+    {
+      "entry-point": 1001100, 
+      "size": 50
+    }
+  ], 
+  "module-name": "ietf-cwt-voucher", 
+  "module-revision": "2017-12-11", 
+  "items": [
+    {
+      "namespace": "module", 
+      "identifier": "ietf-cwt-voucher", 
+      "sid": 1001100
+    }, 
+    {
+      "namespace": "module", 
+      "identifier": "ietf-restconf", 
+      "sid": 1001101
+    }, 
+    {
+      "namespace": "module", 
+      "identifier": "ietf-voucher", 
+      "sid": 1001102
+    }, 
+    {
+      "namespace": "module", 
+      "identifier": "ietf-yang-types", 
+      "sid": 1001103
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher", 
+      "sid": 1001104
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/assertion", 
+      "sid": 1001105
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/created-on", 
+      "sid": 1001106
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/domain-cert-revocation-checks", 
+      "sid": 1001107
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/expires-on", 
+      "sid": 1001108
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/idevid-issuer", 
+      "sid": 1001109
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/last-renewal-date", 
+      "sid": 1001110
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/nonce", 
+      "sid": 1001111
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/pinned-domain-cert", 
+      "sid": 1001112
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/pinned-domain-subject-public-key-info", 
+      "sid": 1001113
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher:voucher-cwt-grouping/ietf-cwt-voucher:voucher/serial-number", 
+      "sid": 1001114
+    }
+  ]
+}

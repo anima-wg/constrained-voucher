@@ -547,8 +547,11 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-tree.txt END
 
 ## SID values
 
+This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}}
+to a list of SID values:
+
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
+INSERT_TEXT_FROM_FILE yang/ietf-cwt-voucher-request.sid.txt END
 </figure>
 
 ## YANG Module
@@ -556,9 +559,6 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request.yang END
 </figure>
-
-This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}}
-uses the
 
 # Proxy details
 
@@ -662,7 +662,28 @@ supported by the pledge.
 
 ## Voucher Response
 
-The format of the voucher is CWT as described in section YYY.
+The format of the voucher is CWT as described in CWT RFC section YYY.
+
+## Tree Diagram
+
+<figure>
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher-tree.txt END
+</figure>
+
+## SID values
+
+This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}}
+to a list of SID values:
+
+<figure>
+INSERT_TEXT_FROM_FILE yang/ietf-cwt-voucher.sid.txt END
+</figure>
+
+## YANG Module
+
+<figure>
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
+</figure>
 
 ### Completing authentication of Provisional TLS connection
 
