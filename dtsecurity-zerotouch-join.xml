@@ -43,7 +43,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-ietf-6tisch-dtsecurity-zerotouch-join-01" category="info">
+<rfc ipr="trust200902" docName="draft-ietf-6tisch-dtsecurity-zerotouch-join-02" category="info">
 
   <front>
     <title>6tisch Zero-Touch Secure Join protocol</title>
@@ -61,7 +61,7 @@
       </address>
     </author>
 
-    <date year="2017" month="October" day="30"/>
+    <date year="2017" month="December" day="04"/>
 
     <area>Internet</area>
     <workgroup>6tisch Working Group</workgroup>
@@ -504,15 +504,18 @@ module: ietf-cwt-voucher-request
   groupings:
   voucher-request-cwt-grouping
       +---- voucher
-         +---- created-on                                     yang:date-and-time
-         +---- expires-on?                                    yang:date-and-time
+         +---- created-on
+         |       yang:date-and-time
+         +---- expires-on?
+         |       yang:date-and-time
          +---- assertion                                      enumeration
          +---- serial-number                                  string
          +---- idevid-issuer?                                 binary
          +---- pinned-domain-cert                             binary
          +---- domain-cert-revocation-checks?                 boolean
          +---- nonce?                                         binary
-         +---- last-renewal-date?                             yang:date-and-time
+         +---- last-renewal-date?
+         |       yang:date-and-time
          +---- proximity-registrar-subject-public-key-info?   binary
 
 ]]></artwork></figure>
@@ -539,7 +542,7 @@ dictionary keys are:
 60111      serial-number
 60112      proximity-registrar-cert
 60113      proximity-registrar-subject-public-key-info
-60100      ietf-cwt-voucher-request
+60200      ietf-cwt-voucher-request
 
 
 
@@ -557,14 +560,6 @@ module ietf-cwt-voucher-request {
   namespace
     "urn:ietf:params:xml:ns:yang:ietf-cwt-voucher-request";
   prefix "vcwt";
-
-  import ietf-restconf {
-    prefix rc;
-    description
-      "This import statement is only present to access
-       the yang-data extension defined in RFC 8040.";
-    reference "RFC 8040: RESTCONF Protocol";
-  }
 
   import ietf-voucher {
     prefix "v";
@@ -1333,38 +1328,38 @@ DODAG root, which is well known in the 6tisch's use of the RPL protocol.</t>
   </back>
 
 <!-- ##markdown-source:
-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
+H4sIAALqJVoAA+19/XfbxpXo7/grsPI5r9SaoCzZcmK9bru0JCdMZEkVlcZu
 Tl/OkByKiECABUDRTOL929/9nBmAlC073Z7sO09tEpIYzNyZuXO/750kSaI6
 rTN7FD+v02o8i/9myyK5LpbwcWjHy9LG3xRpHi/Koi7GRRY9is1oVNo7fSHh
-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
+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
@@ -1645,7 +1640,7 @@ QFBwc6Y3E7acqM5U4zTbzdva6apUfS/h91xMUnB5xUfg2sjlDuAT4flSrwnP
 3YKqw9VfEleEKqdUVo1IWvYjSGxPXWQsWbbq5fiGIrW6cohk3qpCda1ZcEcv
 Stc7RkWVfFAxgUbpn14kwa0tvEvDMEV3KTyWGaXajd4OFtwFy1g0JUO8FIgJ
 66C6DPSVlXThXOFmYP9Qhbc0XV2eOcumxvFNs+V0GkV//Df8wmcLVQXcheoo
-JprHzzC24gjgLW8nOEzw5DSfSMv/C+PY9nBRqQAA
+JprHzzC24gjgLW8nOEzw5DSfSMv/C4eTkx1RqQAA
 
 -->
 
