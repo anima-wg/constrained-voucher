@@ -1,4 +1,4 @@
 #!/bin/sh
 
-sed -n -e'/docname/s,.*dtsecurity-zerotouch-join-\([0-9]*\).*,\1,p' $*
+sed -n -e'/docname/s,.*[^0-9]*-\([0-9]*\).*,\1,p' $*
 
