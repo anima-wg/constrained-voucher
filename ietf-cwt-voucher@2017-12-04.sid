@@ -1,0 +1,87 @@
+{
+  "assignment-ranges": [
+    {
+      "entry-point": 1001100, 
+      "size": 50
+    }
+  ], 
+  "module-name": "ietf-cwt-voucher", 
+  "module-revision": "2017-12-04", 
+  "items": [
+    {
+      "type": "Module", 
+      "label": "ietf-cwt-voucher", 
+      "sid": 1001100
+    }, 
+    {
+      "type": "Module", 
+      "label": "ietf-restconf", 
+      "sid": 1001101
+    }, 
+    {
+      "type": "Module", 
+      "label": "ietf-voucher", 
+      "sid": 1001102
+    }, 
+    {
+      "type": "Module", 
+      "label": "ietf-yang-types", 
+      "sid": 1001103
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher", 
+      "sid": 1001104
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/assertion", 
+      "sid": 1001105
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/created-on", 
+      "sid": 1001106
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/domain-cert-revocation-checks", 
+      "sid": 1001107
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/expires-on", 
+      "sid": 1001108
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/idevid-issuer", 
+      "sid": 1001109
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/last-renewal-date", 
+      "sid": 1001110
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/nonce", 
+      "sid": 1001111
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/pinned-domain-cert", 
+      "sid": 1001112
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/pinned-domain-subject-public-key-info", 
+      "sid": 1001113
+    }, 
+    {
+      "type": "node", 
+      "label": "/voucher-cwt-grouping/voucher/serial-number", 
+      "sid": 1001114
+    }
+  ]
+}
