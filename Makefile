@@ -1,4 +1,4 @@
-DRAFT:=dtsecurity-zerotouch-join
+DRAFT:=constrained-voucher
 VERSION:=$(shell ./getver ${DRAFT}.mkd )
 YANGDATE=$(shell date +%Y-%m-%d)
 CWTDATE1=ietf-cwt-voucher@${YANGDATE}.yang
@@ -58,6 +58,5 @@ version:
 
 clean:
 	-rm -f ${DRAFT}.xml ${CWTDATE1} ${CWTDATE2}
-
 
 .PRECIOUS: ${DRAFT}.xml
