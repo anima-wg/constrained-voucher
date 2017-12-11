@@ -1,7 +1,7 @@
 ---
 title: 6tisch Zero-Touch Secure Join protocol
 # abbrev: 6tisch-Secure-Join
-docname: draft-ietf-6tisch-dtsecurity-zerotouch-join-01
+docname: draft-ietf-6tisch-dtsecurity-zerotouch-join-02
 
 # stand_alone: true
 
@@ -541,15 +541,21 @@ An appendix shows detailed examples of CWT format voucher requests.
 
 ## Tree Diagram
 
+<figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-tree.txt END
+</figure>
 
 ## SID values
 
+<figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
+</figure>
 
 ## YANG Module
 
+<figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request.yang END
+</figure>
 
 This definition, translated via the rules in {{I-D.ietf-core-yang-cbor}}
 uses the
