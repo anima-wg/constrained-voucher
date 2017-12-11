@@ -178,29 +178,6 @@ module: ietf-cwt-voucher-request
 
 <t><figure>
 <artwork><![CDATA[
-
-SID experimental base 60100 is used for voucher-requests.
-
-dictionary keys are:
-60100      ietf-cwt-voucher
-60101      assertion
-60102      created-on
-60103      domain-cert-revocation-checks
-60104      expires-on
-60105      idevid-issuer
-60106      last-renewal-date
-60107      nonce
-60108      pinned-domain-cert
-60109      pinned-domain-subject-public-key-info
-60110      prior-signed-voucher
-60111      serial-number
-60112      proximity-registrar-cert
-60113      proximity-registrar-subject-public-key-info
-60200      ietf-cwt-voucher-request
-
-
-
-
 ]]></artwork>
 </figure></t>
 
@@ -332,3 +309,363 @@ module: ietf-cwt-voucher
 <section anchor="sid-values-1" title="SID values">
 
 <t><figure>
+<artwork><![CDATA[
+           
+      SID Assigned to
+--------- -------------------------------------------------- 
+  1001100 module ietf-cwt-voucher
+  1001101 module ietf-restconf
+  1001102 module ietf-voucher
+  1001103 module ietf-yang-types
+  1001104 data .../ietf-cwt-voucher:voucher
+  1001105 data .../assertion
+  1001106 data .../created-on
+  1001107 data .../domain-cert-revocation-checks
+  1001108 data .../expires-on
+  1001109 data .../idevid-issuer
+  1001110 data .../last-renewal-date
+  1001111 data .../nonce
+  1001112 data .../pinned-domain-cert
+  1001113 data .../pinned-domain-subject-public-key-info
+  1001114 data .../serial-number
+       No .sid file
+]]></artwork>
+</figure></t>
+
+</section>
+<section anchor="yang-module-1" title="YANG Module">
+
+<t><figure>
+<artwork><![CDATA[
+<CODE BEGINS> file "ietf-cwt-voucher.yang"
+/* -*- c -*- */
+module ietf-cwt-voucher {
+  yang-version 1.1;
+
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-cwt-voucher";
+  prefix "vcwt";
+
+  import ietf-voucher {
+    prefix "v";
+  }
+
+  organization
+   "IETF 6tisch Working Group";
+
+  contact
+   "WG Web:   <http://tools.ietf.org/wg/6tisch/>
+    WG List:  <mailto:6tisch@ietf.org>
+    Author:   Michael Richardson
+              <mailto:mcr+ietf@sandelman.ca>";
+
+  description
+   "This module defines the format for a voucher, which is produced by
+    a pledge's manufacturer or delegate (MASA) to securely assign one
+    or more pledges to an 'owner', so that the pledges may establish a
+    secure connection to the owner's network infrastructure.
+
+    This version provides a very restricted subset appropriate
+    for very constrained devices.
+    In particular, it assumes that nonce-ful operation is
+    always required, that expiration dates are rather weak, as no
+    clocks can be assumed, and that the Registrar is identified
+    by a pinned Raw Public Key.
+
+    The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT',
+    'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in
+    the module text are to be interpreted as described in RFC 2119.";
+
+  revision "YYYY-MM-DD" {
+    description
+     "Initial version";
+    reference
+     "RFC XXXX: Voucher Profile for Constrained Devices";
+  }
+
+  // Grouping defined for future usage
+  grouping voucher-cwt-grouping {
+    description
+      "Grouping to allow reuse/extensions in future work.";
+
+    uses v:voucher-artifact-grouping {
+      augment "voucher" {
+        description "Base the CWT voucher upon the regular one";
+        leaf pinned-domain-subject-public-key-info {
+          type binary;
+          description
+            "The pinned-domain-subject replaces the
+         pinned-domain-certificate in constrained uses of
+         the voucher.  The pinned-domain-public-key-info is the
+         Raw Public Key of the Registrar. This field is encoded
+         as specified in RFC7250, section 3.
+         The ECDSA algorithm MUST be supported.
+         The EdDSA algorithm as specified in
+         draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
+         Support for the DSA algorithm is not recommended.
+         Support for the RSA algorithm is a MAY.";
+        }
+      }
+    }
+  }
+}
+<CODE ENDS>
+]]></artwork>
+</figure></t>
+
+<section anchor="example-voucher-artifacts" title="Example voucher artifacts">
+
+<t>TBD</t>
+
+</section>
+</section>
+<section anchor="cms-format-voucher-and-voucher-request-artifacts" title="CMS format voucher and voucher-request artifacts">
+
+</section>
+<section anchor="cose-format-voucher-and-voucher-request-artifacts" title="COSE format voucher and voucher-request artifacts">
+
+</section>
+</section>
+<section anchor="design-considerations" title="Design Considerations">
+
+<section anchor="renewals-instead-of-revocations" title="Renewals instead of Revocations">
+
+</section>
+<section anchor="voucher-per-pledge" title="Voucher Per Pledge">
+
+</section>
+</section>
+<section anchor="security-considerations" title="Security Considerations">
+
+<section anchor="clock-sensitivity" title="Clock Sensitivity">
+<t>## Protect Voucher PKI in HSM
+## Test Domain Certificate Validity when Signing</t>
+
+</section>
+</section>
+<section anchor="iana-considerations" title="IANA Considerations">
+
+<section anchor="the-ietf-xml-registry" title="The IETF XML Registry">
+
+<t>This document registers two URIs in the IETF XML registry [RFC3688].
+Following the format in [RFC3688], the following registration is
+requested:</t>
+
+<figure><artwork><![CDATA[
+  URI: urn:ietf:params:xml:ns:yang:ietf-cwt-voucher
+  Registrant Contact: The ANIMA WG of the IETF.
+  XML: N/A, the requested URI is an XML namespace.
+
+  URI: urn:ietf:params:xml:ns:yang:ietf-cwt-voucher-request
+  Registrant Contact: The ANIMA WG of the IETF.
+  XML: N/A, the requested URI is an XML namespace.
+]]></artwork></figure>
+
+</section>
+<section anchor="the-yang-module-names-registry" title="The YANG Module Names Registry">
+
+<t>This document registers two YANG modules in the YANG Module Names
+registry [RFC6020].  Following the format defined in [RFC6020], the
+the following registration is requested:</t>
+
+<figure><artwork><![CDATA[
+  name:         ietf-cwt-voucher
+  namespace:    urn:ietf:params:xml:ns:yang:ietf-cwt-voucher
+  prefix:       vch
+  reference:    RFC XXXX
+
+  name:         ietf-cwt-voucher-request
+  namespace:    urn:ietf:params:xml:ns:yang:ietf-cwt-voucher-request
+  prefix:       vch
+  reference:    RFC XXXX
+]]></artwork></figure>
+
+</section>
+<section anchor="the-smi-security-for-smime-cms-content-type-registry" title="The SMI Security for S/MIME CMS Content Type Registry">
+
+<t>This document registers an OID in the "SMI Security for S/MIME CMS
+Content Type" registry (1.2.840.113549.1.9.16.1), with the value:</t>
+
+<figure><artwork><![CDATA[
+  Decimal  Description                             References
+  -------  --------------------------------------  ----------
+  TBD1      id-ct-animaCBORVoucher                 [ThisRFC]
+]]></artwork></figure>
+
+<t>XXX: should a seperate value be used for Voucher Requests?</t>
+
+</section>
+<section anchor="the-sid-registry" title="The SID registry">
+
+<t>The SID range 1001100 was allocated by comi.space to the IETF-CWT-VOUCHER
+yang module.</t>
+
+<t>The SID range 1001150 was allocated by comi.space to the IETF-CWT-VOUCHER-REQUEST
+yang module.</t>
+
+<t>EDNOTE: it is unclear if there is further IANA work required.</t>
+
+</section>
+</section>
+<section anchor="acknowledgements" title="Acknowledgements">
+
+<t>TBD</t>
+
+</section>
+
+
+  </middle>
+
+  <back>
+
+    <references title='Normative References'>
+
+&RFC2119;
+&RFC7049;
+&I-D.ietf-core-yang-cbor;
+&I-D.ietf-core-sid;
+&RFC7228;
+&RFC7250;
+&I-D.ietf-anima-bootstrapping-keyinfra;
+&I-D.ietf-core-object-security;
+&I-D.ietf-ace-cbor-web-token;
+&I-D.vanderstok-ace-coap-est;
+<reference anchor="ieee802-1AR" target="http://standards.ieee.org/findstds/standard/802.1AR-2009.html">
+  <front>
+    <title>IEEE 802.1AR Secure Device Identifier</title>
+    <author initials="." surname="IEEE Standard">
+      <organization></organization>
+    </author>
+    <date year="2009"/>
+  </front>
+</reference>
+&RFC7217;
+&RFC6775;
+&RFC7252;
+
+
+    </references>
+
+    <references title='Informative References'>
+
+&RFC4655;
+&RFC7554;
+&RFC4191;
+&RFC5056;
+&RFC7641;
+&RFC7731;
+<reference anchor="pledge" target="http://dictionary.reference.com/browse/pledge">
+  <front>
+    <title>Dictionary.com Unabridged</title>
+    <author initials="." surname="Dictionary.com" fullname="Dictionary.com">
+      <organization></organization>
+    </author>
+    <date year="2015"/>
+  </front>
+</reference>
+<reference anchor="duckling" target="https://www.cl.cam.ac.uk/~fms27/papers/1999-StajanoAnd-duckling.pdf">
+  <front>
+    <title>The resurrecting duckling: security issues for ad-hoc wireless networks</title>
+    <author initials="F." surname="Stajano" fullname="Frank Stajano">
+      <organization></organization>
+    </author>
+    <author initials="R." surname="Anderson" fullname="Ross Anderson">
+      <organization></organization>
+    </author>
+    <date year="1999"/>
+  </front>
+</reference>
+
+
+    </references>
+
+
+<t>&#8212; fluff</t>
+
+<!--- Local variables: --->
+<!--- mode: markdown --->
+<!--- End: --->
+
+
+
+  </back>
+
+<!-- ##markdown-source:
+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
+
+-->
+
+</rfc>
+

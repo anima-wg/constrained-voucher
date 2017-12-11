@@ -42,7 +42,8 @@ submit: ${DRAFT}.xml
 	curl -S -F "user=mcr+ietf@sandelman.ca" -F "xml=@${DRAFT}.xml" https://datatracker.ietf.org/api/submit
 
 ${CWTSIDDATE1}: ${CWTDATE1}
-	PYTHONPATH=${PYANGDIR}:$PYTHONPATH YANG_MODPATH=${PYANGDIR}/modules:$YANG_MODPATH PYANG_XSLT_DIR=${PYANGDIR}/xslt PYANG_RNG_LIBDIR=${PYANGDIR}/schema pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >yang/ietf-cwt-voucher.sid.txt
+	mkdir -p yang
+	PYTHONPATH=${PYANGDIR}:$PYTHONPATH YANG_MODPATH=${PYANGDIR}/modules:$YANG_MODPATH PYANG_XSLT_DIR=${PYANGDIR}/xslt PYANG_RNG_LIBDIR=${PYANGDIR}/schema pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-cwt-voucher-sid.txt
 
 boot-sid:
 	PYTHONPATH=${PYANGDIR}:$PYTHONPATH YANG_MODPATH=${PYANGDIR}/modules:$YANG_MODPATH PYANG_XSLT_DIR=${PYANGDIR}/xslt PYANG_RNG_LIBDIR=${PYANGDIR}/schema pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --generate-sid-file 1001100:50 ${CWTDATE1}
@@ -50,7 +51,8 @@ boot-sid:
 
 
 ${CWTSIDDATE2}: ${CWTDATE2}
-	PYTHONPATH=${PYANGDIR}:$PYTHONPATH YANG_MODPATH=${PYANGDIR}/modules:$YANG_MODPATH PYANG_XSLT_DIR=${PYANGDIR}/xslt PYANG_RNG_LIBDIR=${PYANGDIR}/schema pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE2} ${CWTDATE2}  | ./truncate-sid-table >yang/ietf-cwt-voucher-request.sid.txt
+	mkdir -p yang
+	PYTHONPATH=${PYANGDIR}:$PYTHONPATH YANG_MODPATH=${PYANGDIR}/modules:$YANG_MODPATH PYANG_XSLT_DIR=${PYANGDIR}/xslt PYANG_RNG_LIBDIR=${PYANGDIR}/schema pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE2} ${CWTDATE2}  | ./truncate-sid-table >ietf-cwt-voucher-request-sid.txt
 
 
 version:
