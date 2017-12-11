@@ -1,6 +1,6 @@
 ---
 title: Constrained Voucher Profile for Bootstrapping Protocols
-# abbrev: constrained-voucher
+abbrev: Constrained Vouchers
 docname: draft-richardson-anima-ace-core-constrained-voucher-00
 
 # stand_alone: true
@@ -29,8 +29,10 @@ normative:
   RFC7049:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
-  RFC7228:
   RFC7250:
+  RFC5652:
+  RFC8152:
+  I-D.ietf-anima-voucher:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-core-object-security:
   I-D.ietf-ace-cbor-web-token:
@@ -41,17 +43,9 @@ normative:
     author:
       ins: "IEEE Standard"
     date: 2009
-  RFC7217:
-  RFC6775:
-  RFC7252:
 
 informative:
-  RFC4655:
-  RFC7554:
-  RFC4191:
-  RFC5056:
-  RFC7641:
-  RFC7731:
+  I-D.ietf-netmod-yang-tree-diagrams:
   pledge:
     title: "Dictionary.com Unabridged"
     target: "http://dictionary.reference.com/browse/pledge"
@@ -291,8 +285,3 @@ TBD
 
 --- back
 
---- fluff
-
-<!--- Local variables: --->
-<!--- mode: markdown --->
-<!--- End: --->
