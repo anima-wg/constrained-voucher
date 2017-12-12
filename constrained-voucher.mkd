@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Profile for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-richardson-anima-ace-constrained-voucher-01
+docname: draft-richardson-anima-ace-constrained-voucher-02
 
 # stand_alone: true
 
@@ -212,19 +212,70 @@ TBD
 
 ## CMS format voucher and voucher-request artifacts
 
+The IETF evolution of PKCS#7 is CMS {{RFC5652}}.  The CMS signed voucher is
+much like the equivalent voucher defined in {{I-D.ietf-anima-voucher}}.
+
+A different eContentType of TBD1 is used to indicate that the contents are
+in a different format than in {{I-D.ietf-anima-voucher}}.
+
+The ContentInfo structure contains a payload consisting of the CBOR encoded
+voucher.   The {{I-D.ietf-core-yang-cbor}} use of delta encoding creates a
+canonical ordering for the keys on the wire.  This canonical ordering is not
+important as there is no expectation that the content will be reproduced
+during the validation process.
+
+Normally the recipient is the pledge and the signer is the MASA.
+
+{{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned
+voucher requests from the pledge to the JRC.
+In this specification, voucher-request artifact is not signed from the
+pledge to the registrar.  From the JRC to the MASA, the voucher-request
+artifact MUST be signed by the domain owner key which is requesting
+ownership.
+
+The considerations of {{RFC5652}} section 5.1, concerning validating
+CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
+
+The CMS structure SHOULD also contain all the certificates leading up
+to and including the signer's trust anchor certificate known to the
+recipient.  The inclusion of the trust anchor is unusual in many
+applications, but without it third parties can not accurately audit
+the transaction.
+
+The CMS structure MAY also contain revocation objects for any
+intermediate certificate authorities (CAs) between the voucher-issuer
+and the trust anchor known to the recipient.  However, the use of
+CRLs and other validity mechanisms is discouraged, as the pledge is
+unlikely to be able to perform online checks, and is unlikely to have
+a trusted clock source.  As described below, the use of short-lived
+vouchers and/or pledge provided nonce provides a freshness guarantee.
+
 ## COSE format voucher and voucher-request artifacts
+
+This section to be added.
 
 # Design Considerations
 
-## Renewals instead of Revocations
+The design considerations for the CBOR encoding of vouchers is much the same
+as for {{I-D.ietf-anima-voucher}}.
 
-## Voucher Per Pledge
+One key difference is that the names of the leafs in the YANG does not have a
+material affect on the size of the resulting CBOR, as the SID translation
+process assigns integers to the names.
 
 # Security Considerations
 
 ## Clock Sensitivity
+
+TBD.
+
 ## Protect Voucher PKI in HSM
+
+TBD.
+
 ## Test Domain Certificate Validity when Signing
+
+TBD.
 
 # IANA Considerations
 
@@ -267,7 +318,7 @@ Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
       -------  --------------------------------------  ----------
       TBD1      id-ct-animaCBORVoucher                 [ThisRFC]
 
-XXX: should a seperate value be used for Voucher Requests?
+EDNOTE: should a seperate value be used for Voucher Requests?
 
 ## The SID registry
 
@@ -278,6 +329,10 @@ The SID range 1001150 was allocated by comi.space to the IETF-CWT-VOUCHER-REQUES
 yang module.
 
 EDNOTE: it is unclear if there is further IANA work required.
+
+## CoAP Content-Type
+
+A CoAP Content-Type may be have to be defined to match application/cms.
 
 # Acknowledgements
 

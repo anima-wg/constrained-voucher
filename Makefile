@@ -3,7 +3,9 @@ VERSION:=$(shell ./getver ${DRAFT}.mkd )
 YANGDATE=$(shell date +%Y-%m-%d)
 CWTDATE1=yang/ietf-cwt-voucher@${YANGDATE}.yang
 CWTSIDDATE1=ietf-cwt-voucher@${YANGDATE}.sid
+CWTSIDLIST1=ietf-cwt-voucher-sid.txt
 CWTDATE2=yang/ietf-cwt-voucher-request@${YANGDATE}.yang
+CWTSIDLIST2=ietf-cwt-voucher-request-sid.txt
 CWTSIDDATE2=ietf-cwt-voucher-request@${YANGDATE}.sid
 
 # git clone this from https://github.com/mbj4668/pyang.git
@@ -30,7 +32,7 @@ ietf-cwt-voucher-tree.txt: ${CWTDATE1}
 ietf-cwt-voucher-request-tree.txt: ${CWTDATE2}
 	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-cwt-voucher-request-tree.txt
 
-%.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-cwt-voucher-tree.txt ietf-cwt-voucher-request-tree.txt ${CWTSIDDATE1} ${CWTSIDDATE2}
+%.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-cwt-voucher-tree.txt ietf-cwt-voucher-request-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2}
 	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
 	git add ${DRAFT}.xml
 
@@ -43,7 +45,7 @@ ietf-cwt-voucher-request-tree.txt: ${CWTDATE2}
 submit: ${DRAFT}.xml
 	curl -S -F "user=mcr+ietf@sandelman.ca" -F "xml=@${DRAFT}.xml" https://datatracker.ietf.org/api/submit
 
-${CWTSIDDATE1}: ${CWTDATE1}
+${CWTSIDLIST1} ${CWTSIDDATE1}: ${CWTDATE1}
 	mkdir -p yang
 	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-cwt-voucher-sid.txt
 
@@ -52,7 +54,7 @@ boot-sid:
 	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --generate-sid-file 1001150:50 ${CWTDATE2}
 
 
-${CWTSIDDATE2}: ${CWTDATE2}
+${CWTSIDLIST2} ${CWTSIDDATE2}: ${CWTDATE2}
 	mkdir -p yang
         pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE2} ${CWTDATE2}  | ./truncate-sid-table >ietf-cwt-voucher-request-sid.txt
 
