@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Profile for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-richardson-anima-ace-constrained-voucher-02
+docname: draft-richardson-anima-ace-constrained-voucher-03
 
 # stand_alone: true
 
