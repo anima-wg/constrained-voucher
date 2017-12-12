@@ -190,7 +190,6 @@ module: ietf-cwt-voucher-request
   1001162 data .../pinned-domain-cert
   1001163 data .../proximity-registrar-subject-public-key-info
   1001164 data .../serial-number
-       No .sid file
 ]]></artwork>
 </figure></t>
 
@@ -341,7 +340,6 @@ module: ietf-cwt-voucher
   1001112 data .../pinned-domain-cert
   1001113 data .../pinned-domain-subject-public-key-info
   1001114 data .../serial-number
-       No .sid file
 ]]></artwork>
 </figure></t>
 
@@ -648,7 +646,7 @@ yang module.</t>
   </back>
 
 <!-- ##markdown-source:
-H4sIAB9HL1oAA71abW8bNxL+zl9BOB9q47TrlzZpItybasuNepGds5S2h0NR
+H4sIAL9HL1oAA71abW8bNxL+zl9BOB9q47TrlzZpItybasuNepGds5S2h0NR
 ULuUxXpfdOSuFTXI/fZ7ZshdrWTZTVPgBARZieRwOPPMMzNcR1EkKlNlui/P
 y8JVVplCp/L7sk4W2sq3tpybTMt5aeU3ZVnRhOXSFLc0UpVJmTmhZjOr7/eu
 dyItk0LlkJ5aNa8ia5KFsqkri0gVJleRSnSUbBZG935hdPKlEM+kq1SR/qyy

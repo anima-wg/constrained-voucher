@@ -16,4 +16,3 @@
   1001112 data .../pinned-domain-cert
   1001113 data .../pinned-domain-subject-public-key-info
   1001114 data .../serial-number
-       No .sid file

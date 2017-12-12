@@ -246,7 +246,6 @@ Internet-Draft            Constrained Vouchers             December 2017
      1001162 data .../pinned-domain-cert
      1001163 data .../proximity-registrar-subject-public-key-info
      1001164 data .../serial-number
-          No .sid file
 
 5.1.3.  YANG Module
 
@@ -274,6 +273,7 @@ module ietf-cwt-voucher-request {
 
   description
    "This module defines the format for a voucher, which is produced by
+    a pledge's manufacturer or delegate (MASA) to securely assign one
 
 
 
@@ -282,7 +282,6 @@ Richardson                Expires June 14, 2018                 [Page 5]
 Internet-Draft            Constrained Vouchers             December 2017
 
 
-    a pledge's manufacturer or delegate (MASA) to securely assign one
     or more pledges to an 'owner', so that the pledges may establish a
     secure connection to the owner's network infrastructure.
 
@@ -330,6 +329,7 @@ Internet-Draft            Constrained Vouchers             December 2017
       }
     }
   }
+}
 
 
 
@@ -338,7 +338,6 @@ Richardson                Expires June 14, 2018                 [Page 6]
 Internet-Draft            Constrained Vouchers             December 2017
 
 
-}
 <CODE ENDS>
 
 5.1.4.  Example voucher request artifacts
@@ -389,6 +388,7 @@ Internet-Draft            Constrained Vouchers             December 2017
 
 
 
+
 Richardson                Expires June 14, 2018                 [Page 7]
 
 Internet-Draft            Constrained Vouchers             December 2017
@@ -411,7 +411,6 @@ Internet-Draft            Constrained Vouchers             December 2017
      1001112 data .../pinned-domain-cert
      1001113 data .../pinned-domain-subject-public-key-info
      1001114 data .../serial-number
-          No .sid file
 
 5.5.  YANG Module
 
@@ -442,6 +441,7 @@ Internet-Draft            Constrained Vouchers             December 2017
      a pledge's manufacturer or delegate (MASA) to securely assign one
      or more pledges to an 'owner', so that the pledges may establish a
      secure connection to the owner's network infrastructure.
+
 
 
 

@@ -16,4 +16,3 @@
   1001162 data .../pinned-domain-cert
   1001163 data .../proximity-registrar-subject-public-key-info
   1001164 data .../serial-number
-       No .sid file
