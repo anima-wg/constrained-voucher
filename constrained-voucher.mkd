@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Profile for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-richardson-anima-ace-constrained-voucher-00
+docname: draft-richardson-anima-ace-constrained-voucher-01
 
 # stand_alone: true
 
@@ -171,7 +171,7 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
 ### YANG Module
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request.yang END
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request@DATE.yang END
 </figure>
 
 ### Example voucher request artifacts
@@ -203,7 +203,7 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-sid.txt END
 ## YANG Module
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher.yang END
+INSERT_TEXT_FROM_FILE ietf-cwt-voucher@DATE.yang END
 </figure>
 
 ### Example voucher artifacts

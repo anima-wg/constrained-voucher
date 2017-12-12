@@ -1,9 +1,9 @@
 DRAFT:=constrained-voucher
 VERSION:=$(shell ./getver ${DRAFT}.mkd )
 YANGDATE=$(shell date +%Y-%m-%d)
-CWTDATE1=ietf-cwt-voucher@${YANGDATE}.yang
+CWTDATE1=yang/ietf-cwt-voucher@${YANGDATE}.yang
 CWTSIDDATE1=ietf-cwt-voucher@${YANGDATE}.sid
-CWTDATE2=ietf-cwt-voucher-request@${YANGDATE}.yang
+CWTDATE2=yang/ietf-cwt-voucher-request@${YANGDATE}.yang
 CWTSIDDATE2=ietf-cwt-voucher-request@${YANGDATE}.sid
 
 # git clone this from https://github.com/mbj4668/pyang.git
@@ -17,9 +17,11 @@ ${DRAFT}-${VERSION}.txt: ${DRAFT}.txt
 	git add ${DRAFT}-${VERSION}.txt ${DRAFT}.txt
 
 ${CWTDATE1}: ietf-cwt-voucher.yang
+	mkdir -p yang
 	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-cwt-voucher.yang > ${CWTDATE1}
 
 ${CWTDATE2}: ietf-cwt-voucher-request.yang
+	mkdir -p yang
 	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-cwt-voucher-request.yang > ${CWTDATE2}
 
 ietf-cwt-voucher-tree.txt: ${CWTDATE1}
