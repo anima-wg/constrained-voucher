@@ -65,7 +65,8 @@ informative:
         ins: R. Anderson
         name: Ross Anderson
     date: 1999
-
+  RFC6690:
+  RFC7030:
 
 --- abstract
 
@@ -142,6 +143,52 @@ Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-ke
 This document defines both a constrained voucher and a constrained voucher-request.
 They are presented in the order voucher-request, followed by voucher response
 as this is the time order that they occur.
+
+# Discovery and URI
+
+This section describes the BRSKI extensions to EST-coaps {{I-D.vanderstok-ace-coap-est}} to transport the voucher between registrar, proxy and pledge over CoAP.
+The extension is targeted to low-resource networks with small packets. Saving header space is important and the EST-coaps URI is shorter than the EST URI.
+
+The presence and location of (path to) the management data are discovered by sending a GET request to "/.well-known/core" including a resource type (RT) parameter with the value "ace.est" {{RFC6690}}. Upon success, the return payload will contain the root resource of the EST resources. It is up to the implementation to choose its root resource; throughout this document the example root resource /est is used. The example below shows the discovery of the presence and location of voucher resources.
+
+~~~~
+  REQ: GET /.well-known/core?rt=ace.est
+
+  RES: 2.05 Content 
+  </est>; rt="ace.est"
+~~~~
+
+The EST-coaps server URIs differ from the EST URI by replacing the scheme https by coaps and by specifying shorter resource path names:
+
+~~~~
+  coaps://www.example.com/est/short-name 
+~~~~
+
+Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and corresponding paths which are supported by EST. {{est-uri}} provides the mapping from the BRSKI extension URI path to the EST-coaps URI path.
+
+| BRSKI | EST-coaps |
+| /requestvoucher| /rv |
+| /voucher-status | /vs |
+| /enrollstatus | /es  |
+{: #est-uri title='BRSKI path to EST-coaps path'}
+
+/requestvoucher and /enrollstatus are needed between pledge and Registrar.
+
+When discovering the root path for the EST resources, the server MAY return the full resource paths and the used content types. This is useful when multiple content types are specified for EST-coaps server. For example, the following more complete response is possible.
+
+~~~~
+  REQ: GET /.well-known/core?rt=ace.est
+
+  RES: 2.05 Content 
+  </est>; rt="ace.est"
+  </est/rv>; rt="ace.est";ct=TBD5 TBD6
+  </est/vs>; rt="ace.est";ct=50 
+  </est/es>; rt="ace.est";ct=50
+~~~~
+
+ct=50 stands for the Content-Format "application/json". TBD5 and TBD6 are defined in this document.
+
+The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
 # Artifacts
 
@@ -330,9 +377,35 @@ yang module.
 
 EDNOTE: it is unclear if there is further IANA work required.
 
-## CoAP Content-Type
+## CoAP Content-Format Registry
+
+Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for the below media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
+     Addition 1:
+           application/voucherrequest
+           Type name: application
+           Subtype name: voucherrequest
+           ID: TBD5
+           Required parameters: None
+           Optional parameters: None
+           Encoding considerations: binary
+           Security considerations: As defined in this specification
+           Published specification: BRSKI??
+           Applications that use this media type: ANIMA bootstrap (BRSKI)
+      
+    Addition 2:
+           application/voucher+cms
+           Type name: application
+           Subtype name: voucher+cms
+           ID: TBD6
+           Required parameters: None
+           Optional parameters: None
+           Encoding considerations: binary
+           Security considerations: As defined in this specification
+           Published specification: BRSKI??
+           Applications that use this media type: ANIMA bootstrap (BRSKI)
 
 A CoAP Content-Type may be have to be defined to match application/cms.
+
 
 # Acknowledgements
 
@@ -340,3 +413,39 @@ TBD
 
 --- back
 
+#EST messages to EST-coaps
+
+This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-est}}.
+    
+
+##enrollstatus
+
+[EDNOTE: extend CoAP message example. ]
+
+~~~~
+  Ver = 1
+  T = 0 (CON)
+  Code = 0x01 (0.01 is GET)
+  Options
+   Option1 (Uri-Host)
+     Option Delta = 0x3  (option nr = 3)
+     Option Length = 0x9
+     Option Value = 192.0.2.1
+   Option2 (Uri-Port)
+     Option Delta = 0x4  (option nr = 4+3=7)
+     Option Length = 0x4
+     Option Value = 8085
+   Option3 (Uri-Path)
+     Option Delta = 0x4   (option nr = 7+4= 11)
+     Option Length = 0x7
+     Option Value = /est/es
+  Payload = [Empty]
+~~~~
+
+##voucher_status">
+
+[EDNOTE: Include CoAP message example. ]
+
+##requestvoucher">
+
+[EDNOTE: Include CoAP message example. ]
