@@ -431,13 +431,15 @@ TBD
 
 #EST messages to EST-coaps
 
-This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-est}}.
-    
+This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-est}}. The CoAP headers are only worked out for the enrollstatus example. 
 
 ##enrollstatus
 
-[EDNOTE: extend CoAP message example. ]
-
+A coaps enrollstatus message can be :
+~~~~
+GET coaps://[192.0.2.1:8085]/est/es
+~~~~
+The corresponding coap header fields are shown below.
 ~~~~
   Ver = 1
   T = 0 (CON)
@@ -458,10 +460,70 @@ This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-e
   Payload = [Empty]
 ~~~~
 
-##voucher_status">
+A 2.05 Content response with a non signed JSON voucher (ct=50) will then be:
 
-[EDNOTE: Include CoAP message example. ]
+~~~~
+2.05 Content (Content-Format: application/json)
+  {payload}
+~~~~
 
-##requestvoucher">
+With CoAP fields and payload:
 
-[EDNOTE: Include CoAP message example. ]
+~~~~
+Ver=1
+T=2 (ACK)
+Code = 0x45 (2.05 Content)
+Options
+  Option1 (Content-Format)
+    Option Delta = 0xC  (option nr 12)
+    Option Length = 0x2
+    Option Value = 0x32 (application/json)
+
+Payload = 
+[EDNOTE: put here voucher payload ]
+~~~~
+##voucher_status
+
+A coaps voucher_status message can be :
+~~~~
+GET coaps://[2001:db8::2:1]:61616]/est/vs
+~~~~
+
+A 2.05 Content response with a non signed JSON voucher (ct=50) will then be:
+
+~~~~
+2.05 Content (Content-Format: application/json)
+Payload = 
+[EDNOTE: put here voucher payload ]
+~~~~
+
+##requestvoucher
+
+A coaps requestvoucher message can be :
+~~~~
+GET coaps://[2001:db8::2:1]:61616]/est/rv
+~~~~
+
+A 2.05 Content response with a PKCS#7 signed CBOR voucher (ct=TBD1) will then be:
+
+~~~~
+2.05 Content (Content-Format: application/pkcs7-mime mime-version= xxxx)
+Payload = 
+[EDNOTE: put here encrypted voucher payload ]
+~~~~
+
+
+##requestauditing
+
+A coaps requestauditing message can be :
+~~~~
+GET coaps://[2001:db8::2:1]:61616]/est/ra
+~~~~
+
+A 2.05 Content response with a PKCS#7 signed CBOR voucher (ct=TBD1) will then be:
+
+~~~~
+2.05 Content (Content-Format: application/pkcs7-mime mime-version= xxxx)
+Payload = 
+[EDNOTE: put here encrypted voucher payload ]
+~~~~
