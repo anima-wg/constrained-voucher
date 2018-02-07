@@ -18,11 +18,22 @@ pi:    # can use array (if all yes) or hash here
   symrefs: yes
 
 author:
-      -
-        ins: M. Richardson
-        name: Michael Richardson
-        org: Sandelman Software Works
-        email: mcr+ietf@sandelman.ca
+        
+
+- ins: M. Richardson
+  name: Michael Richardson
+  org: Sandelman Software Works
+  email: mcr+ietf@sandelman.ca 
+
+- ins: P. van der Stok
+  name: Peter van der Stok
+  org: vanderstok consultancy
+  email: consultancy@vanderstok.org
+
+- ins: P. Kampanakis
+  name: Panos Kamapanakis
+  org: Cisco Systems
+  email: pkampana@cisco.com
 
 normative:
   RFC2119:
@@ -182,13 +193,13 @@ When discovering the root path for the EST resources, the server MAY return the 
 
   RES: 2.05 Content 
   </est>; rt="ace.est"
-  </est/rv>; rt="ace.est";ct=50 TBD1 16
+  </est/rv>; rt="ace.est";ct=50 TBD2 16
   </est/vs>; rt="ace.est";ct=50 
   </est/es>; rt="ace.est";ct=50
-  </est/ra>; rt="ace.est";ct= TBD1 16
+  </est/ra>; rt="ace.est";ct= TBD2 16
 ~~~~
 
-ct=50 stands for the Content-Format "application/json", ct=16 stands for the Content-Format "application/cose", and ct=TBD1 stands for Content-Format "application/voucher-cms+cbor defined in this document.
+ct=50 stands for the Content-Format "application/json", ct=16 stands for the Content-Format "application/cose", and ct=TBD2 stands for Content-Format "application/voucher-cms+cbor defined in this document.
 
 The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
@@ -415,7 +426,7 @@ Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameter
      Addition:
            Type name: application
            Subtype name: voucher-cms+cbor
-           ID: TBD1
+           ID: TBD2
            Required parameters: None
            Optional parameters: None
            Encoding considerations: CBOR
@@ -436,10 +447,13 @@ This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-e
 ##enrollstatus
 
 A coaps enrollstatus message can be :
+
 ~~~~
-GET coaps://[192.0.2.1:8085]/est/es
+    GET coaps://[192.0.2.1:8085]/est/es
 ~~~~
+
 The corresponding coap header fields are shown below.
+
 ~~~~
   Ver = 1
   T = 0 (CON)
@@ -463,67 +477,71 @@ The corresponding coap header fields are shown below.
 A 2.05 Content response with an unsigned JSON voucher (ct=50) will then be:
 
 ~~~~
-2.05 Content (Content-Format: application/json)
-  {payload}
+   2.05 Content (Content-Format: application/json)
+     {payload}
 ~~~~
 
 With CoAP fields and payload:
 
 ~~~~
-Ver=1
-T=2 (ACK)
-Code = 0x45 (2.05 Content)
-Options
-  Option1 (Content-Format)
-    Option Delta = 0xC  (option nr 12)
-    Option Length = 0x2
-    Option Value = 0x32 (application/json)
+   Ver=1
+   T=2 (ACK)
+   Code = 0x45 (2.05 Content)
+   Options
+     Option1 (Content-Format)
+     Option Delta = 0xC  (option nr 12)
+     Option Length = 0x2
+     Option Value = 0x32 (application/json)
 
-Payload = 
-[EDNOTE: put here voucher payload ]
+     Payload = 
+    [EDNOTE: put here voucher payload ]
 ~~~~
+
 ##voucher_status
 
 A coaps voucher_status message can be :
+
 ~~~~
-GET coaps://[2001:db8::2:1]:61616]/est/vs
+   GET coaps://[2001:db8::2:1]:61616]/est/vs
 ~~~~
 
 A 2.05 Content response with a non signed JSON voucher (ct=50) will then be:
 
 ~~~~
-2.05 Content (Content-Format: application/json)
-Payload = 
-[EDNOTE: put here voucher payload ]
+    2.05 Content (Content-Format: application/json)
+    Payload = 
+    [EDNOTE: put here voucher payload ]
 ~~~~
 
 ##requestvoucher
 
 A coaps requestvoucher message can be :
-~~~~
-GET coaps://[2001:db8::2:1]:61616]/est/rv
-~~~~
-
-A 2.05 Content response returning CBOR voucher signed with a cms structure(ct=TBD1) will then be:
 
 ~~~~
-2.05 Content (Content-Format: application/voucher-cms+cbor)
-Payload = 
-[EDNOTE: put here encrypted voucher payload ]
+    GET coaps://[2001:db8::2:1]:61616]/est/rv
+~~~~
+
+A 2.05 Content response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:
+
+~~~~
+    2.05 Content (Content-Format: application/voucher-cms+cbor)
+    Payload = 
+    [EDNOTE: put here encrypted voucher payload ]
 ~~~~
 
 
 ##requestauditing
 
 A coaps requestauditing message can be :
+
 ~~~~
-GET coaps://[2001:db8::2:1]:61616]/est/ra
+    GET coaps://[2001:db8::2:1]:61616]/est/ra
 ~~~~
 
 A 2.05 Content response with a COSE voucher (ct=16) will then be:
 
 ~~~~
-2.05 Content (Content-Format: application/cose)
-Payload = 
-[EDNOTE: put here COSE voucher payload ]
+    2.05 Content (Content-Format: application/cose)
+    Payload = 
+    [EDNOTE: put here COSE voucher payload ]
 ~~~~
