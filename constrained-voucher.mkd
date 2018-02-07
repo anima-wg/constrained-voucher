@@ -18,12 +18,12 @@ pi:    # can use array (if all yes) or hash here
   symrefs: yes
 
 author:
-        
+
 
 - ins: M. Richardson
   name: Michael Richardson
   org: Sandelman Software Works
-  email: mcr+ietf@sandelman.ca 
+  email: mcr+ietf@sandelman.ca
 
 - ins: P. van der Stok
   name: Peter van der Stok
@@ -157,25 +157,39 @@ as this is the time order that they occur.
 
 # Discovery and URI
 
-This section describes the BRSKI extensions to EST-coaps {{I-D.vanderstok-ace-coap-est}} to transport the voucher between registrar, proxy and pledge over CoAP.
-The extension is targeted to low-resource networks with small packets. Saving header space is important and the EST-coaps URI is shorter than the EST URI.
+This section describes the BRSKI extensions to EST-coaps
+{{I-D.vanderstok-ace-coap-est}} to transport the voucher between registrar,
+proxy and pledge over CoAP.
 
-The presence and location of (path to) the management data are discovered by sending a GET request to "/.well-known/core" including a resource type (RT) parameter with the value "ace.est" {{RFC6690}}. Upon success, the return payload will contain the root resource of the EST resources. It is up to the implementation to choose its root resource; throughout this document the example root resource /est is used. The example below shows the discovery of the presence and location of voucher resources.
+The extension is targeted to low-resource networks with small packets. Saving
+header space is important and the EST-coaps URI is shorter than the EST
+URI.
+
+The presence and location of (path to) the management data are discovered by
+sending a GET request to "/.well-known/core" including a resource type (RT)
+parameter with the value "ace.est" {{RFC6690}}. Upon success, the return
+payload will contain the root resource of the EST resources. It is up to the
+implementation to choose its root resource; throughout this document the
+example root resource /est is used. The example below shows the discovery of
+the presence and location of voucher resources.
 
 ~~~~
   REQ: GET /.well-known/core?rt=ace.est
 
-  RES: 2.05 Content 
+  RES: 2.05 Content
   </est>; rt="ace.est"
 ~~~~
 
-The EST-coaps server URIs differ from the EST URI by replacing the scheme https by coaps and by specifying shorter resource path names:
+The EST-coaps server URIs differ from the EST URI by replacing the scheme
+https by coaps and by specifying shorter resource path names:
 
 ~~~~
-  coaps://www.example.com/est/short-name 
+  coaps://www.example.com/est/short-name
 ~~~~
 
-Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and corresponding paths which are supported by EST. {{est-uri}} provides the mapping from the BRSKI extension URI path to the EST-coaps URI path.
+Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and
+corresponding paths which are supported by EST. {{est-uri}} provides the
+mapping from the BRSKI extension URI path to the EST-coaps URI path.
 
 | BRSKI | EST-coaps |
 | /requestvoucher| /rv |
@@ -186,22 +200,28 @@ Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and correspon
 
 /requestvoucher and /enrollstatus are needed between pledge and Registrar.
 
-When discovering the root path for the EST resources, the server MAY return the full resource paths and the used content types. This is useful when multiple content types are specified for EST-coaps server. For example, the following more complete response is possible.
+When discovering the root path for the EST resources, the server MAY return
+the full resource paths and the used content types. This is useful when
+multiple content types are specified for EST-coaps server. For example, the
+following more complete response is possible.
 
 ~~~~
   REQ: GET /.well-known/core?rt=ace.est
 
-  RES: 2.05 Content 
+  RES: 2.05 Content
   </est>; rt="ace.est"
   </est/rv>; rt="ace.est";ct=50 TBD2 16
-  </est/vs>; rt="ace.est";ct=50 
+  </est/vs>; rt="ace.est";ct=50
   </est/es>; rt="ace.est";ct=50
   </est/ra>; rt="ace.est";ct= TBD2 16
 ~~~~
 
-ct=50 stands for the Content-Format "application/json", ct=16 stands for the Content-Format "application/cose", and ct=TBD2 stands for Content-Format "application/voucher-cms+cbor defined in this document.
+ct=50 stands for the Content-Format "application/json", ct=16 stands for the
+Content-Format "application/cose", and ct=TBD2 stands for Content-Format
+"application/voucher-cms+cbor defined in this document.
 
-The return of the content-types allows the client to choose the most appropriate one from multiple content types.
+The return of the content-types allows the client to choose the most
+appropriate one from multiple content types.
 
 # Artifacts
 
@@ -211,8 +231,9 @@ view of the contents of each artifact.
 
 Then the assigned SID values are presented. These have been assigned using
 the rules in {{I-D.ietf-core-yang-cbor}}, with an allocation that was made
-via the http://comi.space service.  ((EDNOTE: it is unclear if there is
-further IANA work))
+via the http://comi.space service.
+
+((EDNOTE: it is unclear if there is further IANA work))
 
 ## Voucher Request artifact
 
@@ -402,7 +423,7 @@ the content is a CBOR voucher signed with a cms structure.
     Optional parameters:  none
     Encoding considerations:  CMS-signed CBOR vouchers are CBOR
       encoded.
-    Security considerations:  See Security Considerations, Section 
+    Security considerations:  See Security Considerations, Section
     Interoperability considerations:  The format is designed to be
       broadly interoperable.
     Published specification:  THIS RFC.
@@ -442,7 +463,7 @@ TBD
 
 #EST messages to EST-coaps
 
-This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-est}}. The CoAP headers are only worked out for the enrollstatus example. 
+This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-est}}. The CoAP headers are only worked out for the enrollstatus example.
 
 ##enrollstatus
 
@@ -493,7 +514,7 @@ With CoAP fields and payload:
      Option Length = 0x2
      Option Value = 0x32 (application/json)
 
-     Payload = 
+     Payload =
     [EDNOTE: put here voucher payload ]
 ~~~~
 
@@ -509,7 +530,7 @@ A 2.05 Content response with a non signed JSON voucher (ct=50) will then be:
 
 ~~~~
     2.05 Content (Content-Format: application/json)
-    Payload = 
+    Payload =
     [EDNOTE: put here voucher payload ]
 ~~~~
 
@@ -525,7 +546,7 @@ A 2.05 Content response returning CBOR voucher signed with a cms structure(ct=TB
 
 ~~~~
     2.05 Content (Content-Format: application/voucher-cms+cbor)
-    Payload = 
+    Payload =
     [EDNOTE: put here encrypted voucher payload ]
 ~~~~
 
@@ -542,6 +563,6 @@ A 2.05 Content response with a COSE voucher (ct=16) will then be:
 
 ~~~~
     2.05 Content (Content-Format: application/cose)
-    Payload = 
+    Payload =
     [EDNOTE: put here COSE voucher payload ]
 ~~~~
