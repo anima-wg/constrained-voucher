@@ -108,7 +108,9 @@ Rather than serializing the YANG definition in JSON, it is serialized into
 CBOR ({{RFC7049}}).
 
 This document follows a similar, but not identical structure as
-{{I-D.ietf-anima-voucher}}. Some sections are left out entirely.
+{{I-D.ietf-anima-voucher}}. Some sections are left out entirely. Additional sections to {{I-D.ietf-anima-voucher}} concern:
+- Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
+- Addition to {{I-D.vanderstok-ace-coap-est}} of voucher transport requests over coap.
 
 The CBOR definitions for this constrained voucher format are defined using
 the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID
@@ -340,8 +342,8 @@ This section to be added.
 The design considerations for the CBOR encoding of vouchers is much the same
 as for {{I-D.ietf-anima-voucher}}.
 
-One key difference is that the names of the leafs in the YANG does not have a
-material affect on the size of the resulting CBOR, as the SID translation
+One key difference is that the names of the leaves in the YANG does not have a
+material effect on the size of the resulting CBOR, as the SID translation
 process assigns integers to the names.
 
 # Security Considerations
@@ -399,7 +401,7 @@ Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
       -------  --------------------------------------  ----------
       TBD1      id-ct-animaCBORVoucher                 [ThisRFC]
 
-EDNOTE: should a seperate value be used for Voucher Requests?
+EDNOTE: should a separate value be used for Voucher Requests?
 
 ## The SID registry
 
