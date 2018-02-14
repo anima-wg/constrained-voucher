@@ -247,11 +247,15 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-tree.txt END
 
 ### SID values
 
+[EDNote: the appropriate generation of the SID values is under discussion]
+
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
 </figure>
 
 ### YANG Module
+
+[EDNote: the appropriate syntax of the module is under discussion]
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request@DATE.yang END
@@ -279,11 +283,15 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-tree.txt END
 
 ## SID values
 
+[EDNote: the appropriate generation of the SID values is under discussion]
+
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-sid.txt END
 </figure>
 
 ## YANG Module
+
+[EDNote: the appropriate syntax of the module is under discussion]
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher@DATE.yang END
