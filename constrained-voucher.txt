@@ -5,10 +5,10 @@
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                  Sandelman Software Works
 Intended status: Informational                           P. van der Stok
-Expires: August 11, 2018                          vanderstok consultancy
+Expires: August 18, 2018                          vanderstok consultancy
                                                            P. Kampanakis
                                                            Cisco Systems
-                                                       February 07, 2018
+                                                       February 14, 2018
 
 
         Constrained Voucher Profile for Bootstrapping Protocols
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 11, 2018.
+   This Internet-Draft will expire on August 18, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Richardson, et al.       Expires August 11, 2018                [Page 1]
+Richardson, et al.       Expires August 18, 2018                [Page 1]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -72,7 +72,7 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Requirements Language . . . . . . . . . . . . . . . . . . . .   3
+   3.  Requirements Language . . . . . . . . . . . . . . . . . . . .   4
    4.  Survey of Voucher Types . . . . . . . . . . . . . . . . . . .   4
    5.  Discovery and URI . . . . . . . . . . . . . . . . . . . . . .   4
    6.  Artifacts . . . . . . . . . . . . . . . . . . . . . . . . . .   6
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Richardson, et al.       Expires August 11, 2018                [Page 2]
+Richardson, et al.       Expires August 18, 2018                [Page 2]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -134,6 +134,11 @@ Internet-Draft            Constrained Vouchers             February 2018
 
    This document follows a similar, but not identical structure as
    [I-D.ietf-anima-voucher].  Some sections are left out entirely.
+   Additional sections to [I-D.ietf-anima-voucher] concern: - Addition
+   of voucher-request specification as defined in
+   [I-D.ietf-anima-bootstrapping-keyinfra], - Addition to
+   [I-D.vanderstok-ace-coap-est] of voucher transport requests over
+   coap.
 
    The CBOR definitions for this constrained voucher format are defined
    using the mechanism describe in [I-D.ietf-core-yang-cbor] using the
@@ -153,6 +158,18 @@ Internet-Draft            Constrained Vouchers             February 2018
    Registrar/Coordinator (JRC), Manufacturer Authorized Signing
    Authority (MASA), pledge, Trust of First Use (TOFU), and Voucher.
 
+
+
+
+
+
+
+
+Richardson, et al.       Expires August 18, 2018                [Page 3]
+
+Internet-Draft            Constrained Vouchers             February 2018
+
+
 3.  Requirements Language
 
    In this document, the key words "MUST", "MUST NOT", "REQUIRED",
@@ -160,15 +177,6 @@ Internet-Draft            Constrained Vouchers             February 2018
    and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
    [RFC2119] and indicate requirement levels for compliant STuPiD
    implementations.
-
-
-
-
-
-Richardson, et al.       Expires August 11, 2018                [Page 3]
-
-Internet-Draft            Constrained Vouchers             February 2018
-
 
 4.  Survey of Voucher Types
 
@@ -197,9 +205,11 @@ Internet-Draft            Constrained Vouchers             February 2018
 
    This section describes the BRSKI extensions to EST-coaps
    [I-D.vanderstok-ace-coap-est] to transport the voucher between
-   registrar, proxy and pledge over CoAP.  The extension is targeted to
-   low-resource networks with small packets.  Saving header space is
-   important and the EST-coaps URI is shorter than the EST URI.
+   registrar, proxy and pledge over CoAP.
+
+   The extension is targeted to low-resource networks with small
+   packets.  Saving header space is important and the EST-coaps URI is
+   shorter than the EST URI.
 
    The presence and location of (path to) the management data are
    discovered by sending a GET request to "/.well-known/core" including
@@ -207,6 +217,15 @@ Internet-Draft            Constrained Vouchers             February 2018
    Upon success, the return payload will contain the root resource of
    the EST resources.  It is up to the implementation to choose its root
    resource; throughout this document the example root resource /est is
+
+
+
+
+Richardson, et al.       Expires August 18, 2018                [Page 4]
+
+Internet-Draft            Constrained Vouchers             February 2018
+
+
    used.  The example below shows the discovery of the presence and
    location of voucher resources.
 
@@ -217,14 +236,6 @@ Internet-Draft            Constrained Vouchers             February 2018
 
    The EST-coaps server URIs differ from the EST URI by replacing the
    scheme https by coaps and by specifying shorter resource path names:
-
-
-
-
-Richardson, et al.       Expires August 11, 2018                [Page 4]
-
-Internet-Draft            Constrained Vouchers             February 2018
-
 
      coaps://www.example.com/est/short-name
 
@@ -264,6 +275,13 @@ Internet-Draft            Constrained Vouchers             February 2018
      </est/es>; rt="ace.est";ct=50
      </est/ra>; rt="ace.est";ct= TBD2 16
 
+
+
+Richardson, et al.       Expires August 18, 2018                [Page 5]
+
+Internet-Draft            Constrained Vouchers             February 2018
+
+
    ct=50 stands for the Content-Format "application/json", ct=16 stands
    for the Content-Format "application/cose", and ct=TBD2 stands for
    Content-Format "application/voucher-cms+cbor defined in this
@@ -271,16 +289,6 @@ Internet-Draft            Constrained Vouchers             February 2018
 
    The return of the content-types allows the client to choose the most
    appropriate one from multiple content types.
-
-
-
-
-
-
-Richardson, et al.       Expires August 11, 2018                [Page 5]
-
-Internet-Draft            Constrained Vouchers             February 2018
-
 
 6.  Artifacts
 
@@ -290,8 +298,9 @@ Internet-Draft            Constrained Vouchers             February 2018
 
    Then the assigned SID values are presented.  These have been assigned
    using the rules in [I-D.ietf-core-yang-cbor], with an allocation that
-   was made via the http://comi.space service.  ((EDNOTE: it is unclear
-   if there is further IANA work))
+   was made via the http://comi.space service.
+
+   ((EDNOTE: it is unclear if there is further IANA work))
 
 6.1.  Voucher Request artifact
 
@@ -318,22 +327,13 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 6.1.2.  SID values
 
+   [EDNote: the appropriate generation of the SID values is under
+   discussion]
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.       Expires August 11, 2018                [Page 6]
+Richardson, et al.       Expires August 18, 2018                [Page 6]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -358,7 +358,9 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 6.1.3.  YANG Module
 
-<CODE BEGINS> file "ietf-cwt-voucher-request@2018-02-07.yang"
+   [EDNote: the appropriate syntax of the module is under discussion]
+
+<CODE BEGINS> file "ietf-cwt-voucher-request@2017-12-11.yang"
 /* -*- c -*- */
 module ietf-cwt-voucher-request {
   yang-version 1.1;
@@ -384,15 +386,15 @@ module ietf-cwt-voucher-request {
    "This module defines the format for a voucher, which is produced by
     a pledge's manufacturer or delegate (MASA) to securely assign one
     or more pledges to an 'owner', so that the pledges may establish a
-    secure connection to the owner's network infrastructure.
 
 
 
-
-Richardson, et al.       Expires August 11, 2018                [Page 7]
+Richardson, et al.       Expires August 18, 2018                [Page 7]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
+
+    secure connection to the owner's network infrastructure.
 
     This version provides a very restricted subset appropriate
     for very constrained devices.
@@ -405,7 +407,7 @@ Internet-Draft            Constrained Vouchers             February 2018
     'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in
     the module text are to be interpreted as described in RFC 2119.";
 
-  revision "2018-02-07" {
+  revision "2017-12-11" {
     description
      "Initial version";
     reference
@@ -443,9 +445,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-
-
-Richardson, et al.       Expires August 11, 2018                [Page 8]
+Richardson, et al.       Expires August 18, 2018                [Page 8]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -486,6 +486,8 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 6.4.  SID values
 
+   [EDNote: the appropriate generation of the SID values is under
+   discussion]
 
 
 
@@ -499,9 +501,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-
-
-Richardson, et al.       Expires August 11, 2018                [Page 9]
+Richardson, et al.       Expires August 18, 2018                [Page 9]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -526,7 +526,9 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 6.5.  YANG Module
 
- <CODE BEGINS> file "ietf-cwt-voucher@2018-02-07.yang"
+   [EDNote: the appropriate syntax of the module is under discussion]
+
+ <CODE BEGINS> file "ietf-cwt-voucher@2017-12-11.yang"
  /* -*- c -*- */
  module ietf-cwt-voucher {
    yang-version 1.1;
@@ -552,15 +554,15 @@ Internet-Draft            Constrained Vouchers             February 2018
     "This module defines the format for a voucher, which is produced by
      a pledge's manufacturer or delegate (MASA) to securely assign one
      or more pledges to an 'owner', so that the pledges may establish a
-     secure connection to the owner's network infrastructure.
 
 
 
-
-Richardson, et al.       Expires August 11, 2018               [Page 10]
+Richardson, et al.       Expires August 18, 2018               [Page 10]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
+
+     secure connection to the owner's network infrastructure.
 
      This version provides a very restricted subset appropriate
      for very constrained devices.
@@ -573,7 +575,7 @@ Internet-Draft            Constrained Vouchers             February 2018
      'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in
      the module text are to be interpreted as described in RFC 2119.";
 
-   revision "2018-02-07" {
+   revision "2017-12-11" {
      description
       "Initial version";
      reference
@@ -611,9 +613,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-
-
-Richardson, et al.       Expires August 11, 2018               [Page 11]
+Richardson, et al.       Expires August 18, 2018               [Page 11]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -669,7 +669,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 12]
+Richardson, et al.       Expires August 18, 2018               [Page 12]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -683,8 +683,8 @@ Internet-Draft            Constrained Vouchers             February 2018
    The design considerations for the CBOR encoding of vouchers is much
    the same as for [I-D.ietf-anima-voucher].
 
-   One key difference is that the names of the leafs in the YANG does
-   not have a material affect on the size of the resulting CBOR, as the
+   One key difference is that the names of the leaves in the YANG does
+   not have a material effect on the size of the resulting CBOR, as the
    SID translation process assigns integers to the names.
 
 8.  Security Considerations
@@ -725,7 +725,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 13]
+Richardson, et al.       Expires August 18, 2018               [Page 13]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -749,7 +749,7 @@ Internet-Draft            Constrained Vouchers             February 2018
      -------  --------------------------------------  ----------
      TBD1      id-ct-animaCBORVoucher                 [ThisRFC]
 
-   EDNOTE: should a seperate value be used for Voucher Requests?
+   EDNOTE: should a separate value be used for Voucher Requests?
 
 9.4.  The SID registry
 
@@ -781,7 +781,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 14]
+Richardson, et al.       Expires August 18, 2018               [Page 14]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -837,7 +837,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 15]
+Richardson, et al.       Expires August 18, 2018               [Page 15]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -846,7 +846,7 @@ Internet-Draft            Constrained Vouchers             February 2018
               Pritikin, M., Richardson, M., Behringer, M., Bjarnason,
               S., and K. Watsen, "Bootstrapping Remote Secure Key
               Infrastructures (BRSKI)", draft-ietf-anima-bootstrapping-
-              keyinfra-09 (work in progress), October 2017.
+              keyinfra-10 (work in progress), February 2018.
 
    [I-D.ietf-anima-voucher]
               Watsen, K., Richardson, M., Pritikin, M., and T. Eckert,
@@ -867,8 +867,8 @@ Internet-Draft            Constrained Vouchers             February 2018
    [I-D.ietf-core-yang-cbor]
               Veillette, M., Pelov, A., Somaraju, A., Turner, R., and A.
               Minaburo, "CBOR Encoding of Data Modeled with YANG",
-              draft-ietf-core-yang-cbor-05 (work in progress), August
-              2017.
+              draft-ietf-core-yang-cbor-06 (work in progress), February
+              2018.
 
    [I-D.vanderstok-ace-coap-est]
               Stok, P., Kampanakis, P., Kumar, S., Richardson, M.,
@@ -893,7 +893,7 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 16]
+Richardson, et al.       Expires August 18, 2018               [Page 16]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -922,8 +922,8 @@ Internet-Draft            Constrained Vouchers             February 2018
 
    [I-D.ietf-netmod-yang-tree-diagrams]
               Bjorklund, M. and L. Berger, "YANG Tree Diagrams", draft-
-              ietf-netmod-yang-tree-diagrams-05 (work in progress),
-              January 2018.
+              ietf-netmod-yang-tree-diagrams-06 (work in progress),
+              February 2018.
 
    [pledge]   Dictionary.com, ., "Dictionary.com Unabridged", 2015,
               <http://dictionary.reference.com/browse/pledge>.
@@ -949,7 +949,7 @@ Appendix A.  EST messages to EST-coaps
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 17]
+Richardson, et al.       Expires August 18, 2018               [Page 17]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -1005,7 +1005,7 @@ A.1.  enrollstatus
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 18]
+Richardson, et al.       Expires August 18, 2018               [Page 18]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -1061,7 +1061,7 @@ Authors' Addresses
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 19]
+Richardson, et al.       Expires August 18, 2018               [Page 19]
 
 Internet-Draft            Constrained Vouchers             February 2018
 
@@ -1117,4 +1117,4 @@ Internet-Draft            Constrained Vouchers             February 2018
 
 
 
-Richardson, et al.       Expires August 11, 2018               [Page 20]
+Richardson, et al.       Expires August 18, 2018               [Page 20]
