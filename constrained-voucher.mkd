@@ -247,15 +247,13 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-tree.txt END
 
 ### SID values
 
-[EDNote: the appropriate generation of the SID values is under discussion]
-
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
 </figure>
 
 ### YANG Module
 
-[EDNote: the appropriate syntax of the module is under discussion]
+In the cwt-voucher-request YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the cwt-voucher-request module name, all voucher attributes, and the cwt-voucher-request attribute.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request@DATE.yang END
@@ -291,7 +289,7 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-sid.txt END
 
 ## YANG Module
 
-[EDNote: the appropriate syntax of the module is under discussion]
+In the cwt-voucher YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the cwt-voucher module name, all voucher attributes, and the cwt-voucher attribute.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher@DATE.yang END
