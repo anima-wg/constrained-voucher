@@ -1,10 +1,17 @@
-/* -*- c -*- */
 module ietf-cwt-voucher-request {
   yang-version 1.1;
 
   namespace
     "urn:ietf:params:xml:ns:yang:ietf-cwt-voucher-request";
   prefix "vcwt";
+
+  import ietf-restconf {
+    prefix rc;
+    description
+      "This import statement is only present to access
+       the yang-data extension defined in RFC 8040.";
+    reference "RFC 8040: RESTCONF Protocol";
+  }
 
   import ietf-voucher {
     prefix "v";
@@ -36,13 +43,18 @@ module ietf-cwt-voucher-request {
     'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in
     the module text are to be interpreted as described in RFC 2119.";
 
-  revision "YYYY-MM-DD" {
+  revision "2018-03-12" {
     description
      "Initial version";
     reference
      "RFC XXXX: Voucher Profile for Constrained Devices";
   }
 
+  rc:yang-data voucher-request-cwt-artifact {
+    // YANG data template for a voucher.
+    uses voucher-request-cwt-grouping;
+  }
+  
   // Grouping defined for future usage
   grouping voucher-request-cwt-grouping {
     description
@@ -54,17 +66,17 @@ module ietf-cwt-voucher-request {
         leaf proximity-registrar-subject-public-key-info {
           type binary;
           description
-            "The proximity-registrar-subject-public-key-info replaces
-         the proximit-registrar-cert in constrained uses of
-         the voucher-request.
-         The proximity-registrar-subject-public-key-info is the
-         Raw Public Key of the Registrar. This field is encoded
-         as specified in RFC7250, section 3.
-         The ECDSA algorithm MUST be supported.
-         The EdDSA algorithm as specified in
-         draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
-         Support for the DSA algorithm is not recommended.
-         Support for the RSA algorithm is a MAY.";
+            "The proximity-registrar-subject-public-key-info replaces the
+             proximit-registrar-cert in constrained uses of
+             the voucher-request.
+             The proximity-registrar-subject-public-key-info is the
+             Raw Public Key of the Registrar. This field is encoded
+             as specified in RFC7250, section 3.
+             The ECDSA algorithm MUST be supported.
+             The EdDSA algorithm as specified in
+             draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
+             Support for the DSA algorithm is not recommended.
+             Support for the RSA algorithm is a MAY.";
         }
       }
     }
