@@ -1,5 +1,5 @@
 ---
-title: Constrained Voucher Profile for Bootstrapping Protocols
+title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Vouchers
 docname: draft-richardson-anima-ace-constrained-voucher-03
 
@@ -212,15 +212,16 @@ following more complete response is possible.
 
   RES: 2.05 Content
   </est>; rt="ace.est"
-  </est/rv>; rt="ace.est";ct=50 TBD2 16
+  </est/rv>; rt="ace.est";ct=50 TBD2 TBD3 16
   </est/vs>; rt="ace.est";ct=50
   </est/es>; rt="ace.est";ct=50
-  </est/ra>; rt="ace.est";ct= TBD2 16
+  </est/ra>; rt="ace.est";ct= TBD2 TBD3 16
 ~~~~
 
 ct=50 stands for the Content-Format "application/json", ct=16 stands for the
-Content-Format "application/cose", and ct=TBD2 stands for Content-Format
-"application/voucher-cms+cbor defined in this document.
+Content-Format "application/cose", ct=TBD2 stands for Content-Format
+"application/voucher-cms+cbor,  ct=TBD3 stands for Content-Format
+"application/voucher-cose+cbor. The latter two are  defined in this document.
 
 The return of the content-types allows the client to choose the most
 appropriate one from multiple content types.
@@ -329,7 +330,7 @@ Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request ar
   }
 }
 
-## CMS format voucher and voucher-request artifacts
+## Signing of voucher and voucher-request artifacts
 
 The IETF evolution of PKCS#7 is CMS {{RFC5652}}.  The CMS signed voucher is
 much like the equivalent voucher defined in {{I-D.ietf-anima-voucher}}.
@@ -352,6 +353,8 @@ pledge to the registrar.  From the JRC to the MASA, the voucher-request
 artifact MUST be signed by the domain owner key which is requesting
 ownership.
 
+### CMS signing
+
 The considerations of {{RFC5652}} section 5.1, concerning validating
 CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
 
@@ -369,9 +372,12 @@ unlikely to be able to perform online checks, and is unlikely to have
 a trusted clock source.  As described below, the use of short-lived
 vouchers and/or pledge provided nonce provides a freshness guarantee.
 
-## COSE format voucher and voucher-request artifacts
+### COSE signing
 
-This section to be added.
+The COSE-Sign1 structure discussed in section 4.2 of [RFC8152]. The CBOR object that carries the body, the signature, and the
+information about the body and signature is called the COSE_Sign1
+structure. It is used when only one signature is used on the body. The signature algorithm is ECSDA with three curves P-256,
+P-384, and P-512.
 
 # Design Considerations
 
@@ -451,9 +457,11 @@ EDNOTE: it is unclear if there is further IANA work required.
 
 ## Media-Type Registry
 
-This section registers the 'application/voucher-cms+cbor' media type in the
+This section registers the 'application/voucher-cms+cbor' media type and the 'application/voucher-cose+cbor'in the
 "Media Types" registry.  These media types are used to indicate that
-the content is a CBOR voucher signed with a cms structure.
+the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1 structure [RFC8152].
+
+### application/voucher-cms+cbor
 
     Type name:  application
     Subtype name:  voucher-cms+cbor
@@ -479,13 +487,48 @@ the content is a CBOR voucher signed with a cms structure.
     Change controller:  IETF
     Provisional registration? (standards tree only):  NO
 
+### application/voucher-cose+cbore
+
+    Type name:  application
+    Subtype name:  voucher-cose+cbor
+    Required parameters:  none
+    Optional parameters:  none
+    Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects signed with one signer.
+    Security considerations:  See Security Considerations, Section
+    Interoperability considerations:  The format is designed to be
+      broadly interoperable.
+    Published specification:  THIS RFC.
+    Applications that use this media type:  ANIMA, 6tisch, and other
+      zero-touch imprinting systems
+    Additional information:
+      Magic number(s):  None
+      File extension(s):  .cbor
+      Macintosh file type code(s):  none
+    Person & email address to contact for further information:  IETF
+      ANIMA WG
+    Intended usage:  LIMITED
+    Restrictions on usage:  NONE
+    Author:  ANIMA WG
+    Change controller:  IETF
+    Provisional registration? (standards tree only):  NO
+
 ## CoAP Content-Format Registry
 
 Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for the below media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
-     Addition:
+     Addition1:
            Type name: application
            Subtype name: voucher-cms+cbor
            ID: TBD2
+           Required parameters: None
+           Optional parameters: None
+           Encoding considerations: CBOR
+           Security considerations: As defined in this specification
+           Published specification: this document
+           Applications that use this media type: ANIMA bootstrap (BRSKI)
+     Addition2:
+           Type name: application
+           Subtype name: voucher-cose+cbor
+           ID: TBD3
            Required parameters: None
            Optional parameters: None
            Encoding considerations: CBOR
@@ -585,7 +628,7 @@ A 2.05 Content response returning CBOR voucher signed with a cms structure(ct=TB
 ~~~~
     2.05 Content (Content-Format: application/voucher-cms+cbor)
     Payload =
-    [EDNOTE: put here encrypted voucher payload ]
+    [EDNOTE: put here CMS signed voucher payload ]
 ~~~~
 
 
@@ -597,10 +640,10 @@ A coaps requestauditing message can be :
     GET coaps://[2001:db8::2:1]:61616]/est/ra
 ~~~~
 
-A 2.05 Content response with a COSE voucher (ct=16) will then be:
+A 2.05 Content response returning a COSE_Sign1 object (ct=TBD3) will then be:
 
 ~~~~
-    2.05 Content (Content-Format: application/cose)
+    2.05 Content (Content-Format: application/voucher-cose+cbor)
     Payload =
-    [EDNOTE: put here COSE voucher payload ]
+    [EDNOTE: put here COSE_Sign1 voucher payload ]
 ~~~~
