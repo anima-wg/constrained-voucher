@@ -47,7 +47,7 @@ normative:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-core-object-security:
   I-D.ietf-ace-cbor-web-token:
-  I-D.vanderstok-ace-coap-est:
+  I-D.ietf-ace-coap-est:
   ieee802-1AR:
     target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
     title: "IEEE 802.1AR Secure Device Identifier"
@@ -90,7 +90,7 @@ the resulting artifact in CBOR.  Use with two signature technologies are
 described.
 
 Additionally, this document explains how constrained vouchers may be
-transported in the {{I-D.vanderstok-ace-coap-est}} protocol.
+transported in the {{I-D.ietf-ace-coap-est}} protocol.
 
 --- middle
 
@@ -110,7 +110,7 @@ CBOR ({{RFC7049}}).
 This document follows a similar, but not identical structure as
 {{I-D.ietf-anima-voucher}}. Some sections are left out entirely. Additional sections to {{I-D.ietf-anima-voucher}} concern:
 - Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
-- Addition to {{I-D.vanderstok-ace-coap-est}} of voucher transport requests over coap.
+- Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over coap.
 
 The CBOR definitions for this constrained voucher format are defined using
 the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID
@@ -160,7 +160,7 @@ as this is the time order that they occur.
 # Discovery and URI
 
 This section describes the BRSKI extensions to EST-coaps
-{{I-D.vanderstok-ace-coap-est}} to transport the voucher between registrar,
+{{I-D.ietf-ace-coap-est}} to transport the voucher between registrar,
 proxy and pledge over CoAP.
 
 The extension is targeted to low-resource networks with small packets. Saving
@@ -544,7 +544,7 @@ TBD
 
 #EST messages to EST-coaps
 
-This section extends the examples from Appendix A of {{I-D.vanderstok-ace-coap-est}}. The CoAP headers are only worked out for the enrollstatus example.
+This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}}. The CoAP headers are only worked out for the enrollstatus example.
 
 ##enrollstatus
 
