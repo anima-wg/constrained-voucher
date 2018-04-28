@@ -82,13 +82,13 @@ Table of Contents
        6.1.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .   7
        6.1.4.  Example voucher request artifacts . . . . . . . . . .   9
      6.2.  Voucher artifact  . . . . . . . . . . . . . . . . . . . .   9
-     6.3.  Tree Diagram  . . . . . . . . . . . . . . . . . . . . . .   9
-     6.4.  SID values  . . . . . . . . . . . . . . . . . . . . . . .   9
-     6.5.  YANG Module . . . . . . . . . . . . . . . . . . . . . . .  10
-       6.5.1.  Example voucher artifacts . . . . . . . . . . . . . .  12
-     6.6.  Signing of voucher and voucher-request artifacts  . . . .  12
-       6.6.1.  CMS signing . . . . . . . . . . . . . . . . . . . . .  13
-       6.6.2.  COSE signing  . . . . . . . . . . . . . . . . . . . .  13
+       6.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .   9
+       6.2.2.  SID values  . . . . . . . . . . . . . . . . . . . . .   9
+       6.2.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  10
+       6.2.4.  Example voucher artifacts . . . . . . . . . . . . . .  12
+     6.3.  Signing of voucher and voucher-request artifacts  . . . .  12
+       6.3.1.  CMS signing . . . . . . . . . . . . . . . . . . . . .  13
+       6.3.2.  COSE signing  . . . . . . . . . . . . . . . . . . . .  13
    7.  Design Considerations . . . . . . . . . . . . . . . . . . . .  13
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
      8.1.  Clock Sensitivity . . . . . . . . . . . . . . . . . . . .  14
@@ -471,7 +471,7 @@ Internet-Draft            Constrained Vouchers                April 2018
    the YANG module defined in Section 5.3 that has been signed with CMS
    or with COSE.
 
-6.3.  Tree Diagram
+6.2.1.  Tree Diagram
 
    module: ietf-cwt-voucher
 
@@ -491,7 +491,7 @@ Internet-Draft            Constrained Vouchers                April 2018
           |       yang:date-and-time
           +---- pinned-domain-subject-public-key-info?   binary
 
-6.4.  SID values
+6.2.2.  SID values
 
 
 
@@ -524,7 +524,7 @@ Internet-Draft            Constrained Vouchers                April 2018
      1001113 data .../pinned-domain-subject-public-key-info
      1001114 data .../serial-number
 
-6.5.  YANG Module
+6.2.3.  YANG Module
 
    In the cwt-voucher YANG module, the voucher is "used" and not
    "augmented" such that one continuous set of SID values is generated
@@ -621,12 +621,12 @@ Internet-Draft            Constrained Vouchers                April 2018
  }
  <CODE ENDS>
 
-6.5.1.  Example voucher artifacts
+6.2.4.  Example voucher artifacts
 
    Below a the CBOR serialization of the the cwt-voucher and cwt-
    voucher-request are shown in diagnostic CBOR notation.
 
-6.5.1.1.  CBOR serialization of cwt-voucher
+6.2.4.1.  CBOR serialization of cwt-voucher
 
    { 1001051: { +2 : "2016-10-07T19:31:42Z", / SID = 1001053, created-on
    / +4 : "2016-10-21T19:31:42Z", / SID = 1001055, expires-on / +1 :
@@ -638,7 +638,7 @@ Internet-Draft            Constrained Vouchers                April 2018
    h'01020D0F' / SID = 1001060, pinned-domain-subject-public-key-info /
    } }
 
-6.5.1.2.  CBOR serialization of cwt-voucher-request
+6.2.4.2.  CBOR serialization of cwt-voucher-request
 
    { 1001101: { +2 : "2016-10-07T19:31:42Z", / SID = 1001103, created-on
    / +4 : "2016-10-21T19:31:42Z", / SID = 1001105, expires-on / +1 :
@@ -650,7 +650,7 @@ Internet-Draft            Constrained Vouchers                April 2018
    h'01020D0F' / SID = 1001111, proximity-registrar-subject-public-key-
    info / } }
 
-6.6.  Signing of voucher and voucher-request artifacts
+6.3.  Signing of voucher and voucher-request artifacts
 
    The IETF evolution of PKCS#7 is CMS [RFC5652].  The CMS signed
    voucher is much like the equivalent voucher defined in
@@ -681,7 +681,7 @@ Internet-Draft            Constrained Vouchers                April 2018
    artifact MUST be signed by the domain owner key which is requesting
    ownership.
 
-6.6.1.  CMS signing
+6.3.1.  CMS signing
 
    The considerations of [RFC5652] section 5.1, concerning validating
    CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
@@ -700,7 +700,7 @@ Internet-Draft            Constrained Vouchers                April 2018
    a trusted clock source.  As described below, the use of short-lived
    vouchers and/or pledge provided nonce provides a freshness guarantee.
 
-6.6.2.  COSE signing
+6.3.2.  COSE signing
 
    The COSE-Sign1 structure discussed in section 4.2 of [RFC8152].  The
    CBOR object that carries the body, the signature, and the information

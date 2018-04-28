@@ -274,19 +274,19 @@ This document defines a voucher that is a CBOR encoded instance of
 the YANG module defined in Section 5.3 that has been signed with CMS
 or with COSE.
 
-## Tree Diagram
+### Tree Diagram
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-tree.txt END
 </figure>
 
-## SID values
+### SID values
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-cwt-voucher-sid.txt END
 </figure>
 
-## YANG Module
+### YANG Module
 
 In the cwt-voucher YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the cwt-voucher module name, all voucher attributes, and the cwt-voucher attribute.
 
