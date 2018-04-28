@@ -301,7 +301,7 @@ Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request ar
 #### CBOR serialization of cwt-voucher
 
 {
-  1001051: {                                     
+  1001051: {
     +2 : "2016-10-07T19:31:42Z",  / SID = 1001053, created-on /
     +4 : "2016-10-21T19:31:42Z",  / SID = 1001055, expires-on /
     +1 : "verified",              / SID = 1001052, assertion /
@@ -317,7 +317,7 @@ Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request ar
 #### CBOR serialization of cwt-voucher-request
 
 {
-  1001101: {                                     
+  1001101: {
     +2 : "2016-10-07T19:31:42Z",  / SID = 1001103, created-on /
     +4 : "2016-10-21T19:31:42Z",  / SID = 1001105, expires-on /
     +1 : "verified",              / SID = 1001102, assertion /
