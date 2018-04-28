@@ -34,7 +34,7 @@ ietf-cwt-voucher-request-tree.txt: ${CWTDATE2}
 
 %.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-cwt-voucher-tree.txt ietf-cwt-voucher-request-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2}
 	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
-	git add ${DRAFT}.xml
+	: git add ${DRAFT}.xml
 
 %.txt: %.xml
 	unset DISPLAY; XML_LIBRARY=$(XML_LIBRARY):./src xml2rfc $? $@
