@@ -108,9 +108,11 @@ Rather than serializing the YANG definition in JSON, it is serialized into
 CBOR ({{RFC7049}}).
 
 This document follows a similar, but not identical structure as
-{{I-D.ietf-anima-voucher}}. Some sections are left out entirely. Additional sections to {{I-D.ietf-anima-voucher}} concern:
-- Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
-- Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over coap.
+{{I-D.ietf-anima-voucher}}. Some sections are left out entirely.
+Additional sections have been added concerning:
+
+1. Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
+2. Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over coap.
 
 The CBOR definitions for this constrained voucher format are defined using
 the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID
@@ -120,7 +122,10 @@ SID values presented here should be considered normative rather than the
 output of the pyang tool.
 
 Two methods of signing the resulting CBOR object are described in this
-document.  One is CMS {{RFC5652}}.  The other is COSE {{RFC8152}} signatures.
+document:
+
+1. One is CMS {{RFC5652}}.
+2. The other is COSE {{RFC8152}} signatures.
 
 # Terminology          {#Terminology}
 
@@ -493,7 +498,8 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
     Subtype name:  voucher-cose+cbor
     Required parameters:  none
     Optional parameters:  none
-    Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects signed with one signer.
+    Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects 
+                              signed with one signer.
     Security considerations:  See Security Considerations, Section
     Interoperability considerations:  The format is designed to be
       broadly interoperable.
