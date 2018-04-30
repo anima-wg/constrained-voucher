@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-richardson-anima-ace-constrained-voucher-03
+docname: draft-richardson-anima-ace-constrained-voucher-04
 
 # stand_alone: true
 
