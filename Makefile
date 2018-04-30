@@ -16,7 +16,7 @@ PYANGDIR=/sandel/src/pyang
 
 ${DRAFT}-${VERSION}.txt: ${DRAFT}.txt
 	cp ${DRAFT}.txt ${DRAFT}-${VERSION}.txt
-	git add ${DRAFT}-${VERSION}.txt ${DRAFT}.txt
+	: git add ${DRAFT}-${VERSION}.txt ${DRAFT}.txt
 
 ${CWTDATE1}: ietf-cwt-voucher.yang
 	mkdir -p yang
