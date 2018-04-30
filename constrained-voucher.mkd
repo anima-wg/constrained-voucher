@@ -177,7 +177,7 @@ sending a GET request to "/.well-known/core" including a resource type (RT)
 parameter with the value "ace.est" {{RFC6690}}. Upon success, the return
 payload will contain the root resource of the EST resources. It is up to the
 implementation to choose its root resource; throughout this document the
-example root resource /est is used. 
+example root resource /est is used.
 
 The EST-coaps server URIs differ from the EST URI by replacing the scheme
 https by coaps and by specifying shorter resource path names:
@@ -490,7 +490,7 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
     Subtype name:  voucher-cose+cbor
     Required parameters:  none
     Optional parameters:  cose-type
-    Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects 
+    Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects
                               signed with one signer.
     Security considerations:  See Security Considerations, Section
     Interoperability considerations:  The format is designed to be
