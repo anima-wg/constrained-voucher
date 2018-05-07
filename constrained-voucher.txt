@@ -5,14 +5,14 @@
 6tisch Working Group                                       M. Richardson
 Internet-Draft                                  Sandelman Software Works
 Intended status: Informational                           P. van der Stok
-Expires: October 29, 2018                         vanderstok consultancy
+Expires: November 8, 2018                         vanderstok consultancy
                                                            P. Kampanakis
                                                            Cisco Systems
-                                                          April 27, 2018
+                                                            May 07, 2018
 
 
        Constrained Voucher Artifacts for Bootstrapping Protocols
-           draft-richardson-anima-ace-constrained-voucher-03
+           draft-richardson-anima-ace-constrained-voucher-04
 
 Abstract
 
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 29, 2018.
+   This Internet-Draft will expire on November 8, 2018.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Richardson, et al.      Expires October 29, 2018                [Page 1]
+Richardson, et al.      Expires November 8, 2018                [Page 1]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -71,7 +71,7 @@ Internet-Draft            Constrained Vouchers                April 2018
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Requirements Language . . . . . . . . . . . . . . . . . . . .   4
    4.  Survey of Voucher Types . . . . . . . . . . . . . . . . . . .   4
    5.  Discovery and URI . . . . . . . . . . . . . . . . . . . . . .   4
@@ -101,26 +101,26 @@ Table of Contents
      9.4.  The SID registry  . . . . . . . . . . . . . . . . . . . .  15
      9.5.  Media-Type Registry . . . . . . . . . . . . . . . . . . .  15
        9.5.1.  application/voucher-cms+cbor  . . . . . . . . . . . .  15
-       9.5.2.  application/voucher-cose+cbore  . . . . . . . . . . .  16
+       9.5.2.  application/voucher-cose+cbor . . . . . . . . . . . .  16
      9.6.  CoAP Content-Format Registry  . . . . . . . . . . . . . .  17
    10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  17
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  18
 
 
 
-Richardson, et al.      Expires October 29, 2018                [Page 2]
+Richardson, et al.      Expires November 8, 2018                [Page 2]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
      11.2.  Informative References . . . . . . . . . . . . . . . . .  19
-   Appendix A.  EST messages to EST-coaps  . . . . . . . . . . . . .  19
-     A.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  19
-     A.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  20
+   Appendix A.  EST messages to EST-coaps  . . . . . . . . . . . . .  20
+     A.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  20
+     A.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  21
      A.3.  requestvoucher  . . . . . . . . . . . . . . . . . . . . .  21
      A.4.  requestauditing . . . . . . . . . . . . . . . . . . . . .  21
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 1.  Introduction
 
@@ -137,10 +137,13 @@ Internet-Draft            Constrained Vouchers                April 2018
 
    This document follows a similar, but not identical structure as
    [I-D.ietf-anima-voucher].  Some sections are left out entirely.
-   Additional sections to [I-D.ietf-anima-voucher] concern: - Addition
-   of voucher-request specification as defined in
-   [I-D.ietf-anima-bootstrapping-keyinfra], - Addition to
-   [I-D.ietf-ace-coap-est] of voucher transport requests over coap.
+   Additional sections have been added concerning:
+
+   1.  Addition of voucher-request specification as defined in
+       [I-D.ietf-anima-bootstrapping-keyinfra],
+
+   2.  Addition to [I-D.ietf-ace-coap-est] of voucher transport requests
+       over coap.
 
    The CBOR definitions for this constrained voucher format are defined
    using the mechanism describe in [I-D.ietf-core-yang-cbor] using the
@@ -150,8 +153,22 @@ Internet-Draft            Constrained Vouchers                April 2018
    normative rather than the output of the pyang tool.
 
    Two methods of signing the resulting CBOR object are described in
-   this document.  One is CMS [RFC5652].  The other is COSE [RFC8152]
-   signatures.
+   this document:
+
+   1.  One is CMS [RFC5652].
+
+   2.  The other is COSE [RFC8152] signatures.
+
+
+
+
+
+
+
+Richardson, et al.      Expires November 8, 2018                [Page 3]
+
+Internet-Draft            Constrained Vouchers                  May 2018
+
 
 2.  Terminology
 
@@ -159,16 +176,6 @@ Internet-Draft            Constrained Vouchers                April 2018
    used identically as in that document: artifact, imprint, domain, Join
    Registrar/Coordinator (JRC), Manufacturer Authorized Signing
    Authority (MASA), pledge, Trust of First Use (TOFU), and Voucher.
-
-
-
-
-
-
-Richardson, et al.      Expires October 29, 2018                [Page 3]
-
-Internet-Draft            Constrained Vouchers                April 2018
-
 
 3.  Requirements Language
 
@@ -211,28 +218,21 @@ Internet-Draft            Constrained Vouchers                April 2018
    packets.  Saving header space is important and the EST-coaps URI is
    shorter than the EST URI.
 
+
+
+
+Richardson, et al.      Expires November 8, 2018                [Page 4]
+
+Internet-Draft            Constrained Vouchers                  May 2018
+
+
    The presence and location of (path to) the management data are
    discovered by sending a GET request to "/.well-known/core" including
    a resource type (RT) parameter with the value "ace.est" [RFC6690].
    Upon success, the return payload will contain the root resource of
    the EST resources.  It is up to the implementation to choose its root
    resource; throughout this document the example root resource /est is
-
-
-
-
-Richardson, et al.      Expires October 29, 2018                [Page 4]
-
-Internet-Draft            Constrained Vouchers                April 2018
-
-
-   used.  The example below shows the discovery of the presence and
-   location of voucher resources.
-
-     REQ: GET /.well-known/core?rt=ace.est
-
-     RES: 2.05 Content
-     </est>; rt="ace.est"
+   used.
 
    The EST-coaps server URIs differ from the EST URI by replacing the
    scheme https by coaps and by specifying shorter resource path names:
@@ -263,33 +263,35 @@ Internet-Draft            Constrained Vouchers                April 2018
    When discovering the root path for the EST resources, the server MAY
    return the full resource paths and the used content types.  This is
    useful when multiple content types are specified for EST-coaps
-   server.  For example, the following more complete response is
-   possible.
+   server.  The example below shows the discovery of the presence and
+   the location of voucher resources.
 
      REQ: GET /.well-known/core?rt=ace.est
 
      RES: 2.05 Content
      </est>; rt="ace.est"
-     </est/rv>; rt="ace.est";ct=50 TBD2 TBD3 16
-     </est/vs>; rt="ace.est";ct=50
-     </est/es>; rt="ace.est";ct=50
-     </est/ra>; rt="ace.est";ct= TBD2 TBD3 16
+     </est/rv>; ct=50 TBD2 TBD3 16
+     </est/vs>; ct=50
+     </est/es>; ct=50
+     </est/ra>; ct=TBD2 TBD3 16
 
 
 
-Richardson, et al.      Expires October 29, 2018                [Page 5]
+Richardson, et al.      Expires November 8, 2018                [Page 5]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
-   ct=50 stands for the Content-Format "application/json", ct=16 stands
-   for the Content-Format "application/cose", ct=TBD2 stands for
-   Content-Format "application/voucher-cms+cbor, ct=TBD3 stands for
-   Content-Format "application/voucher-cose+cbor.  The latter two are
-   defined in this document.
-
+   The first line MUST be returned in response to the GET, The following
+   four lines MAY be returned to show the supported Content-Formats.
    The return of the content-types allows the client to choose the most
    appropriate one from multiple content types.
+
+   ct=50 stands for the Content-Format "application/json", ct=16 stands
+   for the Content-Format "application/cose; cose-type="cose-encrypt0",
+   ct=TBD2 stands for Content-Format "application/voucher-cms+cbor,
+   ct=TBD3 stands for Content-Format "application/voucher-cose+cbor;
+   cose-type="cose-sign1.  The latter two are defined in this document.
 
 6.  Artifacts
 
@@ -331,11 +333,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-
-
-Richardson, et al.      Expires October 29, 2018                [Page 6]
+Richardson, et al.      Expires November 8, 2018                [Page 6]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
 6.1.2.  SID values
@@ -389,9 +389,9 @@ module ietf-cwt-voucher-request {
 
 
 
-Richardson, et al.      Expires October 29, 2018                [Page 7]
+Richardson, et al.      Expires November 8, 2018                [Page 7]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
               <mailto:mcr+ietf@sandelman.ca>";
@@ -445,9 +445,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018                [Page 8]
+Richardson, et al.      Expires November 8, 2018                [Page 8]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
         }
@@ -501,9 +501,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018                [Page 9]
+Richardson, et al.      Expires November 8, 2018                [Page 9]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
          SID Assigned to
@@ -557,9 +557,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 10]
+Richardson, et al.      Expires November 8, 2018               [Page 10]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
     "This module defines the format for a voucher, which is produced by
@@ -613,9 +613,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 11]
+Richardson, et al.      Expires November 8, 2018               [Page 11]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
  }
@@ -669,9 +669,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 12]
+Richardson, et al.      Expires November 8, 2018               [Page 12]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
    [I-D.ietf-anima-bootstrapping-keyinfra] supports both signed and
@@ -725,9 +725,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 13]
+Richardson, et al.      Expires November 8, 2018               [Page 13]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
 8.1.  Clock Sensitivity
@@ -781,9 +781,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 14]
+Richardson, et al.      Expires November 8, 2018               [Page 14]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
 9.3.  The SMI Security for S/MIME CMS Content Type Registry
@@ -837,9 +837,9 @@ Internet-Draft            Constrained Vouchers                April 2018
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 15]
+Richardson, et al.      Expires November 8, 2018               [Page 15]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
 
    Type name:  application
@@ -866,37 +866,61 @@ Internet-Draft            Constrained Vouchers                April 2018
    Change controller:  IETF
    Provisional registration? (standards tree only):  NO
 
-9.5.2.  application/voucher-cose+cbore
-
-Type name:  application
-Subtype name:  voucher-cose+cbor
-Required parameters:  none
-Optional parameters:  none
-Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects signed with one signer.
-Security considerations:  See Security Considerations, Section
-Interoperability considerations:  The format is designed to be
-  broadly interoperable.
-Published specification:  THIS RFC.
-Applications that use this media type:  ANIMA, 6tisch, and other
-  zero-touch imprinting systems
-Additional information:
-  Magic number(s):  None
-  File extension(s):  .cbor
-  Macintosh file type code(s):  none
-Person & email address to contact for further information:  IETF
-  ANIMA WG
-Intended usage:  LIMITED
-Restrictions on usage:  NONE
-Author:  ANIMA WG
-Change controller:  IETF
-Provisional registration? (standards tree only):  NO
+9.5.2.  application/voucher-cose+cbor
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 16]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.      Expires November 8, 2018               [Page 16]
 
-Internet-Draft            Constrained Vouchers                April 2018
+Internet-Draft            Constrained Vouchers                  May 2018
 
+
+   Type name:  application
+   Subtype name:  voucher-cose+cbor
+   Required parameters:  none
+   Optional parameters:  cose-type
+   Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects
+                             signed with one signer.
+   Security considerations:  See Security Considerations, Section
+   Interoperability considerations:  The format is designed to be
+     broadly interoperable.
+   Published specification:  THIS RFC.
+   Applications that use this media type:  ANIMA, 6tisch, and other
+     zero-touch imprinting systems
+   Additional information:
+     Magic number(s):  None
+     File extension(s):  .cbor
+     Macintosh file type code(s):  none
+   Person & email address to contact for further information:  IETF
+     ANIMA WG
+   Intended usage:  LIMITED
+   Restrictions on usage:  NONE
+   Author:  ANIMA WG
+   Change controller:  IETF
+   Provisional registration? (standards tree only):  NO
 
 9.6.  CoAP Content-Format Registry
 
@@ -909,15 +933,26 @@ Internet-Draft            Constrained Vouchers                April 2018
    considerations: As defined in this specification Published
    specification: this document Applications that use this media type:
    ANIMA bootstrap (BRSKI) Addition2: Type name: application Subtype
-   name: voucher-cose+cbor ID: TBD3 Required parameters: None Optional
-   parameters: None Encoding considerations: CBOR Security
-   considerations: As defined in this specification Published
-   specification: this document Applications that use this media type:
-   ANIMA bootstrap (BRSKI)
+   name: voucher-cose+cbor ID: TBD3 Required parameters: cose-
+   type="COSE-Sign1" Optional parameters: none Encoding considerations:
+   CBOR Security considerations: As defined in this specification
+   Published specification: this document Applications that use this
+   media type: ANIMA bootstrap (BRSKI)
 
 10.  Acknowledgements
 
    TBD
+
+
+
+
+
+
+
+Richardson, et al.      Expires November 8, 2018               [Page 17]
+
+Internet-Draft            Constrained Vouchers                  May 2018
+
 
 11.  References
 
@@ -945,15 +980,6 @@ Internet-Draft            Constrained Vouchers                April 2018
               "Voucher Profile for Bootstrapping Protocols", draft-ietf-
               anima-voucher-07 (work in progress), January 2018.
 
-
-
-
-
-Richardson, et al.      Expires October 29, 2018               [Page 17]
-
-Internet-Draft            Constrained Vouchers                April 2018
-
-
    [I-D.ietf-core-object-security]
               Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
               "Object Security for Constrained RESTful Environments
@@ -975,6 +1001,14 @@ Internet-Draft            Constrained Vouchers                April 2018
               IEEE Standard, ., "IEEE 802.1AR Secure Device Identifier",
               2009, <http://standards.ieee.org/findstds/
               standard/802.1AR-2009.html>.
+
+
+
+
+Richardson, et al.      Expires November 8, 2018               [Page 18]
+
+Internet-Draft            Constrained Vouchers                  May 2018
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -998,17 +1032,6 @@ Internet-Draft            Constrained Vouchers                April 2018
    [RFC8152]  Schaad, J., "CBOR Object Signing and Encryption (COSE)",
               RFC 8152, DOI 10.17487/RFC8152, July 2017,
               <https://www.rfc-editor.org/info/rfc8152>.
-
-
-
-
-
-
-
-Richardson, et al.      Expires October 29, 2018               [Page 18]
-
-Internet-Draft            Constrained Vouchers                April 2018
-
 
 11.2.  Informative References
 
@@ -1035,6 +1058,14 @@ Internet-Draft            Constrained Vouchers                April 2018
               DOI 10.17487/RFC7030, October 2013, <https://www.rfc-
               editor.org/info/rfc7030>.
 
+
+
+
+Richardson, et al.      Expires November 8, 2018               [Page 19]
+
+Internet-Draft            Constrained Vouchers                  May 2018
+
+
 Appendix A.  EST messages to EST-coaps
 
    This section extends the examples from Appendix A of
@@ -1048,23 +1079,6 @@ A.1.  enrollstatus
        GET coaps://[192.0.2.1:8085]/est/es
 
    The corresponding coap header fields are shown below.
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.      Expires October 29, 2018               [Page 19]
-
-Internet-Draft            Constrained Vouchers                April 2018
-
 
      Ver = 1
      T = 0 (CON)
@@ -1092,6 +1106,22 @@ Internet-Draft            Constrained Vouchers                April 2018
 
    With CoAP fields and payload:
 
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.      Expires November 8, 2018               [Page 20]
+
+Internet-Draft            Constrained Vouchers                  May 2018
+
+
       Ver=1
       T=2 (ACK)
       Code = 0x45 (2.05 Content)
@@ -1112,15 +1142,6 @@ A.2.  voucher_status
 
    A 2.05 Content response with a non signed JSON voucher (ct=50) will
    then be:
-
-
-
-
-
-Richardson, et al.      Expires October 29, 2018               [Page 20]
-
-Internet-Draft            Constrained Vouchers                April 2018
-
 
        2.05 Content (Content-Format: application/json)
        Payload =
@@ -1148,6 +1169,15 @@ A.4.  requestauditing
    A 2.05 Content response returning a COSE_Sign1 object (ct=TBD3) will
    then be:
 
+
+
+
+
+Richardson, et al.      Expires November 8, 2018               [Page 21]
+
+Internet-Draft            Constrained Vouchers                  May 2018
+
+
        2.05 Content (Content-Format: application/voucher-cose+cbor)
        Payload =
        [EDNOTE: put here COSE_Sign1 voucher payload ]
@@ -1173,4 +1203,30 @@ Authors' Addresses
 
 
 
-Richardson, et al.      Expires October 29, 2018               [Page 21]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.      Expires November 8, 2018               [Page 22]
