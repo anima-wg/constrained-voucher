@@ -484,7 +484,7 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
     Change controller:  IETF
     Provisional registration? (standards tree only):  NO
 
-### application/voucher-cose+cbore
+### application/voucher-cose+cbor
 
     Type name:  application
     Subtype name:  voucher-cose+cbor
