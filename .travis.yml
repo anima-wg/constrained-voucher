@@ -1,11 +1,11 @@
 dist: trusty
 
 python:
-  - "2.7"
+  - "3.6"
 
-before_install:
-  - "sudo apt-get install python-pip"
-  - "sudo pip install xml2rfc"
+  before_install:
+  - "sudo apt-get install python3-pip"
+  - "pip3 install xml2rfc pyang"
   - "gem install kramdown-rfc2629"
 
 script: "make"
