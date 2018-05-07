@@ -177,15 +177,7 @@ sending a GET request to "/.well-known/core" including a resource type (RT)
 parameter with the value "ace.est" {{RFC6690}}. Upon success, the return
 payload will contain the root resource of the EST resources. It is up to the
 implementation to choose its root resource; throughout this document the
-example root resource /est is used. The example below shows the discovery of
-the presence and location of voucher resources.
-
-~~~~
-  REQ: GET /.well-known/core?rt=ace.est
-
-  RES: 2.05 Content
-  </est>; rt="ace.est"
-~~~~
+example root resource /est is used. 
 
 The EST-coaps server URIs differ from the EST URI by replacing the scheme
 https by coaps and by specifying shorter resource path names:
@@ -209,27 +201,27 @@ mapping from the BRSKI extension URI path to the EST-coaps URI path.
 
 When discovering the root path for the EST resources, the server MAY return
 the full resource paths and the used content types. This is useful when
-multiple content types are specified for EST-coaps server. For example, the
-following more complete response is possible.
+multiple content types are specified for EST-coaps server. The example below shows the discovery of the presence and the location of voucher resources.
 
 ~~~~
   REQ: GET /.well-known/core?rt=ace.est
 
   RES: 2.05 Content
   </est>; rt="ace.est"
-  </est/rv>; rt="ace.est";ct=50 TBD2 TBD3 16
-  </est/vs>; rt="ace.est";ct=50
-  </est/es>; rt="ace.est";ct=50
-  </est/ra>; rt="ace.est";ct= TBD2 TBD3 16
+  </est/rv>; ct=50 TBD2 TBD3 16
+  </est/vs>; ct=50
+  </est/es>; ct=50
+  </est/ra>; ct=TBD2 TBD3 16
 ~~~~
 
-ct=50 stands for the Content-Format "application/json", ct=16 stands for the
-Content-Format "application/cose", ct=TBD2 stands for Content-Format
-"application/voucher-cms+cbor,  ct=TBD3 stands for Content-Format
-"application/voucher-cose+cbor. The latter two are  defined in this document.
+The first line MUST be returned in response to the GET, The following four lines MAY be returned to show the supported Content-Formats. The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
-The return of the content-types allows the client to choose the most
-appropriate one from multiple content types.
+ct=50 stands for the Content-Format "application/json", ct=16 stands for the
+Content-Format "application/cose; cose-type="cose-encrypt0", ct=TBD2 stands for Content-Format
+"application/voucher-cms+cbor,  ct=TBD3 stands for Content-Format
+"application/voucher-cose+cbor; cose-type="cose-sign1. The latter two are  defined in this document.
+
+
 
 # Artifacts
 
@@ -497,7 +489,7 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
     Type name:  application
     Subtype name:  voucher-cose+cbor
     Required parameters:  none
-    Optional parameters:  none
+    Optional parameters:  cose-type
     Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects 
                               signed with one signer.
     Security considerations:  See Security Considerations, Section
@@ -535,8 +527,8 @@ Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameter
            Type name: application
            Subtype name: voucher-cose+cbor
            ID: TBD3
-           Required parameters: None
-           Optional parameters: None
+           Required parameters: cose-type="COSE-Sign1"
+           Optional parameters: none
            Encoding considerations: CBOR
            Security considerations: As defined in this specification
            Published specification: this document
