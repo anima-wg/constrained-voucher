@@ -297,6 +297,7 @@ Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request ar
 
 #### CBOR serialization of cwt-voucher
 
+~~~~
 {
   1001051: {
     +2 : "2016-10-07T19:31:42Z",  / SID = 1001053, created-on /
@@ -310,9 +311,11 @@ Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request ar
     +9 : h'01020D0F'              / SID = 1001060, pinned-domain-subject-public-key-info /
   }
 }
+~~~~
 
 #### CBOR serialization of cwt-voucher-request
 
+~~~~
 {
   1001101: {
     +2 : "2016-10-07T19:31:42Z",  / SID = 1001103, created-on /
@@ -326,6 +329,7 @@ Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request ar
     +10: h'01020D0F'              / SID = 1001111, proximity-registrar-subject-public-key-info /
   }
 }
+~~~~
 
 ## Signing of voucher and voucher-request artifacts
 
@@ -513,30 +517,40 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
 ## CoAP Content-Format Registry
 
 Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for the below media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
-     Addition1:
-           Type name: application
-           Subtype name: voucher-cms+cbor
-           ID: TBD2
-           Required parameters: None
-           Optional parameters: None
-           Encoding considerations: CBOR
-           Security considerations: As defined in this specification
-           Published specification: this document
-           Applications that use this media type: ANIMA bootstrap (BRSKI)
-     Addition2:
-           Type name: application
-           Subtype name: voucher-cose+cbor
-           ID: TBD3
-           Required parameters: cose-type="COSE-Sign1"
-           Optional parameters: none
-           Encoding considerations: CBOR
-           Security considerations: As defined in this specification
-           Published specification: this document
-           Applications that use this media type: ANIMA bootstrap (BRSKI)
+
+Addition1:
+    
+    Type name: application
+    Subtype name: voucher-cms+cbor
+    ID: TBD2
+    Required parameters: None
+    Optional parameters: None
+    Encoding considerations: CBOR
+    Security considerations: As defined in this specification
+    Published specification: this document
+    Applications that use this media type: ANIMA bootstrap (BRSKI)
+
+Addition2:
+
+    Type name: application
+    Subtype name: voucher-cose+cbor
+    ID: TBD3
+    Required parameters: cose-type="COSE-Sign1"
+    Optional parameters: none
+    Encoding considerations: CBOR
+    Security considerations: As defined in this specification
+    Published specification: this document
+    Applications that use this media type: ANIMA bootstrap (BRSKI)
 
 # Acknowledgements
 
-TBD
+We are very grateful to Jim Schaad for explaining COSE and CMS choices.
+
+# Changelog
+
+-03
+
+    Cms and cose mediatypes are introduced
 
 --- back
 
