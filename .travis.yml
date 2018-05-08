@@ -4,8 +4,7 @@ python:
   - "3.6"
 
 before_install:
-  - "sudo apt-get install python3-pip"
-  - "pip3 install xml2rfc pyang"
+  - "pip install xml2rfc pyang"
   - "gem install kramdown-rfc2629"
 
 script: "make"
