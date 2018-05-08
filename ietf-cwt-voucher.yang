@@ -43,7 +43,7 @@ module ietf-cwt-voucher {
     'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in
     the module text are to be interpreted as described in RFC 2119.";
 
-  revision "2018-03-12" {
+  revision "YYYY-MM-DD" {
     description
      "Initial version";
     reference

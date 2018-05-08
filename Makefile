@@ -7,6 +7,7 @@ CWTSIDLIST1=ietf-cwt-voucher-sid.txt
 CWTDATE2=yang/ietf-cwt-voucher-request@${YANGDATE}.yang
 CWTSIDLIST2=ietf-cwt-voucher-request-sid.txt
 CWTSIDDATE2=ietf-cwt-voucher-request@${YANGDATE}.sid
+PYANG=./pyang.sh
 
 # git clone this from https://github.com/mbj4668/pyang.git
 # then, cd pyang/plugins;
@@ -27,10 +28,10 @@ ${CWTDATE2}: ietf-cwt-voucher-request.yang
 	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-cwt-voucher-request.yang > ${CWTDATE2}
 
 ietf-cwt-voucher-tree.txt: ${CWTDATE1}
-	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE1} > ietf-cwt-voucher-tree.txt
+	${PYANG} --path=../../anima/voucher/yang:../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE1} > ietf-cwt-voucher-tree.txt
 
 ietf-cwt-voucher-request-tree.txt: ${CWTDATE2}
-	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-cwt-voucher-request-tree.txt
+	${PYANG} --path=../../anima/voucher/yang:../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-cwt-voucher-request-tree.txt
 
 %.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-cwt-voucher-tree.txt ietf-cwt-voucher-request-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2}
 	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
@@ -47,18 +48,18 @@ submit: ${DRAFT}.xml
 
 ${CWTSIDLIST1} ${CWTSIDDATE1}: ${CWTDATE1}
 	mkdir -p yang
-	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-cwt-voucher-sid.txt
+	${PYANG} --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-cwt-voucher-sid.txt
 
 boot-sid1:
-	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --generate-sid-file 1001100:50 ${CWTDATE1}
+	${PYANG} --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --generate-sid-file 1001100:50 ${CWTDATE1}
 
 boot-sid2:
-	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --generate-sid-file 1001150:50 ${CWTDATE2}
+	${PYANG} --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --generate-sid-file 1001150:50 ${CWTDATE2}
 
 
 ${CWTSIDLIST2} ${CWTSIDDATE2}: ${CWTDATE2}
 	mkdir -p yang
-	pyang --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE2} ${CWTDATE2}  | ./truncate-sid-table >ietf-cwt-voucher-request-sid.txt
+	${PYANG} --path=../../anima/voucher/yang:../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE2} ${CWTDATE2}  | ./truncate-sid-table >ietf-cwt-voucher-request-sid.txt
 
 
 version:

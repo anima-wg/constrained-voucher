@@ -43,7 +43,7 @@ module ietf-cwt-voucher-request {
     'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in
     the module text are to be interpreted as described in RFC 2119.";
 
-  revision "2018-03-12" {
+  revision "YYYY-MM-DD" {
     description
      "Initial version";
     reference
@@ -54,7 +54,7 @@ module ietf-cwt-voucher-request {
     // YANG data template for a voucher.
     uses voucher-request-cwt-grouping;
   }
-  
+
   // Grouping defined for future usage
   grouping voucher-request-cwt-grouping {
     description
@@ -66,7 +66,7 @@ module ietf-cwt-voucher-request {
         leaf proximity-registrar-subject-public-key-info {
           type binary;
           description
-            "The proximity-registrar-subject-public-key-info replaces 
+            "The proximity-registrar-subject-public-key-info replaces
  	     the proximit-registrar-cert in constrained uses of
              the voucher-request.
              The proximity-registrar-subject-public-key-info is the

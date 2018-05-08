@@ -9,4 +9,7 @@ before_install:
   - "gem install kramdown-rfc2629"
   - "export PATH=$HOME/.local/bin:$PATH."
 
+install:
+  - "./install-pyang-sid-work"
+
 script: "make"

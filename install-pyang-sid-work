@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# run this after "pip install pyang", which will get the appropriate
+# dependancies installed for you.
+
+git clone https://github.com/Trilliant/pyang.git
