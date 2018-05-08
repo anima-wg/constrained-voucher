@@ -1,10 +1,12 @@
 dist: trusty
-
+sudo: false
+language: python
 python:
   - "3.6"
 
 before_install:
-  - "pip install xml2rfc pyang"
+  - "pip install --user xml2rfc pyang"
   - "gem install kramdown-rfc2629"
+  - "export PATH=$HOME/.local/bin:$PATH."
 
 script: "make"
