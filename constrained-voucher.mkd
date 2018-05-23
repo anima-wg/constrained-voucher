@@ -43,7 +43,7 @@ normative:
   RFC7250:
   RFC5652:
   RFC8152:
-  I-D.ietf-anima-voucher:
+  RFC8366:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-core-object-security:
   I-D.ietf-ace-cbor-web-token:
@@ -85,7 +85,7 @@ This document defines a strategy to securely assign a pledge to an
 owner, using an artifact signed, directly or indirectly, by the
 pledge's manufacturer.  This artifact is known as a "voucher".
 
-This document builds upon the work in {{I-D.ietf-anima-voucher}}, encoding
+This document builds upon the work in {{RFC8366}}, encoding
 the resulting artifact in CBOR.  Use with two signature technologies are
 described.
 
@@ -103,12 +103,12 @@ There are bandwidth and code space issues to contend.  A solution such as
 {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
 code space or bandwidth required.
 
-This document defines a constrained version of {{I-D.ietf-anima-voucher}}.
+This document defines a constrained version of {{RFC8366}}.
 Rather than serializing the YANG definition in JSON, it is serialized into
 CBOR ({{RFC7049}}).
 
 This document follows a similar, but not identical structure as
-{{I-D.ietf-anima-voucher}}. Some sections are left out entirely.
+{{RFC8366}}. Some sections are left out entirely.
 Additional sections have been added concerning:
 
 1. Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
@@ -129,7 +129,7 @@ document:
 
 # Terminology          {#Terminology}
 
-The following terms are defined in {{I-D.ietf-anima-voucher}}, and are used
+The following terms are defined in {{RFC8366}}, and are used
 identically as in that document: artifact, imprint, domain, Join
 Registrar/Coordinator (JRC), Manufacturer Authorized Signing Authority
 (MASA), pledge, Trust of First Use (TOFU), and Voucher.
@@ -144,7 +144,7 @@ implementations.
 
 # Survey of Voucher Types
 
-{{I-D.ietf-anima-voucher}} provides for vouchers that assert proximity, that
+{{RFC8366}} provides for vouchers that assert proximity, that
 authenticate the registrar and that include different amounts of anti-replay
 protection.
 
@@ -155,7 +155,7 @@ constrained devices are extremely unlikely to know the correct time, their
 use is very unlikely.  Most users of these constrained vouchers will be
 online and will use live nonces to provide anti-replay protection.
 
-{{I-D.ietf-anima-voucher}} defined only the voucher artifact, and not the
+{{RFC8366}} defined only the voucher artifact, and not the
 Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 This document defines both a constrained voucher and a constrained voucher-request.
@@ -334,10 +334,10 @@ Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request ar
 ## Signing of voucher and voucher-request artifacts
 
 The IETF evolution of PKCS#7 is CMS {{RFC5652}}.  The CMS signed voucher is
-much like the equivalent voucher defined in {{I-D.ietf-anima-voucher}}.
+much like the equivalent voucher defined in {{RFC8366}}.
 
 A different eContentType of TBD1 is used to indicate that the contents are
-in a different format than in {{I-D.ietf-anima-voucher}}.
+in a different format than in {{RFC8366}}.
 
 The ContentInfo structure contains a payload consisting of the CBOR encoded
 voucher.   The {{I-D.ietf-core-yang-cbor}} use of delta encoding creates a
@@ -377,13 +377,16 @@ vouchers and/or pledge provided nonce provides a freshness guarantee.
 
 The COSE-Sign1 structure discussed in section 4.2 of [RFC8152]. The CBOR object that carries the body, the signature, and the
 information about the body and signature is called the COSE_Sign1
-structure. It is used when only one signature is used on the body. The signature algorithm is ECSDA with three curves P-256,
-P-384, and P-512.
+structure. It is used when only one signature is used on the body. The
+signature algorithm is ECSDA with three curves P-256, P-384, and P-512.
+
+Support for EdDSA is encouraged
+
 
 # Design Considerations
 
 The design considerations for the CBOR encoding of vouchers is much the same
-as for {{I-D.ietf-anima-voucher}}.
+as for {{RFC8366}}.
 
 One key difference is that the names of the leaves in the YANG does not have a
 material effect on the size of the resulting CBOR, as the SID translation
