@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-richardson-anima-ace-constrained-voucher-04
+docname: draft-ietf-anima-constrained-voucher-00
 
 # stand_alone: true
 
@@ -522,7 +522,7 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
 Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for the below media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
 Addition1:
-    
+
     Type name: application
     Subtype name: voucher-cms+cbor
     ID: TBD2
