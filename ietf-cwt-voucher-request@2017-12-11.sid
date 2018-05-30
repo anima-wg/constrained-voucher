@@ -75,6 +75,11 @@
     }, 
     {
       "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher-request:voucher-request-cwt-grouping/ietf-cwt-voucher-request:voucher/prior-signed-voucher-request", 
+      "sid": 1001165
+    }, 
+    {
+      "namespace": "data", 
       "identifier": "/ietf-cwt-voucher-request:voucher-request-cwt-grouping/ietf-cwt-voucher-request:voucher/proximity-registrar-subject-public-key-info", 
       "sid": 1001163
     }, 

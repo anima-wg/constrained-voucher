@@ -14,5 +14,6 @@
   1001160 data .../last-renewal-date
   1001161 data .../nonce
   1001162 data .../pinned-domain-cert
+  1001165 data .../prior-signed-voucher-request
   1001163 data .../proximity-registrar-subject-public-key-info
   1001164 data .../serial-number

@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-ietf-anima-constrained-voucher-00
+docname: draft-ietf-anima-constrained-voucher-01
 
 # stand_alone: true
 
