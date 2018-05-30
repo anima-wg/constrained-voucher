@@ -549,6 +549,9 @@ Addition2:
 
 We are very grateful to Jim Schaad for explaining COSE and CMS choices.
 
+Michel Veillette did extensive work on pyang to extend it to support the
+SID allocation process, and this document was among the first users.
+
 # Changelog
 
 -03
