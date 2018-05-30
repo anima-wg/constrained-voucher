@@ -80,6 +80,11 @@
     }, 
     {
       "namespace": "data", 
+      "identifier": "/ietf-cwt-voucher-request:voucher-request-cwt-grouping/ietf-cwt-voucher-request:voucher/proximity-registrar-cert", 
+      "sid": 1001166
+    }, 
+    {
+      "namespace": "data", 
       "identifier": "/ietf-cwt-voucher-request:voucher-request-cwt-grouping/ietf-cwt-voucher-request:voucher/proximity-registrar-subject-public-key-info", 
       "sid": 1001163
     }, 

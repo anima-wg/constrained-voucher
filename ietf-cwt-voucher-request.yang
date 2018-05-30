@@ -79,6 +79,20 @@ module ietf-cwt-voucher-request {
              Support for the RSA algorithm is a MAY.";
         }
 
+        leaf proximity-registrar-cert {
+          type binary;
+          description
+            "An X.509 v3 certificate structure as specified by RFC 5280,
+             Section 4 encoded using the ASN.1 distinguished encoding
+             rules (DER), as specified in ITU-T X.690.
+
+             The first certificate in the Registrar TLS server
+             certificate_list sequence  (see [RFC5246]) presented by
+             the Registrar to the Pledge. This MUST be populated in a
+             Pledge's voucher request if the proximity assertion is
+             populated.";
+        }
+
         leaf prior-signed-voucher-request {
           type binary;
           description
