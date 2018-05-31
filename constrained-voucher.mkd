@@ -7,9 +7,9 @@ docname: draft-ietf-anima-constrained-voucher-01
 
 ipr: trust200902
 area: Internet
-wg: 6tisch Working Group
+wg: anima Working Group
 kw: Internet-Draft
-cat: info
+cat: Standards Track
 
 coding: us-ascii
 pi:    # can use array (if all yes) or hash here
@@ -217,9 +217,9 @@ multiple content types are specified for EST-coaps server. The example below sho
 The first line MUST be returned in response to the GET, The following four lines MAY be returned to show the supported Content-Formats. The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
 ct=50 stands for the Content-Format "application/json", ct=16 stands for the
-Content-Format "application/cose; cose-type="cose-encrypt0", ct=TBD2 stands for Content-Format
-"application/voucher-cms+cbor,  ct=TBD3 stands for Content-Format
-"application/voucher-cose+cbor; cose-type="cose-sign1. The latter two are  defined in this document.
+Content-Format "application/cose"; cose-type="cose-encrypt0", ct=TBD2 stands for Content-Format
+"application/voucher-cms+cbor",  ct=TBD3 stands for Content-Format
+"application/voucher-cose+cbor"; cose-type="cose-sign1". The latter two are  defined in this document.
 
 
 
@@ -519,31 +519,13 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
 
 ## CoAP Content-Format Registry
 
-Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for the below media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
+Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for two media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
-Addition1:
+    Media type                     mime type     Encoding   ID     References
+    ----------------------------   -----------   ---------  -----  ----------
+    application/voucher-cms-cbor      - -        CBOR       TBD2   [This RFC]
+    application/voucher-cose+cbor  "COSE-Sign1"  CBOR       TBD3   [This RFC]
 
-    Type name: application
-    Subtype name: voucher-cms+cbor
-    ID: TBD2
-    Required parameters: None
-    Optional parameters: None
-    Encoding considerations: CBOR
-    Security considerations: As defined in this specification
-    Published specification: this document
-    Applications that use this media type: ANIMA bootstrap (BRSKI)
-
-Addition2:
-
-    Type name: application
-    Subtype name: voucher-cose+cbor
-    ID: TBD3
-    Required parameters: cose-type="COSE-Sign1"
-    Optional parameters: none
-    Encoding considerations: CBOR
-    Security considerations: As defined in this specification
-    Published specification: this document
-    Applications that use this media type: ANIMA bootstrap (BRSKI)
 
 # Acknowledgements
 
