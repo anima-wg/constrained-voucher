@@ -9,7 +9,7 @@ ipr: trust200902
 area: Internet
 wg: anima Working Group
 kw: Internet-Draft
-cat: Standards Track
+cat: std
 
 coding: us-ascii
 pi:    # can use array (if all yes) or hash here
