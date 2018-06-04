@@ -24,7 +24,7 @@
 <?rfc sortrefs="yes"?>
 <?rfc symrefs="yes"?>
 
-<rfc ipr="trust200902" docName="draft-ietf-anima-constrained-voucher-00" category="info">
+<rfc ipr="trust200902" docName="draft-ietf-anima-constrained-voucher-01" category="std">
 
   <front>
     <title abbrev="Constrained Vouchers">Constrained Voucher Artifacts for Bootstrapping Protocols</title>

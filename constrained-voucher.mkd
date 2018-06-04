@@ -240,13 +240,13 @@ via the http://comi.space service.
 ### Tree Diagram
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-tree.txt END
+INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-tree.txt END
 </figure>
 
 ### SID values
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
+INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-sid.txt END
 </figure>
 
 ### YANG Module
@@ -254,7 +254,7 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request-sid.txt END
 In the cwt-voucher-request YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the cwt-voucher-request module name, all voucher attributes, and the cwt-voucher-request attribute.
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher-request@DATE.yang END
+INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 </figure>
 
 ### Example voucher request artifacts
@@ -274,13 +274,13 @@ or with COSE.
 ### Tree Diagram
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher-tree.txt END
+INSERT_TEXT_FROM_FILE ietf-constrained-voucher-tree.txt END
 </figure>
 
 ### SID values
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher-sid.txt END
+INSERT_TEXT_FROM_FILE ietf-constrained-voucher-sid.txt END
 </figure>
 
 ### YANG Module
@@ -288,7 +288,7 @@ INSERT_TEXT_FROM_FILE ietf-cwt-voucher-sid.txt END
 In the cwt-voucher YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the cwt-voucher module name, all voucher attributes, and the cwt-voucher attribute.
 
 <figure>
-INSERT_TEXT_FROM_FILE ietf-cwt-voucher@DATE.yang END
+INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
 </figure>
 
 ### Example voucher artifacts
@@ -414,11 +414,11 @@ This document registers two URIs in the IETF XML registry [RFC3688].
 Following the format in [RFC3688], the following registration is
 requested:
 
-      URI: urn:ietf:params:xml:ns:yang:ietf-cwt-voucher
+      URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
       Registrant Contact: The ANIMA WG of the IETF.
       XML: N/A, the requested URI is an XML namespace.
 
-      URI: urn:ietf:params:xml:ns:yang:ietf-cwt-voucher-request
+      URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher-request
       Registrant Contact: The ANIMA WG of the IETF.
       XML: N/A, the requested URI is an XML namespace.
 
@@ -428,13 +428,13 @@ This document registers two YANG modules in the YANG Module Names
 registry [RFC6020].  Following the format defined in [RFC6020], the
 the following registration is requested:
 
-      name:         ietf-cwt-voucher
-      namespace:    urn:ietf:params:xml:ns:yang:ietf-cwt-voucher
+      name:         ietf-constrained-voucher
+      namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
       prefix:       vch
       reference:    RFC XXXX
 
-      name:         ietf-cwt-voucher-request
-      namespace:    urn:ietf:params:xml:ns:yang:ietf-cwt-voucher-request
+      name:         ietf-constrained-voucher-request
+      namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained-voucher-request
       prefix:       vch
       reference:    RFC XXXX
 
@@ -451,11 +451,11 @@ EDNOTE: should a separate value be used for Voucher Requests?
 
 ## The SID registry
 
-The SID range 1001100 was allocated by comi.space to the IETF-CWT-VOUCHER
-yang module.
+The SID range 1001100 was allocated by comi.space to the
+IETF-CONSTRAINED-VOUCHER yang module.
 
-The SID range 1001150 was allocated by comi.space to the IETF-CWT-VOUCHER-REQUEST
-yang module.
+The SID range 1001150 was allocated by comi.space to the
+IETF-CONSTRAINED-VOUCHER-REQUEST yang module.
 
 EDNOTE: it is unclear if there is further IANA work required.
 

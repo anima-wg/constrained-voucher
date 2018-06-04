@@ -1,0 +1,20 @@
+module: ietf-cwt-voucher-request
+
+  grouping voucher-request-cwt-grouping
+    +---- voucher
+       +---- created-on
+       |       yang:date-and-time
+       +---- expires-on?
+       |       yang:date-and-time
+       +---- assertion
+       |       enumeration
+       +---- serial-number                                  string
+       +---- idevid-issuer?                                 binary
+       +---- pinned-domain-cert                             binary
+       +---- domain-cert-revocation-checks?                 boolean
+       +---- nonce?                                         binary
+       +---- last-renewal-date?
+       |       yang:date-and-time
+       +---- proximity-registrar-subject-public-key-info?   binary
+       +---- proximity-registrar-cert?                      binary
+       +---- prior-signed-voucher-request?                  binary
