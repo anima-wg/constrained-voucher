@@ -1,11 +1,11 @@
            
       SID Assigned to
 --------- -------------------------------------------------- 
-  1001150 module ietf-cwt-voucher-request
+  1001150 module ietf-constrained-voucher-request
   1001151 module ietf-restconf
   1001152 module ietf-voucher
   1001153 module ietf-yang-types
-  1001154 data .../ietf-cwt-voucher-request:voucher
+  1001154 data .../ietf-constrained-voucher-request:voucher
   1001155 data .../assertion
   1001156 data .../created-on
   1001157 data .../domain-cert-revocation-checks

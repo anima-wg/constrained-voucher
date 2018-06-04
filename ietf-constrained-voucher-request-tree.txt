@@ -1,4 +1,4 @@
-module: ietf-cwt-voucher-request
+module: ietf-constrained-voucher-request
 
   grouping voucher-request-cwt-grouping
     +---- voucher
