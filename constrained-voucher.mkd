@@ -251,7 +251,7 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-sid.txt END
 
 ### YANG Module
 
-In the cwt-voucher-request YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the cwt-voucher-request module name, all voucher attributes, and the cwt-voucher-request attribute.
+In the constrained-voucher-request YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attribute.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
@@ -285,7 +285,7 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher-sid.txt END
 
 ### YANG Module
 
-In the cwt-voucher YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the cwt-voucher module name, all voucher attributes, and the cwt-voucher attribute.
+In the constraine-voucher YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
@@ -293,40 +293,44 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
 
 ### Example voucher artifacts
 
-Below a the CBOR serialization of the the cwt-voucher and cwt-voucher-request are shown in diagnostic CBOR notation.
+Below a the CBOR serialization of the the constrained-voucher and constrained-voucher-request are shown in diagnostic CBOR notation.
 
-#### CBOR serialization of cwt-voucher
+#### CBOR serialization of constrained-voucher
 
 ~~~~
 {
   1001051: {
-    +2 : "2016-10-07T19:31:42Z",  / SID = 1001053, created-on /
-    +4 : "2016-10-21T19:31:42Z",  / SID = 1001055, expires-on /
-    +1 : "verified",              / SID = 1001052, assertion /
-    +11: "JADA123456789",         / SID = 1001062, serial-number /
-    +5 : h'01020D0F',             / SID = 1001056, idevid-issuer /
-    +8 : h'01020D0F',             / SID = 1001059, pinned-domain-cert /
-    +3 : true,                    / SID = 1001054, domain-cert-revocation-checks /
-    +6 : "2017-10-07T19:31:42Z",  / SID = 1001057, last-renewal-date /
-    +9 : h'01020D0F'              / SID = 1001060, pinned-domain-subject-public-key-info /
+    +2 : "2016-10-07T19:31:42Z", / SID = 1001053, created-on /
+    +4 : "2016-10-21T19:31:42Z", / SID = 1001055, expires-on /
+    +1 : "verified",             / SID = 1001052, assertion /
+    +11: "JADA123456789",        / SID = 1001062, serial-number /
+    +5 : h'01020D0F',            / SID = 1001056, idevid-issuer /
+    +8 : h'01020D0F',            / SID = 1001059, pinned-domain-cert/
+    +3 : true,                   / SID = 1001054, domain-cert
+                                                  -revocation-checks/
+    +6 : "2017-10-07T19:31:42Z", / SID = 1001057, last-renewal-date /
+    +9 : h'01020D0F'             / SID = 1001060, pinned-domain
+                                          -subject-public-key-info /
   }
 }
 ~~~~
 
-#### CBOR serialization of cwt-voucher-request
+#### CBOR serialization of constrained-voucher-request
 
 ~~~~
 {
   1001101: {
-    +2 : "2016-10-07T19:31:42Z",  / SID = 1001103, created-on /
-    +4 : "2016-10-21T19:31:42Z",  / SID = 1001105, expires-on /
-    +1 : "verified",              / SID = 1001102, assertion /
-    +11: "JADA123456789",         / SID = 1001112, serial-number /
-    +5 : h'01020D0F',             / SID = 1001106, idevid-issuer /
-    +8 : h'01020D0F',             / SID = 1001109, pinned-domain-cert /
-    +3 : true,                    / SID = 1001104, domain-cert-revocation-checks /
-    +6 : "2017-10-07T19:31:42Z",  / SID = 1001107, last-renewal-date /
-    +10: h'01020D0F'              / SID = 1001111, proximity-registrar-subject-public-key-info /
+    +2 : "2016-10-07T19:31:42Z", / SID = 1001103, created-on /
+    +4 : "2016-10-21T19:31:42Z", / SID = 1001105, expires-on /
+    +1 : "verified",             / SID = 1001102, assertion /
+    +11: "JADA123456789",        / SID = 1001112, serial-number /
+    +5 : h'01020D0F',            / SID = 1001106, idevid-issuer /
+    +8 : h'01020D0F',            / SID = 1001109, pinned-domain-cert/
+    +3 : true,                   / SID = 1001104, domain-cert
+                                                 -revocation-checks /
+    +6 : "2017-10-07T19:31:42Z", / SID = 1001107, last-renewal-date /
+    +10: h'01020D0F'             / SID = 1001111, proximity
+                                -registrar-subject-public-key-info /
   }
 }
 ~~~~
@@ -434,7 +438,8 @@ the following registration is requested:
       reference:    RFC XXXX
 
       name:         ietf-constrained-voucher-request
-      namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained-voucher-request
+      namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained
+                                               -voucher-request
       prefix:       vch
       reference:    RFC XXXX
 
@@ -521,10 +526,10 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
 
 Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for two media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
-    Media type                     mime type     Encoding   ID     References
-    ----------------------------   -----------   ---------  -----  ----------
-    application/voucher-cms-cbor      - -        CBOR       TBD2   [This RFC]
-    application/voucher-cose+cbor  "COSE-Sign1"  CBOR       TBD3   [This RFC]
+    Media type                     mime type    Encoding  ID  Reference
+    ----------------------------- ------------ --------- ---- ---------
+    application/voucher-cms-cbor      - -       CBOR     TBD2 [This RFC]
+    application/voucher-cose+cbor "COSE-Sign1"  CBOR     TBD3 [This RFC]
 
 
 # Acknowledgements
