@@ -48,7 +48,7 @@
       </address>
     </author>
 
-    <date year="2018" month="June" day="04"/>
+    <date year="2018" month="June" day="15"/>
 
     <area>Internet</area>
     <workgroup>anima Working Group</workgroup>
@@ -676,12 +676,22 @@ vouchers and/or pledge provided nonce provides a freshness guarantee.</t>
 </section>
 <section anchor="cose-signing" title="COSE signing">
 
-<t>The COSE-Sign1 structure discussed in section 4.2 of <xref target="RFC8152"></xref>. The CBOR object that carries the body, the signature, and the
+<t>The COSE-Sign1 structure discussed in section 4.2 of <xref target="RFC8152"></xref>. The CBOR
+object that carries the body, the signature, and the
 information about the body and signature is called the COSE_Sign1
 structure. It is used when only one signature is used on the body. The
 signature algorithm is ECSDA with three curves P-256, P-384, and P-512.</t>
 
-<t>Support for EdDSA is encouraged</t>
+<t>Support for EdDSA is encouraged.</t>
+
+<t>Unlike with the CMS structure, the COSE-Sign1 structure does not provide
+a standard way for the signing keys to be included in the structure.
+This will not, in general, be a problem for the Pledge, as it the key needed
+to verify the signature MUST be included at manufacturing time.</t>
+
+<t>A problem arises for the Registrar, in order for it to verify the voucher, it
+must have access to the MASA's public key.  This document does not specify
+how to transfer the relevant key.</t>
 
 </section>
 </section>
@@ -800,7 +810,7 @@ Applications that use this media type:  ANIMA, 6tisch, and other
   zero-touch imprinting systems
 Additional information:
   Magic number(s):  None
-  File extension(s):  .cbor
+  File extension(s):  .vch
   Macintosh file type code(s):  none
 Person & email address to contact for further information:  IETF
   ANIMA WG
@@ -829,7 +839,7 @@ Applications that use this media type:  ANIMA, 6tisch, and other
   zero-touch imprinting systems
 Additional information:
   Magic number(s):  None
-  File extension(s):  .cbor
+  File extension(s):  .vch
   Macintosh file type code(s):  none
 Person & email address to contact for further information:  IETF
   ANIMA WG
@@ -844,12 +854,14 @@ Provisional registration? (standards tree only):  NO
 </section>
 <section anchor="coap-content-format-registry" title="CoAP Content-Format Registry">
 
-<t>Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for two media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).</t>
+<t>Additions to the sub-registry "CoAP Content-Formats", within the "CoRE
+Parameters" registry are needed for two media types. These can be registered
+either in the Expert Review range (0-255) or IETF Review range (256-9999).</t>
 
 <figure><artwork><![CDATA[
 Media type                     mime type     Encoding   ID     References
 ----------------------------   -----------   ---------  -----  ----------
-application/voucher-cms-cbor      - -        CBOR       TBD2   [This RFC]
+application/voucher-cms+cbor      - -        CBOR       TBD2   [This RFC]
 application/voucher-cose+cbor  "COSE-Sign1"  CBOR       TBD3   [This RFC]
 ]]></artwork></figure>
 
@@ -1051,7 +1063,7 @@ Cms and cose mediatypes are introduced
   </back>
 
 <!-- ##markdown-source:
-H4sIAJVWFVsAA+08a3PbyJHf8Sum6KqzVEtQJPWwxcTJ0hK11q71OJH2Jrfl
+H4sIANfyI1sAA+08a3PbyJHf8Sum6KqzVEtQJPWwxcTJ0hK11q71OJH2Jrfl
 2hoCQxERCDAYQLTiOL/9+jEzGFCUVmv7ru6qwlTWFGamp6ff3dNgGIZBmZSp
 GoijPNNlIZNMxeJ9XkVzVYhhUSYzGZVazPJCvM7zEqcsl0l2LS6LvMyjPNWB
 nE4LdbsRgg7iPMrkAuDHhZyVYaLKWSizZCHDqJ4e3vL0sNsLgmdClzKLf5Vp
@@ -1160,54 +1172,58 @@ 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
-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
-itr47okkrZF6gKT/Dc6/nQ1xUgAA
+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
+kPS/AbxOeSpIVAAA
 
 -->
 
