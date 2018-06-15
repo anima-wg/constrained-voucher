@@ -379,12 +379,22 @@ vouchers and/or pledge provided nonce provides a freshness guarantee.
 
 ### COSE signing
 
-The COSE-Sign1 structure discussed in section 4.2 of [RFC8152]. The CBOR object that carries the body, the signature, and the
+The COSE-Sign1 structure discussed in section 4.2 of [RFC8152]. The CBOR
+object that carries the body, the signature, and the
 information about the body and signature is called the COSE_Sign1
 structure. It is used when only one signature is used on the body. The
 signature algorithm is ECSDA with three curves P-256, P-384, and P-512.
 
-Support for EdDSA is encouraged
+Support for EdDSA is encouraged.
+
+Unlike with the CMS structure, the COSE-Sign1 structure does not provide
+a standard way for the signing keys to be included in the structure.
+This will not, in general, be a problem for the Pledge, as it the key needed
+to verify the signature MUST be included at manufacturing time.
+
+A problem arises for the Registrar, in order for it to verify the voucher, it
+must have access to the MASA's public key.  This document does not specify
+how to transfer the relevant key.
 
 
 # Design Considerations
