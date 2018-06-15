@@ -496,7 +496,7 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
       zero-touch imprinting systems
     Additional information:
       Magic number(s):  None
-      File extension(s):  .cbor
+      File extension(s):  .vch
       Macintosh file type code(s):  none
     Person & email address to contact for further information:  IETF
       ANIMA WG
@@ -522,7 +522,7 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
       zero-touch imprinting systems
     Additional information:
       Magic number(s):  None
-      File extension(s):  .cbor
+      File extension(s):  .vch
       Macintosh file type code(s):  none
     Person & email address to contact for further information:  IETF
       ANIMA WG
@@ -534,12 +534,14 @@ the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1
 
 ## CoAP Content-Format Registry
 
-Additions to the sub-registry "CoAP Content-Formats", within the "CoRE Parameters" registry are needed for two media types. These can be registered either in the Expert Review range (0-255) or IETF Review range (256-9999).
+Additions to the sub-registry "CoAP Content-Formats", within the "CoRE
+Parameters" registry are needed for two media types. These can be registered
+either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
-    Media type                     mime type    Encoding  ID  Reference
-    ----------------------------- ------------ --------- ---- ---------
-    application/voucher-cms-cbor      - -       CBOR     TBD2 [This RFC]
-    application/voucher-cose+cbor "COSE-Sign1"  CBOR     TBD3 [This RFC]
+    Media type                     mime type     Encoding   ID     References
+    ----------------------------   -----------   ---------  -----  ----------
+    application/voucher-cms+cbor      - -        CBOR       TBD2   [This RFC]
+    application/voucher-cose+cbor  "COSE-Sign1"  CBOR       TBD3   [This RFC]
 
 
 # Acknowledgements
