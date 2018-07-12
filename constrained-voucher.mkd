@@ -117,7 +117,7 @@ Additional sections have been added concerning:
 The CBOR definitions for this constrained voucher format are defined using
 the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID
 mechanism explained in {{I-D.ietf-core-sid}}.  As the tooling to convert
-YANG documents into an list of SID keys is still in its infancy, the table of
+YANG documents into a list of SID keys is still in its infancy, the table of
 SID values presented here should be considered normative rather than the
 output of the pyang tool.
 
@@ -209,6 +209,16 @@ When discovering the root path for the EST resources, the server MAY return
 the full resource paths and the used content types. This is useful when
 multiple content types are specified for EST-coaps server. For example, the
 following more complete response is possible.
+
+[ EDNOTE: spell out where voucher artifacts are used in
+  BRSKI flows since the APIs ] 
+
+[ EDNOTE: The /requestauditlog and /voucher-status are exchanged by the
+Registrar and MASA. The JRC will likely talk to MASA over a normal
+(not constrained) medium. Do we need /ra and /vs? Do we need to
+remove them from the example too? Also what happens to the
+voucher-request and response in this case? Is MASA supposed to
+support contrained vouchers? ]  
 
 ~~~~
   REQ: GET /.well-known/core?rt=ace.est
@@ -321,6 +331,10 @@ Below a the CBOR serialization of the the constrained-voucher and constrained-vo
 }
 ~~~~
 
+[ EDNOTE: Add multipart blurb from M. Richardson about the public key
+  sent in the voucher response https://bitbucket.org/6tisch/draft-richardson-6tisch-dtsecurity-secure-join/commits/a2c01d7800509418957f7ce05a298a753758146f
+  Reference the forssati doc if it makes sense. ]
+
 #### CBOR serialization of constrained-voucher-request
 
 ~~~~
@@ -360,7 +374,8 @@ Normally the recipient is the pledge and the signer is the MASA.
 {{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned
 voucher requests from the pledge to the JRC.
 In this specification, voucher-request artifact is not signed from the
-pledge to the registrar.  From the JRC to the MASA, the voucher-request
+pledge to the registrar.  [EDNOTE: Confirm that voucher requests do not 
+need to be signed ] From the JRC to the MASA, the voucher-request
 artifact MUST be signed by the domain owner key which is requesting
 ownership.
 
@@ -389,7 +404,7 @@ information about the body and signature is called the COSE_Sign1
 structure. It is used when only one signature is used on the body. The
 signature algorithm is ECSDA with three curves P-256, P-384, and P-512.
 
-Support for EdDSA is encouraged.
+Support for EdDSA is encouraged. [EDNOTE: Expand and add a reference why. ] 
 
 Unlike with the CMS structure, the COSE-Sign1 structure does not provide
 a standard way for the signing keys to be included in the structure.
