@@ -245,6 +245,9 @@ via the http://comi.space service.
 
 ### Tree Diagram
 
+The following diagram is largely a duplicate of the contents of {{RFC8366}},
+with only the addition of pinned-domain-subject-public-key-info.
+
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-tree.txt END
 </figure>
@@ -278,6 +281,9 @@ the YANG module defined in Section 5.3 that has been signed with CMS
 or with COSE.
 
 ### Tree Diagram
+
+The following diagram is largely a duplicate of the contents of {{RFC8366}},
+with only the addition of pinned-domain-subject-public-key-info.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-tree.txt END
