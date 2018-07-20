@@ -31,7 +31,7 @@ author:
   email: consultancy@vanderstok.org
 
 - ins: P. Kampanakis
-  name: Panos Kamapanakis
+  name: Panos Kampanakis
   org: Cisco Systems
   email: pkampana@cisco.com
 
