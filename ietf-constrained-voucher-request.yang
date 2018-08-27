@@ -35,7 +35,8 @@ module ietf-constrained-voucher-request {
 
     A voucher is then returned to the pledge, binding the
     pledge to the owner.  This is a constrained version of the
-    voucher-request present in draft-ietf-anima-bootstrap-keyinfra.txt.
+    voucher-request present in 
+    draft-ietf-anima-bootstrap-keyinfra.txt.
 
     This version provides a very restricted subset appropriate
     for very constrained devices.
@@ -44,9 +45,10 @@ module ietf-constrained-voucher-request {
     clocks can be assumed, and that the Registrar is identified
     by a pinned Raw Public Key.
 
-    The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT',
-    'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in
-    the module text are to be interpreted as described in RFC 2119.";
+    The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+    'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', 
+    and 'OPTIONAL' in the module text are to be interpreted as
+    described in RFC 2119.";
 
   revision "YYYY-MM-DD" {
     description
@@ -67,7 +69,9 @@ module ietf-constrained-voucher-request {
 
     uses v:voucher-artifact-grouping {
       augment "voucher" {
-        description "Base the CWT voucher-request upon the regular one";
+        description "Base the CWT voucher-request upon the
+          regular one";
+
         leaf proximity-registrar-subject-public-key-info {
           type binary;
           description
@@ -87,7 +91,8 @@ module ietf-constrained-voucher-request {
         leaf proximity-registrar-cert {
           type binary;
           description
-            "An X.509 v3 certificate structure as specified by RFC 5280,
+            "An X.509 v3 certificate structure as specified by
+             RFC 5280,
              Section 4 encoded using the ASN.1 distinguished encoding
              rules (DER), as specified in ITU-T X.690.
 
@@ -103,21 +108,23 @@ module ietf-constrained-voucher-request {
           description
             "If it is necessary to change a voucher, or re-sign and
              forward a voucher that was previously provided along a
-             protocol path, then the previously signed voucher SHOULD be
-             included in this field.
+             protocol path, then the previously signed voucher
+             SHOULD be included in this field.
 
-             For example, a pledge might sign a proximity voucher, which
-             an intermediate registrar then re-signs to make its own
-             proximity assertion.  This is a simple mechanism for a
-             chain of trusted parties to change a voucher, while
-             maintaining the prior signature information.
+             For example, a pledge might sign a proximity voucher, 
+             which an intermediate registrar then re-signs to 
+             make its own proximity assertion.  This is a simple  
+             mechanism for a chain of trusted parties to change a   
+             voucher, while maintaining the prior signature 
+             information.
 
-             The pledge MUST ignore all prior voucher information when
-             accepting a voucher for imprinting. Other parties MAY
-             examine the prior signed voucher information for the
-             purposes of policy decisions. For example this information
-             could be useful to a MASA to determine that both pledge and
-             registrar agree on proximity assertions. The MASA SHOULD
+             The pledge MUST ignore all prior voucher information 
+             when accepting a voucher for imprinting. Other 
+             parties MAY examine the prior signed voucher 
+             information for the purposes of policy decisions. 
+             For example this information could be useful to a 
+             MASA to determine that both pledge and registrar 
+             agree on proximity assertions. The MASA SHOULD
              remove all prior-signed-voucher-request information when
              signing a voucher for imprinting so as to minimize the
              final voucher size.";
