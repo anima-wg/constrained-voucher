@@ -215,19 +215,22 @@ following more complete response is possible.
 
   RES: 2.05 Content
   </est>; rt="ace.est"
-  </est/rv>; rt="ace.est/rv";ct=50 TBD2 16
-  </est/vs>; rt="ace.est/vs";ct=50
-  </est/es>; rt="ace.est/es";ct=50
-  </est/ra>; rt="ace.est/ra";ct= TBD2 16
+  </est/rv>; rt="ace.est/rv";ct=50 60 TBD2 TBD3 16
+  </est/vs>; rt="ace.est/vs";ct=50 60
+  </est/es>; rt="ace.est/es";ct=50 60
+  </est/ra>; rt="ace.est/ra";ct=TBD2 TBD3 16
 ~~~~
 
 The first line MUST be returned in response to the GET, The following four lines MAY be returned to show the supported Content-Formats. The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
-ct=50 stands for the Content-Format "application/json", ct=16 stands for the
+ct=50 stands for the Content-Format "application/json", ct=60 stands for the Content-Format "application/cbor", ct=16 stands for the
 Content-Format "application/cose", and ct=TBD2 stands for Content-Format
-"application/voucher-cms+cbor defined in this document.
-The return of the content-types allows the client to choose the most
-appropriate one from multiple content types.
+"application/voucher-cms+cbor, and ct=TBD3 stands for Content-Format
+"application/voucher-cose+cbor". Content-Formats TBD2 and TBD3 are defined in this document.
+The return of the content-formts allows the client to choose the most
+appropriate one from multiple content formats.
+
+The Content-Format 50 MAY be supported. Content-Formats 60, TBD2, TBD3, and 16 MUST be supported. 
 
 # Artifacts
 
@@ -557,10 +560,10 @@ Additions to the sub-registry "CoAP Content-Formats", within the "CoRE
 Parameters" registry are needed for two media types. These can be registered
 either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
-    Media type                     mime type     Encoding   ID     References
-    ----------------------------   -----------   ---------  -----  ----------
-    application/voucher-cms+cbor      - -        CBOR       TBD2   [This RFC]
-    application/voucher-cose+cbor  "COSE-Sign1"  CBOR       TBD3   [This RFC]
+    Media type                    mime type    Encoding   ID  References
+    ----------------------------  -----------  --------- ---- ----------
+    application/voucher-cms+cbor      - -        CBOR    TBD2  [This RFC]
+    application/voucher-cose+cbor "COSE-Sign1"   CBOR    TBD3  [This RFC]
 
 
 # Acknowledgements
@@ -570,10 +573,13 @@ We are very grateful to Jim Schaad for explaining COSE and CMS choices.
 Michel Veillette did extensive work on pyang to extend it to support the
 SID allocation process, and this document was among the first users.
 
+We are grateful for the suggestions done by Esko Dijk.
+
 # Changelog
 
--03
+-01
 
+    application/json is optional, application/cbor is compulsory
     Cms and cose mediatypes are introduced
 
 --- back
@@ -643,10 +649,10 @@ A coaps voucher_status message can be :
    GET coaps://[2001:db8::2:1]:61616]/est/vs
 ~~~~
 
-A 2.05 Content response with a non signed JSON voucher (ct=50) will then be:
+A 2.05 Content response with a non signed CBOR voucher (ct=60) will then be:
 
 ~~~~
-    2.05 Content (Content-Format: application/json)
+    2.05 Content (Content-Format: application/cbor)
     Payload =
     [EDNOTE: put here voucher payload ]
 ~~~~
@@ -656,13 +662,13 @@ A 2.05 Content response with a non signed JSON voucher (ct=50) will then be:
 A coaps requestvoucher message can be :
 
 ~~~~
-    GET coaps://[2001:db8::2:1]:61616]/est/rv
+    POST coaps://[2001:db8::2:1]:61616]/est/rv
 ~~~~
 
-A 2.05 Content response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:
+A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:
 
 ~~~~
-    2.05 Content (Content-Format: application/voucher-cms+cbor)
+    2.05 Changed (Content-Format: application/voucher-cms+cbor)
     Payload =
     [EDNOTE: put here encrypted voucher payload ]
 ~~~~
