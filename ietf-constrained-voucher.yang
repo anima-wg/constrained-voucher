@@ -26,7 +26,7 @@ module ietf-constrained-voucher {
     Author:   Michael Richardson
               <mailto:mcr+ietf@sandelman.ca>";
 description
-  "This module defines the format for a voucher, which is produced 
+  "This module defines the format for a voucher, which is produced
    by a pledge's manufacturer or delegate (MASA) to securely assign
    one or more pledges to an 'owner', so that the pledges may
    establis a secure connection to the owner's network
@@ -69,9 +69,9 @@ description
           description
             "The pinned-domain-subject replaces the
              pinned-domain-certificate in constrained uses of
-             the voucher.  The pinned-domain-public-key-info is the
-             Raw Public Key of the Registrar. This field is encoded
-             as specified in RFC7250, section 3.
+             the voucher.  The pinned-domain-subject-public-key-info
+             is the Raw Public Key of the Registrar.
+             This field is encoded as specified in RFC7250, section 3.
              The ECDSA algorithm MUST be supported.
              The EdDSA algorithm as specified in
              draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
