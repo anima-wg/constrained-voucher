@@ -251,14 +251,20 @@ via the http://comi.space service.
 ### Tree Diagram
 
 The following diagram is largely a duplicate of the contents of {{RFC8366}},
-with the addition of pinned-domain-subject-public-key-info,
-proximity-registrar-subject-public-key-info, prior-signed-voucher-request.
+with the addition of proximity-registrar-subject-public-key-info,
+proximity-registrar-cert, and prior-signed-voucher-request.
+
+prior-signed-voucher-request is only used between the Registrar and the MASA.
+proximity-registrar-subject-public-key-info replaces proximity-registrar-cert
+for the extremely constrained cases.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-tree.txt END
 </figure>
 
 ### SID values
+
+[[EDNOTE - to be fixed ]]
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-sid.txt END

@@ -18,13 +18,17 @@ module ietf-constrained-voucher {
   }
 
   organization
-   "IETF 6tisch Working Group";
+   "IETF ANIMA Working Group";
 
   contact
-   "WG Web:   <http://tools.ietf.org/wg/6tisch/>
-    WG List:  <mailto:6tisch@ietf.org>
+   "WG Web:   <http://tools.ietf.org/wg/anima/>
+    WG List:  <mailto:anima@ietf.org>
     Author:   Michael Richardson
-              <mailto:mcr+ietf@sandelman.ca>";
+              <mailto:mcr+ietf@sandelman.ca>
+    Author:   Peter van der Stok
+              <mailto: consultancy@vanderstok.org>
+    Author:   Panos Kampanakis
+              <mailto: pkampana@cisco.com>";
 description
   "This module defines the format for a voucher, which is produced
    by a pledge's manufacturer or delegate (MASA) to securely assign
