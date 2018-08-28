@@ -166,8 +166,8 @@ as this is the time order that they occur.
 
 This section describes the BRSKI extensions to EST-coaps
 {{I-D.ietf-ace-coap-est}} to transport the voucher between registrar,
-proxy and pledge over CoAP. The extensions are targeted to low-resource 
-networks with small packets. Saving header space is important and the 
+proxy and pledge over CoAP. The extensions are targeted to low-resource
+networks with small packets. Saving header space is important and the
 EST-coaps URI is shorter than the EST URI.
 
 The presence and location of (path to) the management data are discovered by
@@ -230,7 +230,7 @@ Content-Format "application/cose", and ct=TBD2 stands for Content-Format
 The return of the content-formts allows the client to choose the most
 appropriate one from multiple content formats.
 
-The Content-Format 50 MAY be supported. Content-Formats 60, TBD2, TBD3, and 16 MUST be supported. 
+The Content-Format 50 MAY be supported. Content-Formats 60, TBD2, TBD3, and 16 MUST be supported.
 
 # Artifacts
 
@@ -249,7 +249,8 @@ via the http://comi.space service.
 ### Tree Diagram
 
 The following diagram is largely a duplicate of the contents of {{RFC8366}},
-with only the addition of pinned-domain-subject-public-key-info.
+with the addition of pinned-domain-subject-public-key-info,
+proximity-registrar-subject-public-key-info, prior-signed-voucher-request.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-tree.txt END

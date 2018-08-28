@@ -325,9 +325,9 @@ Internet-Draft            Constrained Vouchers               August 2018
 6.1.1.  Tree Diagram
 
    The following diagram is largely a duplicate of the contents of
-   [RFC8366], with only the addition of pinned-domain-subject-public-
-   key-info.
-
+   [RFC8366], with the addition of pinned-domain-subject-public-key-
+   info, proximity-registrar-subject-public-key-info, prior-signed-
+   voucher-request.
 
 
 
