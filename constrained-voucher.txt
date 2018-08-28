@@ -82,25 +82,25 @@ Table of Contents
        6.1.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .   7
        6.1.4.  Example voucher request artifacts . . . . . . . . . .  10
      6.2.  Voucher artifact  . . . . . . . . . . . . . . . . . . . .  10
-       6.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  10
+       6.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  11
        6.2.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  11
        6.2.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  11
        6.2.4.  Example voucher artifacts . . . . . . . . . . . . . .  13
      6.3.  CMS format voucher and voucher-request artifacts  . . . .  14
        6.3.1.  COSE signing  . . . . . . . . . . . . . . . . . . . .  15
-   7.  Design Considerations . . . . . . . . . . . . . . . . . . . .  15
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
-     8.1.  Clock Sensitivity . . . . . . . . . . . . . . . . . . . .  15
-     8.2.  Protect Voucher PKI in HSM  . . . . . . . . . . . . . . .  15
+   7.  Design Considerations . . . . . . . . . . . . . . . . . . . .  16
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
+     8.1.  Clock Sensitivity . . . . . . . . . . . . . . . . . . . .  16
+     8.2.  Protect Voucher PKI in HSM  . . . . . . . . . . . . . . .  16
      8.3.  Test Domain Certificate Validity when Signing . . . . . .  16
    9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
      9.1.  Resource Type Registry  . . . . . . . . . . . . . . . . .  16
      9.2.  The IETF XML Registry . . . . . . . . . . . . . . . . . .  16
-     9.3.  The YANG Module Names Registry  . . . . . . . . . . . . .  16
+     9.3.  The YANG Module Names Registry  . . . . . . . . . . . . .  17
      9.4.  The SMI Security for S/MIME CMS Content Type Registry . .  17
      9.5.  The SID registry  . . . . . . . . . . . . . . . . . . . .  17
-     9.6.  Media-Type Registry . . . . . . . . . . . . . . . . . . .  17
-       9.6.1.  application/voucher-cms+cbor  . . . . . . . . . . . .  17
+     9.6.  Media-Type Registry . . . . . . . . . . . . . . . . . . .  18
+       9.6.1.  application/voucher-cms+cbor  . . . . . . . . . . . .  18
        9.6.2.  application/voucher-cose+cbor . . . . . . . . . . . .  18
      9.7.  CoAP Content-Format Registry  . . . . . . . . . . . . . .  19
    10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
@@ -296,11 +296,9 @@ Internet-Draft            Constrained Vouchers               August 2018
    The return of the content-types allows the client to choose the most
    appropriate one from multiple content types.
 
-   ct=50 stands for the Content-Format "application/json", ct=60 stands
-   for the Content-Format "application/cbor", ct=16 stands for the
-   Content-Format "application/cose", and ct=TBD2 stands for Content-
-   Format "application/voucher-cms+cbor, and ct=TBD3 stands for Content-
-   Format "application/voucher-cose+cbor".
+   ct=16 stands for the Content-Format "application/cose", and ct=TBD2
+   stands for Content-Format "application/voucher-cms+cbor, and ct=TBD3
+   stands for Content-Format "application/voucher-cose+cbor".
 
    Content-Formats TBD2 and TBD3 are defined in this document.  The
    return of the content-formts allows the client to choose the most
@@ -327,9 +325,11 @@ Internet-Draft            Constrained Vouchers               August 2018
 6.1.1.  Tree Diagram
 
    The following diagram is largely a duplicate of the contents of
-   [RFC8366], with the addition of pinned-domain-subject-public-key-
-   info, proximity-registrar-subject-public-key-info, prior-signed-
-   voucher-request.
+   [RFC8366], with the addition of proximity-registrar-subject-public-
+   key-info, proximity-registrar-cert, and prior-signed-voucher-request.
+
+
+
 
 
 
@@ -338,9 +338,13 @@ Richardson, et al.        Expires March 1, 2019                 [Page 6]
 Internet-Draft            Constrained Vouchers               August 2018
 
 
+   prior-signed-voucher-request is only used between the Registrar and
+   the MASA.  proximity-registrar-subject-public-key-info replaces
+   proximity-registrar-cert for the extremely constrained cases.
+
    module: ietf-constrained-voucher-request
 
-     grouping voucher-request-cwt-grouping
+     grouping voucher-request-constrained-grouping
        +---- voucher
           +---- created-on
           |       yang:date-and-time
@@ -361,6 +365,8 @@ Internet-Draft            Constrained Vouchers               August 2018
 
 6.1.2.  SID values
 
+   [[EDNOTE - to be fixed ]]
+
 
 6.1.3.  YANG Module
 
@@ -369,23 +375,17 @@ Internet-Draft            Constrained Vouchers               August 2018
    generated for the constrained-voucher-request module name, all
    voucher attributes, and the constrained-voucher-request attribute.
 
-   <CODE BEGINS> file "ietf-constrained-voucher-request@2017-12-11.yang"
+   <CODE BEGINS> file "ietf-constrained-voucher-request@2018-09-01.yang"
    module ietf-constrained-voucher-request {
      yang-version 1.1;
 
      namespace
        "urn:ietf:params:xml:ns:yang:ietf-constrained-voucher-request";
-     prefix "vcwt";
+     prefix "constrained";
 
      import ietf-restconf {
        prefix rc;
        description
-         "This import statement is only present to access
-          the yang-data extension defined in RFC 8040.";
-       reference "RFC 8040: RESTCONF Protocol";
-     }
-
-     import ietf-voucher {
 
 
 
@@ -394,18 +394,27 @@ Richardson, et al.        Expires March 1, 2019                 [Page 7]
 Internet-Draft            Constrained Vouchers               August 2018
 
 
+         "This import statement is only present to access
+          the yang-data extension defined in RFC 8040.";
+       reference "RFC 8040: RESTCONF Protocol";
+     }
+
+     import ietf-voucher {
        prefix "v";
      }
 
      organization
-      "IETF 6tisch Working Group";
+      "IETF ANIMA Working Group";
 
      contact
-      "WG Web:   <http://tools.ietf.org/wg/6tisch/>
-       WG List:  <mailto:6tisch@ietf.org>
+      "WG Web:   <http://tools.ietf.org/wg/anima/>
+       WG List:  <mailto:anima@ietf.org>
        Author:   Michael Richardson
-                 <mailto:mcr+ietf@sandelman.ca>";
-
+                 <mailto:mcr+ietf@sandelman.ca>
+       Author:   Peter van der Stok
+                 <mailto: consultancy@vanderstok.org>
+       Author:   Panos Kampanakis
+                 <mailto: pkampana@cisco.com>";
      description
       "This module defines the format for a voucher request,
        which is produced by a pledge to request a voucher.
@@ -430,18 +439,9 @@ Internet-Draft            Constrained Vouchers               August 2018
        and 'OPTIONAL' in the module text are to be interpreted as
        described in RFC 2119.";
 
-     revision "2017-12-11" {
+     revision "2018-09-01" {
        description
         "Initial version";
-       reference
-        "RFC XXXX: Voucher Profile for Constrained Devices";
-     }
-
-     rc:yang-data voucher-request-cwt-artifact {
-       // YANG data template for a voucher.
-       uses voucher-request-cwt-grouping;
-     }
-
 
 
 
@@ -450,14 +450,23 @@ Richardson, et al.        Expires March 1, 2019                 [Page 8]
 Internet-Draft            Constrained Vouchers               August 2018
 
 
+       reference
+        "RFC XXXX: Voucher Profile for Constrained Devices";
+     }
+
+     rc:yang-data voucher-request-constrained-artifact {
+       // YANG data template for a voucher.
+       uses voucher-request-constrained-grouping;
+     }
+
      // Grouping defined for future usage
-     grouping voucher-request-cwt-grouping {
+     grouping voucher-request-constrained-grouping {
        description
          "Grouping to allow reuse/extensions in future work.";
 
        uses v:voucher-artifact-grouping {
          augment "voucher" {
-           description "Base the CWT voucher-request upon the
+           description "Base the constrained voucher-request upon the
              regular one";
 
            leaf proximity-registrar-subject-public-key-info {
@@ -489,6 +498,14 @@ Internet-Draft            Constrained Vouchers               August 2018
                 the Registrar to the Pledge. This MUST be populated in a
                 Pledge's voucher request if the proximity assertion is
                 populated.";
+
+
+
+Richardson, et al.        Expires March 1, 2019                 [Page 9]
+
+Internet-Draft            Constrained Vouchers               August 2018
+
+
            }
 
            leaf prior-signed-voucher-request {
@@ -498,13 +515,6 @@ Internet-Draft            Constrained Vouchers               August 2018
                 forward a voucher that was previously provided along a
                 protocol path, then the previously signed voucher
                 SHOULD be included in this field.
-
-
-
-Richardson, et al.        Expires March 1, 2019                 [Page 9]
-
-Internet-Draft            Constrained Vouchers               August 2018
-
 
                 For example, a pledge might sign a proximity voucher,
                 which an intermediate registrar then re-signs to
@@ -545,16 +555,6 @@ Internet-Draft            Constrained Vouchers               August 2018
    the YANG module defined in Section 5.3 that has been signed with CMS
    or with COSE.
 
-6.2.1.  Tree Diagram
-
-   The following diagram is largely a duplicate of the contents of
-   [RFC8366], with only the addition of pinned-domain-subject-public-
-   key-info.
-
-
-
-
-
 
 
 Richardson, et al.        Expires March 1, 2019                [Page 10]
@@ -562,9 +562,15 @@ Richardson, et al.        Expires March 1, 2019                [Page 10]
 Internet-Draft            Constrained Vouchers               August 2018
 
 
+6.2.1.  Tree Diagram
+
+   The following diagram is largely a duplicate of the contents of
+   [RFC8366], with only the addition of pinned-domain-subject-public-
+   key-info.
+
    module: ietf-constrained-voucher
 
-     grouping voucher-cwt-grouping
+     grouping voucher-constrained-grouping
        +---- voucher
           +---- created-on
           |       yang:date-and-time
@@ -590,26 +596,20 @@ Internet-Draft            Constrained Vouchers               August 2018
    for the constrained-voucher module name, all voucher attributes, and
    the constrained-voucher attribute.
 
-  <CODE BEGINS> file "ietf-constrained-voucher@2017-12-11.yang"
-  module ietf-constrained-voucher {
-    yang-version 1.1;
+<CODE BEGINS> file "ietf-constrained-voucher@2018-09-01.yang"
+module ietf-constrained-voucher {
+  yang-version 1.1;
 
-    namespace
-      "urn:ietf:params:xml:ns:yang:ietf-constrained-voucher";
-    prefix "vcwt";
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-constrained-voucher";
+  prefix "constrained";
 
-    import ietf-restconf {
-      prefix rc;
-      description
-        "This import statement is only present to access
-         the yang-data extension defined in RFC 8040.";
-      reference "RFC 8040: RESTCONF Protocol";
-    }
-
-    import ietf-voucher {
-      prefix "v";
-    }
-
+  import ietf-restconf {
+    prefix rc;
+    description
+      "This import statement is only present to access
+       the yang-data extension defined in RFC 8040.";
+    reference "RFC 8040: RESTCONF Protocol";
 
 
 
@@ -618,54 +618,54 @@ Richardson, et al.        Expires March 1, 2019                [Page 11]
 Internet-Draft            Constrained Vouchers               August 2018
 
 
-    organization
-     "IETF 6tisch Working Group";
+  }
 
-    contact
-     "WG Web:   <http://tools.ietf.org/wg/6tisch/>
-      WG List:  <mailto:6tisch@ietf.org>
-      Author:   Michael Richardson
-                <mailto:mcr+ietf@sandelman.ca>";
-  description
-    "This module defines the format for a voucher, which is produced
-     by a pledge's manufacturer or delegate (MASA) to securely assign
-     one or more pledges to an 'owner', so that the pledges may
-     establis a secure connection to the owner's network
-     infrastructure.
+  import ietf-voucher {
+    prefix "v";
+  }
 
-     This version provides a very restricted subset appropriate
-     for very constrained devices.
-     In particular, it assumes that nonce-ful operation is
-     always required, that expiration dates are rather weak, as no
-     clocks can be assumed, and that the Registrar is identified
-     by a pinned Raw Public Key.
+  organization
+   "IETF ANIMA Working Group";
 
-     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
-     'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY',
-     and 'OPTIONAL' in the module text are to be interpreted as
-     described in RFC 2119.";
+  contact
+   "WG Web:   <http://tools.ietf.org/wg/anima/>
+    WG List:  <mailto:anima@ietf.org>
+    Author:   Michael Richardson
+              <mailto:mcr+ietf@sandelman.ca>
+    Author:   Peter van der Stok
+              <mailto: consultancy@vanderstok.org>
+    Author:   Panos Kampanakis
+              <mailto: pkampana@cisco.com>";
+description
+  "This module defines the format for a voucher, which is produced
+   by a pledge's manufacturer or delegate (MASA) to securely assign
+   one or more pledges to an 'owner', so that the pledges may
+   establis a secure connection to the owner's network
+   infrastructure.
 
-    revision "2017-12-11" {
-      description
-       "Initial version";
-      reference
-       "RFC XXXX: Voucher Profile for Constrained Devices";
-    }
+   This version provides a very restricted subset appropriate
+   for very constrained devices.
+   In particular, it assumes that nonce-ful operation is
+   always required, that expiration dates are rather weak, as no
+   clocks can be assumed, and that the Registrar is identified
+   by a pinned Raw Public Key.
 
-    rc:yang-data voucher-cwt-artifact {
-      // YANG data template for a voucher.
-      uses voucher-cwt-grouping;
-    }
+   The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+   'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY',
+   and 'OPTIONAL' in the module text are to be interpreted as
+   described in RFC 2119.";
 
-    // Grouping defined for future usage
-    grouping voucher-cwt-grouping {
-      description
-        "Grouping to allow reuse/extensions in future work.";
+  revision "2018-09-01" {
+    description
+     "Initial version";
+    reference
+     "RFC XXXX: Voucher Profile for Constrained Devices";
+  }
 
-      uses v:voucher-artifact-grouping {
-        augment "voucher" {
-          description "Base the CWT voucher upon the regular one";
-          leaf pinned-domain-subject-public-key-info {
+  rc:yang-data voucher-constrained-artifact {
+    // YANG data template for a voucher.
+    uses voucher-constrained-grouping;
+  }
 
 
 
@@ -674,24 +674,33 @@ Richardson, et al.        Expires March 1, 2019                [Page 12]
 Internet-Draft            Constrained Vouchers               August 2018
 
 
-            type binary;
-            description
-              "The pinned-domain-subject replaces the
-               pinned-domain-certificate in constrained uses of
-               the voucher.  The pinned-domain-subject-public-key-info
-               is the Raw Public Key of the Registrar.
-               This field is encoded as specified in RFC7250, section 3.
-               The ECDSA algorithm MUST be supported.
-               The EdDSA algorithm as specified in
-               draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
-               Support for the DSA algorithm is not recommended.
-               Support for the RSA algorithm is a MAY.";
-          }
+  // Grouping defined for future usage
+  grouping voucher-constrained-grouping {
+    description
+      "Grouping to allow reuse/extensions in future work.";
+
+    uses v:voucher-artifact-grouping {
+      augment "voucher" {
+        description "Base the constrained voucher upon the regular one";
+        leaf pinned-domain-subject-public-key-info {
+          type binary;
+          description
+            "The pinned-domain-subject replaces the
+             pinned-domain-certificate in constrained uses of
+             the voucher.  The pinned-domain-subject-public-key-info
+             is the Raw Public Key of the Registrar.
+             This field is encoded as specified in RFC7250, section 3.
+             The ECDSA algorithm MUST be supported.
+             The EdDSA algorithm as specified in
+             draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
+             Support for the DSA algorithm is not recommended.
+             Support for the RSA algorithm is a MAY.";
         }
       }
     }
   }
-  <CODE ENDS>
+}
+<CODE ENDS>
 
 6.2.4.  Example voucher artifacts
 
@@ -699,6 +708,27 @@ Internet-Draft            Constrained Vouchers               August 2018
    constrained-voucher-request are shown in diagnostic CBOR notation.
 
 6.2.4.1.  CBOR serialization of constrained-voucher
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires March 1, 2019                [Page 13]
+
+Internet-Draft            Constrained Vouchers               August 2018
+
 
    {
      1001051: {
@@ -717,18 +747,6 @@ Internet-Draft            Constrained Vouchers               August 2018
    }
 
 6.2.4.2.  CBOR serialization of constrained-voucher-request
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires March 1, 2019                [Page 13]
-
-Internet-Draft            Constrained Vouchers               August 2018
-
 
    {
      1001101: {
@@ -760,6 +778,14 @@ Internet-Draft            Constrained Vouchers               August 2018
    canonical ordering is not important as there is no expectation that
    the content will be reproduced during the validation process.
 
+
+
+
+Richardson, et al.        Expires March 1, 2019                [Page 14]
+
+Internet-Draft            Constrained Vouchers               August 2018
+
+
    Normally the recipient is the pledge and the signer is the MASA.
 
    [I-D.ietf-anima-bootstrapping-keyinfra] supports both signed and
@@ -777,14 +803,6 @@ Internet-Draft            Constrained Vouchers               August 2018
    recipient.  The inclusion of the trust anchor is unusual in many
    applications, but without it third parties can not accurately audit
    the transaction.
-
-
-
-
-Richardson, et al.        Expires March 1, 2019                [Page 14]
-
-Internet-Draft            Constrained Vouchers               August 2018
-
 
    The CMS structure MAY also contain revocation objects for any
    intermediate certificate authorities (CAs) between the voucher-issuer
@@ -814,6 +832,16 @@ Internet-Draft            Constrained Vouchers               August 2018
    voucher, it must have access to the MASA's public key.  This document
    does not specify how to transfer the relevant key.
 
+
+
+
+
+
+Richardson, et al.        Expires March 1, 2019                [Page 15]
+
+Internet-Draft            Constrained Vouchers               August 2018
+
+
 7.  Design Considerations
 
    The design considerations for the CBOR encoding of vouchers is much
@@ -832,15 +860,6 @@ Internet-Draft            Constrained Vouchers               August 2018
 8.2.  Protect Voucher PKI in HSM
 
    TBD.
-
-
-
-
-
-Richardson, et al.        Expires March 1, 2019                [Page 15]
-
-Internet-Draft            Constrained Vouchers               August 2018
-
 
 8.3.  Test Domain Certificate Validity when Signing
 
@@ -865,6 +884,19 @@ Internet-Draft            Constrained Vouchers               August 2018
    This document registers two URIs in the IETF XML registry [RFC3688].
    Following the format in [RFC3688], the following registration is
    requested:
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires March 1, 2019                [Page 16]
+
+Internet-Draft            Constrained Vouchers               August 2018
+
 
      URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
      Registrant Contact: The ANIMA WG of the IETF.
@@ -891,13 +923,6 @@ Internet-Draft            Constrained Vouchers               August 2018
      prefix:       vch
      reference:    RFC XXXX
 
-
-
-Richardson, et al.        Expires March 1, 2019                [Page 16]
-
-Internet-Draft            Constrained Vouchers               August 2018
-
-
 9.4.  The SMI Security for S/MIME CMS Content Type Registry
 
    This document registers an OID in the "SMI Security for S/MIME CMS
@@ -919,31 +944,6 @@ Internet-Draft            Constrained Vouchers               August 2018
 
    EDNOTE: it is unclear if there is further IANA work required.
 
-9.6.  Media-Type Registry
-
-   This section registers the 'application/voucher-cms+cbor' media type
-   and the 'application/voucher-cose+cbor'in the "Media Types" registry.
-   These media types are used to indicate that the content is a CBOR
-   voucher either signed with a cms structure or a COSE_Sign1 structure
-   [RFC8152].
-
-9.6.1.  application/voucher-cms+cbor
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -953,6 +953,16 @@ Richardson, et al.        Expires March 1, 2019                [Page 17]
 
 Internet-Draft            Constrained Vouchers               August 2018
 
+
+9.6.  Media-Type Registry
+
+   This section registers the 'application/voucher-cms+cbor' media type
+   and the 'application/voucher-cose+cbor'in the "Media Types" registry.
+   These media types are used to indicate that the content is a CBOR
+   voucher either signed with a cms structure or a COSE_Sign1 structure
+   [RFC8152].
+
+9.6.1.  application/voucher-cms+cbor
 
    Type name:  application
    Subtype name:  voucher-cms+cbor
@@ -979,16 +989,6 @@ Internet-Draft            Constrained Vouchers               August 2018
    Provisional registration? (standards tree only):  NO
 
 9.6.2.  application/voucher-cose+cbor
-
-
-
-
-
-
-
-
-
-
 
 
 

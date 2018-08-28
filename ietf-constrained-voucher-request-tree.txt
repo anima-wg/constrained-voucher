@@ -1,6 +1,6 @@
 module: ietf-constrained-voucher-request
 
-  grouping voucher-request-cwt-grouping
+  grouping voucher-request-constrained-grouping
     +---- voucher
        +---- created-on
        |       yang:date-and-time
