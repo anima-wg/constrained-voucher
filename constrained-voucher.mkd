@@ -223,14 +223,16 @@ following more complete response is possible.
 
 The first line MUST be returned in response to the GET, The following four lines MAY be returned to show the supported Content-Formats. The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
-ct=50 stands for the Content-Format "application/json", ct=60 stands for the Content-Format "application/cbor", ct=16 stands for the
-Content-Format "application/cose", and ct=TBD2 stands for Content-Format
-"application/voucher-cms+cbor, and ct=TBD3 stands for Content-Format
-"application/voucher-cose+cbor". Content-Formats TBD2 and TBD3 are defined in this document.
+ct=16 stands for the Content-Format "application/cose",
+and ct=TBD2 stands for Content-Format "application/voucher-cms+cbor,
+and ct=TBD3 stands for Content-Format "application/voucher-cose+cbor".
+
+Content-Formats TBD2 and TBD3 are defined in this document.
 The return of the content-formts allows the client to choose the most
 appropriate one from multiple content formats.
 
-The Content-Format 50 MAY be supported. Content-Formats 60, TBD2, TBD3, and 16 MUST be supported.
+The Content-Format ("application/json") 50 MAY be supported.
+Content-Formats ("application/cbor") 60, TBD2, TBD3, and 16 MUST be supported.
 
 # Artifacts
 

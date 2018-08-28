@@ -300,13 +300,15 @@ Internet-Draft            Constrained Vouchers               August 2018
    for the Content-Format "application/cbor", ct=16 stands for the
    Content-Format "application/cose", and ct=TBD2 stands for Content-
    Format "application/voucher-cms+cbor, and ct=TBD3 stands for Content-
-   Format "application/voucher-cose+cbor".  Content-Formats TBD2 and
-   TBD3 are defined in this document.  The return of the content-formts
-   allows the client to choose the most appropriate one from multiple
-   content formats.
+   Format "application/voucher-cose+cbor".
 
-   The Content-Format 50 MAY be supported.  Content-Formats 60, TBD2,
-   TBD3, and 16 MUST be supported.
+   Content-Formats TBD2 and TBD3 are defined in this document.  The
+   return of the content-formts allows the client to choose the most
+   appropriate one from multiple content formats.
+
+   The Content-Format ("application/json") 50 MAY be supported.
+   Content-Formats ("application/cbor") 60, TBD2, TBD3, and 16 MUST be
+   supported.
 
 6.  Artifacts
 
@@ -328,8 +330,6 @@ Internet-Draft            Constrained Vouchers               August 2018
    [RFC8366], with the addition of pinned-domain-subject-public-key-
    info, proximity-registrar-subject-public-key-info, prior-signed-
    voucher-request.
-
-
 
 
 
