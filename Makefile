@@ -1,6 +1,6 @@
 DRAFT:=constrained-voucher
 VERSION:=$(shell ./getver ${DRAFT}.mkd )
-YANGDATE=2017-12-11
+YANGDATE=2018-09-01
 CWTDATE1=yang/ietf-constrained-voucher@${YANGDATE}.yang
 CWTSIDDATE1=ietf-constrained-voucher@${YANGDATE}.sid
 CWTSIDLIST1=ietf-constrained-voucher-sid.txt

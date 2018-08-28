@@ -3,7 +3,7 @@ module ietf-constrained-voucher {
 
   namespace
     "urn:ietf:params:xml:ns:yang:ietf-constrained-voucher";
-  prefix "vcwt";
+  prefix "constrained";
 
   import ietf-restconf {
     prefix rc;
@@ -55,19 +55,19 @@ description
      "RFC XXXX: Voucher Profile for Constrained Devices";
   }
 
-  rc:yang-data voucher-cwt-artifact {
+  rc:yang-data voucher-constrained-artifact {
     // YANG data template for a voucher.
-    uses voucher-cwt-grouping;
+    uses voucher-constrained-grouping;
   }
 
   // Grouping defined for future usage
-  grouping voucher-cwt-grouping {
+  grouping voucher-constrained-grouping {
     description
       "Grouping to allow reuse/extensions in future work.";
 
     uses v:voucher-artifact-grouping {
       augment "voucher" {
-        description "Base the CWT voucher upon the regular one";
+        description "Base the constrained voucher upon the regular one";
         leaf pinned-domain-subject-public-key-info {
           type binary;
           description
