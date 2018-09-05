@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-ietf-anima-constrained-voucher-01
+docname: draft-ietf-anima-constrained-voucher-02
 
 # stand_alone: true
 
@@ -41,6 +41,7 @@ normative:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
   RFC7250:
+  RFC7950:
   RFC5652:
   RFC8152:
   RFC8366:
@@ -278,9 +279,28 @@ In the constrained-voucher-request YANG module, the voucher is "used" and not "a
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 </figure>
 
-### Example voucher request artifacts
+### Example voucher request artifact
 
-TBD
+Below a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
+
+~~~~
+{
+  1001101: {
+    +2 : "2016-10-07T19:31:42Z", / SID = 1001103, created-on /
+    +4 : "2016-10-21T19:31:42Z", / SID = 1001105, expires-on /
+    +1 : 0,                      / SID = 1001102, assertion /
+                                 /                "verified" /
+    +12: "JADA123456789",        / SID = 1001113, serial-number /
+    +5 : h'01020D0F',            / SID = 1001106, idevid-issuer /
+    +8 : h'01020D0F',            / SID = 1001109, pinned-domain-cert/
+    +3 : true,                   / SID = 1001104, domain-cert
+                                                 -revocation-checks /
+    +6 : "2017-10-07T19:31:42Z", / SID = 1001107, last-renewal-date /
+    +11: h'01020D0F'             / SID = 1001112, proximity
+                                -registrar-subject-public-key-info /
+  }
+}
+~~~~
 
 ## Voucher artifact
 
@@ -317,17 +337,17 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
 
 ### Example voucher artifacts
 
-Below a the CBOR serialization of the the constrained-voucher and constrained-voucher-request are shown in diagnostic CBOR notation.
+Below a the CBOR serialization of the the constrained-voucher and constrained-voucher-request are shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
-#### CBOR serialization of constrained-voucher
 
 ~~~~
 {
   1001051: {
     +2 : "2016-10-07T19:31:42Z", / SID = 1001053, created-on /
     +4 : "2016-10-21T19:31:42Z", / SID = 1001055, expires-on /
-    +1 : "verified",             / SID = 1001052, assertion /
-    +11: "JADA123456789",        / SID = 1001062, serial-number /
+    +1 : 0,                      / SID = 1001052, assertion /
+                                 /                "verified" /
+    +10: "JADA123456789",        / SID = 1001061, serial-number /
     +5 : h'01020D0F',            / SID = 1001056, idevid-issuer /
     +8 : h'01020D0F',            / SID = 1001059, pinned-domain-cert/
     +3 : true,                   / SID = 1001054, domain-cert
@@ -339,25 +359,6 @@ Below a the CBOR serialization of the the constrained-voucher and constrained-vo
 }
 ~~~~
 
-#### CBOR serialization of constrained-voucher-request
-
-~~~~
-{
-  1001101: {
-    +2 : "2016-10-07T19:31:42Z", / SID = 1001103, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID = 1001105, expires-on /
-    +1 : "verified",             / SID = 1001102, assertion /
-    +11: "JADA123456789",        / SID = 1001112, serial-number /
-    +5 : h'01020D0F',            / SID = 1001106, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 1001109, pinned-domain-cert/
-    +3 : true,                   / SID = 1001104, domain-cert
-                                                 -revocation-checks /
-    +6 : "2017-10-07T19:31:42Z", / SID = 1001107, last-renewal-date /
-    +10: h'01020D0F'             / SID = 1001111, proximity
-                                -registrar-subject-public-key-info /
-  }
-}
-~~~~
 
 ## CMS format voucher and voucher-request artifacts
 
@@ -585,6 +586,10 @@ SID allocation process, and this document was among the first users.
 We are grateful for the suggestions done by Esko Dijk.
 
 # Changelog
+
+-02
+ 
+    CBOR serialization of vouchers improved
 
 -01
 
