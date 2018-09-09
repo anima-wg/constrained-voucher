@@ -314,7 +314,7 @@ or with COSE.
 
 ### Tree Diagram
 
-The following diagram is largely a duplicate of the contents of {{RFC8366}},
+The following diagram is largely a duplicate of the contents of {{RFC8366}}
 with only the addition of pinned-domain-subject-public-key-info.
 
 <figure>
@@ -588,7 +588,7 @@ We are grateful for the suggestions done by Esko Dijk.
 # Changelog
 
 -02
- 
+
     CBOR serialization of vouchers improved
 
 -01
