@@ -673,7 +673,11 @@ A 2.05 Content response with a non signed CBOR voucher (ct=60) will then be:
 
 ##requestvoucher
 
-A coaps requestvoucher message can be :
+Two request-voucher request payloads are possible from pledge to Registrar, a signed one and an unsigned one, as explained in Section 5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+
+### signed requestvoucher
+
+A coaps signed requestvoucher message from RA to MASA can be :
 
 ~~~~
     POST coaps://[2001:db8::2:1]:61616]/est/rv
@@ -682,11 +686,27 @@ A coaps requestvoucher message can be :
 A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:
 
 ~~~~
-    2.05 Changed (Content-Format: application/voucher-cms+cbor)
+    2.04 Changed (Content-Format: application/voucher-cms+cbor)
     Payload =
     [EDNOTE: put here encrypted voucher payload ]
 ~~~~
 
+
+### unsigned requestvoucher
+
+A coaps unsigned requestvoucher message from pledge to Registrar can be :
+
+~~~~
+    POST coaps://[2001:db8::2:1]:61616]/est/rv
+~~~~
+
+A 2.04 Changed response returning CBOR voucher (ct=60) will then be:
+
+~~~~
+    2.04 Changed (Content-Format: application/cbor)
+    Payload =
+    [EDNOTE: put here encrypted voucher payload ]
+~~~~
 
 ##requestauditing
 
