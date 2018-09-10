@@ -1,8 +1,12 @@
-
+           
       SID Assigned to
---------- --------------------------------------------------
-  1001150 module ietf-constrained-voucher-request
-  1001154 data .../voucher
+--------- -------------------------------------------------- 
+  1001167 module ietf-constrained-voucher-request
+  1001168 module ietf-restconf
+  1001169 module ietf-voucher
+  1001170 module ietf-yang-types
+  1001171 data /ietf-constrained-voucher-request:voucher
+  1001154 data .../ietf-constrained-voucher-request:voucher
   1001155 data .../assertion
   1001156 data .../created-on
   1001157 data .../domain-cert-revocation-checks
@@ -11,8 +15,27 @@
   1001160 data .../last-renewal-date
   1001161 data .../nonce
   1001162 data .../pinned-domain-cert
-  1001163 data .../prior-signed-voucher-request
-  1001164 data .../proximity-registrar-cert
-  1001165 data .../proximity-registrar-subject-public-key-info
-  1001166 data .../serial-number
+  1001165 data .../prior-signed-voucher-request
+  1001166 data .../proximity-registrar-cert
+  1001163 data .../proximity-registrar-subject-public-key-info
+  1001164 data .../serial-number
+  1001172 data .../assertion
+  1001173 data .../created-on
+  1001174 data .../domain-cert-revocation-checks
+  1001175 data .../expires-on
+  1001176 data .../idevid-issuer
+  1001177 data .../last-renewal-date
+  1001178 data /ietf-constrained-voucher-request:voucher/nonce
+  1001179 data .../pinned-domain-cert
+  1001180 data .../prior-signed-voucher-request
+  1001181 data .../proximity-registrar-cert
+  1001182 data .../proximity-registrar-subject-public-key-info
+  1001183 data .../serial-number
+  1001150 data ietf-constrained-voucher-request
+  1001151 data ietf-restconf
+  1001152 data ietf-voucher
+  1001153 data ietf-yang-types
+           
+ WARNING, obsolete definitions
+           
 
