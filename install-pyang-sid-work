@@ -3,4 +3,4 @@
 # run this after "pip install pyang", which will get the appropriate
 # dependancies installed for you.
 
-git clone -b sid-work2 https://github.com/Trilliant/pyang.git
+git clone -b sid-work2 https://github.com/mcr/pyang.git
