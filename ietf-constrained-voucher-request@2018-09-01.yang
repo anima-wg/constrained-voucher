@@ -53,7 +53,7 @@ module ietf-constrained-voucher-request {
     and 'OPTIONAL' in the module text are to be interpreted as
     described in RFC 2119.";
 
-  revision "YYYY-MM-DD" {
+  revision "2018-09-01" {
     description
      "Initial version";
     reference

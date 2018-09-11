@@ -229,7 +229,7 @@ and ct=TBD2 stands for Content-Format "application/voucher-cms+cbor,
 and ct=TBD3 stands for Content-Format "application/voucher-cose+cbor".
 
 Content-Formats TBD2 and TBD3 are defined in this document.
-The return of the content-formts allows the client to choose the most
+The return of the content-formats allows the client to choose the most
 appropriate one from multiple content formats.
 
 The Content-Format ("application/json") 50 MAY be supported.
@@ -244,8 +244,6 @@ view of the contents of each artifact.
 Then the assigned SID values are presented. These have been assigned using
 the rules in {{I-D.ietf-core-yang-cbor}}, with an allocation that was made
 via the http://comi.space service.
-
-((EDNOTE: it is unclear if there is further IANA work))
 
 ## Voucher Request artifact
 
@@ -265,15 +263,13 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-tree.txt END
 
 ### SID values
 
-[[EDNOTE - to be fixed ]]
-
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-sid.txt END
 </figure>
 
 ### YANG Module
 
-In the constrained-voucher-request YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attribute.
+In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attribute. Two attributes of the voucher are "refined" to be optional.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
@@ -314,7 +310,7 @@ or with COSE.
 
 ### Tree Diagram
 
-The following diagram is largely a duplicate of the contents of {{RFC8366}}
+The following diagram is largely a duplicate of the contents of {{RFC8366}},
 with only the addition of pinned-domain-subject-public-key-info.
 
 <figure>
@@ -329,7 +325,7 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher-sid.txt END
 
 ### YANG Module
 
-In the constraine-voucher YANG module, the voucher is "used" and not "augmented" such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute.
+In the constraine-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute. Two attributes of the voucher are "refined" to be optional.
 
 <figure>
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
@@ -412,10 +408,10 @@ Support for EdDSA is encouraged.
 
 Unlike with the CMS structure, the COSE-Sign1 structure does not provide
 a standard way for the signing keys to be included in the structure.
-This will not, in general, be a problem for the Pledge, as it the key needed
+This will not, in general, be a problem for the Pledge, as the key needed
 to verify the signature MUST be included at manufacturing time.
 
-A problem arises for the Registrar, in order for it to verify the voucher, it
+A problem arises for the Registrar: to verify the voucher, the Registrar
 must have access to the MASA's public key.  This document does not specify
 how to transfer the relevant key.
 
@@ -588,7 +584,9 @@ We are grateful for the suggestions done by Esko Dijk.
 # Changelog
 
 -02
-
+ 
+    Example of requestvoucher with unsigned appllication/cbor is added
+    attributes of voucher "refined" to optional
     CBOR serialization of vouchers improved
 
 -01
