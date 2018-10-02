@@ -41,6 +41,7 @@ normative:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
   RFC7250:
+  RFC7252:
   RFC7950:
   RFC5652:
   RFC8152:
@@ -223,6 +224,8 @@ following more complete response is possible.
 ~~~~
 
 The first line MUST be returned in response to the GET, The following four lines MAY be returned to show the supported Content-Formats. The return of the content-types allows the client to choose the most appropriate one from multiple content types.
+
+Port numbers, not returned in the example, are assumed to be the default numbers 5683 and 5684 for coap and coaps respectively (sections 12.6 and 12.7 of {{RFC7252}}. Discoverable port numbers MAY be returned in the &lt;href&gt; of the payload.
 
 ct=16 stands for the Content-Format "application/cose",
 and ct=TBD2 stands for Content-Format "application/voucher-cms+cbor,
@@ -588,6 +591,7 @@ We are grateful for the suggestions done by Esko Dijk.
     Example of requestvoucher with unsigned appllication/cbor is added
     attributes of voucher "refined" to optional
     CBOR serialization of vouchers improved
+    Discovery port numbers are specified
 
 -01
 
