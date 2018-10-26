@@ -1,6 +1,7 @@
 
       SID Assigned to
 --------- --------------------------------------------------
+  1001100 module ietf-constrained-voucher
   1001104 data .../voucher
   1001105 data .../assertion
   1001106 data .../created-on
