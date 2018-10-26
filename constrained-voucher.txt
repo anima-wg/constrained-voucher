@@ -396,14 +396,15 @@ Internet-Draft            Constrained Vouchers              October 2018
 
          SID Assigned to
    --------- --------------------------------------------------
-     1001154 data /ietf-constrained-voucher-request:voucher
+     1001150 module ietf-constrained-voucher-request
+     1001154 data .../voucher
      1001155 data .../assertion
      1001156 data .../created-on
      1001157 data .../domain-cert-revocation-checks
      1001158 data .../expires-on
      1001159 data .../idevid-issuer
      1001160 data .../last-renewal-date
-     1001161 data /ietf-constrained-voucher-request:voucher/nonce
+     1001161 data .../nonce
      1001162 data .../pinned-domain-cert
      1001163 data .../prior-signed-voucher-request
      1001164 data .../proximity-registrar-cert
@@ -441,7 +442,6 @@ Internet-Draft            Constrained Vouchers              October 2018
      }
 
      organization
-      "IETF ANIMA Working Group";
 
 
 
@@ -449,6 +449,8 @@ Richardson, et al.       Expires April 28, 2019                 [Page 8]
 
 Internet-Draft            Constrained Vouchers              October 2018
 
+
+      "IETF ANIMA Working Group";
 
      contact
       "WG Web:   <http://tools.ietf.org/wg/anima/>
@@ -496,8 +498,6 @@ Internet-Draft            Constrained Vouchers              October 2018
      }
 
      // Grouping defined for future usage
-     grouping voucher-request-constrained-grouping {
-       description
 
 
 
@@ -506,6 +506,8 @@ Richardson, et al.       Expires April 28, 2019                 [Page 9]
 Internet-Draft            Constrained Vouchers              October 2018
 
 
+     grouping voucher-request-constrained-grouping {
+       description
          "Grouping to allow reuse/extensions in future work.";
 
        uses v:voucher-artifact-grouping {
@@ -552,8 +554,6 @@ Internet-Draft            Constrained Vouchers              October 2018
                 the Registrar to the Pledge. This MUST be populated in a
                 Pledge's voucher request if the proximity assertion is
                 populated.";
-           }
-
 
 
 
@@ -561,6 +561,8 @@ Richardson, et al.       Expires April 28, 2019                [Page 10]
 
 Internet-Draft            Constrained Vouchers              October 2018
 
+
+           }
 
            leaf prior-signed-voucher-request {
              type binary;
@@ -600,8 +602,6 @@ Internet-Draft            Constrained Vouchers              October 2018
    shown in diagnostic CBOR notation.  The enum value of the assertion
    field is calculated to be zero by following the algorithm described
    in section 9.6.4.2 of [RFC7950].
-
-
 
 
 
@@ -679,6 +679,7 @@ Internet-Draft            Constrained Vouchers              October 2018
 
          SID Assigned to
    --------- --------------------------------------------------
+     1001100 module ietf-constrained-voucher
      1001104 data .../voucher
      1001105 data .../assertion
      1001106 data .../created-on
@@ -721,7 +722,6 @@ Internet-Draft            Constrained Vouchers              October 2018
      }
 
      organization
-      "IETF ANIMA Working Group";
 
 
 
@@ -729,6 +729,8 @@ Richardson, et al.       Expires April 28, 2019                [Page 13]
 
 Internet-Draft            Constrained Vouchers              October 2018
 
+
+      "IETF ANIMA Working Group";
 
      contact
       "WG Web:   <http://tools.ietf.org/wg/anima/>
@@ -777,8 +779,6 @@ Internet-Draft            Constrained Vouchers              October 2018
 
        uses v:voucher-artifact-grouping {
 
-         refine voucher/created-on {
-
 
 
 Richardson, et al.       Expires April 28, 2019                [Page 14]
@@ -786,6 +786,7 @@ Richardson, et al.       Expires April 28, 2019                [Page 14]
 Internet-Draft            Constrained Vouchers              October 2018
 
 
+         refine voucher/created-on {
              mandatory  false;
          }
 
@@ -823,7 +824,6 @@ Internet-Draft            Constrained Vouchers              October 2018
    constrained-voucher-request are shown in diagnostic CBOR notation.
    The enum value of the assertion field is calculated to be zero by
    following the algorithm described in section 9.6.4.2 of [RFC7950].
-
 
 
 

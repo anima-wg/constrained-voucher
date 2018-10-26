@@ -300,23 +300,24 @@ module: ietf-constrained-voucher-request
 
 <t><figure>
 <artwork><![CDATA[
-           
+
       SID Assigned to
---------- -------------------------------------------------- 
-  1001154 data /ietf-constrained-voucher-request:voucher
+--------- --------------------------------------------------
+  1001150 module ietf-constrained-voucher-request
+  1001154 data .../voucher
   1001155 data .../assertion
   1001156 data .../created-on
   1001157 data .../domain-cert-revocation-checks
   1001158 data .../expires-on
   1001159 data .../idevid-issuer
   1001160 data .../last-renewal-date
-  1001161 data /ietf-constrained-voucher-request:voucher/nonce
+  1001161 data .../nonce
   1001162 data .../pinned-domain-cert
   1001163 data .../prior-signed-voucher-request
   1001164 data .../proximity-registrar-cert
   1001165 data .../proximity-registrar-subject-public-key-info
   1001166 data .../serial-number
-           
+
 ]]></artwork>
 </figure></t>
 
@@ -548,6 +549,7 @@ module: ietf-constrained-voucher
 
       SID Assigned to
 --------- --------------------------------------------------
+  1001100 module ietf-constrained-voucher
   1001104 data .../voucher
   1001105 data .../assertion
   1001106 data .../created-on
@@ -1178,7 +1180,7 @@ Cms and cose mediatypes are introduced
   </back>
 
 <!-- ##markdown-source:
-H4sIAD9h0lsAA+08a3PbxrXf8St26JlauiEgknrYYuo2tEQnSqxHRTlJb8aT
+H4sIAJ5h0lsAA+08a3PbxrXf8St26JlauiEgknrYYuo2tEQnSqxHRTlJb8aT
 AYEliQgPBgtIVl33t9/z2F0sKFKW47S9nSk7dShi9+zZ8z5nz8L3fa9KqlQO
 xVGRq6oMk1zG4vuijhayFKOySmZhVCkxK0rxsigqHLJcJvlcXJRFVURFqrxw
 Oi3lzVoIyouLKA8zgB+X4azyE1nN/DBPstCPmuH+DQ/3ewPPeyJUFebxz2Fa
