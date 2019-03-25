@@ -1,6 +1,7 @@
-           
+Base SID value for voucher request: 1001101.
+
       SID Assigned to
---------- -------------------------------------------------- 
+--------- --------------------------------------------------
   1001115 module ietf-constrained-voucher
   1001116 module ietf-restconf
   1001117 module ietf-voucher

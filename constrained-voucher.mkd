@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-ietf-anima-constrained-voucher-02
+docname: draft-ietf-anima-constrained-voucher-03
 
 # stand_alone: true
 
@@ -351,25 +351,9 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
 Below a the CBOR serialization of the the constrained-voucher and constrained-voucher-request are shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
 
-~~~~
-{
-  1001051: {
-    +2 : "2016-10-07T19:31:42Z", / SID = 1001053, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID = 1001055, expires-on /
-    +1 : 0,                      / SID = 1001052, assertion /
-                                 /                "verified" /
-    +10: "JADA123456789",        / SID = 1001061, serial-number /
-    +5 : h'01020D0F',            / SID = 1001056, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 1001059, pinned-domain-cert/
-    +3 : true,                   / SID = 1001054, domain-cert
-                                                  -revocation-checks/
-    +6 : "2017-10-07T19:31:42Z", / SID = 1001057, last-renewal-date /
-    +9 : h'01020D0F'             / SID = 1001060, pinned-domain
-                                          -subject-public-key-info /
-  }
-}
-~~~~
-
+<figure>
+INSERT_TEXT_FROM_FILE voucher1-example.txt END
+</figure>
 
 ## CMS format voucher and voucher-request artifacts
 
