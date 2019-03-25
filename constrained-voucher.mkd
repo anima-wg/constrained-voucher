@@ -46,6 +46,8 @@ normative:
   RFC5652:
   RFC8152:
   RFC8366:
+  RFC3688:
+  RFC6020:
   I-D.ietf-anima-bootstrapping-keyinfra:
   I-D.ietf-core-object-security:
   I-D.ietf-ace-cbor-web-token:
@@ -294,24 +296,9 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 
 Below a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
-~~~~
-{
-  1001101: {
-    +2 : "2016-10-07T19:31:42Z", / SID = 1001103, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID = 1001105, expires-on /
-    +1 : 0,                      / SID = 1001102, assertion /
-                                 /                "verified" /
-    +12: "JADA123456789",        / SID = 1001113, serial-number /
-    +5 : h'01020D0F',            / SID = 1001106, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 1001109, pinned-domain-cert/
-    +3 : true,                   / SID = 1001104, domain-cert
-                                                 -revocation-checks /
-    +6 : "2017-10-07T19:31:42Z", / SID = 1001107, last-renewal-date /
-    +11: h'01020D0F'             / SID = 1001112, proximity
-                                -registrar-subject-public-key-info /
-  }
-}
-~~~~
+<figure>
+INSERT_TEXT_FROM_FILE voucher-request-example1.txt END
+</figure>
 
 ## Voucher artifact
 
@@ -352,7 +339,7 @@ Below a the CBOR serialization of the the constrained-voucher and constrained-vo
 
 
 <figure>
-INSERT_TEXT_FROM_FILE voucher1-example.txt END
+INSERT_TEXT_FROM_FILE voucher-example1.txt END
 </figure>
 
 ## CMS format voucher and voucher-request artifacts
@@ -451,8 +438,8 @@ Additions to the sub-registry "CoAP Resource Type", within the "CoRE parameters"
 
 ## The IETF XML Registry
 
-This document registers two URIs in the IETF XML registry [RFC3688].
-Following the format in [RFC3688], the following registration is
+This document registers two URIs in the IETF XML registry {{RFC3688}}.
+Following the format in {{RFC3688}}, the following registration is
 requested:
 
       URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
@@ -466,7 +453,7 @@ requested:
 ## The YANG Module Names Registry
 
 This document registers two YANG modules in the YANG Module Names
-registry [RFC6020].  Following the format defined in [RFC6020], the
+registry {{RFC6020}}.  Following the format defined in {{RFC6020}}, the
 the following registration is requested:
 
       name:         ietf-constrained-voucher
