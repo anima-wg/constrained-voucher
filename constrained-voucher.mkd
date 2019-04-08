@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Vouchers
-docname: draft-ietf-anima-constrained-voucher-03
+docname: draft-ietf-anima-constrained-voucher-04
 
 # stand_alone: true
 
@@ -171,6 +171,8 @@ COSE signed voucher requests and responses.
 The use of CMS signatures implies the use of PKIX format certificates.
 The pinned-domain-cert present in such a voucher, is the certificate of the Registrar.
 
+The constrained voucher and constrained voucher request MUST be signed.
+
 The use of COSE signatures permits the use of both PKIX format certificates,
 and also raw public keys (RPK).  When RPKs are used, the voucher produced by
 the MASA pins the raw public key of the Registrar: the
@@ -231,18 +233,17 @@ following more complete response is possible.
 
   RES: 2.05 Content
   </est>; rt="ace.est"
-  </est/rv>; rt="ace.est/rv";ct=50 60 TBD2 TBD3 16
+  </est/rv>; rt="ace.est/rv";ct=TBD2 TBD3
   </est/vs>; rt="ace.est/vs";ct=50 60
   </est/es>; rt="ace.est/es";ct=50 60
-  </est/ra>; rt="ace.est/ra";ct=TBD2 TBD3 16
+  </est/ra>; rt="ace.est/ra";ct=TBD2 TBD3
 ~~~~
 
 The first line MUST be returned in response to the GET, The following four lines MAY be returned to show the supported Content-Formats. The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
 Port numbers, not returned in the example, are assumed to be the default numbers 5683 and 5684 for coap and coaps respectively (sections 12.6 and 12.7 of {{RFC7252}}. Discoverable port numbers MAY be returned in the &lt;href&gt; of the payload.
 
-ct=16 stands for the Content-Format "application/cose",
-and ct=TBD2 stands for Content-Format "application/voucher-cms+cbor,
+ct=TBD2 stands for Content-Format "application/voucher-cms+cbor,
 and ct=TBD3 stands for Content-Format "application/voucher-cose+cbor".
 
 Content-Formats TBD2 and TBD3 are defined in this document.
@@ -250,7 +251,7 @@ The return of the content-formats allows the client to choose the most
 appropriate one from multiple content formats.
 
 The Content-Format ("application/json") 50 MAY be supported.
-Content-Formats ("application/cbor") 60, TBD2, TBD3, and 16 MUST be supported.
+Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported.
 
 # Artifacts
 
@@ -292,7 +293,7 @@ In the constrained-voucher-request YANG module, the voucher is "augmented" withi
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 </figure>
 
-### Example voucher request artifact
+### Example voucher request artifact {#example2}
 
 Below a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
@@ -333,14 +334,15 @@ In the constraine-voucher YANG module, the voucher is "augmented" within the "us
 INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
 </figure>
 
-### Example voucher artifacts
+### Example voucher artifacts {#example1}
 
-Below a the CBOR serialization of the the constrained-voucher and constrained-voucher-request are shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
-
+Below a the CBOR serialization of the the constrained-voucher is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
 <figure>
 INSERT_TEXT_FROM_FILE voucher-example1.txt END
 </figure>
+
+The signing of the example is shown in {{cmssign}}.
 
 ## CMS format voucher and voucher-request artifacts
 
@@ -360,7 +362,7 @@ Normally the recipient is the pledge and the signer is the MASA.
 
 {{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned
 voucher requests from the pledge to the JRC.
-In this specification, voucher-request artifact is not signed from the
+In this specification, voucher-request artifact MUST be signed from the
 pledge to the registrar.  From the JRC to the MASA, the voucher-request
 artifact MUST be signed by the domain owner key which is requesting
 ownership.
@@ -381,6 +383,8 @@ CRLs and other validity mechanisms is discouraged, as the pledge is
 unlikely to be able to perform online checks, and is unlikely to have
 a trusted clock source.  As described below, the use of short-lived
 vouchers and/or pledge provided nonce provides a freshness guarantee.
+
+In {{cmssign}} examples for the signing of the voucher are shown.
 
 ### COSE signing
 
@@ -467,6 +471,16 @@ the following registration is requested:
       prefix:       vch
       reference:    RFC XXXX
 
+## The RFC SID range assignment sub-registry
+
+    ------------ ------ --------------------------- ------------
+    Entry-point | Size | Module name               | RFC Number
+    ------------ ------ --------------------------- ------------
+    1001100       50     ietf-constrained-voucher    [ThisRFC]
+    1001150       50     ietf-constrained-voucher    [ThisRFC}
+                                     -request   
+    ----------- ------  --------------------------- ------------
+
 ## The SMI Security for S/MIME CMS Content Type Registry
 
 This document registers an OID in the "SMI Security for S/MIME CMS
@@ -478,15 +492,7 @@ Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
 
 EDNOTE: should a separate value be used for Voucher Requests?
 
-## The SID registry
 
-The SID range 1001100 was allocated by comi.space to the
-IETF-CONSTRAINED-VOUCHER yang module.
-
-The SID range 1001150 was allocated by comi.space to the
-IETF-CONSTRAINED-VOUCHER-REQUEST yang module.
-
-EDNOTE: it is unclear if there is further IANA work required.
 
 ## Media-Type Registry
 
@@ -569,6 +575,16 @@ We are grateful for the suggestions done by Esko Dijk.
 
 # Changelog
 
+-04
+
+    voucher and request-voucher MUST be signed
+    examples for signed request are added in appendix
+    IANA SID registration is updated.
+
+-03
+
+    Examples are inverted.
+
 -02
 
     Example of requestvoucher with unsigned appllication/cbor is added
@@ -587,7 +603,7 @@ We are grateful for the suggestions done by Esko Dijk.
 
 This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}}. The CoAP headers are only worked out for the enrollstatus example.
 
-##enrollstatus
+##enrollstatus {#es}
 
 A coaps enrollstatus message can be :
 
@@ -602,26 +618,23 @@ The corresponding coap header fields are shown below.
   T = 0 (CON)
   Code = 0x01 (0.01 is GET)
   Options
-   Option1 (Uri-Host)
-     Option Delta = 0x3  (option nr = 3)
-     Option Length = 0x9
-     Option Value = 192.0.2.1
-   Option2 (Uri-Port)
-     Option Delta = 0x4  (option nr = 4+3=7)
-     Option Length = 0x4
-     Option Value = 8085
-   Option3 (Uri-Path)
-     Option Delta = 0x4   (option nr = 7+4= 11)
-     Option Length = 0x7
-     Option Value = /est/es
+   Option  (Uri-Path)
+     Option Delta = 0xb   (option nr = 11)
+     Option Length = 0x3
+     Option Value = "est"
+   Option  (Uri-Path)
+     Option Delta = 0x0   (option nr = 11)
+     Option Length = 0x2
+     Option Value = "es"
   Payload = [Empty]
 ~~~~
+The Uri-Host and Uri-Port Options are omitted because they coincide with the transport protocol destination address and port respectively.
 
-A 2.05 Content response with an unsigned JSON voucher (ct=50) will then be:
+A 2.05 Content response with an unsigned voucher status (ct=60) will then be:
 
 ~~~~
-   2.05 Content (Content-Format: application/json)
-     {payload}
+   2.05 Content (Content-Format: application/cbor)
+
 ~~~~
 
 With CoAP fields and payload:
@@ -634,10 +647,15 @@ With CoAP fields and payload:
      Option1 (Content-Format)
      Option Delta = 0xC  (option nr 12)
      Option Length = 0x2
-     Option Value = 0x32 (application/json)
+     Option Value = 60 (application/cbor)
 
      Payload =
-    [EDNOTE: put here voucher payload ]
+     "version":"1",
+     "Status":TRUE /* TRUE=Success, FALSE=Fail"
+     "Reason":"Informative human readable message"
+     "reason-context": "Additional information"
+
+[EDNote, to be serialized into binary]
 ~~~~
 
 ##voucher_status
@@ -653,19 +671,60 @@ A 2.05 Content response with a non signed CBOR voucher (ct=60) will then be:
 ~~~~
     2.05 Content (Content-Format: application/cbor)
     Payload =
-    [EDNOTE: put here voucher payload ]
+    {
+     "version":"1",
+     "Status":FALSE /* TRUE=Success, FALSE=Fail"
+     "Reason":"Informative human readable message"
+     "reason-context": { additional CBOR }
+   }
+
+[EDNote, payload to be serialized to binary]
 ~~~~
 
 ##requestvoucher
 
-Two request-voucher request payloads are possible from pledge to Registrar, a signed one and an unsigned one, as explained in Section 5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+Signed request-voucher-request payloads are sent from pledge to Registrar, as explained in Section 5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
-### signed requestvoucher
+### signed requestvoucher {#rv}
 
 A coaps signed requestvoucher message from RA to MASA can be :
 
 ~~~~
     POST coaps://[2001:db8::2:1]:61616]/est/rv
+(Content-Format: application/voucher-cms+cbor)
+    Payload =
+308203ba06092a864886f70d010702a08203ab308203a7020101310d300b
+0609608648016503040201300b06092a864886f70d010701a08202413082
+023d308201e2a00302010202087e7661d7b54e4632300a06082a8648ce3d
+040302305d310b3009060355040613025553310b300906035504080c0243
+4131143012060355040a0c0b4578616d706c6520496e6331163014060355
+040b0c0d63657274696669636174696f6e3113301106035504030c0a3830
+322e3141522043413020170d3139303133313131323931365a180f393939
+39313233313233353935395a305c310b3009060355040613025553310b30
+0906035504080c024341310b300906035504070c024c4131143012060355
+040a0c0b6578616d706c6520496e63310c300a060355040b0c03496f5431
+0f300d060355040513065774313233343059301306072a8648ce3d020106
+082a8648ce3d03010703420004c8b421f11c25e47e3ac57123bf2d9fdc49
+4f028bc351cc80c03f150bf50cff958d75419d81a6a245dffae790be95cf
+75f602f9152618f816a2b23b5638e59fd9a3818a30818730090603551d13
+04023000301d0603551d0e0416041496600d8716bf7fd0e752d0ac760777
+ad665d02a0301f0603551d2304183016801468d16551f951bfc82a431d0d
+9f08bc2d205b1160300e0603551d0f0101ff0404030205a0302a0603551d
+1104233021a01f06082b06010505070804a013301106092b06010401b43b
+0a01040401020304300a06082a8648ce3d0403020349003046022100c0d8
+1996d2507d693f3c48eaa5ee9491bda6db214099d98117c63b361374cd86
+022100a774989f4c321a5cf25d832a4d336a08ad67df20f1506421188a0a
+de6d3492363182013f3082013b0201013069305d310b3009060355040613
+025553310b300906035504080c02434131143012060355040a0c0b457861
+6d706c6520496e6331163014060355040b0c0d6365727469666963617469
+6f6e3113301106035504030c0a3830322e31415220434102087e7661d7b5
+4e4632300b0609608648016503040201a069301806092a864886f70d0109
+03310b06092a864886f70d010701301c06092a864886f70d010905310f17
+0d3139303430383130343833365a302f06092a864886f70d010904312204
+20b11d09338bb36672ef0dcb82f4995d911a773dcb6f39e8141b3a14c14d
+f7545a300a06082a8648ce3d0403020447304502200128c3b08a6bd2d5bf
+9fa7511eabefaacaa06651dbb459c4ad46d67e14b4283e022100c3504a9c
+e704e64467f469d110550cea988821304805d74bea5efd3680bd632f
 ~~~~
 
 A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:
@@ -673,38 +732,396 @@ A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TB
 ~~~~
     2.04 Changed (Content-Format: application/voucher-cms+cbor)
     Payload =
-    [EDNOTE: put here encrypted voucher payload ]
+308203bb06092a864886f70d010702a08203ac308203a8020101310d300b
+0609608648016503040201300b06092a864886f70d010701a08202413082
+023d308201e2a00302010202087e7661d7b54e4632300a06082a8648ce3d
+040302305d310b3009060355040613025553310b300906035504080c0243
+4131143012060355040a0c0b4578616d706c6520496e6331163014060355
+040b0c0d63657274696669636174696f6e3113301106035504030c0a3830
+322e3141522043413020170d3139303133313131323931365a180f393939
+39313233313233353935395a305c310b3009060355040613025553310b30
+0906035504080c024341310b300906035504070c024c4131143012060355
+040a0c0b6578616d706c6520496e63310c300a060355040b0c03496f5431
+0f300d060355040513065774313233343059301306072a8648ce3d020106
+082a8648ce3d03010703420004c8b421f11c25e47e3ac57123bf2d9fdc49
+4f028bc351cc80c03f150bf50cff958d75419d81a6a245dffae790be95cf
+75f602f9152618f816a2b23b5638e59fd9a3818a30818730090603551d13
+04023000301d0603551d0e0416041496600d8716bf7fd0e752d0ac760777
+ad665d02a0301f0603551d2304183016801468d16551f951bfc82a431d0d
+9f08bc2d205b1160300e0603551d0f0101ff0404030205a0302a0603551d
+1104233021a01f06082b06010505070804a013301106092b06010401b43b
+0a01040401020304300a06082a8648ce3d0403020349003046022100c0d8
+1996d2507d693f3c48eaa5ee9491bda6db214099d98117c63b361374cd86
+022100a774989f4c321a5cf25d832a4d336a08ad67df20f1506421188a0a
+de6d349236318201403082013c0201013069305d310b3009060355040613
+025553310b300906035504080c02434131143012060355040a0c0b457861
+6d706c6520496e6331163014060355040b0c0d6365727469666963617469
+6f6e3113301106035504030c0a3830322e31415220434102087e7661d7b5
+4e4632300b0609608648016503040201a069301806092a864886f70d0109
+03310b06092a864886f70d010701301c06092a864886f70d010905310f17
+0d3139303430383037333431305a302f06092a864886f70d010904312204
+20fdab29af89f0b55dc1812607685ebb1b33d3902cd33a0001891ec8daac
+8787e2300a06082a8648ce3d04030204483046022100b39dd8529b7bd146
+90de0f83b148805fbffdc42ffcdfafeed0d9333181005374022100bb9048
+d28438a34c1972b0f22a853619b7978651bf83e3a04d47ed60c277daca
 ~~~~
 
+##requestauditing  {#ra}
 
-### unsigned requestvoucher
-
-A coaps unsigned requestvoucher message from pledge to Registrar can be :
-
-~~~~
-    POST coaps://[2001:db8::2:1]:61616]/est/rv
-~~~~
-
-A 2.04 Changed response returning CBOR voucher (ct=60) will then be:
+A coaps requestauditing message contains the signed CBOR voucher :
 
 ~~~~
-    2.04 Changed (Content-Format: application/cbor)
+    POST coaps://[2001:db8::2:1]:61616]/est/ra
+    (Content-Format: application/voucher-cms+cbor)
     Payload =
-    [EDNOTE: put here encrypted voucher payload ]
+308203ba06092a864886f70d010702a08203ab308203a7020101310d300b
+0609608648016503040201300b06092a864886f70d010701a08202413082
+023d308201e2a00302010202087e7661d7b54e4632300a06082a8648ce3d
+040302305d310b3009060355040613025553310b300906035504080c0243
+4131143012060355040a0c0b4578616d706c6520496e6331163014060355
+040b0c0d63657274696669636174696f6e3113301106035504030c0a3830
+322e3141522043413020170d3139303133313131323931365a180f393939
+39313233313233353935395a305c310b3009060355040613025553310b30
+0906035504080c024341310b300906035504070c024c4131143012060355
+040a0c0b6578616d706c6520496e63310c300a060355040b0c03496f5431
+0f300d060355040513065774313233343059301306072a8648ce3d020106
+082a8648ce3d03010703420004c8b421f11c25e47e3ac57123bf2d9fdc49
+4f028bc351cc80c03f150bf50cff958d75419d81a6a245dffae790be95cf
+75f602f9152618f816a2b23b5638e59fd9a3818a30818730090603551d13
+04023000301d0603551d0e0416041496600d8716bf7fd0e752d0ac760777
+ad665d02a0301f0603551d2304183016801468d16551f951bfc82a431d0d
+9f08bc2d205b1160300e0603551d0f0101ff0404030205a0302a0603551d
+1104233021a01f06082b06010505070804a013301106092b06010401b43b
+0a01040401020304300a06082a8648ce3d0403020349003046022100c0d8
+1996d2507d693f3c48eaa5ee9491bda6db214099d98117c63b361374cd86
+022100a774989f4c321a5cf25d832a4d336a08ad67df20f1506421188a0a
+de6d3492363182013f3082013b0201013069305d310b3009060355040613
+025553310b300906035504080c02434131143012060355040a0c0b457861
+6d706c6520496e6331163014060355040b0c0d6365727469666963617469
+6f6e3113301106035504030c0a3830322e31415220434102087e7661d7b5
+4e4632300b0609608648016503040201a069301806092a864886f70d0109
+03310b06092a864886f70d010701301c06092a864886f70d010905310f17
+0d3139303430383130343833365a302f06092a864886f70d010904312204
+20b11d09338bb36672ef0dcb82f4995d911a773dcb6f39e8141b3a14c14d
+f7545a300a06082a8648ce3d0403020447304502200128c3b08a6bd2d5bf
+9fa7511eabefaacaa06651dbb459c4ad46d67e14b4283e022100c3504a9c
+e704e64467f469d110550cea988821304805d74bea5efd3680bd632f
 ~~~~
 
-##requestauditing
-
-A coaps requestauditing message can be :
+A 2.05 Content response returning a log of the voucher (ct=60) will then be:
 
 ~~~~
-    GET coaps://[2001:db8::2:1]:61616]/est/ra
-~~~~
-
-A 2.05 Content response returning a COSE_Sign1 object (ct=TBD3) will then be:
-
-~~~~
-    2.05 Content (Content-Format: application/voucher-cose+cbor)
+    2.05 Content (Content-Format: application/cbor)
     Payload =
-    [EDNOTE: put here COSE_Sign1 voucher payload ]
+{
+ "version":"1",
+ "events":[
+   {
+    "date":"<date/time of the entry>",
+    "domainID":"<domainID extracted from voucher-request>",
+    "nonce":"<any nonce if supplied (or the exact string 'NULL')>"
+    "assertion":"<the value from the voucher assertion leaf>"
+    "truncated":"<the number of domainID entries truncated>"
+   },
+   {
+    "date":"<date/time of the entry>",
+    "domainID":"<anotherDomainID extracted from voucher-request>",
+    "nonce":"<any nonce if supplied (or the exact string 'NULL')>"
+    "assertion":"<the value from the voucher assertion leaf>"
+   }
+ ],
+  "truncation": {
+    "nonced duplicates": "<total number of entries truncated>",
+    "nonceless duplicates": "<total number of entries truncated>",
+    "arbitrary": "<number of domainID entries removed entirely>"
+  }
+}
+
+    [EDNOTE: Change JSON to CBOR; Serialize CBOR payload to binary]
 ~~~~
+
+# CMS signed voucher(-request)  {#cmssign}
+
+## CMS signed voucher-request example
+
+The voucher-request example, visualized in CBOR diagnostic notation in {{example2}} is shown as a hexadecimal dump of the binary file. 
+
+~~~
+413120314120303030463436354220204139203032203734203332333033
+313336324433313330324433303337353433313339334133333331334133
+34333235410d0a3034203734202033323330333133363244333133303244
+333233313534333133393341333333313341333433323541200d0a303120
+203030202030412036442034413431343434313331333233333334333533
+36333733383339202030352034342020303130323044304620200d0a2030
+462034342030313032304430462020303320463520303620373420203332
+333033313337324433313330324433303337353433313339334133333331
+33413334333235410d0a20303920343420203031303230443046202020
+~~~
+
+The voucher-request example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
+The CMS signing of the binary voucher-request leads to a binary signed voucher-request, shown with a hexadecimal representation shown in the payload of the request part of {{rv}} and {{ra}}.
+
+The breakdown of the CMS signed binary voucher-request file is visualized below:
+
+~~~
+CMS_ContentInfo: 
+  contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
+  d.signedData: 
+    version: 1
+    digestAlgorithms:
+        algorithm: sha256 (2.16.840.1.101.3.4.2.1)
+        parameter: <ABSENT>
+    encapContentInfo: 
+      eContentType: pkcs7-data (1.2.840.113549.1.7.1)
+      eContent: <ABSENT>
+    certificates:
+      d.certificate: 
+        cert_info: 
+          version: 2
+          serialNumber: 9112578475118446130
+          signature: 
+            algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
+            parameter: <ABSENT>
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
+                                                    CN=802.1AR CA
+          validity: 
+            notBefore: Jan 31 11:29:16 2019 GMT
+            notAfter: Dec 31 23:59:59 9999 GMT
+          subject: C=US, ST=CA, L=LA, O=example Inc, 
+                                        OU=IoT/serialNumber=Wt1234
+          key: 
+            algor: 
+              algorithm: id-ecPublicKey (1.2.840.10045.2.1)
+              parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
+            public_key:  (0 unused bits)
+              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf
+              000e - 2d 9f dc 49 4f 02 8b c3-51 cc 80 c0 3f 15
+              001c - 0b f5 0c ff 95 8d 75 41-9d 81 a6 a2 45 df
+              002a - fa e7 90 be 95 cf 75 f6-02 f9 15 26 18 f8
+              0038 - 16 a2 b2 3b 56 38 e5 9f-d9
+          issuerUID: <ABSENT>
+          subjectUID: <ABSENT>
+          extensions:
+              object: X509v3 Basic Constraints (2.5.29.19)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 30            
+                0002 - <SPACES/NULS>
+
+              object: X509v3 Subject Key Identifier (2.5.29.14)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0 
+                000d - ac 76 07 77 ad 66 5d 02-a0           
+
+              object: X509v3 Authority Key Identifier (2.5.29.35)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
+                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60     
+              object: X509v3 Key Usage (2.5.29.15)
+              critical: TRUE
+              value: 
+                0000 - 03 02 05 a0                     
+
+              object: X509v3 Subject Alternative Name (2.5.29.17)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
+                000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4
+                001a - 3b 0a 01 04 04 01 02 03-04            
+        sig_alg: 
+          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
+          parameter: <ABSENT>
+        signature:  (0 unused bits)
+          0000 - 30 46 02 21 00 c0 d8 19-96 d2 50 7d 69 3f 3c
+          000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
+          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
+          002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20
+          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36 
+    crls:
+      <EMPTY>
+    signerInfos:
+        version: 1
+        d.issuerAndSerialNumber: 
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
+                                                     CN=802.1AR CA
+          serialNumber: 9112578475118446130
+        digestAlgorithm: 
+          algorithm: sha256 (2.16.840.1.101.3.4.2.1)
+          parameter: <ABSENT>
+        signedAttrs:
+            object: contentType (1.2.840.113549.1.9.3)
+            value.set:
+              OBJECT:pkcs7-data (1.2.840.113549.1.7.1)
+
+            object: signingTime (1.2.840.113549.1.9.5)
+            value.set:
+              UTCTIME:Apr  8 10:48:36 2019 GMT
+
+            object: messageDigest (1.2.840.113549.1.9.4)
+            value.set:
+              OCTET STRING:
+                0000 - b1 1d 09 33 8b b3 66 72-ef 0d cb 82 f4
+                000d - 99 5d 91 1a 77 3d cb 6f-39 e8 14 1b 3a
+                001a - 14 c1 4d f7 54 5a                  
+        signatureAlgorithm: 
+          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
+          parameter: <ABSENT>
+        signature: 
+          0000 - 30 45 02 20 01 28 c3 b0-8a 6b d2 d5 bf 9f a7
+          000f - 51 1e ab ef aa ca a0 66-51 db b4 59 c4 ad 46 
+          001e - d6 7e 14 b4 28 3e 02 21-00 c3 50 4a 9c e7 04
+          002d - e6 44 67 f4 69 d1 10 55-0c ea 98 88 21 30 48
+          003c - 05 d7 4b ea 5e fd 36 80-bd 63 2f           
+        unsignedAttrs:
+          <EMPTY>
+
+~~~
+## CMS signed voucher example
+
+The voucher example, visualized in CBOR diagnostic notation in {{example1}} is shown as a hexadecimal dump of the binary file. 
+
+~~~
+   a11a000f468da90274323031362d31302d30375431393a33313a34325a04
+   74323031362d31302d32315431393a33313a34325a01000c6d4a41444131
+   3233343536373839054401020d0f084401020d0f03f50674323031372d31
+   302d30375431393a33313a34325a0b4401020d0f
+~~~
+
+The voucher example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
+The CMS signing of the binary voucher leads to a binary signed voucher, shown with a hexadecimal representation shown in the request part of the payloads of {{rv}} and {{ra}}.
+
+The breakdown of the CMS signed binary file is visualized below:
+
+~~~
+CMS_ContentInfo: 
+  contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
+  d.signedData: 
+    version: 1
+    digestAlgorithms:
+        algorithm: sha256 (2.16.840.1.101.3.4.2.1)
+        parameter: <ABSENT>
+    encapContentInfo: 
+      eContentType: pkcs7-data (1.2.840.113549.1.7.1)
+      eContent: <ABSENT>
+    certificates:
+      d.certificate: 
+        cert_info: 
+          version: 2
+          serialNumber: 9112578475118446130
+          signature: 
+            algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
+            parameter: <ABSENT>
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
+                                                   CN=802.1AR CA
+          validity: 
+            notBefore: Jan 31 11:29:16 2019 GMT
+            notAfter: Dec 31 23:59:59 9999 GMT
+          subject: C=US, ST=CA, L=LA, O=example Inc, 
+                                       OU=IoT/serialNumber=Wt1234
+          key: 
+            algor: 
+              algorithm: id-ecPublicKey (1.2.840.10045.2.1)
+              parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
+            public_key:  (0 unused bits)
+              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf
+              000e - 2d 9f dc 49 4f 02 8b c3-51 cc 80 c0 3f 15
+              001c - 0b f5 0c ff 95 8d 75 41-9d 81 a6 a2 45 df
+              002a - fa e7 90 be 95 cf 75 f6-02 f9 15 26 18 f8
+              0038 - 16 a2 b2 3b 56 38 e5 9f-d9               
+          issuerUID: <ABSENT>
+          subjectUID: <ABSENT>
+          extensions:
+              object: X509v3 Basic Constraints (2.5.29.19)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 30                                   
+                0002 - <SPACES/NULS>
+
+              object: X509v3 Subject Key Identifier (2.5.29.14)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0
+                000d - ac 76 07 77 ad 66 5d 02-a0          
+
+              object: X509v3 Authority Key Identifier (2.5.29.35)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
+                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60      
+
+              object: X509v3 Key Usage (2.5.29.15)
+              critical: TRUE
+              value: 
+                0000 - 03 02 05 a0                             
+
+              object: X509v3 Subject Alternative Name (2.5.29.17)
+              critical: BOOL ABSENT
+              value: 
+                0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
+                000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4 
+                001a - 3b 0a 01 04 04 01 02 03-04           
+        sig_alg: 
+          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
+          parameter: <ABSENT>
+        signature:  (0 unused bits)
+          0000 - 30 46 02 21 00 c0 d8 19-96 d2 50 7d 69 3f 3c
+          000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
+          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
+          002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20 
+          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36         
+    crls:
+      <EMPTY>
+    signerInfos:
+        version: 1
+        d.issuerAndSerialNumber: 
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
+                                                     CN=802.1AR CA
+          serialNumber: 9112578475118446130
+        digestAlgorithm: 
+          algorithm: sha256 (2.16.840.1.101.3.4.2.1)
+          parameter: <ABSENT>
+        signedAttrs:
+            object: contentType (1.2.840.113549.1.9.3)
+            value.set:
+              OBJECT:pkcs7-data (1.2.840.113549.1.7.1)
+
+            object: signingTime (1.2.840.113549.1.9.5)
+            value.set:
+              UTCTIME:Apr  8 07:34:10 2019 GMT
+
+            object: messageDigest (1.2.840.113549.1.9.4)
+            value.set:
+              OCTET STRING:
+                0000 - fd ab 29 af 89 f0 b5 5d-c1 81 26 07 68 
+                000d - 5e bb 1b 33 d3 90 2c d3-3a 00 01 89 1e
+                001a - c8 da ac 87 87 e2         
+        signatureAlgorithm: 
+          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
+          parameter: <ABSENT>
+        signature: 
+          0000 - 30 46 02 21 00 b3 9d d8-52 9b 7b d1 46 90 de
+          000f - 0f 83 b1 48 80 5f bf fd-c4 2f fc df af ee d0
+          001e - d9 33 31 81 00 53 74 02-21 00 bb 90 48 d2 84 
+          002d - 38 a3 4c 19 72 b0 f2 2a-85 36 19 b7 97 86 51
+          003c - bf 83 e3 a0 4d 47 ed 60-c2 77 da ca   
+        unsignedAttrs:
+          <EMPTY>
+~~~
+
+## CBOR-sign1 signed voucher example
+
+A COSE sign1 cose object has the follwing structure in CBOR diagnostic notation:
+
+    [EDNote: ED25519 signature will be used.]
+
+~~~
+18(
+[
+h'',
+{4: kid, 6: partial IV, kid context, 9: signature},
+binary voucher(-request)
+]
+)
+~~~
