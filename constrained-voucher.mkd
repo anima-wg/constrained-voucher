@@ -847,15 +847,10 @@ A 2.05 Content response returning a log of the voucher (ct=60) will then be:
 The voucher-request example, visualized in CBOR diagnostic notation in {{example2}} is shown as a hexadecimal dump of the binary file. 
 
 ~~~
-413120314120303030463436354220204139203032203734203332333033
-313336324433313330324433303337353433313339334133333331334133
-34333235410d0a3034203734202033323330333133363244333133303244
-333233313534333133393341333333313341333433323541200d0a303120
-203030202030412036442034413431343434313331333233333334333533
-36333733383339202030352034342020303130323044304620200d0a2030
-462034342030313032304430462020303320463520303620373420203332
-333033313337324433313330324433303337353433313339334133333331
-33413334333235410d0a20303920343420203031303230443046202020
+a11a000f468da90274323031362d31302d30375431393a33313a34325a04
+74323031362d31302d32315431393a33313a34325a01000c6d4a41444131
+3233343536373839054401020d0f084401020d0f03f50674323031372d31
+302d30375431393a33313a34325a0b4401020d0f
 ~~~
 
 The voucher-request example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
@@ -978,150 +973,68 @@ CMS_ContentInfo:
           <EMPTY>
 
 ~~~
-## CMS signed voucher example
 
-The voucher example, visualized in CBOR diagnostic notation in {{example1}} is shown as a hexadecimal dump of the binary file. 
+## CBOR-sign1 signed voucher request example
 
-~~~
-   a11a000f468da90274323031362d31302d30375431393a33313a34325a04
-   74323031362d31302d32315431393a33313a34325a01000c6d4a41444131
-   3233343536373839054401020d0f084401020d0f03f50674323031372d31
-   302d30375431393a33313a34325a0b4401020d0f
-~~~
-
-The voucher example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
-The CMS signing of the binary voucher leads to a binary signed voucher, shown with a hexadecimal representation shown in the request part of the payloads of {{rv}} and {{ra}}.
-
-The breakdown of the CMS signed binary file is visualized below:
-
-~~~
-CMS_ContentInfo: 
-  contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
-  d.signedData: 
-    version: 1
-    digestAlgorithms:
-        algorithm: sha256 (2.16.840.1.101.3.4.2.1)
-        parameter: <ABSENT>
-    encapContentInfo: 
-      eContentType: pkcs7-data (1.2.840.113549.1.7.1)
-      eContent: <ABSENT>
-    certificates:
-      d.certificate: 
-        cert_info: 
-          version: 2
-          serialNumber: 9112578475118446130
-          signature: 
-            algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-            parameter: <ABSENT>
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
-                                                   CN=802.1AR CA
-          validity: 
-            notBefore: Jan 31 11:29:16 2019 GMT
-            notAfter: Dec 31 23:59:59 9999 GMT
-          subject: C=US, ST=CA, L=LA, O=example Inc, 
-                                       OU=IoT/serialNumber=Wt1234
-          key: 
-            algor: 
-              algorithm: id-ecPublicKey (1.2.840.10045.2.1)
-              parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
-            public_key:  (0 unused bits)
-              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf
-              000e - 2d 9f dc 49 4f 02 8b c3-51 cc 80 c0 3f 15
-              001c - 0b f5 0c ff 95 8d 75 41-9d 81 a6 a2 45 df
-              002a - fa e7 90 be 95 cf 75 f6-02 f9 15 26 18 f8
-              0038 - 16 a2 b2 3b 56 38 e5 9f-d9               
-          issuerUID: <ABSENT>
-          subjectUID: <ABSENT>
-          extensions:
-              object: X509v3 Basic Constraints (2.5.29.19)
-              critical: BOOL ABSENT
-              value: 
-                0000 - 30                                   
-                0002 - <SPACES/NULS>
-
-              object: X509v3 Subject Key Identifier (2.5.29.14)
-              critical: BOOL ABSENT
-              value: 
-                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0
-                000d - ac 76 07 77 ad 66 5d 02-a0          
-
-              object: X509v3 Authority Key Identifier (2.5.29.35)
-              critical: BOOL ABSENT
-              value: 
-                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
-                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60      
-
-              object: X509v3 Key Usage (2.5.29.15)
-              critical: TRUE
-              value: 
-                0000 - 03 02 05 a0                             
-
-              object: X509v3 Subject Alternative Name (2.5.29.17)
-              critical: BOOL ABSENT
-              value: 
-                0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
-                000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4 
-                001a - 3b 0a 01 04 04 01 02 03-04           
-        sig_alg: 
-          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-          parameter: <ABSENT>
-        signature:  (0 unused bits)
-          0000 - 30 46 02 21 00 c0 d8 19-96 d2 50 7d 69 3f 3c
-          000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
-          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
-          002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20 
-          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36         
-    crls:
-      <EMPTY>
-    signerInfos:
-        version: 1
-        d.issuerAndSerialNumber: 
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
-                                                     CN=802.1AR CA
-          serialNumber: 9112578475118446130
-        digestAlgorithm: 
-          algorithm: sha256 (2.16.840.1.101.3.4.2.1)
-          parameter: <ABSENT>
-        signedAttrs:
-            object: contentType (1.2.840.113549.1.9.3)
-            value.set:
-              OBJECT:pkcs7-data (1.2.840.113549.1.7.1)
-
-            object: signingTime (1.2.840.113549.1.9.5)
-            value.set:
-              UTCTIME:Apr  8 07:34:10 2019 GMT
-
-            object: messageDigest (1.2.840.113549.1.9.4)
-            value.set:
-              OCTET STRING:
-                0000 - fd ab 29 af 89 f0 b5 5d-c1 81 26 07 68 
-                000d - 5e bb 1b 33 d3 90 2c d3-3a 00 01 89 1e
-                001a - c8 da ac 87 87 e2         
-        signatureAlgorithm: 
-          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-          parameter: <ABSENT>
-        signature: 
-          0000 - 30 46 02 21 00 b3 9d d8-52 9b 7b d1 46 90 de
-          000f - 0f 83 b1 48 80 5f bf fd-c4 2f fc df af ee d0
-          001e - d9 33 31 81 00 53 74 02-21 00 bb 90 48 d2 84 
-          002d - 38 a3 4c 19 72 b0 f2 2a-85 36 19 b7 97 86 51
-          003c - bf 83 e3 a0 4d 47 ed 60-c2 77 da ca   
-        unsignedAttrs:
-          <EMPTY>
-~~~
-
-## CBOR-sign1 signed voucher example
-
-A COSE sign1 cose object has the follwing structure in CBOR diagnostic notation:
-
-    [EDNote: ED25519 signature will be used.]
+A COSE sign1 cose object has the following structure in CBOR diagnostic notation {{RFC8152}}:
 
 ~~~
 18(
 [
-h'',
-{4: kid, 6: partial IV, kid context, 9: signature},
-binary voucher(-request)
+/ protected / h’a10126’ / {
+\ alg \ 1:-8 \ EDdsa 256 \
+} / ,
+/ unprotected / {
+/ crv / -1: 6
+},
+/ payload / ’voucher-request binary content’,
+/ signature / 'voucher-request binary signature’
 ]
 )
+~~~
+The private key with length 64 that is used :
+
+~~~
+10 2b 19 19 cb 2b a8 f3 3e b1 06 70 c3 d3 77 57 2f 03 ba
+be f4 1d 6f 29 f8 29 48 35 13 46 ae 62 37 71 e0 83 69 11 
+83 13 14 c2 ba fd e7 c6 65 f4 3c 0d fc 01 e8 e6 75 e5 b2 
+b7 e3 76 ed 97 f1 23
+~~~
+
+The public key with length 32 that is used:
+
+~~~
+84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5 
+c8 a1 04 41 61 b2 64 57 fe 0e ae 08 4d
+~~~
+
+The generated signature is:
+
+~~~
+0c 39 d9 52 2a 4e d3 2d 88 3d 19 e0 ad 32 ea 4e 8f ab bd 
+16 ef e9 0d 49 8d c8 df eb 7e 33 90 23 e9 ac 11 17 40 bd 
+87 82 46 24 a9 71 6d 51 93 14 e8 a7 6e ce 99 20 93 80 9f 
+ae 82 f1 fb b8 17 04
+~~~
+The Cose object does not need the CBOR tag 18 when the content-format application/voucher-cose+cbor is specified for the payload. The value of the COSE object parameters are:
+
+    *protected: alg (1:) has value -8 for EDdsa algorithm,
+    *unprotected: crv (-1:) has value 6 for Ed25519 curve.
+ 
+~~~
+[h'',{},
+h'a1 1a 00 0f 46 5b a9 02 74 32 30 31 36 2d 31 30 2d 30 
+37 54 31 39 3a 33 31 3a 34 32 5a 04 74 32 30 31 36 2d 31 
+30 2d 32 31 54 31 39 3a 33 31 3a 34 32 5a 01 00 0a 6d 4a 
+41 44 41 31 32 33 34 35 36 37 38 39 05 44 01 02 0d 0f 0f 
+44 01 02 0d 0f 03 f5 06 74 32 30 31 37 2d 31 30 2d 30 37 
+54 31 39 3a 33 31 3a 34 32 5a 09 44 01 02 0d 0f',
+[[h'a10126',
+{1: -8}, 
+ {1: 1},
+h'0c 39 d9 52 2a 4e d3 2d 88 3d 19 e0 ad 32 ea 4e 8f ab bd 
+16 ef e9 0d 49 8d c8 df eb 7e 33 90 23 e9 ac 11 17 40 bd 87
+82 46 24 a9 71 6d 51 93 14 e8 a7 6e ce 99 20 93 80 9f ae 82 
+f1 fb b8 17 04'
+]]]
 ~~~
