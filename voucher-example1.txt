@@ -1,16 +1,17 @@
 {
-  1001101: {
-    +2 : "2016-10-07T19:31:42Z", / SID = 1001103, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID = 1001105, expires-on /
-    +1 : 0,                      / SID = 1001102, assertion /
+  1001105: {
+    +2 : "2016-10-07T19:31:42Z", / SID = 1001107, created-on /
+    +4 : "2016-10-21T19:31:42Z", / SID = 1001109, expires-on /
+    +1 : 0,                      / SID = 1001106, assertion /
                                  /                "verified" /
-    +12: "JADA123456789",        / SID = 1001113, serial-number /
-    +5 : h'01020D0F',            / SID = 1001106, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 1001109, pinned-domain-cert/
-    +3 : true,                   / SID = 1001104, domain-cert
+    +12: "JADA123456789",        / SID = 1001117, serial-number /
+    +5 : h'01020D0F',            / SID = 1001110, idevid-issuer /
+    +8 : h'01020D0F',            / SID = 1001113, pinned-domain-cert/
+    +3 : true,                   / SID = 1001108, domain-cert
                                                  -revocation-checks /
-    +6 : "2017-10-07T19:31:42Z", / SID = 1001107, last-renewal-date /
-    +11: h'01020D0F'             / SID = 1001112, proximity
+    +6 : "2017-10-07T19:31:42Z", / SID = 1001111, last-renewal-date /
+    +11: h'01020D0F'             / SID = 1001116, proximity
                                 -registrar-subject-public-key-info /
   }
 }
+
