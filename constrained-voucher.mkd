@@ -1,6 +1,6 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
-abbrev: Constrained Vouchers
+abbrev: Constrained Voucher
 docname: draft-ietf-anima-constrained-voucher-04
 
 # stand_alone: true
@@ -80,6 +80,13 @@ informative:
         ins: R. Anderson
         name: Ross Anderson
     date: 1999
+
+  COSE-registry:
+    title: "CBOR Object Signing and Encryption (COSE) registry"
+    target: "https://www.iana.org/assignments/cose/cose.xhtml"
+    author:
+      ins: "IANA"
+    date: 2017
   RFC6690:
   RFC7030:
 
@@ -94,7 +101,7 @@ the resulting artifact in CBOR.  Use with two signature technologies are
 described.
 
 Additionally, this document explains how constrained vouchers may be
-transported in the {{I-D.ietf-ace-coap-est}} protocol.
+transported as an extension to the {{I-D.ietf-ace-coap-est}} protocol.
 
 --- middle
 
@@ -129,7 +136,7 @@ Two methods of signing the resulting CBOR object are described in this
 document:
 
 1. One is CMS {{RFC5652}}.
-2. The other is COSE {{RFC8152}} signatures.
+2. The other is COSE_Sign1 {{RFC8152}} objects.
 
 # Terminology          {#Terminology}
 
@@ -173,7 +180,7 @@ The pinned-domain-cert present in such a voucher, is the certificate of the Regi
 
 The constrained voucher and constrained voucher request MUST be signed.
 
-The use of COSE signatures permits the use of both PKIX format certificates,
+The use of the two signing formats permit the use of both PKIX format certificates,
 and also raw public keys (RPK).  When RPKs are used, the voucher produced by
 the MASA pins the raw public key of the Registrar: the
 pinned-domain-subject-public-key-info in such a voucher, is the raw public
@@ -247,8 +254,6 @@ ct=TBD2 stands for Content-Format "application/voucher-cms+cbor,
 and ct=TBD3 stands for Content-Format "application/voucher-cose+cbor".
 
 Content-Formats TBD2 and TBD3 are defined in this document.
-The return of the content-formats allows the client to choose the most
-appropriate one from multiple content formats.
 
 The Content-Format ("application/json") 50 MAY be supported.
 Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported.
@@ -260,7 +265,7 @@ in {{I-D.ietf-netmod-yang-tree-diagrams}} first.  This provides a high-level
 view of the contents of each artifact.
 
 Then the assigned SID values are presented. These have been assigned using
-the rules in {{I-D.ietf-core-yang-cbor}}, with an allocation that was made
+the rules in {{I-D.ietf-core-sid}}, with an allocation that was made
 via the http://comi.space service.
 
 ## Voucher Request artifact
@@ -344,7 +349,9 @@ INSERT_TEXT_FROM_FILE voucher-example1.txt END
 
 The signing of the example is shown in {{cmssign}}.
 
-## CMS format voucher and voucher-request artifacts
+## Signing voucher and voucher-request artifacts
+
+### CMS signing
 
 The IETF evolution of PKCS#7 is CMS {{RFC5652}}.  The CMS signed voucher is
 much like the equivalent voucher defined in {{RFC8366}}.
@@ -384,27 +391,39 @@ unlikely to be able to perform online checks, and is unlikely to have
 a trusted clock source.  As described below, the use of short-lived
 vouchers and/or pledge provided nonce provides a freshness guarantee.
 
-In {{cmssign}} examples for the signing of the voucher are shown.
+~~~
+[EDnote: compulsory signing algorithms are ....]
+~~~
+
+In {{cmssign}} an example for the CMS signing of the voucher-request is shown.
 
 ### COSE signing
 
-The COSE-Sign1 structure discussed in section 4.2 of [RFC8152]. The CBOR
+The COSE-Sign1 structure is discussed in section 4.2 of [RFC8152]. The CBOR
 object that carries the body, the signature, and the
 information about the body and signature is called the COSE_Sign1
-structure. It is used when only one signature is used on the body. The
-signature algorithm is ECSDA with three curves P-256, P-384, and P-512.
+structure. It is used when only one signature is used on the body. 
+Support for  EDdsa 256 with  Ed25519 is compulsory.
 
-Support for EdDSA is encouraged.
+The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 
-Unlike with the CMS structure, the COSE-Sign1 structure does not provide
-a standard way for the signing keys to be included in the structure.
-This will not, in general, be a problem for the Pledge, as the key needed
-to verify the signature MUST be included at manufacturing time.
+~~~
+COSE_Sign1(
+[
+ h'a10126',         #{ "alg":  EDdsa 256 } 
+{
+ "crv": Ed25519,
+ "kty": OKP,
+ "key_ops": "verify"
+},
+h'123', #voucher-request binary content
+h'456', #voucher-request binary public signature
+]
+)
+~~~
+{: #fig-cose title='The cose-sign1 structure.' align="left"}
 
-A problem arises for the Registrar: to verify the voucher, the Registrar
-must have access to the MASA's public key.  This document does not specify
-how to transfer the relevant key.
-
+The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}. In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}. 
 
 # Design Considerations
 
@@ -579,7 +598,8 @@ We are grateful for the suggestions done by Esko Dijk.
 
     voucher and request-voucher MUST be signed
     examples for signed request are added in appendix
-    IANA SID registration is updated.
+    IANA SID registration is updated
+    SID values in examples are aligned
 
 -03
 
@@ -840,9 +860,9 @@ A 2.05 Content response returning a log of the voucher (ct=60) will then be:
     [EDNOTE: Change JSON to CBOR; Serialize CBOR payload to binary]
 ~~~~
 
-# CMS signed voucher(-request)  {#cmssign}
+# Signed voucher-request examples 
 
-## CMS signed voucher-request example
+## CMS signed voucher-request example   {#cmssign}
 
 The voucher-request example, visualized in CBOR diagnostic notation in {{example2}} is shown as a hexadecimal dump of the binary file. 
 
@@ -974,25 +994,28 @@ CMS_ContentInfo:
 
 ~~~
 
-## CBOR-sign1 signed voucher request example
+## CBOR-sign1 signed voucher request example  {#cosesign}
 
-A COSE sign1 cose object has the following structure in CBOR diagnostic notation {{RFC8152}}:
+A COSE sign1 cose object has the following structure in CDDL notation {{RFC8152}}:
 
 ~~~
 18(
 [
-/ protected / h’a10126’ / {
+/ protected / h’a10127’ / {
 \ alg \ 1:-8 \ EDdsa 256 \
 } / ,
 / unprotected / {
-/ crv / -1: 6
+/ crv / -1: 6 \ Ed25519 \,
+/ kty / 1: 1 \ OKP \,
+/key_ops / 4: 2 \ verify \
 },
 / payload / ’voucher-request binary content’,
-/ signature / 'voucher-request binary signature’
+/ signature / 'voucher-request binary public signature’
 ]
 )
 ~~~
-The private key with length 64 that is used :
+
+The private key with length 64 that was used  to generate the signature:
 
 ~~~
 10 2b 19 19 cb 2b a8 f3 3e b1 06 70 c3 d3 77 57 2f 03 ba
@@ -1001,7 +1024,7 @@ be f4 1d 6f 29 f8 29 48 35 13 46 ae 62 37 71 e0 83 69 11
 b7 e3 76 ed 97 f1 23
 ~~~
 
-The public key with length 32 that is used:
+The associated public key with length 32 that is used to verify the signature:
 
 ~~~
 84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5 
@@ -1016,25 +1039,47 @@ The generated signature is:
 87 82 46 24 a9 71 6d 51 93 14 e8 a7 6e ce 99 20 93 80 9f 
 ae 82 f1 fb b8 17 04
 ~~~
+
 The Cose object does not need the CBOR tag 18 when the content-format application/voucher-cose+cbor is specified for the payload. The value of the COSE object parameters are:
 
-    *protected: alg (1:) has value -8 for EDdsa algorithm,
-    *unprotected: crv (-1:) has value 6 for Ed25519 curve.
- 
+    * protected: alg (1:) has value -8 for EDdsa algorithm,
+    * unprotected:
+             * crv (-1:) has value 6 for Ed25519 curve,
+             * kty (1:) has value 1 for OKP,
+             * key_ops (4:) has value 2 for verify.
+
+ The associated CBOR diagnostic notation for the COSE object is:
+
 ~~~
-[h'',{},
-h'a1 1a 00 0f 46 5b a9 02 74 32 30 31 36 2d 31 30 2d 30 
-37 54 31 39 3a 33 31 3a 34 32 5a 04 74 32 30 31 36 2d 31 
-30 2d 32 31 54 31 39 3a 33 31 3a 34 32 5a 01 00 0a 6d 4a 
-41 44 41 31 32 33 34 35 36 37 38 39 05 44 01 02 0d 0f 0f 
-44 01 02 0d 0f 03 f5 06 74 32 30 31 37 2d 31 30 2d 30 37 
-54 31 39 3a 33 31 3a 34 32 5a 09 44 01 02 0d 0f',
-[[h'a10126',
-{1: -8}, 
- {1: 1},
-h'0c 39 d9 52 2a 4e d3 2d 88 3d 19 e0 ad 32 ea 4e 8f ab bd 
-16 ef e9 0d 49 8d c8 df eb 7e 33 90 23 e9 ac 11 17 40 bd 87
-82 46 24 a9 71 6d 51 93 14 e8 a7 6e ce 99 20 93 80 9f ae 82 
-f1 fb b8 17 04'
-]]]
+[h'a10126',
+{
+-1: 6,
+1: 1,
+4: 2
+},
+h’
+a11a000f468da90274323031362d31302d30375431393a33313a34325a04
+74323031362d31302d32315431393a33313a34325a01000c6d4a41444131
+3233343536373839054401020d0f084401020d0f03f50674323031372d31
+302d30375431393a33313a34325a0b4401020d0f’,
+h'
+0c39d9522a4ed32d883d19e0ad32ea4e8fabbd16efe90d498dc8dfeb7e33
+9023e9ac111740bd87824624a9716d519314e8a76ece992093809fae82f1
+fbb81704'
+]
+~~~
+
+Which leads to the binary COSE object represented as hexadecimal:
+
+~~~
+
+84  43  A10126 A3 20 06 01 01 04 02 58 6E
+A11A000F468DA90274323031362D31302D30375431393A33313A34325A04
+74323031362D31302D32315431393A33313A34325A01000C6D4A41444131
+3233343536373839054401020D0F084401020D0F03F50674323031372D31
+302D30375431393A33313A34325A0B4401020D0F
+58 40 
+0C39D9522A4ED32D883D19E0AD32EA4E8FABBD16EFE90D498DC8DFEB7E33
+9023E9AC111740BD87824624A9716D519314E8A76ECE992093809FAE82F1
+FBB81704
 ~~~
