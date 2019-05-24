@@ -1106,3 +1106,27 @@ A11A000F468DA90274323031362D31302D30375431393A33313A34325A04
 9023E9AC111740BD87824624A9716D519314E8A76ECE992093809FAE82F1
 FBB81704
 ~~~
+
+
+# COSE examples
+
+## Device keys
+
+### Device IDevID certificate
+
+INSERT_FIG_FROM_FILE examples/device-00-D0-E5-F2-00-02.crt END
+
+### Device private key
+
+INSERT_FIG_FROM_FILE examples/key-00-D0-E5-F2-00-02.pem END
+
+### COSE signed requestvoucher
+
+This is the CBOR diagnostic format, folded to 60 characters:
+
+INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-02.diag END
+
+This is the raw binary, encoded in base64:
+
+INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-02.b64 END
+
