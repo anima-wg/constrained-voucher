@@ -1,0 +1,12 @@
+COSE_Sign1(
+[
+ h'a10126',         #{ "alg":  EDdsa 256 }
+{
+ "crv": Ed25519,
+ "kty": OKP,
+ "key_ops": "verify"
+},
+h'123', #voucher-request binary content
+h'456', #voucher-request binary public signature
+]
+)

@@ -344,7 +344,7 @@ INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
 Below a the CBOR serialization of the the constrained-voucher is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
 <figure>
-INSERT_TEXT_FROM_FILE voucher-example1.txt END
+INSERT_TEXT_FROM_FILE examples/voucher-example1.txt END
 </figure>
 
 The signing of the example is shown in {{cmssign}}.
@@ -407,20 +407,7 @@ Support for  EDdsa 256 with  Ed25519 is compulsory.
 
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 
-~~~
-COSE_Sign1(
-[
- h'a10126',         #{ "alg":  EDdsa 256 }
-{
- "crv": Ed25519,
- "kty": OKP,
- "key_ops": "verify"
-},
-h'123', #voucher-request binary content
-h'456', #voucher-request binary public signature
-]
-)
-~~~
+INSERT_TEXT_FROM_FILE examples/cose-sign1.txt END
 {: #fig-cose title='The cose-sign1 structure.' align="left"}
 
 The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}. In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
@@ -707,45 +694,17 @@ Signed request-voucher-request payloads are sent from pledge to Registrar, as ex
 
 ### signed requestvoucher {#rv}
 
-A coaps signed requestvoucher message from RA to MASA can be :
+A CMS signed requestvoucher message from JRC to MASA is shown below.
+It would be CoAP POSTED to /est/rv.
 
 ~~~~
     POST coaps://[2001:db8::2:1]:61616]/est/rv
-(Content-Format: application/voucher-cms+cbor)
-    Payload =
-308203ba06092a864886f70d010702a08203ab308203a7020101310d300b
-0609608648016503040201300b06092a864886f70d010701a08202413082
-023d308201e2a00302010202087e7661d7b54e4632300a06082a8648ce3d
-040302305d310b3009060355040613025553310b300906035504080c0243
-4131143012060355040a0c0b4578616d706c6520496e6331163014060355
-040b0c0d63657274696669636174696f6e3113301106035504030c0a3830
-322e3141522043413020170d3139303133313131323931365a180f393939
-39313233313233353935395a305c310b3009060355040613025553310b30
-0906035504080c024341310b300906035504070c024c4131143012060355
-040a0c0b6578616d706c6520496e63310c300a060355040b0c03496f5431
-0f300d060355040513065774313233343059301306072a8648ce3d020106
-082a8648ce3d03010703420004c8b421f11c25e47e3ac57123bf2d9fdc49
-4f028bc351cc80c03f150bf50cff958d75419d81a6a245dffae790be95cf
-75f602f9152618f816a2b23b5638e59fd9a3818a30818730090603551d13
-04023000301d0603551d0e0416041496600d8716bf7fd0e752d0ac760777
-ad665d02a0301f0603551d2304183016801468d16551f951bfc82a431d0d
-9f08bc2d205b1160300e0603551d0f0101ff0404030205a0302a0603551d
-1104233021a01f06082b06010505070804a013301106092b06010401b43b
-0a01040401020304300a06082a8648ce3d0403020349003046022100c0d8
-1996d2507d693f3c48eaa5ee9491bda6db214099d98117c63b361374cd86
-022100a774989f4c321a5cf25d832a4d336a08ad67df20f1506421188a0a
-de6d3492363182013f3082013b0201013069305d310b3009060355040613
-025553310b300906035504080c02434131143012060355040a0c0b457861
-6d706c6520496e6331163014060355040b0c0d6365727469666963617469
-6f6e3113301106035504030c0a3830322e31415220434102087e7661d7b5
-4e4632300b0609608648016503040201a069301806092a864886f70d0109
-03310b06092a864886f70d010701301c06092a864886f70d010905310f17
-0d3139303430383130343833365a302f06092a864886f70d010904312204
-20b11d09338bb36672ef0dcb82f4995d911a773dcb6f39e8141b3a14c14d
-f7545a300a06082a8648ce3d0403020447304502200128c3b08a6bd2d5bf
-9fa7511eabefaacaa06651dbb459c4ad46d67e14b4283e022100c3504a9c
-e704e64467f469d110550cea988821304805d74bea5efd3680bd632f
+    (Content-Format: application/voucher-cms+cbor)
 ~~~~
+
+The payload would be in binary, but is presented in base64 in this document.
+
+INSERT_TEXT_FROM_FILE examples/cms-parboiled-request.b64 END
 
 A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:
 
