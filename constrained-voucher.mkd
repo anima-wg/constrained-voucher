@@ -1120,7 +1120,7 @@ INSERT_FIG_FROM_FILE examples/device-00-D0-E5-F2-00-02.crt END
 
 INSERT_FIG_FROM_FILE examples/key-00-D0-E5-F2-00-02.pem END
 
-### COSE signed requestvoucher
+## COSE signed requestvoucher
 
 This is the CBOR diagnostic format, folded to 60 characters:
 
