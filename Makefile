@@ -7,6 +7,9 @@ CWTSIDLIST1=ietf-constrained-voucher-sid.txt
 CWTDATE2=yang/ietf-constrained-voucher-request@${YANGDATE}.yang
 CWTSIDLIST2=ietf-constrained-voucher-request-sid.txt
 CWTSIDDATE2=ietf-constrained-voucher-request@${YANGDATE}.sid
+EXAMPLES=examples/cms-parboiled-request.b64
+EXAMPLES+=examples/voucher-example1.txt
+EXAMPLES+=examples/voucher-request-example1.txt
 PYANG=./pyang.sh
 
 # git clone this from https://github.com/mbj4668/pyang.git
@@ -33,7 +36,7 @@ ietf-constrained-voucher-tree.txt: ${CWTDATE1}
 ietf-constrained-voucher-request-tree.txt: ${CWTDATE2}
 	${PYANG} --path=../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-constrained-voucher-request-tree.txt
 
-%.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-constrained-voucher-tree.txt ietf-constrained-voucher-request-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2} voucher-example1.txt voucher-request-example1.txt
+%.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-constrained-voucher-tree.txt ietf-constrained-voucher-request-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2} ${EXAMPLES}
 	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
 	: git add ${DRAFT}.xml
 

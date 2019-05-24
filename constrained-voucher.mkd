@@ -280,31 +280,23 @@ prior-signed-voucher-request is only used between the Registrar and the MASA.
 proximity-registrar-subject-public-key-info replaces proximity-registrar-cert
 for the extremely constrained cases.
 
-<figure>
-INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-tree.txt END
-</figure>
+INSERT_FIG_FROM_FILE ietf-constrained-voucher-request-tree.txt END
 
 ### SID values
 
-<figure>
-INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request-sid.txt END
-</figure>
+INSERT_FIG_FROM_FILE ietf-constrained-voucher-request-sid.txt END
 
 ### YANG Module
 
 In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attribute. Two attributes of the voucher are "refined" to be optional.
 
-<figure>
-INSERT_TEXT_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
-</figure>
+INSERT_FIG_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 
 ### Example voucher request artifact {#example2}
 
 Below a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
-<figure>
-INSERT_TEXT_FROM_FILE voucher-request-example1.txt END
-</figure>
+INSERT_FIG_FROM_FILE examples/voucher-request-example1.txt END
 
 ## Voucher artifact
 
@@ -321,31 +313,24 @@ or with COSE.
 The following diagram is largely a duplicate of the contents of {{RFC8366}},
 with only the addition of pinned-domain-subject-public-key-info.
 
-<figure>
-INSERT_TEXT_FROM_FILE ietf-constrained-voucher-tree.txt END
-</figure>
+INSERT_FIG_FROM_FILE ietf-constrained-voucher-tree.txt END
 
 ### SID values
 
-<figure>
-INSERT_TEXT_FROM_FILE ietf-constrained-voucher-sid.txt END
-</figure>
+INSERT_FIG_FROM_FILE ietf-constrained-voucher-sid.txt END
+
 
 ### YANG Module
 
 In the constraine-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute. Two attributes of the voucher are "refined" to be optional.
 
-<figure>
-INSERT_TEXT_FROM_FILE ietf-constrained-voucher@DATE.yang END
-</figure>
+INSERT_FIG_FROM_FILE ietf-constrained-voucher@DATE.yang END
 
 ### Example voucher artifacts {#example1}
 
 Below a the CBOR serialization of the the constrained-voucher is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
-<figure>
-INSERT_TEXT_FROM_FILE examples/voucher-example1.txt END
-</figure>
+INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
 The signing of the example is shown in {{cmssign}}.
 
@@ -407,7 +392,9 @@ Support for  EDdsa 256 with  Ed25519 is compulsory.
 
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 
+~~~~
 INSERT_TEXT_FROM_FILE examples/cose-sign1.txt END
+~~~~
 {: #fig-cose title='The cose-sign1 structure.' align="left"}
 
 The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}. In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
@@ -704,7 +691,7 @@ It would be CoAP POSTED to /est/rv.
 
 The payload would be in binary, but is presented in base64 in this document.
 
-INSERT_TEXT_FROM_FILE examples/cms-parboiled-request.b64 END
+INSERT_FIG_FROM_FILE examples/cms-parboiled-request.b64 END
 
 A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:
 
