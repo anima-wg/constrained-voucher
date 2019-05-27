@@ -466,7 +466,7 @@ the following registration is requested:
                                      -request
     ----------- ------  --------------------------- ------------
 
-Warning: These SID values will change when they transfer to the range 1000 - 59,999 allocated for SIDs in YANG modules defined in RFCs. 
+Warning: These SID values will change when they transfer to the range 1000 - 59,999 allocated for SIDs in YANG modules defined in RFCs.
 
 ## The SMI Security for S/MIME CMS Content Type Registry
 
@@ -643,7 +643,7 @@ With CoAP fields and payload:
      "version":"1",
      "Status": 1,   / 1 = Success, 0 = Fail  /
      "Reason":"Informative human readable message",
-     "reason-context": "Additional information" 
+     "reason-context": "Additional information"
      }
 
      Payload (binary) =
@@ -791,91 +791,91 @@ The CMS signing of the binary voucher-request leads to a binary signed voucher-r
 The breakdown of the CMS signed binary voucher-request file is visualized below:
 
 ~~~
-CMS_ContentInfo: 
+CMS_ContentInfo:
   contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
-  d.signedData: 
+  d.signedData:
     version: 1
     digestAlgorithms:
         algorithm: sha256 (2.16.840.1.101.3.4.2.1)
         parameter: <ABSENT>
-    encapContentInfo: 
+    encapContentInfo:
       eContentType: pkcs7-data (1.2.840.113549.1.7.1)
       eContent: <ABSENT>
     certificates:
-      d.certificate: 
-        cert_info: 
+      d.certificate:
+        cert_info:
           version: 2
           serialNumber: 9112578475118446130
-          signature: 
+          signature:
             algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
             parameter: <ABSENT>
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
                                                        CN=802.1AR CA
-          validity: 
+          validity:
             notBefore: Jan 31 11:29:16 2019 GMT
             notAfter: Dec 31 23:59:59 9999 GMT
-          subject: C=US, ST=CA, L=LA, O=example Inc, 
+          subject: C=US, ST=CA, L=LA, O=example Inc,
                                           OU=IoT/serialNumber=Wt1234
-          key: 
-            algor: 
+          key:
+            algor:
               algorithm: id-ecPublicKey (1.2.840.10045.2.1)
               parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
             public_key:  (0 unused bits)
-              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf 
+              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf
               000e - 2d 9f dc 49 4f 02 8b c3-51 cc 80 c0 3f 15
               001c - 0b f5 0c ff 95 8d 75 41-9d 81 a6 a2 45 df
               002a - fa e7 90 be 95 cf 75 f6-02 f9 15 26 18 f8
-              0038 - 16 a2 b2 3b 56 38 e5 9f-d9      
+              0038 - 16 a2 b2 3b 56 38 e5 9f-d9
           issuerUID: <ABSENT>
           subjectUID: <ABSENT>
           extensions:
               object: X509v3 Basic Constraints (2.5.29.19)
               critical: BOOL ABSENT
-              value: 
-                0000 - 30                         
+              value:
+                0000 - 30
                 0002 - <SPACES/NULS>
 
               object: X509v3 Subject Key Identifier (2.5.29.14)
               critical: BOOL ABSENT
-              value: 
-                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0  
-                000d - ac 76 07 77 ad 66 5d 02-a0          
+              value:
+                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0
+                000d - ac 76 07 77 ad 66 5d 02-a0
 
               object: X509v3 Authority Key Identifier (2.5.29.35)
               critical: BOOL ABSENT
-              value: 
-                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a 
-                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60    
+              value:
+                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
+                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60
 
               object: X509v3 Key Usage (2.5.29.15)
               critical: TRUE
-              value: 
-                0000 - 03 02 05 a0                    
+              value:
+                0000 - 03 02 05 a0
 
               object: X509v3 Subject Alternative Name (2.5.29.17)
               critical: BOOL ABSENT
-              value: 
+              value:
                 0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
                 000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4
-                001a - 3b 0a 01 04 04 01 02 03-04  
-        sig_alg: 
+                001a - 3b 0a 01 04 04 01 02 03-04
+        sig_alg:
           algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
           parameter: <ABSENT>
         signature:  (0 unused bits)
           0000 - 30 46 02 21 00 c0 d8 19-96 d2 50 7d 69 3f 3c
           000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
-          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c 
+          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
           002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20
-          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36   
+          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36
     crls:
       <EMPTY>
     signerInfos:
         version: 1
-        d.issuerAndSerialNumber: 
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
+        d.issuerAndSerialNumber:
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
                                                      CN=802.1AR CA
           serialNumber: 9112578475118446130
-        digestAlgorithm: 
+        digestAlgorithm:
           algorithm: sha256 (2.16.840.1.101.3.4.2.1)
           parameter: <ABSENT>
         signedAttrs:
@@ -892,17 +892,17 @@ CMS_ContentInfo:
               OCTET STRING:
                 0000 - d4 b0 5c dd c8 b4 91 28-4a 18 ca 25 9d
                 000d - be d0 60 23 cf ad a0 aa-c2 95 ac e9 3f
-                001a - 0b 4f 44 9e 25 
+                001a - 0b 4f 44 9e 25
                 0020 - <SPACES/NULS>
-        signatureAlgorithm: 
+        signatureAlgorithm:
           algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
           parameter: <ABSENT>
-        signature: 
+        signature:
           0000 - 30 46 02 21 00 e5 e1 7f-23 c3 aa 14 9f 35 64
           000f - 1e c4 4a 0f 68 fe b0 16-3b e6 7c 06 51 af bf
           001e - 5a a0 99 59 e0 28 1f 02-21 00 b4 07 2f 7c c4
           002d - f9 26 0c 6d 47 a7 93 56-de b8 da f7 23 f0 af
-          003c - 2b 59 16 cc 36 63 e7 91-89 39 df df 
+          003c - 2b 59 16 cc 36 63 e7 91-89 39 df df
         unsignedAttrs:
           <EMPTY>
 
@@ -935,15 +935,15 @@ The private key with length 64 that was used  to generate the signature:
 
 ~~~
 10 2b 19 19 cb 2b a8 f3 3e b1 06 70 c3 d3 77 57 2f 03 ba
-be f4 1d 6f 29 f8 29 48 35 13 46 ae 62 37 71 e0 83 69 11 
-83 13 14 c2 ba fd e7 c6 65 f4 3c 0d fc 01 e8 e6 75 e5 b2 
+be f4 1d 6f 29 f8 29 48 35 13 46 ae 62 37 71 e0 83 69 11
+83 13 14 c2 ba fd e7 c6 65 f4 3c 0d fc 01 e8 e6 75 e5 b2
 b7 e3 76 ed 97 f1 23
 ~~~
 
 The associated public key with length 32 that is used to verify the signature:
 
 ~~~
-84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5 
+84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5
 c8 a1 04 41 61 b2 64 57 fe 0e ae 08 4d
 ~~~
 
@@ -997,7 +997,7 @@ Which leads to the binary COSE object represented as hexadecimal:
      031372D31302D30375431393A33313A34325A0C4401020D0F
      58405D2FA088C547FB64A80EEC9333724C76F7823133F17AA8804C
      31B4B102847B5F6D2D0D98CE52CB397B47CC712860F9304B80A14
-     E7871DB67D586D2560291A501 
+     E7871DB67D586D2560291A501
 ~~~
 
 
