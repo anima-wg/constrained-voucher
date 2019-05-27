@@ -932,136 +932,28 @@ A COSE sign1 cose object has the following structure in CDDL notation {{RFC8152}
 The private key with length 64 that was used  to generate the signature:
 
 ~~~
-   a11a000f468da90274323031362d31302d30375431393a33313a34325a04
-   74323031362d31302d32315431393a33313a34325a01000c6d4a41444131
-   3233343536373839054401020d0f084401020d0f03f50674323031372d31
-   302d30375431393a33313a34325a0b4401020d0f
+10 2b 19 19 cb 2b a8 f3 3e b1 06 70 c3 d3 77 57 2f 03 ba
+be f4 1d 6f 29 f8 29 48 35 13 46 ae 62 37 71 e0 83 69 11 
+83 13 14 c2 ba fd e7 c6 65 f4 3c 0d fc 01 e8 e6 75 e5 b2 
+b7 e3 76 ed 97 f1 23
 ~~~
 
 The associated public key with length 32 that is used to verify the signature:
 
 ~~~
-84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5
+84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5 
 c8 a1 04 41 61 b2 64 57 fe 0e ae 08 4d
 ~~~
 
 The generated signature is:
 
 ~~~
-CMS_ContentInfo:
-  contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
-  d.signedData:
-    version: 1
-    digestAlgorithms:
-        algorithm: sha256 (2.16.840.1.101.3.4.2.1)
-        parameter: <ABSENT>
-    encapContentInfo:
-      eContentType: pkcs7-data (1.2.840.113549.1.7.1)
-      eContent: <ABSENT>
-    certificates:
-      d.certificate:
-        cert_info:
-          version: 2
-          serialNumber: 9112578475118446130
-          signature:
-            algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-            parameter: <ABSENT>
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
-                                                   CN=802.1AR CA
-          validity:
-            notBefore: Jan 31 11:29:16 2019 GMT
-            notAfter: Dec 31 23:59:59 9999 GMT
-          subject: C=US, ST=CA, L=LA, O=example Inc,
-                                       OU=IoT/serialNumber=Wt1234
-          key:
-            algor:
-              algorithm: id-ecPublicKey (1.2.840.10045.2.1)
-              parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
-            public_key:  (0 unused bits)
-              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf
-              000e - 2d 9f dc 49 4f 02 8b c3-51 cc 80 c0 3f 15
-              001c - 0b f5 0c ff 95 8d 75 41-9d 81 a6 a2 45 df
-              002a - fa e7 90 be 95 cf 75 f6-02 f9 15 26 18 f8
-              0038 - 16 a2 b2 3b 56 38 e5 9f-d9
-          issuerUID: <ABSENT>
-          subjectUID: <ABSENT>
-          extensions:
-              object: X509v3 Basic Constraints (2.5.29.19)
-              critical: BOOL ABSENT
-              value:
-                0000 - 30
-                0002 - <SPACES/NULS>
-
-              object: X509v3 Subject Key Identifier (2.5.29.14)
-              critical: BOOL ABSENT
-              value:
-                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0
-                000d - ac 76 07 77 ad 66 5d 02-a0
-
-              object: X509v3 Authority Key Identifier (2.5.29.35)
-              critical: BOOL ABSENT
-              value:
-                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
-                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60
-
-              object: X509v3 Key Usage (2.5.29.15)
-              critical: TRUE
-              value:
-                0000 - 03 02 05 a0
-
-              object: X509v3 Subject Alternative Name (2.5.29.17)
-              critical: BOOL ABSENT
-              value:
-                0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
-                000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4
-                001a - 3b 0a 01 04 04 01 02 03-04
-        sig_alg:
-          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-          parameter: <ABSENT>
-        signature:  (0 unused bits)
-          0000 - 30 46 02 21 00 c0 d8 19-96 d2 50 7d 69 3f 3c
-          000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
-          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
-          002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20
-          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36
-    crls:
-      <EMPTY>
-    signerInfos:
-        version: 1
-        d.issuerAndSerialNumber:
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
-                                                     CN=802.1AR CA
-          serialNumber: 9112578475118446130
-        digestAlgorithm:
-          algorithm: sha256 (2.16.840.1.101.3.4.2.1)
-          parameter: <ABSENT>
-        signedAttrs:
-            object: contentType (1.2.840.113549.1.9.3)
-            value.set:
-              OBJECT:pkcs7-data (1.2.840.113549.1.7.1)
-
-            object: signingTime (1.2.840.113549.1.9.5)
-            value.set:
-              UTCTIME:Apr  8 07:34:10 2019 GMT
-
-            object: messageDigest (1.2.840.113549.1.9.4)
-            value.set:
-              OCTET STRING:
-                0000 - fd ab 29 af 89 f0 b5 5d-c1 81 26 07 68
-                000d - 5e bb 1b 33 d3 90 2c d3-3a 00 01 89 1e
-                001a - c8 da ac 87 87 e2
-        signatureAlgorithm:
-          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-          parameter: <ABSENT>
-        signature:
-          0000 - 30 46 02 21 00 b3 9d d8-52 9b 7b d1 46 90 de
-          000f - 0f 83 b1 48 80 5f bf fd-c4 2f fc df af ee d0
-          001e - d9 33 31 81 00 53 74 02-21 00 bb 90 48 d2 84
-          002d - 38 a3 4c 19 72 b0 f2 2a-85 36 19 b7 97 86 51
-          003c - bf 83 e3 a0 4d 47 ed 60-c2 77 da ca
-        unsignedAttrs:
-          <EMPTY>
+0c 39 d9 52 2a 4e d3 2d 88 3d 19 e0 ad 32 ea 4e 8f ab bd 
+16 ef e9 0d 49 8d c8 df eb 7e 33 90 23 e9 ac 11 17 40 bd 
+87 82 46 24 a9 71 6d 51 93 14 e8 a7 6e ce 99 20 93 80 9f 
+ae 82 f1 fb b8 17 04
 ~~~
+
 
 The Cose object does not need the CBOR tag 18 when the content-format application/voucher-cose+cbor is specified for the payload. The value of the COSE object parameters are:
 
