@@ -469,8 +469,8 @@ the following registration is requested:
     ------------ ------ --------------------------- ------------
     Entry-point | Size | Module name               | RFC Number
     ------------ ------ --------------------------- ------------
-    1001100       50     ietf-constrained-voucher    [ThisRFC]
-    1001150       50     ietf-constrained-voucher    [ThisRFC}
+    1001150       50     ietf-constrained-voucher    [ThisRFC]
+    1001101       50     ietf-constrained-voucher    [ThisRFC}
                                      -request
     ----------- ------  --------------------------- ------------
 
