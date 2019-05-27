@@ -385,7 +385,7 @@ Support for  EDdsa 256 with  Ed25519 is compulsory.
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 
 ~~~~
-INSERT_TEXT_FROM_FILE examples/cose-sign1.txt END
+{::include examples/cose-sign1.txt}
 ~~~~
 {: #fig-cose title='The cose-sign1 structure.' align="left"}
 
