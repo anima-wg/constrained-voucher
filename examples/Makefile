@@ -1,10 +1,17 @@
-all: vr_00-D0-E5-F2-00-02.b64 vr_00-D0-E5-F2-00-02.diag
+.SUFFIXES: .vrq .b64 .diag
+
+all: vr_00-D0-E5-F2-00-02.b64 vr_00-D0-E5-F2-00-02.diag \
+	parboiled_vr_00-D0-E5-F2-00-02.b64 parboiled_vr_00-D0-E5-F2-00-02.diag \
 
 
-vr_00-D0-E5-F2-00-02.b64:  vr_00-D0-E5-F2-00-02.vrq
-	base64 -w 60 vr_00-D0-E5-F2-00-02.vrq >vr_00-D0-E5-F2-00-02.b64
+%.b64:  %.vrq
+	base64 -w 60 $< >$@
 
-vr_00-D0-E5-F2-00-02.diag: vr_00-D0-E5-F2-00-02.vrq
-	cbor2diag.rb vr_00-D0-E5-F2-00-02.vrq | fold -60 >vr_00-D0-E5-F2-00-02.diag
+%.diag: %.vrq
+	cbor2diag.rb $< | fold -60 >$@
+
+update:
+	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-02/parboiled_vr_00-D0-E5-F2-00-02.vrq .
+
 
 
