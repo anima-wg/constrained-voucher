@@ -1110,7 +1110,11 @@ FBB81704
 
 # COSE examples
 
-## Device keys
+## Device, Registrar and MASA keys
+
+This first section documents the public and private keys used in the
+subsequent test vectors below.  These keys come from test code and are not used in any
+production system, and should only be used only to validate implementations.
 
 ### Device IDevID certificate
 
@@ -1120,7 +1124,29 @@ INSERT_FIG_FROM_FILE examples/device-00-D0-E5-F2-00-02.crt END
 
 INSERT_FIG_FROM_FILE examples/key-00-D0-E5-F2-00-02.pem END
 
-## COSE signed requestvoucher
+### Registrar Certificate
+
+INSERT_FIG_FROM_FILE examples/jrc-fountain-test.crt END
+
+### Registrar private key {#jrcpriv}
+
+INSERT_FIG_FROM_FILE examples/jrc-fountain-test.pem END
+
+### MASA Certificate
+
+INSERT_FIG_FROM_FILE examples/masa_prime256v1.crt END
+
+### MASA private key {#masapriv}
+
+INSERT_FIG_FROM_FILE examples/masa_prime256v1.key END
+
+
+## COSE signed requestvoucher with registrar certificate pinned
+
+This voucher request has been signed by the pledge, using the private key
+given above, and has been sent to the JRC over CoAPS.  This example
+uses the proximity-registrar-cert mechanism to request a voucher that
+pins the certificate of the registrar.
 
 This is the CBOR diagnostic format, folded to 60 characters:
 
@@ -1129,4 +1155,32 @@ INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-02.diag END
 This is the raw binary, encoded in base64:
 
 INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-02.b64 END
+
+## COSE signed parboiled requestvoucher
+
+This voucher request has been signed by the JRC using the private key from
+{{jrcpriv}}.  Contained within this voucher request is the pledge voucher
+request above.
+
+This is the CBOR diagnostic format, folded to 60 characters:
+
+INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-02.diag END
+
+This is the raw binary, encoded in base64:
+
+INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-02.b64 END
+
+## COSE signed voucher
+
+The resulting voucher is created by the MASA and returned via the JRC to the
+Pledge.  It is signed by the MASA's private key {{masapriv}} and can be
+verified by the pledge using the MASA's publie key.
+
+This is the CBOR diagnostic format, folded to 60 characters:
+
+INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-02.diag END
+
+This is the raw binary, encoded in base64:
+
+INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-02.b64 END
 
