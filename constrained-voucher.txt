@@ -1181,8 +1181,8 @@ Internet-Draft             Constrained Voucher                 June 2019
    ------------ ------ --------------------------- ------------
    Entry-point | Size | Module name               | RFC Number
    ------------ ------ --------------------------- ------------
-   1001150       50     ietf-constrained-voucher    [ThisRFC]
-   1001100       50     ietf-constrained-voucher    [ThisRFC}
+   1001100       50     ietf-constrained-voucher    [ThisRFC]
+   1001150       50     ietf-constrained-voucher    [ThisRFC}
                                     -request
    ----------- ------  --------------------------- ------------
 
