@@ -52,7 +52,7 @@
       </address>
     </author>
 
-    <date year="2019" month="April" day="24"/>
+    <date year="2019" month="June" day="13"/>
 
     <area>Internet</area>
     <workgroup>anima Working Group</workgroup>
@@ -272,8 +272,7 @@ proximity-registrar-cert, and prior-signed-voucher-request.</t>
 proximity-registrar-subject-public-key-info replaces proximity-registrar-cert
 for the extremely constrained cases.</t>
 
-<t><figure>
-<artwork><![CDATA[
+<figure><artwork><![CDATA[
 module: ietf-constrained-voucher-request
 
   grouping voucher-request-constrained-grouping
@@ -282,52 +281,67 @@ module: ietf-constrained-voucher-request
        |       yang:date-and-time
        +-- expires-on?
        |       yang:date-and-time
-       +-- assertion                                      enumeration
-       +-- serial-number                                  string
-       +-- idevid-issuer?                                 binary
-       +-- pinned-domain-cert?                            binary
-       +-- domain-cert-revocation-checks?                 boolean
-       +-- nonce?                                         binary
+       +-- assertion
+       |       enumeration
+       +-- serial-number
+       |       string
+       +-- idevid-issuer?
+       |       binary
+       +-- pinned-domain-cert?
+       |       binary
+       +-- domain-cert-revocation-checks?
+       |       boolean
+       +-- nonce?
+       |       binary
        +-- last-renewal-date?
        |       yang:date-and-time
-       +-- proximity-registrar-subject-public-key-info?   binary
-       +-- proximity-registrar-cert?                      binary
-       +-- prior-signed-voucher-request?                  binary
-]]></artwork>
-</figure></t>
+       +-- proximity-registrar-subject-public-key-info?
+       |       binary
+       +-- proximity-registrar-sha256-of-subject-public-key-info?
+       |       binary
+       +-- proximity-registrar-cert?
+       |       binary
+       +-- prior-signed-voucher-request?
+               binary
+]]></artwork></figure>
 
 </section>
 <section anchor="sid-values" title="SID values">
 
-<t><figure>
-<artwork><![CDATA[
-           
-      SID Assigned to
---------- -------------------------------------------------- 
-  1001154 data /ietf-constrained-voucher-request:voucher
-  1001155 data .../assertion
-  1001156 data .../created-on
-  1001157 data .../domain-cert-revocation-checks
-  1001158 data .../expires-on
-  1001159 data .../idevid-issuer
-  1001160 data .../last-renewal-date
-  1001161 data /ietf-constrained-voucher-request:voucher/nonce
-  1001162 data .../pinned-domain-cert
-  1001163 data .../prior-signed-voucher-request
-  1001164 data .../proximity-registrar-cert
-  1001165 data .../proximity-registrar-subject-public-key-info
-  1001166 data .../serial-number
-           
-]]></artwork>
-</figure></t>
+<figure><artwork><![CDATA[
+
+SID        Assigned to
+---------  --------------------------------------------------
+1001150    module ietf-constrained-voucher-request
+1001151    module ietf-restconf
+1001152    module ietf-voucher
+1001153    module ietf-yang-types
+1001154    data /ietf-constrained-voucher-request:voucher
+1001155    data /ietf-constrained-voucher-request:voucher/assertion
+1001156    data /ietf-constrained-voucher-request:voucher/created-on
+1001157    data /ietf-constrained-voucher-request:voucher/domain-cert-revocation-checks
+1001158    data /ietf-constrained-voucher-request:voucher/expires-on
+1001159    data /ietf-constrained-voucher-request:voucher/idevid-issuer
+1001160    data /ietf-constrained-voucher-request:voucher/last-renewal-date
+1001161    data /ietf-constrained-voucher-request:voucher/nonce
+1001162    data /ietf-constrained-voucher-request:voucher/pinned-domain-cert
+1001163    data /ietf-constrained-voucher-request:voucher/prior-signed-voucher-request
+1001164    data /ietf-constrained-voucher-request:voucher/proximity-registrar-cert
+1001165    data /ietf-constrained-voucher-request:voucher/proximity-registrar-sha256-of-subject-public-key-info
+1001166    data /ietf-constrained-voucher-request:voucher/proximity-registrar-subject-public-key-info
+1001167    data /ietf-constrained-voucher-request:voucher/serial-number
+
+File ietf-constrained-voucher-request@2018-09-01.sid created
+Number of SIDs available : 50
+Number of SIDs used : 18
+]]></artwork></figure>
 
 </section>
 <section anchor="yang-module" title="YANG Module">
 
 <t>In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attribute. Two attributes of the voucher are "refined" to be optional.</t>
 
-<t><figure>
-<artwork><![CDATA[
+<figure><artwork><![CDATA[
 <CODE BEGINS> file "ietf-constrained-voucher-request@2018-09-01.yang"
 module ietf-constrained-voucher-request {
   yang-version 1.1;
@@ -420,7 +434,7 @@ module ietf-constrained-voucher-request {
           type binary;
           description
             "The proximity-registrar-subject-public-key-info replaces
- 	         the proximit-registrar-cert in constrained uses of
+ 	     the proximit-registrar-cert in constrained uses of
              the voucher-request.
              The proximity-registrar-subject-public-key-info is the
              Raw Public Key of the Registrar. This field is encoded
@@ -429,7 +443,27 @@ module ietf-constrained-voucher-request {
              The EdDSA algorithm as specified in
              draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
              Support for the DSA algorithm is not recommended.
-             Support for the RSA algorithm is a MAY.";
+             Support for the RSA algorithm is MAY, but due to 
+             size is discouraged.";
+        }
+
+        leaf proximity-registrar-sha256-of-subject-public-key-info {
+          type binary;
+          description
+            "The proximity-registrar-sha256-of-subject-public-key-info
+             is an alternative to 
+             proximity-registrar-subject-public-key-info.
+             and pinned-domain-cert.  In many cases the
+             public key of the domain has already been transmitted
+             during the key agreement protocol, and it is wasteful
+             to transmit the public key another two times.
+             The use of a hash of public key info, at 32-bytes for
+             sha256 is a significant savings compared to an RSA
+             public key, but is only a minor savings compared to
+             a 256-bit ECDSA public-key.
+             Algorithm agility is provided by extensions to this
+             specifications which define new leaf for other hash
+             types.";
         }
 
         leaf proximity-registrar-cert {
@@ -478,35 +512,33 @@ module ietf-constrained-voucher-request {
   }
 }
 <CODE ENDS>
-]]></artwork>
-</figure></t>
+]]></artwork></figure>
 
 </section>
 <section anchor="example2" title="Example voucher request artifact">
 
 <t>Below a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of <xref target="RFC7950"/>.</t>
 
-<t><figure>
-<artwork><![CDATA[
+<figure><artwork><![CDATA[
 {
-  1001054: {
-    +2 : "2016-10-07T19:31:42Z", / SID= 1001056, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID= 1001058, expires-on /
-    +1 : 0,                      / SID= 1001055, assertion /
+  1001154: {
+    +2 : "2016-10-07T19:31:42Z", / SID= 1001156, created-on /
+    +4 : "2016-10-21T19:31:42Z", / SID= 1001158, expires-on /
+    +1 : 0,                      / SID= 1001155, assertion /
                                  /                "verified" /
-    +10: "JADA123456789",        / SID= 1001064, serial-number /
-    +5 : h'01020D0F',            / SID= 1001059, idevid-issuer /
+    +10: "JADA123456789",        / SID= 1001164, serial-number /
+    +5 : h'01020D0F',            / SID= 1001159, idevid-issuer /
     +15: h'01020D0F',        / SID=1001069, proximity-registrar-cert/
-    +3 : true,                   / SID= 1001057, domain-cert
+    +3 : true,                   / SID= 1001157, domain-cert
                                                   -revocation-checks/
-    +6 : "2017-10-07T19:31:42Z", / SID= 1001060, last-renewal-date /
-    +9 : h'01020D0F'             / SID= 1001063, pinned-domain
+    +6 : "2017-10-07T19:31:42Z", / SID= 1001160, last-renewal-date /
+    +9 : h'01020D0F'             / SID= 1001163, pinned-domain
                                          -subject-public-key-info /
   }
 }
 
-]]></artwork>
-</figure></t>
+
+]]></artwork></figure>
 
 </section>
 </section>
@@ -525,8 +557,7 @@ or with COSE.</t>
 <t>The following diagram is largely a duplicate of the contents of <xref target="RFC8366"/>,
 with only the addition of pinned-domain-subject-public-key-info.</t>
 
-<t><figure>
-<artwork><![CDATA[
+<figure><artwork><![CDATA[
 module: ietf-constrained-voucher
 
   grouping voucher-constrained-grouping
@@ -535,48 +566,53 @@ module: ietf-constrained-voucher
        |       yang:date-and-time
        +-- expires-on?
        |       yang:date-and-time
-       +-- assertion                                enumeration
-       +-- serial-number                            string
-       +-- idevid-issuer?                           binary
-       +-- pinned-domain-cert?                      binary
-       +-- domain-cert-revocation-checks?           boolean
-       +-- nonce?                                   binary
+       +-- assertion                                   enumeration
+       +-- serial-number                               string
+       +-- idevid-issuer?                              binary
+       +-- pinned-domain-cert?                         binary
+       +-- domain-cert-revocation-checks?              boolean
+       +-- nonce?                                      binary
        +-- last-renewal-date?
        |       yang:date-and-time
-       +-- pinned-domain-subject-public-key-info?   binary
-]]></artwork>
-</figure></t>
+       +-- pinned-domain-subject-public-key-info?      binary
+       +-- pinned-sha256-of-subject-public-key-info?   binary
+]]></artwork></figure>
 
 </section>
 <section anchor="sid-values-1" title="SID values">
 
-<t><figure>
-<artwork><![CDATA[
-           
-      SID Assigned to
---------- -------------------------------------------------- 
-  1001105 data /ietf-constrained-voucher:voucher
-  1001106 data /ietf-constrained-voucher:voucher/assertion
-  1001107 data /ietf-constrained-voucher:voucher/created-on
-  1001108 data .../domain-cert-revocation-checks
-  1001109 data /ietf-constrained-voucher:voucher/expires-on
-  1001110 data /ietf-constrained-voucher:voucher/idevid-issuer
-  1001111 data .../last-renewal-date
-  1001112 data /ietf-constrained-voucher:voucher/nonce
-  1001113 data .../pinned-domain-cert
-  1001114 data .../pinned-domain-subject-public-key-info
-  1001115 data /ietf-constrained-voucher:voucher/serial-number
-           
-]]></artwork>
-</figure></t>
+<figure><artwork><![CDATA[
+
+SID        Assigned to
+---------  --------------------------------------------------
+1001100    module ietf-constrained-voucher
+1001101    module ietf-restconf
+1001102    module ietf-voucher
+1001103    module ietf-yang-types
+1001104    data /ietf-constrained-voucher:voucher
+1001105    data /ietf-constrained-voucher:voucher/assertion
+1001106    data /ietf-constrained-voucher:voucher/created-on
+1001107    data /ietf-constrained-voucher:voucher/domain-cert-revocation-checks
+1001108    data /ietf-constrained-voucher:voucher/expires-on
+1001109    data /ietf-constrained-voucher:voucher/idevid-issuer
+1001110    data /ietf-constrained-voucher:voucher/last-renewal-date
+1001111    data /ietf-constrained-voucher:voucher/nonce
+1001112    data /ietf-constrained-voucher:voucher/pinned-domain-cert
+1001113    data /ietf-constrained-voucher:voucher/pinned-domain-subject-public-key-info
+1001114    data /ietf-constrained-voucher:voucher/pinned-sha256-of-subject-public-key-info
+1001115    data /ietf-constrained-voucher:voucher/serial-number
+
+File ietf-constrained-voucher@2018-09-01.sid created
+Number of SIDs available : 50
+Number of SIDs used : 16
+]]></artwork></figure>
 
 </section>
 <section anchor="yang-module-1" title="YANG Module">
 
 <t>In the constraine-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute. Two attributes of the voucher are "refined" to be optional.</t>
 
-<t><figure>
-<artwork><![CDATA[
+<figure><artwork><![CDATA[
 <CODE BEGINS> file "ietf-constrained-voucher@2018-09-01.yang"
 module ietf-constrained-voucher {
   yang-version 1.1;
@@ -656,7 +692,7 @@ description
       }
 
       augment "voucher" {
-        description "Base the constrained voucher 
+        description "Base the constrained voucher
                                    upon the regular one";
         leaf pinned-domain-subject-public-key-info {
           type binary;
@@ -673,40 +709,54 @@ description
              Support for the DSA algorithm is not recommended.
              Support for the RSA algorithm is a MAY.";
         }
+
+        leaf pinned-sha256-of-subject-public-key-info {
+          type binary;
+          description
+            "The pinned-hash-subject-public-key-info is a second
+             alternative to pinned-domain-cert.  In many cases the
+             public key of the domain has already been transmitted
+             during the key agreement process, and it is wasteful
+             to transmit the public key another two times.
+             The use of a hash of public key info, at 32-bytes for
+             sha256 is a significant savings compared to an RSA
+             public key, but is only a minor savings compared to
+             a 256-bit ECDSA public-key.
+             Algorithm agility is provided by extensions to this
+             specifications which define new leaf for other hash types";
+        }
       }
     }
   }
 }
 <CODE ENDS>
-]]></artwork>
-</figure></t>
+]]></artwork></figure>
 
 </section>
 <section anchor="example1" title="Example voucher artifacts">
 
 <t>Below a the CBOR serialization of the the constrained-voucher is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of <xref target="RFC7950"/>.</t>
 
-<t><figure>
-<artwork><![CDATA[
+<figure><artwork><![CDATA[
 {
-  1001105: {
-    +2 : "2016-10-07T19:31:42Z", / SID = 1001107, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID = 1001109, expires-on /
-    +1 : 0,                      / SID = 1001106, assertion /
+  1001104: {
+    +2 : "2016-10-07T19:31:42Z", / SID = 1001106, created-on /
+    +4 : "2016-10-21T19:31:42Z", / SID = 1001108, expires-on /
+    +1 : 0,                      / SID = 1001105, assertion /
                                  /                "verified" /
-    +12: "JADA123456789",        / SID = 1001117, serial-number /
-    +5 : h'01020D0F',            / SID = 1001110, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 1001113, pinned-domain-cert/
-    +3 : true,                   / SID = 1001108, domain-cert
+    +12: "JADA123456789",        / SID = 1001116, serial-number /
+    +5 : h'01020D0F',            / SID = 1001109, idevid-issuer /
+    +8 : h'01020D0F',            / SID = 1001111, pinned-domain-cert/
+    +3 : true,                   / SID = 1001107, domain-cert
                                                  -revocation-checks /
-    +6 : "2017-10-07T19:31:42Z", / SID = 1001111, last-renewal-date /
-    +11: h'01020D0F'             / SID = 1001116, proximity
+    +6 : "2017-10-07T19:31:42Z", / SID = 1001110, last-renewal-date /
+    +11: h'01020D0F'             / SID = 1001115, proximity
                                 -registrar-subject-public-key-info /
   }
 }
 
-]]></artwork>
-</figure></t>
+
+]]></artwork></figure>
 
 <t>The signing of the example is shown in <xref target="cmssign"/>.</t>
 
@@ -766,7 +816,7 @@ vouchers and/or pledge provided nonce provides a freshness guarantee.</t>
 <t>The COSE-Sign1 structure is discussed in section 4.2 of <xref target="RFC8152"></xref>. The CBOR
 object that carries the body, the signature, and the
 information about the body and signature is called the COSE_Sign1
-structure. It is used when only one signature is used on the body. 
+structure. It is used when only one signature is used on the body.
 Support for  EDdsa 256 with  Ed25519 is compulsory.</t>
 
 <t>The supported COSE-sign1 object stucture is shown in <xref target="fig-cose"/>.</t>
@@ -774,7 +824,7 @@ Support for  EDdsa 256 with  Ed25519 is compulsory.</t>
 <figure title="The cose-sign1 structure." align="left" anchor="fig-cose"><artwork><![CDATA[
 COSE_Sign1(
 [
- h'a10126',         #{ "alg":  EDdsa 256 } 
+ h'a10126',         #{ "alg":  EDdsa 256 }
 {
  "crv": Ed25519,
  "kty": OKP,
@@ -876,11 +926,13 @@ the following registration is requested:</t>
 ------------ ------ --------------------------- ------------
 Entry-point | Size | Module name               | RFC Number
 ------------ ------ --------------------------- ------------
-1001100       50     ietf-constrained-voucher    [ThisRFC]
-1001150       50     ietf-constrained-voucher    [ThisRFC}
-                                 -request   
+1001150       50     ietf-constrained-voucher    [ThisRFC]
+1001100       50     ietf-constrained-voucher    [ThisRFC}
+                                 -request
 ----------- ------  --------------------------- ------------
 ]]></artwork></figure>
+
+<t>Warning: These SID values will change when they transfer to the range 1000 - 59,999 allocated for SIDs in YANG modules defined in RFCs.</t>
 
 </section>
 <section anchor="the-smi-security-for-smime-cms-content-type-registry" title="The SMI Security for S/MIME CMS Content Type Registry">
@@ -1188,83 +1240,69 @@ Cms and cose mediatypes are introduced
 
 <section anchor="rv" title="signed requestvoucher">
 
-<t>A coaps signed requestvoucher message from RA to MASA can be :</t>
+<t>A CMS signed requestvoucher message from JRC to MASA is shown below.
+It would be CoAP POSTED to /est/rv.</t>
 
 <figure><artwork><![CDATA[
     POST coaps://[2001:db8::2:1]:61616]/est/rv
-(Content-Format: application/voucher-cms+cbor)
-    Payload =
-308203ba06092a864886f70d010702a08203ab308203a7020101310d300b
-0609608648016503040201300b06092a864886f70d010701a08202413082
-023d308201e2a00302010202087e7661d7b54e4632300a06082a8648ce3d
-040302305d310b3009060355040613025553310b300906035504080c0243
-4131143012060355040a0c0b4578616d706c6520496e6331163014060355
-040b0c0d63657274696669636174696f6e3113301106035504030c0a3830
-322e3141522043413020170d3139303133313131323931365a180f393939
-39313233313233353935395a305c310b3009060355040613025553310b30
-0906035504080c024341310b300906035504070c024c4131143012060355
-040a0c0b6578616d706c6520496e63310c300a060355040b0c03496f5431
-0f300d060355040513065774313233343059301306072a8648ce3d020106
-082a8648ce3d03010703420004c8b421f11c25e47e3ac57123bf2d9fdc49
-4f028bc351cc80c03f150bf50cff958d75419d81a6a245dffae790be95cf
-75f602f9152618f816a2b23b5638e59fd9a3818a30818730090603551d13
-04023000301d0603551d0e0416041496600d8716bf7fd0e752d0ac760777
-ad665d02a0301f0603551d2304183016801468d16551f951bfc82a431d0d
-9f08bc2d205b1160300e0603551d0f0101ff0404030205a0302a0603551d
-1104233021a01f06082b06010505070804a013301106092b06010401b43b
-0a01040401020304300a06082a8648ce3d0403020349003046022100c0d8
-1996d2507d693f3c48eaa5ee9491bda6db214099d98117c63b361374cd86
-022100a774989f4c321a5cf25d832a4d336a08ad67df20f1506421188a0a
-de6d3492363182013f3082013b0201013069305d310b3009060355040613
-025553310b300906035504080c02434131143012060355040a0c0b457861
-6d706c6520496e6331163014060355040b0c0d6365727469666963617469
-6f6e3113301106035504030c0a3830322e31415220434102087e7661d7b5
-4e4632300b0609608648016503040201a069301806092a864886f70d0109
-03310b06092a864886f70d010701301c06092a864886f70d010905310f17
-0d3139303430383130343833365a302f06092a864886f70d010904312204
-20b11d09338bb36672ef0dcb82f4995d911a773dcb6f39e8141b3a14c14d
-f7545a300a06082a8648ce3d0403020447304502200128c3b08a6bd2d5bf
-9fa7511eabefaacaa06651dbb459c4ad46d67e14b4283e022100c3504a9c
-e704e64467f469d110550cea988821304805d74bea5efd3680bd632f
+    (Content-Format: application/voucher-cms+cbor)
+]]></artwork></figure>
+
+<t>The payload would be in binary, but is presented in base64 in this document.</t>
+
+<figure><artwork><![CDATA[
+MIIDugYJKoZIhvcNAQcCoIIDqzCCA6cCAQExDTALBglghkgBZQMEAgEwCwYJ
+KoZIhvcNAQcBoIICQTCCAj0wggHioAMCAQICCH52Yde1TkYyMAoGCCqGSM49
+BAMCMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEUMBIGA1UECgwLRXhh
+bXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRpb24xEzARBgNVBAMMCjgw
+Mi4xQVIgQ0EwIBcNMTkwMTMxMTEyOTE2WhgPOTk5OTEyMzEyMzU5NTlaMFwx
+CzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTELMAkGA1UEBwwCTEExFDASBgNV
+BAoMC2V4YW1wbGUgSW5jMQwwCgYDVQQLDANJb1QxDzANBgNVBAUTBld0MTIz
+NDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMi0IfEcJeR+OsVxI78tn9xJ
+TwKLw1HMgMA/FQv1DP+VjXVBnYGmokXf+ueQvpXPdfYC+RUmGPgWorI7Vjjl
+n9mjgYowgYcwCQYDVR0TBAIwADAdBgNVHQ4EFgQUlmANhxa/f9DnUtCsdgd3
+rWZdAqAwHwYDVR0jBBgwFoAUaNFlUflRv8gqQx0Nnwi8LSBbEWAwDgYDVR0P
+AQH/BAQDAgWgMCoGA1UdEQQjMCGgHwYIKwYBBQUHCASgEzARBgkrBgEEAbQ7
+CgEEBAECAwQwCgYIKoZIzj0EAwIDSQAwRgIhAMDYGZbSUH1pPzxI6qXulJG9
+ptshQJnZgRfGOzYTdM2GAiEAp3SYn0wyGlzyXYMqTTNqCK1n3yDxUGQhGIoK
+3m00kjYxggE/MIIBOwIBATBpMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJD
+QTEUMBIGA1UECgwLRXhhbXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRp
+b24xEzARBgNVBAMMCjgwMi4xQVIgQ0ECCH52Yde1TkYyMAsGCWCGSAFlAwQC
+AaBpMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE5MDQwODEwNDgzNlowLwYJKoZIhvcNAQkEMSIEILEdCTOLs2Zy7w3LgvSZ
+XZEadz3LbznoFBs6FMFN91RaMAoGCCqGSM49BAMCBEcwRQIgASjDsIpr0tW/
+n6dRHqvvqsqgZlHbtFnErUbWfhS0KD4CIQDDUEqc5wTmRGf0adEQVQzqmIgh
+MEgF10vqXv02gL1jLw==
 ]]></artwork></figure>
 
 <t>A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TBD2) will then be:</t>
 
 <figure><artwork><![CDATA[
     2.04 Changed (Content-Format: application/voucher-cms+cbor)
-    Payload =
-308203bb06092a864886f70d010702a08203ac308203a8020101310d300b
-0609608648016503040201300b06092a864886f70d010701a08202413082
-023d308201e2a00302010202087e7661d7b54e4632300a06082a8648ce3d
-040302305d310b3009060355040613025553310b300906035504080c0243
-4131143012060355040a0c0b4578616d706c6520496e6331163014060355
-040b0c0d63657274696669636174696f6e3113301106035504030c0a3830
-322e3141522043413020170d3139303133313131323931365a180f393939
-39313233313233353935395a305c310b3009060355040613025553310b30
-0906035504080c024341310b300906035504070c024c4131143012060355
-040a0c0b6578616d706c6520496e63310c300a060355040b0c03496f5431
-0f300d060355040513065774313233343059301306072a8648ce3d020106
-082a8648ce3d03010703420004c8b421f11c25e47e3ac57123bf2d9fdc49
-4f028bc351cc80c03f150bf50cff958d75419d81a6a245dffae790be95cf
-75f602f9152618f816a2b23b5638e59fd9a3818a30818730090603551d13
-04023000301d0603551d0e0416041496600d8716bf7fd0e752d0ac760777
-ad665d02a0301f0603551d2304183016801468d16551f951bfc82a431d0d
-9f08bc2d205b1160300e0603551d0f0101ff0404030205a0302a0603551d
-1104233021a01f06082b06010505070804a013301106092b06010401b43b
-0a01040401020304300a06082a8648ce3d0403020349003046022100c0d8
-1996d2507d693f3c48eaa5ee9491bda6db214099d98117c63b361374cd86
-022100a774989f4c321a5cf25d832a4d336a08ad67df20f1506421188a0a
-de6d349236318201403082013c0201013069305d310b3009060355040613
-025553310b300906035504080c02434131143012060355040a0c0b457861
-6d706c6520496e6331163014060355040b0c0d6365727469666963617469
-6f6e3113301106035504030c0a3830322e31415220434102087e7661d7b5
-4e4632300b0609608648016503040201a069301806092a864886f70d0109
-03310b06092a864886f70d010701301c06092a864886f70d010905310f17
-0d3139303430383037333431305a302f06092a864886f70d010904312204
-20fdab29af89f0b55dc1812607685ebb1b33d3902cd33a0001891ec8daac
-8787e2300a06082a8648ce3d04030204483046022100b39dd8529b7bd146
-90de0f83b148805fbffdc42ffcdfafeed0d9333181005374022100bb9048
-d28438a34c1972b0f22a853619b7978651bf83e3a04d47ed60c277daca
+]]></artwork></figure>
+<figure><artwork><![CDATA[
+MIIDuwYJKoZIhvcNAQcCoIIDrDCCA6gCAQExDTALBglghkgBZQMEAgEwCwYJ
+KoZIhvcNAQcBoIICQTCCAj0wggHioAMCAQICCH52Yde1TkYyMAoGCCqGSM49
+BAMCMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEUMBIGA1UECgwLRXhh
+bXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRpb24xEzARBgNVBAMMCjgw
+Mi4xQVIgQ0EwIBcNMTkwMTMxMTEyOTE2WhgPOTk5OTEyMzEyMzU5NTlaMFwx
+CzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTELMAkGA1UEBwwCTEExFDASBgNV
+BAoMC2V4YW1wbGUgSW5jMQwwCgYDVQQLDANJb1QxDzANBgNVBAUTBld0MTIz
+NDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMi0IfEcJeR+OsVxI78tn9xJ
+TwKLw1HMgMA/FQv1DP+VjXVBnYGmokXf+ueQvpXPdfYC+RUmGPgWorI7Vjjl
+n9mjgYowgYcwCQYDVR0TBAIwADAdBgNVHQ4EFgQUlmANhxa/f9DnUtCsdgd3
+rWZdAqAwHwYDVR0jBBgwFoAUaNFlUflRv8gqQx0Nnwi8LSBbEWAwDgYDVR0P
+AQH/BAQDAgWgMCoGA1UdEQQjMCGgHwYIKwYBBQUHCASgEzARBgkrBgEEAbQ7
+CgEEBAECAwQwCgYIKoZIzj0EAwIDSQAwRgIhAMDYGZbSUH1pPzxI6qXulJG9
+ptshQJnZgRfGOzYTdM2GAiEAp3SYn0wyGlzyXYMqTTNqCK1n3yDxUGQhGIoK
+3m00kjYxggFAMIIBPAIBATBpMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJD
+QTEUMBIGA1UECgwLRXhhbXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRp
+b24xEzARBgNVBAMMCjgwMi4xQVIgQ0ECCH52Yde1TkYyMAsGCWCGSAFlAwQC
+AaBpMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+DTE5MDQwODA3MzQxMFowLwYJKoZIhvcNAQkEMSIEIP2rKa+J8LVdwYEmB2he
+uxsz05As0zoAAYkeyNqsh4fiMAoGCCqGSM49BAMCBEgwRgIhALOd2FKbe9FG
+kN4Pg7FIgF+//cQv/N+v7tDZMzGBAFN0AiEAu5BI0oQ4o0wZcrDyKoU2GbeX
+hlG/g+OgTUftYMJ32so=
 ]]></artwork></figure>
 
 </section>
@@ -1364,33 +1402,33 @@ The CMS signing of the binary voucher-request leads to a binary signed voucher-r
 <t>The breakdown of the CMS signed binary voucher-request file is visualized below:</t>
 
 <figure><artwork><![CDATA[
-CMS_ContentInfo: 
+CMS_ContentInfo:
   contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
-  d.signedData: 
+  d.signedData:
     version: 1
     digestAlgorithms:
         algorithm: sha256 (2.16.840.1.101.3.4.2.1)
         parameter: <ABSENT>
-    encapContentInfo: 
+    encapContentInfo:
       eContentType: pkcs7-data (1.2.840.113549.1.7.1)
       eContent: <ABSENT>
     certificates:
-      d.certificate: 
-        cert_info: 
+      d.certificate:
+        cert_info:
           version: 2
           serialNumber: 9112578475118446130
-          signature: 
+          signature:
             algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
             parameter: <ABSENT>
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
                                                     CN=802.1AR CA
-          validity: 
+          validity:
             notBefore: Jan 31 11:29:16 2019 GMT
             notAfter: Dec 31 23:59:59 9999 GMT
-          subject: C=US, ST=CA, L=LA, O=example Inc, 
+          subject: C=US, ST=CA, L=LA, O=example Inc,
                                         OU=IoT/serialNumber=Wt1234
-          key: 
-            algor: 
+          key:
+            algor:
               algorithm: id-ecPublicKey (1.2.840.10045.2.1)
               parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
             public_key:  (0 unused bits)
@@ -1404,33 +1442,33 @@ CMS_ContentInfo:
           extensions:
               object: X509v3 Basic Constraints (2.5.29.19)
               critical: BOOL ABSENT
-              value: 
-                0000 - 30            
+              value:
+                0000 - 30
                 0002 - <SPACES/NULS>
 
               object: X509v3 Subject Key Identifier (2.5.29.14)
               critical: BOOL ABSENT
-              value: 
-                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0 
-                000d - ac 76 07 77 ad 66 5d 02-a0           
+              value:
+                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0
+                000d - ac 76 07 77 ad 66 5d 02-a0
 
               object: X509v3 Authority Key Identifier (2.5.29.35)
               critical: BOOL ABSENT
-              value: 
+              value:
                 0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
-                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60     
+                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60
               object: X509v3 Key Usage (2.5.29.15)
               critical: TRUE
-              value: 
-                0000 - 03 02 05 a0                     
+              value:
+                0000 - 03 02 05 a0
 
               object: X509v3 Subject Alternative Name (2.5.29.17)
               critical: BOOL ABSENT
-              value: 
+              value:
                 0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
                 000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4
-                001a - 3b 0a 01 04 04 01 02 03-04            
-        sig_alg: 
+                001a - 3b 0a 01 04 04 01 02 03-04
+        sig_alg:
           algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
           parameter: <ABSENT>
         signature:  (0 unused bits)
@@ -1438,16 +1476,16 @@ CMS_ContentInfo:
           000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
           001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
           002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20
-          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36 
+          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36
     crls:
       <EMPTY>
     signerInfos:
         version: 1
-        d.issuerAndSerialNumber: 
+        d.issuerAndSerialNumber:
           issuer: C=US, ST=CA, O=Example Inc, OU=certification,
                                                      CN=802.1AR CA
           serialNumber: 9112578475118446130
-        digestAlgorithm: 
+        digestAlgorithm:
           algorithm: sha256 (2.16.840.1.101.3.4.2.1)
           parameter: <ABSENT>
         signedAttrs:
@@ -1464,16 +1502,16 @@ CMS_ContentInfo:
               OCTET STRING:
                 0000 - b1 1d 09 33 8b b3 66 72-ef 0d cb 82 f4
                 000d - 99 5d 91 1a 77 3d cb 6f-39 e8 14 1b 3a
-                001a - 14 c1 4d f7 54 5a                  
-        signatureAlgorithm: 
+                001a - 14 c1 4d f7 54 5a
+        signatureAlgorithm:
           algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
           parameter: <ABSENT>
-        signature: 
+        signature:
           0000 - 30 45 02 20 01 28 c3 b0-8a 6b d2 d5 bf 9f a7
-          000f - 51 1e ab ef aa ca a0 66-51 db b4 59 c4 ad 46 
+          000f - 51 1e ab ef aa ca a0 66-51 db b4 59 c4 ad 46
           001e - d6 7e 14 b4 28 3e 02 21-00 c3 50 4a 9c e7 04
           002d - e6 44 67 f4 69 d1 10 55-0c ea 98 88 21 30 48
-          003c - 05 d7 4b ea 5e fd 36 80-bd 63 2f           
+          003c - 05 d7 4b ea 5e fd 36 80-bd 63 2f
         unsignedAttrs:
           <EMPTY>
 
@@ -1565,10 +1603,276 @@ A11A000F468DA90274323031362D31302D30375431393A33313A34325A04
 74323031362D31302D32315431393A33313A34325A01000C6D4A41444131
 3233343536373839054401020D0F084401020D0F03F50674323031372D31
 302D30375431393A33313A34325A0B4401020D0F
-58 40 
+58 40
 0C39D9522A4ED32D883D19E0AD32EA4E8FABBD16EFE90D498DC8DFEB7E33
 9023E9AC111740BD87824624A9716D519314E8A76ECE992093809FAE82F1
 FBB81704
+]]></artwork></figure>
+
+</section>
+</section>
+<section anchor="cose-examples" title="COSE examples">
+
+<section anchor="device-registrar-and-masa-keys" title="Device, Registrar and MASA keys">
+
+<t>This first section documents the public and private keys used in the
+subsequent test vectors below.  These keys come from test code and are not used in any
+production system, and should only be used only to validate implementations.</t>
+
+<section anchor="device-idevid-certificate" title="Device IDevID certificate">
+
+<figure><artwork><![CDATA[
+-----BEGIN CERTIFICATE-----
+MIICFjCCAZygAwIBAgIEZaGuqTAKBggqhkjOPQQDAjBdMQ8wDQYDVQQGEwZDYW5h
+ZGExEDAOBgNVBAgMB09udGFyaW8xEjAQBgNVBAsMCVNhbmRlbG1hbjEkMCIGA1UE
+AwwbaGlnaHdheS10ZXN0LmV4YW1wbGUuY29tIENBMCAXDTE5MDUyNDE3MzYzNFoY
+DzI5OTkxMjMxMDAwMDAwWjAcMRowGAYDVQQFDBEwMC1EMC1FNS1GMi0wMC0wMjBZ
+MBMGByqGSM49AgEGCCqGSM49AwEHA0IABAOjdUOHs3zACpqHnK329DgTHNQMhB/g
+QE5BefBbE0sgcbNEm0li8RYwzrsAfYCxp9k7E1CbpielT8OWf0z+ISejgYgwgYUw
+HQYDVR0OBBYEFEWIzJaWAGQ3sLojZWRkVAgGbFatMAkGA1UdEwQCMAAwKwYDVR0R
+BCQwIqAgBgkrBgEEAYLuUgGgEwwRMDAtRDAtRTUtRjItMDAtMDIwLAYJKwYBBAGC
+7lICBB8MHWhpZ2h3YXktdGVzdC5leGFtcGxlLmNvbTo5NDQzMAoGCCqGSM49BAMC
+A2gAMGUCMQDwKygZS52YSdiBzyfS3YA0QWaQGzm4KgppkPhPp3ERaFi7F3/5zk3s
+im7M5NLf0qICMDGBx2waQrxYQhRtYYHvLqJRhik0QNQ2Wv9+99AynGs55YzAaJRm
+RLcaDcWSgpu/GA==
+-----END CERTIFICATE-----
+]]></artwork></figure>
+
+</section>
+<section anchor="device-private-key" title="Device private key">
+
+<figure><artwork><![CDATA[
+-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIBHNh6r8QRevRuo+tEmBJeFjQKf6bpFA/9NGoltv+9sNoAoGCCqGSM49
+AwEHoUQDQgAEA6N1Q4ezfMAKmoecrfb0OBMc1AyEH+BATkF58FsTSyBxs0SbSWLx
+FjDOuwB9gLGn2TsTUJumJ6VPw5Z/TP4hJw==
+-----END EC PRIVATE KEY-----
+]]></artwork></figure>
+
+</section>
+<section anchor="registrar-certificate" title="Registrar Certificate">
+
+<figure><artwork><![CDATA[
+-----BEGIN CERTIFICATE-----
+MIIB0TCCAVagAwIBAgIBAjAKBggqhkjOPQQDAzBxMRIwEAYKCZImiZPyLGQBGRYC
+Y2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xQDA+BgNVBAMMNyM8U3lzdGVt
+VmFyaWFibGU6MHgwMDAwMDAwNGY5MTFhMD4gVW5zdHJ1bmcgRm91bnRhaW4gQ0Ew
+HhcNMTcxMTA3MjM0NTI4WhcNMTkxMTA3MjM0NTI4WjBDMRIwEAYKCZImiZPyLGQB
+GRYCY2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xEjAQBgNVBAMMCWxvY2Fs
+aG9zdDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJZlUHI0up/l3eZf9vCBb+lI
+noEMEgc7Ro+XZCtjAI0CD1fJfJR/hIyyDmHWyYiNFbRCH9fyarfkzgX4p0zTizqj
+DTALMAkGA1UdEwQCMAAwCgYIKoZIzj0EAwMDaQAwZgIxALQMNurf8tv50lROD5DQ
+XHEOJJNW3QV2g9QEdDSk2MY+AoSrBSmGSNjh4olEOhEuLgIxAJ4nWfNw+BjbZmKi
+IiUEcTwHMhGVXaMHY/F7n39wwKcBBSOndNPqCpOELl6bq3CZqQ==
+-----END CERTIFICATE-----
+]]></artwork></figure>
+
+</section>
+<section anchor="jrcpriv" title="Registrar private key">
+
+<figure><artwork><![CDATA[
+-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIFZodk+PC5Mu24+ra0sbOjKzan+dW5rvDAR7YuJUOC1YoAoGCCqGSM49
+AwEHoUQDQgAElmVQcjS6n+Xd5l/28IFv6UiegQwSBztGj5dkK2MAjQIPV8l8lH+E
+jLIOYdbJiI0VtEIf1/Jqt+TOBfinTNOLOg==
+-----END EC PRIVATE KEY-----
+]]></artwork></figure>
+
+</section>
+<section anchor="masa-certificate" title="MASA Certificate">
+
+<figure><artwork><![CDATA[
+-----BEGIN CERTIFICATE-----
+MIIB3zCCAWSgAwIBAgIEG5lfVDAKBggqhkjOPQQDAjBdMQ8wDQYDVQQGEwZDYW5h
+ZGExEDAOBgNVBAgMB09udGFyaW8xEjAQBgNVBAsMCVNhbmRlbG1hbjEkMCIGA1UE
+AwwbaGlnaHdheS10ZXN0LmV4YW1wbGUuY29tIENBMB4XDTE5MDIxMjIyMjI0MVoX
+DTIxMDIxMTIyMjI0MVowXzEPMA0GA1UEBhMGQ2FuYWRhMRAwDgYDVQQIDAdPbnRh
+cmlvMRIwEAYDVQQLDAlTYW5kZWxtYW4xJjAkBgNVBAMMHWhpZ2h3YXktdGVzdC5l
+eGFtcGxlLmNvbSBNQVNBMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqgQVo0S5
+4kT4yfkbBxumdHOcHrpsqbOpMKmiMln3oB1HAW25MJV+gqi4tMFfSJ0iEwt8kszf
+WXK4rLgJS2mnpaMQMA4wDAYDVR0TAQH/BAIwADAKBggqhkjOPQQDAgNpADBmAjEA
+vVXlmw77/F6VKeOBsxU1qpMYogS+RHKyUX1NbevR1cEQOrI5e1c/xcywow7nmUa6
+AjEA9n9EfbcU+tFnatQRw0uu5vuamFb6hSEuXEhM8D/ymz+uiCCnrvly/1v5eGjP
+D0jJ
+-----END CERTIFICATE-----
+]]></artwork></figure>
+
+</section>
+<section anchor="masapriv" title="MASA private key">
+
+<figure><artwork><![CDATA[
+-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIFhdd0eDdzip67kXx72K+KHGJQYJHNy8pkiLJ6CcvxMGoAoGCCqGSM49
+AwEHoUQDQgAEqgQVo0S54kT4yfkbBxumdHOcHrpsqbOpMKmiMln3oB1HAW25MJV+
+gqi4tMFfSJ0iEwt8kszfWXK4rLgJS2mnpQ==
+-----END EC PRIVATE KEY-----
+]]></artwork></figure>
+
+</section>
+</section>
+<section anchor="cose-signed-requestvoucher-with-registrar-certificate-pinned" title="COSE signed requestvoucher with registrar certificate pinned">
+
+<t>This voucher request has been signed by the pledge, using the private key
+given above, and has been sent to the JRC over CoAPS.  This example
+uses the proximity-registrar-cert mechanism to request a voucher that
+pins the certificate of the registrar.</t>
+
+<t>This is the CBOR diagnostic format, folded to 60 characters:</t>
+
+<figure><artwork><![CDATA[
+18([h'A0', {}, {1001154: {1: "proximity", 2: 1(1558719497), 
+10: h'30302D44302D45352D46322D30302D3032', 7: "rIe_64PzENXdd
+32FApWcMQ", 12: h'308201E53082016BA003020102020101300A06082A
+8648CE3D040302307331123010060A0992268993F22C6401191602636131
+193017060A0992268993F22C640119160973616E64656C6D616E31423040
+06035504030C39233C53797374656D5661726961626C653A307830303030
+3536346635623730386165303E20556E737472756E6720466F756E746169
+6E204341301E170D3138313131393033313732305A170D32303131313830
+33313732305A305331123010060A0992268993F22C640119160263613119
+3017060A0992268993F22C640119160973616E64656C6D616E3122302006
+035504030C19666F756E7461696E2D746573742E6578616D706C652E636F
+6D3059301306072A8648CE3D020106082A8648CE3D03010703420004987E
+46A0D56A6F049FC278BDD34AE9339E88C10E57292A412EE26BBD104066FA
+C2212489FDC4FB165AC3787E256B7DD1777713A88A3C926C34D96A03BB4A
+ACE3A310300E300C0603551D130101FF04023000300A06082A8648CE3D04
+03020368003065023006AACD00169FC14E7C09729BBE8449E241E46FF59B
+DE30BCFD3A03BB09A4EDCAC86515C877E5C328C209E7A3015CD81D023100
+98891045999A4D6CB3442D053B16DA29906E64922D174644D9D6A80B888D
+8D493D2FCF433579C6516926DA68A2363F72'}}, h'D5E2BC22F19BDDB3B
+8D40D2C6C019A6FE5D742040B2FE70CC1286487AF21C8D3B5BBF0ECCFDAF
+97B80A96D17DF84477B08BBFA486019ED9A1329E4E7F26EBDC8'])
+]]></artwork></figure>
+
+<t>This is the raw binary, encoded in base64:</t>
+
+<figure><artwork><![CDATA[
+0oRBoKChGgAPRsKlAWlwcm94aW1pdHkCwRpc6CwJClEwMC1EMC1FNS1GMi0w
+MC0wMgd2ckllXzY0UHpFTlhkZDMyRkFwV2NNUQxZAekwggHlMIIBa6ADAgEC
+AgEBMAoGCCqGSM49BAMCMHMxEjAQBgoJkiaJk/IsZAEZFgJjYTEZMBcGCgmS
+JomT8ixkARkWCXNhbmRlbG1hbjFCMEAGA1UEAww5IzxTeXN0ZW1WYXJpYWJs
+ZToweDAwMDA1NjRmNWI3MDhhZTA+IFVuc3RydW5nIEZvdW50YWluIENBMB4X
+DTE4MTExOTAzMTcyMFoXDTIwMTExODAzMTcyMFowUzESMBAGCgmSJomT8ixk
+ARkWAmNhMRkwFwYKCZImiZPyLGQBGRYJc2FuZGVsbWFuMSIwIAYDVQQDDBlm
+b3VudGFpbi10ZXN0LmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0D
+AQcDQgAEmH5GoNVqbwSfwni900rpM56IwQ5XKSpBLuJrvRBAZvrCISSJ/cT7
+FlrDeH4la33Rd3cTqIo8kmw02WoDu0qs46MQMA4wDAYDVR0TAQH/BAIwADAK
+BggqhkjOPQQDAgNoADBlAjAGqs0AFp/BTnwJcpu+hEniQeRv9ZveMLz9OgO7
+CaTtyshlFch35cMowgnnowFc2B0CMQCYiRBFmZpNbLNELQU7FtopkG5kki0X
+RkTZ1qgLiI2NST0vz0M1ecZRaSbaaKI2P3JYQNXivCLxm92zuNQNLGwBmm/l
+10IECy/nDMEoZIevIcjTtbvw7M/a+XuAqW0X34RHewi7+khgGe2aEynk5/Ju
+vcg=
+]]></artwork></figure>
+
+</section>
+<section anchor="cose-signed-parboiled-requestvoucher" title="COSE signed parboiled requestvoucher">
+
+<t>This voucher request has been signed by the JRC using the private key from
+<xref target="jrcpriv"/>.  Contained within this voucher request is the pledge voucher
+request above.</t>
+
+<t>This is the CBOR diagnostic format, folded to 60 characters:</t>
+
+<figure><artwork><![CDATA[
+18([h'A0', {}, {1001154: {1: "proximity", 2: 1(1558719499), 
+10: h'30302D44302D45352D46322D30302D3032', 7: "rIe_64PzENXdd
+32FApWcMQ", 11: h'D28441A0A0A11A000F46C2A5016970726F78696D69
+747902C11A5CE82C090A5130302D44302D45352D46322D30302D30320776
+7249655F3634507A454E586464333246417057634D510C5901E9308201E5
+3082016BA003020102020101300A06082A8648CE3D040302307331123010
+060A0992268993F22C6401191602636131193017060A0992268993F22C64
+0119160973616E64656C6D616E3142304006035504030C39233C53797374
+656D5661726961626C653A3078303030303536346635623730386165303E
+20556E737472756E6720466F756E7461696E204341301E170D3138313131
+393033313732305A170D3230313131383033313732305A30533112301006
+0A0992268993F22C6401191602636131193017060A0992268993F22C6401
+19160973616E64656C6D616E3122302006035504030C19666F756E746169
+6E2D746573742E6578616D706C652E636F6D3059301306072A8648CE3D02
+0106082A8648CE3D03010703420004987E46A0D56A6F049FC278BDD34AE9
+339E88C10E57292A412EE26BBD104066FAC2212489FDC4FB165AC3787E25
+6B7DD1777713A88A3C926C34D96A03BB4AACE3A310300E300C0603551D13
+0101FF04023000300A06082A8648CE3D0403020368003065023006AACD00
+169FC14E7C09729BBE8449E241E46FF59BDE30BCFD3A03BB09A4EDCAC865
+15C877E5C328C209E7A3015CD81D02310098891045999A4D6CB3442D053B
+16DA29906E64922D174644D9D6A80B888D8D493D2FCF433579C6516926DA
+68A2363F725840D5E2BC22F19BDDB3B8D40D2C6C019A6FE5D742040B2FE7
+0CC1286487AF21C8D3B5BBF0ECCFDAF97B80A96D17DF84477B08BBFA4860
+19ED9A1329E4E7F26EBDC8'}}, h'20E084F80458B09753A4C2CE03A6806
+5E532AC46D44A6C4A9BEA399920431599728A85A8E246E29285B78B4BEEE
+7216B94EEE3CDD138BB08D4A62C4C9BB5D513'])
+]]></artwork></figure>
+
+<t>This is the raw binary, encoded in base64:</t>
+
+<figure><artwork><![CDATA[
+0oRBoKChGgAPRsKlAWlwcm94aW1pdHkCwRpc6CwLClEwMC1EMC1FNS1GMi0w
+MC0wMgd2ckllXzY0UHpFTlhkZDMyRkFwV2NNUQtZAnjShEGgoKEaAA9GwqUB
+aXByb3hpbWl0eQLBGlzoLAkKUTAwLUQwLUU1LUYyLTAwLTAyB3ZySWVfNjRQ
+ekVOWGRkMzJGQXBXY01RDFkB6TCCAeUwggFroAMCAQICAQEwCgYIKoZIzj0E
+AwIwczESMBAGCgmSJomT8ixkARkWAmNhMRkwFwYKCZImiZPyLGQBGRYJc2Fu
+ZGVsbWFuMUIwQAYDVQQDDDkjPFN5c3RlbVZhcmlhYmxlOjB4MDAwMDU2NGY1
+YjcwOGFlMD4gVW5zdHJ1bmcgRm91bnRhaW4gQ0EwHhcNMTgxMTE5MDMxNzIw
+WhcNMjAxMTE4MDMxNzIwWjBTMRIwEAYKCZImiZPyLGQBGRYCY2ExGTAXBgoJ
+kiaJk/IsZAEZFglzYW5kZWxtYW4xIjAgBgNVBAMMGWZvdW50YWluLXRlc3Qu
+ZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASYfkag1Wpv
+BJ/CeL3TSukznojBDlcpKkEu4mu9EEBm+sIhJIn9xPsWWsN4fiVrfdF3dxOo
+ijySbDTZagO7SqzjoxAwDjAMBgNVHRMBAf8EAjAAMAoGCCqGSM49BAMCA2gA
+MGUCMAaqzQAWn8FOfAlym76ESeJB5G/1m94wvP06A7sJpO3KyGUVyHflwyjC
+CeejAVzYHQIxAJiJEEWZmk1ss0QtBTsW2imQbmSSLRdGRNnWqAuIjY1JPS/P
+QzV5xlFpJtpoojY/clhA1eK8IvGb3bO41A0sbAGab+XXQgQLL+cMwShkh68h
+yNO1u/Dsz9r5e4CpbRffhEd7CLv6SGAZ7ZoTKeTn8m69yFhAIOCE+ARYsJdT
+pMLOA6aAZeUyrEbUSmxKm+o5mSBDFZlyioWo4kbikoW3i0vu5yFrlO7jzdE4
+uwjUpixMm7XVEw==
+]]></artwork></figure>
+
+</section>
+<section anchor="cose-signed-voucher" title="COSE signed voucher">
+
+<t>The resulting voucher is created by the MASA and returned via the JRC to the
+Pledge.  It is signed by the MASA's private key <xref target="masapriv"/> and can be
+verified by the pledge using the MASA's publie key.</t>
+
+<t>This is the CBOR diagnostic format, folded to 60 characters:</t>
+
+<figure><artwork><![CDATA[
+18([h'A0', {}, {1001100: {5: "logged", 6: 1(1558719500), 14:
+ "00-D0-E5-F2-00-02", 11: "rIe_64PzENXdd32FApWcMQ", 12: "MII
+B5TCCAWugAwIBAgIBATAKBggqhkjOPQQDAjBzMRIwEAYKCZImiZPyLGQBGRY
+CY2ExGTAXBgoJkiaJk/IsZAEZFglzYW5kZWxtYW4xQjBABgNVBAMMOSM8U3l
+zdGVtVmFyaWFibGU6MHgwMDAwNTY0ZjViNzA4YWUwPiBVbnN0cnVuZyBGb3V
+udGFpbiBDQTAeFw0xODExMTkwMzE3MjBaFw0yMDExMTgwMzE3MjBaMFMxEjA
+QBgoJkiaJk/IsZAEZFgJjYTEZMBcGCgmSJomT8ixkARkWCXNhbmRlbG1hbjE
+iMCAGA1UEAwwZZm91bnRhaW4tdGVzdC5leGFtcGxlLmNvbTBZMBMGByqGSM4
+9AgEGCCqGSM49AwEHA0IABJh+RqDVam8En8J4vdNK6TOeiMEOVykqQS7ia70
+QQGb6wiEkif3E+xZaw3h+JWt90Xd3E6iKPJJsNNlqA7tKrOOjEDAOMAwGA1U
+dEwEB/wQCMAAwCgYIKoZIzj0EAwIDaAAwZQIwBqrNABafwU58CXKbvoRJ4kH
+kb/Wb3jC8/ToDuwmk7crIZRXId+XDKMIJ56MBXNgdAjEAmIkQRZmaTWyzRC0
+FOxbaKZBuZJItF0ZE2daoC4iNjUk9L89DNXnGUWkm2miiNj9y"}}, h'AFB7
+E330EC20D230CB2398241757493E6E3DF38255110E9612779699AD5627BD
+DBB0B846252E69723B54B5F3F3D1378B7D1DBC84318FE1EE52AC0ACE9ED7
+DAC8'])
+]]></artwork></figure>
+
+<t>This is the raw binary, encoded in base64:</t>
+
+<figure><artwork><![CDATA[
+0oRBoKChGgAPRoylBWZsb2dnZWQGwRpc6CwMDnEwMC1EMC1FNS1GMi0wMC0w
+Mgt2ckllXzY0UHpFTlhkZDMyRkFwV2NNUQx5AoxNSUlCNVRDQ0FXdWdBd0lC
+QWdJQkFUQUtCZ2dxaGtqT1BRUURBakJ6TVJJd0VBWUtDWkltaVpQeUxHUUJH
+UllDWTJFeEdUQVhCZ29Ka2lhSmsvSXNaQUVaRmdsellXNWtaV3h0WVc0eFFq
+QkFCZ05WQkFNTU9TTThVM2x6ZEdWdFZtRnlhV0ZpYkdVNk1IZ3dNREF3TlRZ
+MFpqVmlOekE0WVdVd1BpQlZibk4wY25WdVp5QkdiM1Z1ZEdGcGJpQkRRVEFl
+RncweE9ERXhNVGt3TXpFM01qQmFGdzB5TURFeE1UZ3dNekUzTWpCYU1GTXhF
+akFRQmdvSmtpYUprL0lzWkFFWkZnSmpZVEVaTUJjR0NnbVNKb21UOGl4a0FS
+a1dDWE5oYm1SbGJHMWhiakVpTUNBR0ExVUVBd3daWm05MWJuUmhhVzR0ZEdW
+emRDNWxlR0Z0Y0d4bExtTnZiVEJaTUJNR0J5cUdTTTQ5QWdFR0NDcUdTTTQ5
+QXdFSEEwSUFCSmgrUnFEVmFtOEVuOEo0dmROSzZUT2VpTUVPVnlrcVFTN2lh
+NzBRUUdiNndpRWtpZjNFK3haYXczaCtKV3Q5MFhkM0U2aUtQSkpzTk5scUE3
+dEtyT09qRURBT01Bd0dBMVVkRXdFQi93UUNNQUF3Q2dZSUtvWkl6ajBFQXdJ
+RGFBQXdaUUl3QnFyTkFCYWZ3VTU4Q1hLYnZvUko0a0hrYi9XYjNqQzgvVG9E
+dXdtazdjcklaUlhJZCtYREtNSUo1Nk1CWE5nZEFqRUFtSWtRUlptYVRXeXpS
+QzBGT3hiYUtaQnVaSkl0RjBaRTJkYW9DNGlOalVrOUw4OUROWG5HVVdrbTJt
+aWlOajl5WECvt+Mw7CDSMMsjmCQXV0k+bj3zglURDpYSd5aZrVYnvduwuEYl
+LmlyO1S18/PRN4t9HbyEMY/h7lKsCs6e19rI
 ]]></artwork></figure>
 
 </section>
@@ -1578,283 +1882,289 @@ FBB81704
   </back>
 
 <!-- ##markdown-source:
-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
-S7Ip9XJzdUVb5yQNKWl+Ov5Wvl+Jk/wv7zm7qyV0vqJrE+lGTEJmu+jGFl/a
-Z93Ne25uNgB0St5o9qa6QJkbf2gLfL2mE6s/aXVDaWVODmzldzZrupRMD90u
-U1s2E/Gocw0BwA402LP265xvsuEDFD3X7zSgjNrWcTe2jLbMgjmwc1iDYwla
-hWbQTt2aHaJTr2aL1Zya2++ViTWbGwvaZTVjN2etO+dwOplvWpHn3JMVOo/C
-tflm7kOxfeaku8unYVuU5vSQjbGaECs3l3/xjJD4WCbvwTJ0bm8BHoUB2Drc
-3Q0bNcuX7ZovU7AyNXwgpnoH6YEj4Wb7lfS1PoStweKNTxIw2p/aVDWvd04r
-2mOnZC86Lz48UeVHqszS56U678yqrP5uDrQKPrhnj7V+7439vtv3+95k5I4G
-P5gzc63jbt3DqHxEyxwj59I9Q0+9z8a7GPVMf0Sb58LDp0v869KNgK+f0b2C
-dAkZHvzkejAVfZdLxwAUvdM+JuvzNyaFcfCuyHtvZXX9TFt68/yEi7NomBgP
-DzSniCVP6XWbvlLLK8gEtQ06L/7ImYXnYt8cQfz0Od3PmNN/aE6a8q0pXXsu
-vp8t1tXdDxp7hHmC4Ws+qEdXFRBAJEYGQ5p9FnnFB4FVIrV7qMhhzZcJXaRS
-J4qauwjs5XjktlZ0KxJv5xuPi8/S6PvBmoN3/T1isPYJzuaEoz2ZVCsbqz8M
-Dx4k1fPIfaZr1SrakItVixE7gx503ZjJPYF/Zjo633GJN0mSZUCCW6OxNTq4
-7znxnrh87ouD6fG3TJ+a98IBPJEWAM8a8pdtennbkD3EEccdhvD8z2SHCPKx
-Y8nctOaRPf37vrl/b3+y7+0f2ocXjPT9yeX5u5k4+o2gf59f2FsNXk5fXcye
-v4SHvW87nCtZ8iCnzZ2w4npDNyMXkHAu6DFqpO5TcJ8e56V+qqhQYXf8gA5U
-S/N6VVEBOBcIbd3wZ/btDb9DtRnm+VEzT6PWus8fUWwdvea7rjdJ49Fk4k+8
-HyaRh/9+MOeGzZSPszUFKGJHaunnuPqz2bpDYf7twyfRmSn6jyP0h/qIAyjN
-CPnIbfH3XkNqW4l7j+Q7CN71WxznouNu3TsPZIY2BocLh8kANyWd9ZG9w84h
-0e4ZEn/bTP/c/U6UfOk6gpYRPjwpblrmd3cjy64M6/mU4OQLdnbY5bdvLj6J
-gYsb51G22g5ZtlkscEe+G8TSjdyxL0dROBpF2dBNXc8dur7ktzLWrSSe4LkX
-eG4auG6851CvyKVerhcN3MANqQW92zmex+P5oUfjobcfpDyypzATetPoeO+O
-hmoYRV46jAehCqPAx4gE4UiPmKggRe+QegTuIAU8gNAdo0UwGOB5hAkQdA6C
-e29GboL5gz0HMHheGLieX7+TeBeHg+EIyE2HbpREA98Nx5GKMI4XoW2o2/Lc
-MVqnURANhv4wjMZRhD9B5PHnLFLoEQS0b2ZHD9BeBqPA3XMC38f70Bv4GD8g
-bNA9xcCpF4wDF39jPv7Px+8eppDeyM3wGf+h95jfBObvAX7Hn4EEJpKfwwQg
-v4cLwsRWryG/SbZxxOtmLEUPYMlNDKX0OISjAO+yQRh46J3hbVq/HQA2DDQM
-zUow0wDrp6fusKE0c0WE3i3qA5vET0EIwXDDZBSHvpd5XuIPVDhUgUwGQ88P
-4sxPx1mahMBamLn+KE6CgZcktPAg8wZunA3cJMvGg1E6HITeOB15MpJ+OEiz
-TKrh2I3VeJBke85wkEWun41BssgbZSMPrWJMMIiCkRpgjjFI641AA/w9bHDp
-pV7AWCMOJqBT+9xVbuhF+AP0RMDKaOhFcTbM8GI48FNXJkNgYTjcc2QaRYOU
-ZBH9M9sfA4YeuMmLIHphNEohfwMPS/HiLAGmgNTUhZSMMxfL9lPfHcRgYoyB
-mS0MGUlzlgE+liV3QHP40r7fc8C/IUjj+pBcnnvkk2R77gD/DcFBIZ5bPh+b
-d6HrxWFA2kHybyFLNeC9L8VmXvAIYScEjn3PJcEaYe7xOEp9TJNG4yALknCk
-pBwoNQ7HXpzKKI19COR4nI5HnjdMoiCG+AXDMElHxC08kgR3jUfjLEwCLAGk
-9AfpKAB20iCIoIyA22Ga+S4xQwQe8kYj6co9J1VRCqD8IAo80k+Yn/VUEBsN
-6AKmBzQPzf2Y7nlc8+w5j+uexzUPej+qe7Y1T1fXQkqsto13a3bJ64Y2uq/d
-MbfLa96t+dEr2dXLHaBP5oHPa/0H3ABWjz+NoBci0m1+trM32JyWsuf4Ltg7
-dcdBMIrBCNHQV5mbJvHIz8LxeJCOPQ/MEOBJBE2qRkBCHEgvTLwQfJ5B/GmW
-B/gzDCHT4QA8BTvsjxKwwUhGceqngzgjGZPDgecpGatMykRikAjiE4Ok4ySU
-aRiBzZQXQkuNAmV4PABh5DjZc9TQDVUUhtEwAwVTkA00S5Qcj0YjH1gABQbp
-MIwVmD9LA8h7DOr7WdtxDU26q7lI0VxtUt8OXEdjD+8RH5j7TR71ZpuZ/hZu
-x25msW5HYtyO0Re344vb8cXt+OJ2/P/mdhCY7HYkX9yOf5Db4QZD1gno+Wlu
-R5bK2B/LDOR248EgTbyR50OGotFAxTGcDBibsesnID2MDRYx9lQySuEn7Dmj
-IdCww8rUbseo4c44GKfpaOCP42GcQvQgY26q3GwUxB5gcwdZnJHS8bMsSTOZ
-KQVBHJO+HqH3ABxqxokBPvg89Udwr2QAD2g8hAhlPuYfgKCYYAyWIImGtwKg
-wxTKLY3cxB8OU7g32zkbPh3JG7EfnhSylQTZfl9n6+xh7fok6FZW7RclQiQ3
-/5IM+eKVfPFKvnglX7ySL8mQ/zleyZdkyGckQ3bs4jXJECnoQumta5n+vrt4
-fNp7e/duX91Q5db+5HveODO7fPtUIYQ2X9G/R/rLOczlQnQK6Hd2429fXypy
-esJtzWe+OFImlb3jZGvPrOnMVyBQT/omGn0fQp5x8daczp8e1PdQ8pcX8nFs
-8fT1u1evnj77ndkT3K8vbaJx6gMozb0tdalVfbnTXMms7l4VmyWdbkhtd10Q
-xBft1MvBkvm4uG1ren88/NUok0uuiz35b4c52mb9gaGxKOSBamQwTGlzcR1f
-H/BVtarkvIXiHZjtrJC/5PSXjyGLOKet1zvu+AhlC7WgArH6K/b0IrFG/M9D
-fW8PApl6W/qSQNo1pWjht+LC7ijr6KG93dzdXRYXnZKU7eP+pdDVt/cuybp3
-LwCFOPZqj841jNstD8VNThfQmAoH82V6zcVo9k40fUy0uWmguaeAv97zGm9S
-c5Yr3SzWlrXNNQdUSk13E9AqJXQ63KqM3B+JgBOepM/+c+STLXHxN2Jb8j1h
-VyR7zAj+Ah9uDizGjtZ+4O1sDX3tJlEaSrhrIdlv8uHZY0X0iOh5hHB3EGo/
-h7yqUetzAB8zquca0lzo/RhscdPbqcvQHiLP9mWQ8V3riwS/u4QXHHYv2lmm
-fLHCWuZFc9tHXcV3/HgVX3P9T/cuF0OcbSDpSiSuK6xvqdjNbIcGEpOib7MA
-3e/Ft0lr3qkh5rt4DPfXNzjYQomi0ssobsw3suGjrK9Tiwsl36c0jr0krZGC
-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
-cjob+S8B7csXL5jmhkb/B08Y39NcmwAA
+H4sIAB0eAl0AA+1963LbSJLuf0T0O1TIEWN5VqRwI3iZ8ezQEtWtbsv2SnL3
+bPR0OIpAQcKYJDgAKLXG4419jfN650nOl1lVuFCUbPdc9uzGqts2RdQlK++Z
+lVXo9XpOlVULNRFH+aqsCpmtVCK+zzfxtSrEtKiyVMZVKdK8EC/yvKIm63W2
+uhJvirzK43xROnI+L9TNzhGcJI9Xconhk0KmVS9TVdqTq2wpe3HTunejW/fc
+0HGeiLKSq+SdXOQr9KuKjXKcbF3wx7LyXXfs+o4slJyI01WlipWqnNurieBh
+xQ958Z7A+7rIN2vn/W3TqHdMIDixrCaYInGcOE/QciI2ZU+WcZY562wi8PNE
+xHKFb5WQRSHvxH6WCrlYiDtVPhPAw7UsrwXAVY4QQMGEHuBjmRdVodJywkMk
+KpWbBTBX5fb53VI/pl8duamu82LiOE5PZCt8e9YX51l8LYukzFdortF2Rl+p
+RfdRXgDqCyBJLZaA9CJPq1sghNdOM6mlzBYTsYyLfyGE/760TfuxrOd70xc3
+6JyAzBdV/r6e8Y0CurYf8Yw3NExR4htBxMPq5Cq+a+Zrffn7pm0ffduTfieX
+a7mS77OymVKu8rL7gCc8yso4Fxd3ZaWWrXWt3+uWv4/peT/Ol46zyoulrLIb
+NUG785Mj3/PG5uPQDfnjae+4z/wX54Xq3cnVVS+eEwm2H5VZYrv6A7f56NuP
+4/rbQVR/O/Kaj0EUmY9BNBqZj5Hru53JtBzM21LVe6/uslVayPtQ5fM/qbjq
+lSreFFl11x0pVryW3q2a94Bztbr/OJfrniorepAppUau3/Om5/QruFgWVwpi
+sXddVevJ4SFLILFbn5oSBQ/TbJVAasr62SFG6GOEHklk/7paLvb0WFqd7J3O
+ZjNh2ogLglqJY3WTxUqcJmoFxZKpQnexsiD4hxlFd78wc+lmiawwME0HhbBK
+2xSvlwo5X+aJpi6kUfWSTF4VcllSq/VCJVdq0gHzOIurLF/J4o4YSbxdyXmR
+oZWZcxszSdMcwgwdsIoVdTycF/ltqQ71FLuW1TP/WqbvTtxZoDdw8Huyid8v
+SEF14L28VqJQ5aYowA2k6OpmwrKGyMpyo7TOlknvOo/FbVaohSpLAfzckpbY
+sboSy7u9ve3HC6iJZV/G/c37w/9Il6U/PFzLNaT50BuPxz0Q5U8Q2Okq6dm5
+++skfXzNTNSTvjCdt3BxUsjV+61nW33P+2LKKoU1YLvzeY51dZ5pPBKwhMej
+1xezXqGuMkjZXReZRy9en4vXLFjiIrtaET7BcWK2iou7NZFH7FP3Z8L2fwRv
+GVQSi4osS4y1BI+Xh3EOpqC/+j83IrKT36evpl0294ZGb0TjWgm5AT46vV5P
+yDkpjbhynMvrrBSwsxuakewOTGoppKDnlbq6IwvErKEWd0LDhqeaUemZXDn5
+7UoVBzB5GgGwe9ruC2qskgORZMRu6A+WgiIwvx2IOUa/Vo4e7GkpYGM21BGT
+FX0hGLR6MHx+v8JUAAIA7Bmjv9ffXsJ8ky2SUmzWQD9GF8SwmFV8+GB068eP
+BwKCx+bbqYxALFgamslWgqgLIN7CkN9m1bUA5/OCJIEnKhVfr/JFfpURtmDM
+E1XGRTZXCQCaJknG0rmgVVYd8NTP6wXcllJc57ei5cUIsyDCwp2YKwffr8o1
+vAI8oyWv0LVSq5LYCngnwD982KmkP34Ua+Ne9TW5l1mSLBR5R3BnihyCR+A5
+zmxV5IsFw5WnkO5bscqxECwfM7SBs4KvUdF5Qh2cNXBIo2xW2Z83SsDbWCzU
+6kqVTB4oOsKRmEM6brMEI5CYgAJKlGtAblWOnhSLTID4KVyixYalqARmgAOn
+vd5HrB/Wr3GIAXOxIGkjgsIxWZZYp9OaGAzZAFWoP2/Am8k9lmqkokMwEIug
+A+ZavNV3zmVF3m91DZKVqsjkIvsLMRdR7N+nr77WwzGDEFjfXrx+dSAyZnDb
+HKMTCRzWMPs8OvkhHz8+uwdbCgLCdpDEZssMi4VYbSqQBQOyoYzlgoR5w2Kl
+sdgAC+9vqUi+CRpmZLFQKbgBQ1Bnkvp+i5+bptfyBgRVCvKYJIqoCVtWrNji
+OB7UrelD6LEOOiEY/AncqxgGHL40NQBzawQnWkw/k8YHjt+aBazzsDQ0IIha
+qoQBBhwBQgpqrXmVBb9FI20JWYh3iKvQjgRjzq6CFSFrliW0BFZRLoVVD1tL
+7DqTAFUrUep7cXrsNP2N2riHI+tyEi3FtOSe4PoFj8LihNVVjuY7wzNGvsGe
+C1glwg7mEsBsyTxYZYhWMEvGDVNyyA/0uHK+UCRA1PxGLkhkjeADLpby8jrf
+LBISPcIVGLBgFWF8LVG0RIM0P9hsvWEIaPw1IYKhJ0pA3S4VLF1CMsua12Km
+0ddMKu3aGgoYJczyDpI5ds2aKV+vSNeIo7MLLbLkgJPIgpOI8jlDRw1gtd+R
+SfeMaHvUzsxEOu2JuIQ2ydgC3In658OT1tcfNTtpAWXYWQG1OWXbLJFapOeI
+HhOnFl82vHpF4LR6RbW1gvZYrgvQFJY2R5CzOhDf5tnKOddehywOj/K8gLmT
+FTh5/9vzo2cH4qxla8WUXQrWO9aRMV9Vd87+2fRiih7aTB+ISwqkiSYnGUI0
+NpD7l69P3j7T8JvYnZF0rjWqZrqXoO5GQhd/eFKkMYVYwNDpqmsfNaeBF8lu
+g/R7Z28vLvcO9L/i1Wv+fD77t7en57PjvQNn7+Kb6cuX9CV/sC0uvnn99uVx
+86npefT67Gz26njGD8+m/44xCOq9128uT1+/mr7cYwJAPFhWQTJwuDHBHe56
+cfRGeOEB+VWC1qLVKq/qI+OBHB1oOGXNCmvrhbpRC61R4LavF/D64Dtebt5k
+xw6IuOBWrBY1l11sihvgAsi2SZXLuzUlAFpsQ8b+JkuMy167EcwscNgg/tTi
+Z1iHigVZVpw+0MwF+LRIGVZh0LlrtooXGxjKJEs5UsFgy3xDhAQ0ADuDOodO
+unPI19BW4b7hzAEVmaKlfA/bs7prfJjSOjEVLailotllyJbkLZRtt4jIYmCq
+xbulprXZu4KW0XLitJV1wpGjHgMQEDEgVJvVIntPHwAJuZYMDhQquadw8peK
+mTErHErmYDJo0qYT1O1ZDvbHs6I0GqxUuz26W9KocOly9F0pRjF/ReMuSC+u
+yHgyRgwt2wgWHQS3CW/VCMZlT7o2So1moLmIAKRtLQudGzPctLq9zuBh3f5C
+S/ygvzTPydXbaTZZ0+16Yp2EPinPO6ZYY2My7dJDM6hiu8OB0bRohrjCzoOu
+CARK5chSc0xmbCRxmB6Hub2iyfIYcc7jq4Hp6OmwpjWFcSRoTXa+klHvkCER
+n9We18scAV4iA1XHGiWp9wXFGVXT4s13p3+wvgf8rkq7U3YYEIgSo9oa9GKt
+ArSHnll32sJzYFHSGsZa5NqCGNfoIUru+t46e6y4oUw1FsxAZhVMCRNXkdHR
+C4JXQVa0aq+Xkf/QorUKl4syh4dxK9ab+SKLtUOzf/7mu2eQ1R+g7wQ+l7V9
+PehIzJqjIuYd9tzI5hEaNWq6o97DzkSHsR2klxudcdPdSFp6lHV6BP/NJM6u
+SfqaLbNy28u5H1Voh3UnudiqHFPmk7UZ4e3t+alheePc1xNouF6cX3x3uqW4
+ZxeX7GB3Y7Ku1036vfa227ieI5ikwKE2OgdkQ37W0JjMAjvlR/n0jfbMWrOz
+eeYMClaFOSDyUAFlvili5XTj1HJJiXcEeu8VvDZxIW+Iya6VJLG3kSdJFyAk
+Q6xtn3Lq1RFu2Ce+pji8cVxp/fTMcLOWrVhr9kVu4hoQcH8tKXOQP+NOS7mC
++6N1iqyk9gQNKTTnYZSE8xDi69llLUFY5N5h/1YtFj3OgByS079njKFubhHA
+1hRMf/nMWctCLjkbr9MXRADy2cUe1t3HuHva96QEEUUPb9c60oYhKg+MUwD1
+s8JAd4tcGpNF8bk0bFfAHjQzG34lzNjvgPNTjms3a2Ptt5wcDlGu85zsK8S+
+M+Bv0L7IN1fXFIt2cyg0kPpZ0lBbQBwSvmhCCLjlHN1ursAoRMhbzdVJLQMI
+aKrHiNgyJWZVjvMf+KGk2uzfJkyqe+T516J6bvDscMOLifD77oC2ucDKFb77
+LQH7u98ItKxJogdmpmqYEB4GSQP4rTTemEiLfNlmRDJ57C3ENkgqAfNSOZxi
+pKd6KFobftEB+B21taxdo5BZlnKj5aReJ3c2iUqDUE5bA+RDHqBHHQzwJ9kV
+ZRoGrOqMRgn6ft+vMyWUiISCUCuQk7KMmiL5mn7RMg7TyY4YGUdmcYKqNH4K
+yU25WZvcGJYDJPQxMqDpbYqs7RETpyzNlmONsy2Fxvgzgmpx2hJ/egKK/9V0
++2vr8V/x7aGRUsMl9MWNfmD9kxK8vkFjfGO6KE67Nd8D0M5YEmJdIYSkZ4XE
+ow8T8cSsTmefnz/V0FiwG5jom6cIrLbgYsp3JyY0rpQid9pqZKN8qW3b9LPx
+tAJTR+EkeDy/NTcd0dcqxLAu4iyrTejbdANN0mG40upellyTBax0bNAX1vDh
+GbqCC9TKWVIKgAS701bzhk4vYRyCbFuO+uIE3xouZiidJkRfQnR1ZKY4ctPO
+Gc29zssym4Pvv0z4f/1F0m++Bgt1n+CLvd/E1fPLF8e+wF9B3fKm3Gp5U3LL
+gSsit26ltlupXa0KuT2r3Jq10U4px/4czlgHTxNYeyU15oxIAU0HopsNSUF9
+HqBk9mgPQFsO1yYeawTd4K53op1Erd51H2t8DC/0DC/ozCg/gP+8qlrmhu0x
+xW9QDkW+LjL2erEa1hK7mQukf0O+DNTWHGHdAQdW7VVXjb05YE5E+A0Vl5h0
+ApsdvbFvxxCDaBQw7+NDaPICcm2camJawiQp0RsKVPfr9Kvn9yNuhQ/DRrH6
+nM+qHTxO2K1bMN9DtYH6V4vqN9eFSn91Vf2mTsdpu49VWx7gzVudZugSAz7F
+GiGKtpm14ouX5b9QWlO753qQ4IsHAbV4FNrp2WIBwVDR4DzyVmat4zPY3G53
+xv3OlH8q89XeMwGhMFiqea9/b+ZuT4bvGWTpgEE6aGCqo59mKDjgdWXMo463
+3aQT+7QX/azt4SOarTPCTjdWf3APG3aRpdburNVGUorr7Oq6x7kp5yZTt1vi
+xOkNJdnyarg1NjXr6D1Byhw2WeFO1M6CCpFr7RjYLk2mvNgseN9pd277QPuw
+tLe4qF0zjtspZ7GEPw+4JYNjdtqhw7O+dvFJ7WcxKe4nT8RDORB6+ERcAl8Q
+HsbXdvbWoJFsAW8pUVZWJBvNBGoXytqpXad2wmVrY6TOy/XqWOihwFHHSNuN
+KQrW3AYVlhcmNdG7l0txHntMS+IUEtte6wt0gs/aPFNc3N8JykMBr3ZLeatg
+N/yO9R+azFw7cI0lZ0ec01cXs/PLdyenX787OX99hg8vZ8Lwyf1aMLM0loB+
+9XMlZq+ONY0bNv2lY4Ilu0Ny/H2WJxvaYz1dbcfe9/DN7ZfcvpuFACH25OZq
+yXKzx0xvFPQe0WZPXFFdGrvt8OF0KMnZBJYFMl/Ef9lqk29IqdR7O0YsMfyV
+WrHLnexKEtwDVMPI0cABF7HV3mRVQU9tKpPn+uRAdXsog9u81d3KTZO5xFoL
+rcT3jN3M13rz8Zcywe+Pp5ezPm8u1SSbmbBwO1tVVwB8eGIsuQ9n+gUHj1Lv
+N9lN2jpA/NTidQLhlnd7SYus4HdksR4MLgSPY4JVmGkTpZtxdQKfkzqZWiQ0
+ViwX8WYhq9qv+IsqcgqDWjtN1HNxRfs318tuvsiamnE/6oftmGw8cDmVuxPF
+Bhfl4bYsmAdeWyBqJdso18uGxE9JE2RLich7vSnWuXavP7PKhG1XS164jktb
+S9NYh4i0uUGlTJXZkXTsdqTd2SENzQM+vNdfbxnzbkhpyc+lI4xL8mQ48eHU
+STgjMC0v5MLge9AP9EjXsFhsBY0NZMNwdHbh5CZTQznj/j/HHtUbBx2j9Dl5
+zC+Wxb+nIu4o4M/QwLbj//eK929WuP81ivZzFKysi8Frzeq1NGtlCy92ateH
+Vvs/UbPe16gEv90hMcDbrGYbAR8+IOCidjwZCZjp004B3TPMTSRCVLMbT+SW
+87yns8sToW5sJRbvPB1dPBnuKqPQutkO0doKykpnScJCO6ca/D9vMhCDpMi2
+2V0SQcV0rR1oZcIw2gQnWBBieTbdSySr99ztnl6j/6hGLyOj0oxmdpI4qX9v
+2la0eEpubFNCZVLgZBBsapytS1m1CNQ2FY7de2H8PF79w8tK1KKSdY2iiAvF
+SVLpxHKVr7iii7cuzZaZLZkgL16XPGaFslHeji4Z78k7rX0PtqCF0k8osgQr
+t4KsFiLtXja59WbLzEk2dVIQRM0S3ROPaSsBqHxFeF4YS1OoOFtzMibr2G2r
+1Jh1CvtQhxtfUPhn4myzW2v4kMberPQvzpbHVzZ54cbdoN++PT/q1+UpnYq1
+gwelaGuzsx7a6Q5dxz8g0omdHfPZ57Tqjn2yEzkPTaQraU35j/ZsdBENe0NZ
+aVdLcs1Py+ts3drUJdfI5N6t2tJCXWu1Qd87aBX51ZTGgCTxpjSqlaEH0xLN
+SV0M68f7UFHf67rJ594zwTkUWySqNUctZqZwh3d17a4TWcStrWp4P0qymGzW
+DnuKSWtnrOEouJ18AggN4mtKs7V2u3VdsdmhqhnU6DMerGwbo/YwpHxWm3Ij
+uWRuKVd3TisxVOqqFHInaBeLt7SzAsE60VGxcHISUVLhASAhH45y/46eR65K
+2RTWbCOIklQd7BTQ03bbyuCbi/gBE1cyLVXCac720qUp8yJo9o+m5bNO/G/Z
+j+tzC8fKaAcDbeSJNvK+yW/VDe1vV/U2vnN0/lKn+nWpHTMROep1oaPe4Kb0
+JRByRbv0sqMmYEraZTtzypItWLDWqiCFLkyRDeCO3xtniYnUdKJElCP1KijB
+sMjj90JvRugiysas865hewV6v6xHVTu1KuEVHQIVBkaTWEt0WU87z5YWqrxe
+0UmKq40EeStl9hOcH2fHYAQ14c2HDaiK8Mja/Nrf0Im1Pn5+4k6knlpWX9eI
+a8fAmoWWQd/yAO+FpybmqEtWah+Aj0DoasiG+wyZNmXZ9X6M5/OjqZr8SRs9
+MoeOKdRkkxLLorAlLfM8MRWmdc1L7eQ2R3Uo6znXe8G6CzdpKvK1/7ZQmkWb
+Ck6nhrnejSaQaRNJxz/kvXeG4efGlNJEfedCWxXGqpgdJ6UU/iDS4ZqYJf5g
+4I0ZgJp4RmJbuxeExJKRaPBQVg0qW05cml1x0pu9EN5wMX7j5ewPl7scR2qs
+R65dRu5Gm4Z2MLtrqPW9bd+Qs/8UXIavnu9R+feeKV398KFz+oWsgdla04Qj
+rXJV1xqaRJ8mZEUuQbOrt1ypJbkh5b01Cs3D+MUysZhndK6pDafBWI0oXRqY
+r3bysxUBNmR1EuejrnzhWfisaWPy9GIT/WjLGtZyVPtzRpJq2QdQSx0JYtm0
+Cy51r647SZXHZJCt96lLT2rvivfbrYDCoN2oslvcYwspOYkuHQgEx0lCYbi4
+sqgos7/U8U23SrrWoxSVsmVZ8Aod46aZpEvZomneQKZrUe0BsW3skdJgHXpB
+G+pVdkNVww58cx2GvNHli3VW6M13p7S2by7OWo0uiXLH2n05atmn762FYHm9
+qNWS7ifo3NMueM7t5jJHCiaNfdeczKmXV27mNX+LPSo46vbdO+gkA47y85mo
+K2vKvfpk19bGM9sNu/FBVn5uvT4u9REqq3T+Sm+cw+GGdjlXvPkC4sCI7Ls9
+qBU+McwxWPchtE9vjB86D8KV57RlW1T94oa39MvaxWS9yXqKUNVpe1N+flv1
+BW0L+XhbJrcNLf9w9rJFnm4qziKs5BpBLn8xCKu71uhnaaPjsiRtJ51w3YR5
+NsLTjQ7MI9uwAyucDKNMVDIxCKb5J2JTrCYUhkyYB8rJz8vFZFVOKIabPJQd
+Mf3tXgoWRnElHLsJo2H66vRsKn742sotra1v+mCJE/HqcGrrsQxMtiwNfEVI
+YBGlra7+3wxrHWj8M2E2/NDK4YlXrA8/jzFaSb2u0myP5XQ5hU5Tc8ZiJ6ts
+5yJ0a10r8ijbiPtso0+Z1odRH+eRGivc429gtjVl9n62897E1+b7+tQxP6Kz
+C3/Az5fBusUjvxzm+iTuZ/48AMCXrtWwG31BxlBr1ObUbcckaMz0Wj+i88/O
+n84zHmC2wli9dQ7jKv4KKwYr/VfLnoS/rYX+lYF7xSUbfx8APNf1vIFrxjcf
+HiIwPfuRJA5Q/NR0d39B94+fR+MORXes9fMX6/wg9SFEY3tbSXhdv3rN5L41
+1Qt32hdK9cYQKyx+jsW6oicG4wMYWVt0YHL3GJL1TEfvtFQGll32Rc1nF2en
+jevE/Q/PTs9mHJmZBOO2l/KQtoPufI31WGfkkZGd9sgtL2Xf6/v9Uej2PS8Y
+hOO+18efqO89O9iqEq711zFcmiUcTXKdERTrY+2P/ZxbsSvtUfzPIGKbnq12
+ZgRO82qeS3pxpXOA5NV+33Bc56fhXmd2/Or15WxiTyZKBKqkmipbDT03JYeE
+v63ikPJfHd5eEmeUOOntIpKNelsWCRh8+lg11FPBeRhdqW3jo909bOnTU01x
+Z48B0UfAGqLqPFWpWuM2pxzuZcWddjK32dW0smsc0/bepBQAvRX5U0qpfUKy
+edIE/TqV8BgaNH8xTo3ZabXmZxebedV6fG8AzWz6yHbLJ0fTFUJ6fvzabGg9
+8HhWZ9g7EQSatI75tNGj8crJDM1oJsOvfZ9aFu8Nd6HUQ+HTgd0h5iH4tiEu
+hJ5ni51DXbY82tIErXa/ygA1L3KZLO708UU9GNWt0qM3tItbXqNDJ6NN435z
+ekGqS7ebtnKYOkrdcNEkBbs1l6EXO4IHIqqyMr4+aDJ7BhLaP+tVhDt7RJW3
+UOsreYRoHS1vZXrs5RZn8iqLTe3ifvkME76ytIPrli1aB0P0435j/s+oFr7K
+y2uRUkNmJSKWbljzwBu++EP8Sl8PRBvhBYXD5ioCSrWTZkg3RdUUHFickdtr
+ZrMecU3FVcL1bfKK0PTy9Oz0cnZsWJaSI6aMM1/VbV69fjXTKNH3e2yNeaQN
+FwFFNdyqaM//hlKMpUZj2yX9V7FfX8YjaAeeM16Mx9ePiKjVO79cRusRfrGQ
+cvaHxv6UpDaKaIekUi7T5MI/4Ym0NZ7NCFJ5yP8K9v8K9n8/weajc9vVzl+W
+BtuqeN6RCHPePJQIM8dKOHnK9zjUjsmDOTHn750SO2u8rB0/Szr/ax/W2gWY
+P77nwX6us9r+RWxFJvripkfcIQ0VulgAWZkJoUvctUMr6njsUa0N4tQbNnvd
+kYLOSFyJHtP+He9b8S0NCKD0XT18NO6KHGU6cgM2+TZbiguET1LT1ZSfc36Z
+tCxpCApp4us802fk6PJBtRDfK8RdqqroyF1ixfrG3MtEdQLm1g/9KOFN0txu
+nLDbSzFcq+7bZKztFlE7VKJqcLnMbTaHz6jwAf1+va56STazX26urmhnnKQh
+Ic1PB8rK97k4zv70npPMWkIXOV1ESHdMEjLbNTW2FtJ+192b5+Z2s4ZnNZq9
+KR5Q5g4d2uFer+kM6M9a3VB2m3MUW2mmzZqu+dJDt8vMVs1EPOpCQwCwAw32
+rP0447th+EhCz/U7DSixt3WAjC2jraJgDuwcf+BYglahGbRTd2aH6NSb2WIz
+p+b2e6VfzR7LkjZRzdjN6eXOyZZOAp5W5Dn3ZIVOeHC1u5n7QGyf4uju4mnY
+lqU5j2NjrCbEysx1WjwjJH4u4/dgGToJtwSPwgBsHZfuho2a5ct2SZepR5ka
+PhBTvY/1wCFrs7tK+lofa9Zg8b4mCRjtkm2qmtc75//sQU6yF50HH56o8iMV
+XukTSJ1nZlVWfzdHRAUfhbMHRX/0xn7f7ft9bzJyR4OfzCm01gGy7vFOPvRk
+DmZzOZ6hp97t482Ueqbv0ea58PDpEv+6dMfeq2d0Ux9d64UvfnY9mIq+y5Vh
+AIqeaR+T9flrk8LYf1tkvTeyun6mLb35/phrr2iYOb7c15wiVjyl1236Uq2u
+IBPUNug8+J4zC8/FnjnU9/lzul8wp//QnDTlG1OZ9lz8OFuuq7ufNPYI8wTD
+N3z0jQ7/E0AkRgZDmn2WWcVHa1UstXuoyGHNVjFdTVIniprT/fa6OXJbK7pn
+iHfrjcfFp1P0jVvNUTYu7GsfiWyODNqjPrWuserDsOB+XD2P3Gc6n1dRIm+u
+WnzYGXS/68VM7sn7M9PR+YFLr0mQLP8R2BqLrdHBfM+J9cTlc1/sT4++Y/LU
+rBcO4Ii0AHjWUL9sk8vbhuwhhjjq8IPnfyE3RBCPHUvmpjWL6F/3zH12e5M9
+b+/AfHfBKN+bXJ6/nYnDXwv69/mFvSTgZPryYvb8BO71nml/rmTJQ5w2N6yK
+6w3dM1xAurlWx6gQ26XgLj1OSf1c7U3E3u7QYc+hIplXeUWl21z5s3Vbnqkb
+MJwOpWb45p3mm0ahdb9/RKV1NJrvut4kmY8mE3/i/TSJPPz3kzmDa6Z8nKMp
+NBE7kkqfYugv5uj7xP3wGSRmYv6zaPyhPnEAIjMyeKfgY4vGtrb2Hq13ULrr
+qjjORcfDuncgxwxtbAyXApPNbYo063NvB52Tlt3zHP62Zf7UJUmUb+n6fpYD
+Pjwpbtjitoqnt5pYLmVITa0oX1LTFMVoM3kKN9hewsf67M3rC4So1N6cLe+3
+eIsefg6PFzfc/FHu245pnrXMfX2JiAUNqNRU1CWSWdm95okqfKJw1zHex6vo
+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
+epMAAA==
 
 -->
 

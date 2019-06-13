@@ -474,6 +474,8 @@ the following registration is requested:
                                      -request
     ----------- ------  --------------------------- ------------
 
+Warning: These SID values will change when they transfer to the range 1000 - 59,999 allocated for SIDs in YANG modules defined in RFCs. 
+
 ## The SMI Security for S/MIME CMS Content Type Registry
 
 This document registers an OID in the "SMI Security for S/MIME CMS
