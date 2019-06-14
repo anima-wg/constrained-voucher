@@ -52,7 +52,7 @@
       </address>
     </author>
 
-    <date year="2019" month="June" day="13"/>
+    <date year="2019" month="June" day="14"/>
 
     <area>Internet</area>
     <workgroup>anima Working Group</workgroup>
@@ -309,31 +309,24 @@ module: ietf-constrained-voucher-request
 <section anchor="sid-values" title="SID values">
 
 <figure><artwork><![CDATA[
-
-SID        Assigned to
----------  --------------------------------------------------
-1001150    module ietf-constrained-voucher-request
-1001151    module ietf-restconf
-1001152    module ietf-voucher
-1001153    module ietf-yang-types
-1001154    data /ietf-constrained-voucher-request:voucher
-1001155    data /ietf-constrained-voucher-request:voucher/assertion
-1001156    data /ietf-constrained-voucher-request:voucher/created-on
-1001157    data /ietf-constrained-voucher-request:voucher/domain-cert-revocation-checks
-1001158    data /ietf-constrained-voucher-request:voucher/expires-on
-1001159    data /ietf-constrained-voucher-request:voucher/idevid-issuer
-1001160    data /ietf-constrained-voucher-request:voucher/last-renewal-date
-1001161    data /ietf-constrained-voucher-request:voucher/nonce
-1001162    data /ietf-constrained-voucher-request:voucher/pinned-domain-cert
-1001163    data /ietf-constrained-voucher-request:voucher/prior-signed-voucher-request
-1001164    data /ietf-constrained-voucher-request:voucher/proximity-registrar-cert
-1001165    data /ietf-constrained-voucher-request:voucher/proximity-registrar-sha256-of-subject-public-key-info
-1001166    data /ietf-constrained-voucher-request:voucher/proximity-registrar-subject-public-key-info
-1001167    data /ietf-constrained-voucher-request:voucher/serial-number
-
-File ietf-constrained-voucher-request@2018-09-01.sid created
-Number of SIDs available : 50
-Number of SIDs used : 18
+           
+      SID Assigned to
+--------- -------------------------------------------------- 
+  1001154 data /ietf-constrained-voucher-request:voucher
+  1001155 data .../assertion
+  1001156 data .../created-on
+  1001157 data .../domain-cert-revocation-checks
+  1001158 data .../expires-on
+  1001159 data .../idevid-issuer
+  1001160 data .../last-renewal-date
+  1001161 data /ietf-constrained-voucher-request:voucher/nonce
+  1001162 data .../pinned-domain-cert
+  1001163 data .../prior-signed-voucher-request
+  1001164 data .../proximity-registrar-cert
+  1001165 data mity-registrar-sha256-of-subject-public-key-info
+  1001166 data .../proximity-registrar-subject-public-key-info
+  1001167 data .../serial-number
+           
 ]]></artwork></figure>
 
 </section>
@@ -524,15 +517,15 @@ module ietf-constrained-voucher-request {
   1001154: {
     +2 : "2016-10-07T19:31:42Z", / SID= 1001156, created-on /
     +4 : "2016-10-21T19:31:42Z", / SID= 1001158, expires-on /
-    +1 : 0,                      / SID= 1001155, assertion /
-                                 /                "verified" /
-    +10: "JADA123456789",        / SID= 1001164, serial-number /
+    +1 : 2,                      / SID= 1001155, assertion /
+                                 /                "proximity" /
+    +13: "JADA123456789",        / SID= 1001167, serial-number /
     +5 : h'01020D0F',            / SID= 1001159, idevid-issuer /
-    +15: h'01020D0F',        / SID=1001069, proximity-registrar-cert/
+    +10: h'01020D0F',        / SID=1001064, proximity-registrar-cert/
     +3 : true,                   / SID= 1001157, domain-cert
                                                   -revocation-checks/
     +6 : "2017-10-07T19:31:42Z", / SID= 1001160, last-renewal-date /
-    +9 : h'01020D0F'             / SID= 1001163, pinned-domain
+    +12: h'01020D0F'             / SID= 1001166, proximity-registrar
                                          -subject-public-key-info /
   }
 }
@@ -582,29 +575,22 @@ module: ietf-constrained-voucher
 <section anchor="sid-values-1" title="SID values">
 
 <figure><artwork><![CDATA[
-
-SID        Assigned to
----------  --------------------------------------------------
-1001100    module ietf-constrained-voucher
-1001101    module ietf-restconf
-1001102    module ietf-voucher
-1001103    module ietf-yang-types
-1001104    data /ietf-constrained-voucher:voucher
-1001105    data /ietf-constrained-voucher:voucher/assertion
-1001106    data /ietf-constrained-voucher:voucher/created-on
-1001107    data /ietf-constrained-voucher:voucher/domain-cert-revocation-checks
-1001108    data /ietf-constrained-voucher:voucher/expires-on
-1001109    data /ietf-constrained-voucher:voucher/idevid-issuer
-1001110    data /ietf-constrained-voucher:voucher/last-renewal-date
-1001111    data /ietf-constrained-voucher:voucher/nonce
-1001112    data /ietf-constrained-voucher:voucher/pinned-domain-cert
-1001113    data /ietf-constrained-voucher:voucher/pinned-domain-subject-public-key-info
-1001114    data /ietf-constrained-voucher:voucher/pinned-sha256-of-subject-public-key-info
-1001115    data /ietf-constrained-voucher:voucher/serial-number
-
-File ietf-constrained-voucher@2018-09-01.sid created
-Number of SIDs available : 50
-Number of SIDs used : 16
+           
+      SID Assigned to
+--------- -------------------------------------------------- 
+  1001104 data /ietf-constrained-voucher:voucher
+  1001105 data /ietf-constrained-voucher:voucher/assertion
+  1001106 data /ietf-constrained-voucher:voucher/created-on
+  1001107 data .../domain-cert-revocation-checks
+  1001108 data /ietf-constrained-voucher:voucher/expires-on
+  1001109 data /ietf-constrained-voucher:voucher/idevid-issuer
+  1001110 data .../last-renewal-date
+  1001111 data /ietf-constrained-voucher:voucher/nonce
+  1001112 data .../pinned-domain-cert
+  1001113 data .../pinned-domain-subject-public-key-info
+  1001114 data .../pinned-sha256-of-subject-public-key-info
+  1001115 data /ietf-constrained-voucher:voucher/serial-number
+           
 ]]></artwork></figure>
 
 </section>
@@ -744,14 +730,14 @@ description
     +4 : "2016-10-21T19:31:42Z", / SID = 1001108, expires-on /
     +1 : 0,                      / SID = 1001105, assertion /
                                  /                "verified" /
-    +12: "JADA123456789",        / SID = 1001116, serial-number /
+    +11: "JADA123456789",        / SID = 1001115, serial-number /
     +5 : h'01020D0F',            / SID = 1001109, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 1001111, pinned-domain-cert/
+    +8 : h'01020D0F',            / SID = 1001112, pinned-domain-cert/
     +3 : true,                   / SID = 1001107, domain-cert
                                                  -revocation-checks /
     +6 : "2017-10-07T19:31:42Z", / SID = 1001110, last-renewal-date /
-    +11: h'01020D0F'             / SID = 1001115, proximity
-                                -registrar-subject-public-key-info /
+    +9 : h'01020D0F'             / SID = 1001113, pinned-domain
+                                           -subject-public-key-info /
   }
 }
 
@@ -1882,7 +1868,7 @@ LmlyO1S18/PRN4t9HbyEMY/h7lKsCs6e19rI
   </back>
 
 <!-- ##markdown-source:
-H4sIAJYmAl0AA+1963LbSJLuf0T0O1TIEWN5VqRwI3iZ8ezQEtWtbsv2SnL3
+H4sIAFFKA10AA+1963LbSJLuf0T0O1TIEWN5VqRwI3iZ8ezQEtWtbsv2SnL3
 bPR0OIpAQcKYJDgAKLXG4419jfN650nOl1lVuFCUbPdc9uzGqts2RdQlK++Z
 lVXo9XpOlVULNRFH+aqsCpmtVCK+zzfxtSrEtKiyVMZVKdK8EC/yvKIm63W2
 uhJvirzK43xROnI+L9TNzhGcJI9Xconhk0KmVS9TVdqTq2wpe3HTunejW/fc
