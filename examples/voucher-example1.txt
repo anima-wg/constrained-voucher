@@ -4,14 +4,14 @@
     +4 : "2016-10-21T19:31:42Z", / SID = 1001108, expires-on /
     +1 : 0,                      / SID = 1001105, assertion /
                                  /                "verified" /
-    +12: "JADA123456789",        / SID = 1001116, serial-number /
+    +11: "JADA123456789",        / SID = 1001115, serial-number /
     +5 : h'01020D0F',            / SID = 1001109, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 1001111, pinned-domain-cert/
+    +8 : h'01020D0F',            / SID = 1001112, pinned-domain-cert/
     +3 : true,                   / SID = 1001107, domain-cert
                                                  -revocation-checks /
     +6 : "2017-10-07T19:31:42Z", / SID = 1001110, last-renewal-date /
-    +11: h'01020D0F'             / SID = 1001115, proximity
-                                -registrar-subject-public-key-info /
+    +9 : h'01020D0F'             / SID = 1001113, pinned-domain
+                                           -subject-public-key-info /
   }
 }
 
