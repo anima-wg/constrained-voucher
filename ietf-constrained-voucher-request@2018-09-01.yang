@@ -98,7 +98,7 @@ module ietf-constrained-voucher-request {
              The EdDSA algorithm as specified in
              draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
              Support for the DSA algorithm is not recommended.
-             Support for the RSA algorithm is MAY, but due to 
+             Support for the RSA algorithm is MAY, but due to
              size is discouraged.";
         }
 
@@ -106,7 +106,7 @@ module ietf-constrained-voucher-request {
           type binary;
           description
             "The proximity-registrar-sha256-of-subject-public-key-info
-             is an alternative to 
+             is an alternative to
              proximity-registrar-subject-public-key-info.
              and pinned-domain-cert.  In many cases the
              public key of the domain has already been transmitted
