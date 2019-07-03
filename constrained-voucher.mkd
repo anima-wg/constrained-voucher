@@ -200,15 +200,7 @@ sending a GET request to "/.well-known/core" including a resource type (RT)
 parameter with the value "ace.est" {{RFC6690}}. Upon success, the return
 payload will contain the root resource of the EST resources. It is up to the
 implementation to choose its root resource; throughout this document the
-example root resource /est is used. The example below shows the discovery of
-the presence and location of voucher resources.
-
-~~~~
-  REQ: GET /.well-known/core?rt=ace.est
-
-  RES: 2.05 Content
-  </est>; rt="ace.est"
-~~~~
+example root resource /est is used.
 
 The EST-coaps server URIs differ from the EST URI by replacing the scheme
 https by coaps and by specifying shorter resource path names:
@@ -246,7 +238,7 @@ following more complete response is possible.
   </est/ra>; rt="ace.est/ra";ct=TBD2 TBD3
 ~~~~
 
-The first line MUST be returned in response to the GET, The following four lines MAY be returned to show the supported Content-Formats. The return of the content-types allows the client to choose the most appropriate one from multiple content types.
+The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
 Port numbers, not returned in the example, are assumed to be the default numbers 5683 and 5684 for coap and coaps respectively (sections 12.6 and 12.7 of {{RFC7252}}. Discoverable port numbers MAY be returned in the &lt;href&gt; of the payload.
 
@@ -571,11 +563,11 @@ We are grateful for the suggestions done by Esko Dijk.
 # Changelog
 
 -04
-
     voucher and request-voucher MUST be signed
     examples for signed request are added in appendix
     IANA SID registration is updated
     SID values in examples are aligned
+    signed cms examples aligned with new SIDs
 
 -03
 
@@ -624,6 +616,7 @@ The corresponding coap header fields are shown below.
      Option Value = "es"
   Payload = [Empty]
 ~~~~
+
 The Uri-Host and Uri-Port Options are omitted because they coincide with the transport protocol destination address and port respectively.
 
 A 2.05 Content response with an unsigned voucher status (ct=60) will then be:
@@ -645,14 +638,20 @@ With CoAP fields and payload:
      Option Length = 0x2
      Option Value = 60 (application/cbor)
 
-     Payload =
+     Payload (CBOR diagnostic) =
+     {
      "version":"1",
-     "Status":TRUE /* TRUE=Success, FALSE=Fail"
-     "Reason":"Informative human readable message"
-     "reason-context": "Additional information"
+     "Status": 1,   / 1 = Success, 0 = Fail  /
+     "Reason":"Informative human readable message",
+     "reason-context": "Additional information" 
+     }
 
-[EDNote, to be serialized into binary]
-~~~~
+     Payload (binary) =
+     A46776657273696F6E6131665374617475730166526561736F6E7822
+     496E666F726D61746976652068756D616E207265616461626C65206D
+     6573736167656e726561736F6E2D636F6E74657874
+     764164646974696F6E616C20696E666F726D6174696F6E
+~~~
 
 ##voucher_status
 
@@ -667,14 +666,11 @@ A 2.05 Content response with a non signed CBOR voucher (ct=60) will then be:
 ~~~~
     2.05 Content (Content-Format: application/cbor)
     Payload =
-    {
-     "version":"1",
-     "Status":FALSE /* TRUE=Success, FALSE=Fail"
-     "Reason":"Informative human readable message"
-     "reason-context": { additional CBOR }
-   }
+    A46776657273696F6E6131665374617475730166526561736F6E7822
+    496E666F726D61746976652068756D616E207265616461626C65206D
+    6573736167656e726561736F6E2D636F6E74657874
+    764164646974696F6E616C20696E666F726D6174696F6E
 
-[EDNote, payload to be serialized to binary]
 ~~~~
 
 ##requestvoucher
@@ -783,10 +779,10 @@ A 2.05 Content response returning a log of the voucher (ct=60) will then be:
 The voucher-request example, visualized in CBOR diagnostic notation in {{example2}} is shown as a hexadecimal dump of the binary file.
 
 ~~~
-a11a000f468da90274323031362d31302d30375431393a33313a34325a04
-74323031362d31302d32315431393a33313a34325a01000c6d4a41444131
-3233343536373839054401020d0f084401020d0f03f50674323031372d31
-302d30375431393a33313a34325a0b4401020d0f
+    A11A000F46C2A90274323031362D31302D30375431393A33313A34325A0
+    474323031362D31302D32315431393A33313A34325A01020d6d4A414441
+    313233343536373839054401020D0F0A4401020D0F03F50674323031372
+    D31302D30375431393A33313A34325A0c4401020D0F
 ~~~
 
 The voucher-request example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
@@ -795,90 +791,91 @@ The CMS signing of the binary voucher-request leads to a binary signed voucher-r
 The breakdown of the CMS signed binary voucher-request file is visualized below:
 
 ~~~
-CMS_ContentInfo:
+CMS_ContentInfo: 
   contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
-  d.signedData:
+  d.signedData: 
     version: 1
     digestAlgorithms:
         algorithm: sha256 (2.16.840.1.101.3.4.2.1)
         parameter: <ABSENT>
-    encapContentInfo:
+    encapContentInfo: 
       eContentType: pkcs7-data (1.2.840.113549.1.7.1)
       eContent: <ABSENT>
     certificates:
-      d.certificate:
-        cert_info:
+      d.certificate: 
+        cert_info: 
           version: 2
           serialNumber: 9112578475118446130
-          signature:
+          signature: 
             algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
             parameter: <ABSENT>
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
-                                                    CN=802.1AR CA
-          validity:
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
+                                                       CN=802.1AR CA
+          validity: 
             notBefore: Jan 31 11:29:16 2019 GMT
             notAfter: Dec 31 23:59:59 9999 GMT
-          subject: C=US, ST=CA, L=LA, O=example Inc,
-                                        OU=IoT/serialNumber=Wt1234
-          key:
-            algor:
+          subject: C=US, ST=CA, L=LA, O=example Inc, 
+                                          OU=IoT/serialNumber=Wt1234
+          key: 
+            algor: 
               algorithm: id-ecPublicKey (1.2.840.10045.2.1)
               parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
             public_key:  (0 unused bits)
-              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf
+              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf 
               000e - 2d 9f dc 49 4f 02 8b c3-51 cc 80 c0 3f 15
               001c - 0b f5 0c ff 95 8d 75 41-9d 81 a6 a2 45 df
               002a - fa e7 90 be 95 cf 75 f6-02 f9 15 26 18 f8
-              0038 - 16 a2 b2 3b 56 38 e5 9f-d9
+              0038 - 16 a2 b2 3b 56 38 e5 9f-d9      
           issuerUID: <ABSENT>
           subjectUID: <ABSENT>
           extensions:
               object: X509v3 Basic Constraints (2.5.29.19)
               critical: BOOL ABSENT
-              value:
-                0000 - 30
+              value: 
+                0000 - 30                         
                 0002 - <SPACES/NULS>
 
               object: X509v3 Subject Key Identifier (2.5.29.14)
               critical: BOOL ABSENT
-              value:
-                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0
-                000d - ac 76 07 77 ad 66 5d 02-a0
+              value: 
+                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0  
+                000d - ac 76 07 77 ad 66 5d 02-a0          
 
               object: X509v3 Authority Key Identifier (2.5.29.35)
               critical: BOOL ABSENT
-              value:
-                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
-                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60
+              value: 
+                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a 
+                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60    
+
               object: X509v3 Key Usage (2.5.29.15)
               critical: TRUE
-              value:
-                0000 - 03 02 05 a0
+              value: 
+                0000 - 03 02 05 a0                    
 
               object: X509v3 Subject Alternative Name (2.5.29.17)
               critical: BOOL ABSENT
-              value:
+              value: 
                 0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
                 000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4
-                001a - 3b 0a 01 04 04 01 02 03-04
-        sig_alg:
+                001a - 3b 0a 01 04 04 01 02 03-04  
+        sig_alg: 
           algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
           parameter: <ABSENT>
         signature:  (0 unused bits)
           0000 - 30 46 02 21 00 c0 d8 19-96 d2 50 7d 69 3f 3c
           000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
-          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
+          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c 
           002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20
-          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36
+          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36   
     crls:
       <EMPTY>
     signerInfos:
         version: 1
-        d.issuerAndSerialNumber:
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
+        d.issuerAndSerialNumber: 
+          issuer: C=US, ST=CA, O=Example Inc, OU=certification, 
                                                      CN=802.1AR CA
           serialNumber: 9112578475118446130
-        digestAlgorithm:
+        digestAlgorithm: 
           algorithm: sha256 (2.16.840.1.101.3.4.2.1)
           parameter: <ABSENT>
         signedAttrs:
@@ -888,25 +885,28 @@ CMS_ContentInfo:
 
             object: signingTime (1.2.840.113549.1.9.5)
             value.set:
-              UTCTIME:Apr  8 10:48:36 2019 GMT
+              UTCTIME:Jul  3 08:53:30 2019 GMT
 
             object: messageDigest (1.2.840.113549.1.9.4)
             value.set:
               OCTET STRING:
-                0000 - b1 1d 09 33 8b b3 66 72-ef 0d cb 82 f4
-                000d - 99 5d 91 1a 77 3d cb 6f-39 e8 14 1b 3a
-                001a - 14 c1 4d f7 54 5a
-        signatureAlgorithm:
+                0000 - d4 b0 5c dd c8 b4 91 28-4a 18 ca 25 9d
+                000d - be d0 60 23 cf ad a0 aa-c2 95 ac e9 3f
+                001a - 0b 4f 44 9e 25 
+                0020 - <SPACES/NULS>
+        signatureAlgorithm: 
           algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
           parameter: <ABSENT>
-        signature:
-          0000 - 30 45 02 20 01 28 c3 b0-8a 6b d2 d5 bf 9f a7
-          000f - 51 1e ab ef aa ca a0 66-51 db b4 59 c4 ad 46
-          001e - d6 7e 14 b4 28 3e 02 21-00 c3 50 4a 9c e7 04
-          002d - e6 44 67 f4 69 d1 10 55-0c ea 98 88 21 30 48
-          003c - 05 d7 4b ea 5e fd 36 80-bd 63 2f
+        signature: 
+          0000 - 30 46 02 21 00 e5 e1 7f-23 c3 aa 14 9f 35 64
+          000f - 1e c4 4a 0f 68 fe b0 16-3b e6 7c 06 51 af bf
+          001e - 5a a0 99 59 e0 28 1f 02-21 00 b4 07 2f 7c c4
+          002d - f9 26 0c 6d 47 a7 93 56-de b8 da f7 23 f0 af
+          003c - 2b 59 16 cc 36 63 e7 91-89 39 df df 
         unsignedAttrs:
           <EMPTY>
+
+
 
 ~~~
 
@@ -950,10 +950,10 @@ c8 a1 04 41 61 b2 64 57 fe 0e ae 08 4d
 The generated signature is:
 
 ~~~
-0c 39 d9 52 2a 4e d3 2d 88 3d 19 e0 ad 32 ea 4e 8f ab bd 
-16 ef e9 0d 49 8d c8 df eb 7e 33 90 23 e9 ac 11 17 40 bd 
-87 82 46 24 a9 71 6d 51 93 14 e8 a7 6e ce 99 20 93 80 9f 
-ae 82 f1 fb b8 17 04
+5d 2f a0 88 c5 47 fb 64 a8 0e ec 93 33 72 4c 76 f7 82 31
+33 f1 7a a8 80 4c 31 b4 b1 02 84 7b 5f 6d 2d 0d 98 ce 52
+cb 39 7b 47 cc 71 28 60 f9 30 4b 80 a1 4e 78 71 db 67 d5
+86 d2 56 02 91 a5 01
 ~~~
 
 
@@ -968,37 +968,36 @@ The Cose object does not need the CBOR tag 18 when the content-format applicatio
  The associated CBOR diagnostic notation for the COSE object is:
 
 ~~~
-[h'a10126',
-{
--1: 6,
-1: 1,
-4: 2
-},
-h’
-a11a000f468da90274323031362d31302d30375431393a33313a34325a04
-74323031362d31302d32315431393a33313a34325a01000c6d4a41444131
-3233343536373839054401020d0f084401020d0f03f50674323031372d31
-302d30375431393a33313a34325a0b4401020d0f’,
-h'
-0c39d9522a4ed32d883d19e0ad32ea4e8fabbd16efe90d498dc8dfeb7e33
-9023e9ac111740bd87824624a9716d519314e8a76ece992093809fae82f1
-fbb81704'
-]
+    [h'a10126',
+    {
+     -1: 6,
+     1: 1,
+     4: 2
+     },
+    h'
+    A11A000F46C2A90274323031362D31302D30375431393A33313A34325A0
+    474323031362D31302D32315431393A33313A34325A01020d6d4A414441
+    313233343536373839054401020D0F0A4401020D0F03F50674323031372
+    D31302D30375431393A33313A34325A0c4401020D0F',
+    h'
+    5d2fa088c547fb64a80eec9333724c76f7823133f17aa8804c31b4b1028
+    47b5f6d2d0d98ce52cb397b47cc712860f9304b80a14e7871db67d586d2
+    560291a501'
+    ]
 ~~~
 
 Which leads to the binary COSE object represented as hexadecimal:
 
 ~~~
 
-84  43  A10126 A3 20 06 01 01 04 02 58 6E
-A11A000F468DA90274323031362D31302D30375431393A33313A34325A04
-74323031362D31302D32315431393A33313A34325A01000C6D4A41444131
-3233343536373839054401020D0F084401020D0F03F50674323031372D31
-302D30375431393A33313A34325A0B4401020D0F
-58 40
-0C39D9522A4ED32D883D19E0AD32EA4E8FABBD16EFE90D498DC8DFEB7E33
-9023E9AC111740BD87824624A9716D519314E8A76ECE992093809FAE82F1
-FBB81704
+     8443A10126A3200601010402586E
+     A11A000F46C2A90274323031362D31302D30375431393A33313A34325
+     A0474323031362D31302D32315431393A33313A34325A01020D6D4A41
+     4441313233343536373839054401020D0F0A4401020D0F03F50674323
+     031372D31302D30375431393A33313A34325A0C4401020D0F
+     58405D2FA088C547FB64A80EEC9333724C76F7823133F17AA8804C
+     31B4B102847B5F6D2D0D98CE52CB397B47CC712860F9304B80A14
+     E7871DB67D586D2560291A501 
 ~~~
 
 
