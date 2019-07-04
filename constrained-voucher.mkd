@@ -286,7 +286,7 @@ INSERT_FIG_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 
 ### Example voucher request artifact {#example2}
 
-Below a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
+Below is a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
 INSERT_FIG_FROM_FILE examples/voucher-request-example1.txt END
 
