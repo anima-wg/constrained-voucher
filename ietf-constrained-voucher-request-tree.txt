@@ -6,14 +6,25 @@ module: ietf-constrained-voucher-request
        |       yang:date-and-time
        +-- expires-on?
        |       yang:date-and-time
-       +-- assertion                                      enumeration
-       +-- serial-number                                  string
-       +-- idevid-issuer?                                 binary
-       +-- pinned-domain-cert?                            binary
-       +-- domain-cert-revocation-checks?                 boolean
-       +-- nonce?                                         binary
+       +-- assertion
+       |       enumeration
+       +-- serial-number
+       |       string
+       +-- idevid-issuer?
+       |       binary
+       +-- pinned-domain-cert?
+       |       binary
+       +-- domain-cert-revocation-checks?
+       |       boolean
+       +-- nonce?
+       |       binary
        +-- last-renewal-date?
        |       yang:date-and-time
-       +-- proximity-registrar-subject-public-key-info?   binary
-       +-- proximity-registrar-cert?                      binary
-       +-- prior-signed-voucher-request?                  binary
+       +-- proximity-registrar-subject-public-key-info?
+       |       binary
+       +-- proximity-registrar-sha256-of-subject-public-key-info?
+       |       binary
+       +-- proximity-registrar-cert?
+       |       binary
+       +-- prior-signed-voucher-request?
+               binary
