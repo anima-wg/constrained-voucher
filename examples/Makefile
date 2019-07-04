@@ -19,7 +19,7 @@ all: vr_00-D0-E5-F2-00-03.b64 vr_00-D0-E5-F2-00-03.diag \
 	cbor2diag.rb $< | fold -60 >$@
 
 %.crt-txt: %.crt
-	openssl x509 -noout -text -in $< | fold -60 >$@
+	openssl x509 -noout -text -in $< | sed -e's/  / /g' | fold -60 >$@
 
 update:
 	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/vr_00-D0-E5-F2-00-03.vrq .
