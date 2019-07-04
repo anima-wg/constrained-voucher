@@ -910,7 +910,7 @@ CMS_ContentInfo:
 
 ~~~
 
-# COSE examples
+# COSE examples {#cosesign}
 
 ## Device, Registrar and MASA keys
 
