@@ -10,8 +10,8 @@ CWTSIDDATE2=ietf-constrained-voucher-request@${YANGDATE}.sid
 EXAMPLES=examples/cms-parboiled-request.b64
 EXAMPLES+=examples/voucher-example1.txt
 EXAMPLES+=examples/voucher-request-example1.txt
-EXAMPLES+=examples/vr_00-D0-E5-F2-00-02.b64
-EXAMPLES+=examples/vr_00-D0-E5-F2-00-02.diag
+EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.b64
+EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.diag
 PYANG=./pyang.sh
 
 # git clone this from https://github.com/mbj4668/pyang.git

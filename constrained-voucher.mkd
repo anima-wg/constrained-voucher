@@ -920,11 +920,11 @@ production system, and should only be used only to validate implementations.
 
 ### Device IDevID certificate
 
-INSERT_FIG_FROM_FILE examples/device-00-D0-E5-F2-00-02.crt END
+INSERT_FIG_FROM_FILE examples/device_00-D0-E5-F2-00-03.crt-txt END
 
 ### Device private key
 
-INSERT_FIG_FROM_FILE examples/key-00-D0-E5-F2-00-02.pem END
+INSERT_FIG_FROM_FILE examples/key_00-D0-E5-F2-00-03.pem END
 
 ### Registrar Certificate
 
@@ -952,11 +952,11 @@ pins the certificate of the registrar.
 
 This is the CBOR diagnostic format, folded to 60 characters:
 
-INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-02.diag END
+INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-03.diag END
 
 This is the raw binary, encoded in base64:
 
-INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-02.b64 END
+INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-03.b64 END
 
 ## COSE signed parboiled requestvoucher
 
@@ -966,11 +966,11 @@ request above.
 
 This is the CBOR diagnostic format, folded to 60 characters:
 
-INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-02.diag END
+INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-03.diag END
 
 This is the raw binary, encoded in base64:
 
-INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-02.b64 END
+INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-03.b64 END
 
 ## COSE signed voucher
 
@@ -980,9 +980,9 @@ verified by the pledge using the MASA's publie key.
 
 This is the CBOR diagnostic format, folded to 60 characters:
 
-INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-02.diag END
+INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-03.diag END
 
 This is the raw binary, encoded in base64:
 
-INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-02.b64 END
+INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-03.b64 END
 
