@@ -1,0 +1,42 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 463036244 (0x1b995f54)
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C = Canada, ST = Ontario, OU = Sandelman, CN
+ = highway-test.example.com CA
+        Validity
+            Not Before: Feb 12 22:22:41 2019 GMT
+            Not After : Feb 11 22:22:41 2021 GMT
+        Subject: C = Canada, ST = Ontario, OU = Sandelman, C
+N = highway-test.example.com MASA
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:aa:04:15:a3:44:b9:e2:44:f8:c9:f9:1b:0
+7:1b:
+                    a6:74:73:9c:1e:ba:6c:a9:b3:a9:30:a9:a2:3
+2:59:
+                    f7:a0:1d:47:01:6d:b9:30:95:7e:82:a8:b8:b
+4:c1:
+                    5f:48:9d:22:13:0b:7c:92:cc:df:59:72:b8:a
+c:b8:
+                    09:4b:69:a7:a5
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+    Signature Algorithm: ecdsa-with-SHA256
+         30:66:02:31:00:bd:55:e5:9b:0e:fb:fc:5e:95:29:e3:81:
+b3:
+         15:35:aa:93:18:a2:04:be:44:72:b2:51:7d:4d:6d:eb:d1:
+d5:
+         c1:10:3a:b2:39:7b:57:3f:c5:cc:b0:a3:0e:e7:99:46:ba:
+02:
+         31:00:f6:7f:44:7d:b7:14:fa:d1:67:6a:d4:11:c3:4b:ae:
+e6:
+         fb:9a:98:56:fa:85:21:2e:5c:48:4c:f0:3f:f2:9b:3f:ae:
+88:
+         20:a7:ae:f9:72:ff:5b:f9:78:68:cf:0f:48:c9

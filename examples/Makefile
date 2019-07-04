@@ -1,9 +1,10 @@
 .SUFFIXES: .vrq .b64 .diag .vch
 
-all: vr_00-D0-E5-F2-00-02.b64 vr_00-D0-E5-F2-00-02.diag \
-	parboiled_vr_00-D0-E5-F2-00-02.b64 parboiled_vr_00-D0-E5-F2-00-02.diag \
-	voucher_00-D0-E5-F2-00-02.b64 voucher_00-D0-E5-F2-00-02.diag
-
+all: vr_00-D0-E5-F2-00-03.b64 vr_00-D0-E5-F2-00-03.diag \
+	parboiled_vr_00-D0-E5-F2-00-03.b64 parboiled_vr_00-D0-E5-F2-00-03.diag \
+	voucher_00-D0-E5-F2-00-03.b64 voucher_00-D0-E5-F2-00-03.diag \
+	key_00-D0-E5-F2-00-03.pem device_00-D0-E5-F2-00-03.crt-txt \
+	masa_00-D0-E5-F2-00-03.crt-txt
 
 %.b64:  %.vrq
 	base64 -w 60 $< >$@
@@ -17,9 +18,16 @@ all: vr_00-D0-E5-F2-00-02.b64 vr_00-D0-E5-F2-00-02.diag \
 %.diag: %.vch
 	cbor2diag.rb $< | fold -60 >$@
 
+%.crt-txt: %.crt
+	openssl x509 -noout -text -in $< | fold -60 >$@
+
 update:
-	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-02/parboiled_vr_00-D0-E5-F2-00-02.vrq .
-	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-02/voucher_00-D0-E5-F2-00-02.vch .
+	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/vr_00-D0-E5-F2-00-03.vrq .
+	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/parboiled_vr_00-D0-E5-F2-00-03.vrq .
+	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/voucher_00-D0-E5-F2-00-03.vch .
+	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/key.pem key_00-D0-E5-F2-00-03.pem
+	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/device.crt device_00-D0-E5-F2-00-03.crt
+	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/masa.crt masa_00-D0-E5-F2-00-03.crt
 
 
 
