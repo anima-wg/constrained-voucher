@@ -314,13 +314,13 @@ INSERT_FIG_FROM_FILE ietf-constrained-voucher-sid.txt END
 
 ### YANG Module
 
-In the constraine-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute. Two attributes of the voucher are "refined" to be optional.
+In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute. Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-constrained-voucher@DATE.yang END
 
 ### Example voucher artifacts {#example1}
 
-Below a the CBOR serialization of the the constrained-voucher is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
+Below a the CBOR serialization of the constrained-voucher is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
 INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
