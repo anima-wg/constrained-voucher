@@ -76,7 +76,7 @@
     {
       "namespace": "data",
       "identifier": "/ietf-constrained-voucher-request:voucher/prior-signed-voucher-request",
-      "sid": 1001163
+      "sid": 1001165
     },
     {
       "namespace": "data",
@@ -91,7 +91,7 @@
     {
       "namespace": "data",
       "identifier": "/ietf-constrained-voucher-request:voucher/proximity-registrar-subject-public-key-info",
-      "sid": 1001165
+      "sid": 1001168
     },
     {
       "namespace": "data",
