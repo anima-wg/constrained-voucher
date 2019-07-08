@@ -75,28 +75,28 @@
     },
     {
       "namespace": "data",
+      "identifier": "/ietf-constrained-voucher-request:voucher/proximity-registrar-subject-public-key-info",
+      "sid": 1001163
+    },
+    {
+      "namespace": "data",
+      "identifier": "/ietf-constrained-voucher-request:voucher/serial-number",
+      "sid": 1001164
+    },
+    {
+      "namespace": "data",
       "identifier": "/ietf-constrained-voucher-request:voucher/prior-signed-voucher-request",
       "sid": 1001165
     },
     {
       "namespace": "data",
       "identifier": "/ietf-constrained-voucher-request:voucher/proximity-registrar-cert",
-      "sid": 1001164
+      "sid": 1001166
     },
     {
       "namespace": "data",
       "identifier": "/ietf-constrained-voucher-request:voucher/proximity-registrar-sha256-of-subject-public-key-info",
       "sid": 1001167
-    },
-    {
-      "namespace": "data",
-      "identifier": "/ietf-constrained-voucher-request:voucher/proximity-registrar-subject-public-key-info",
-      "sid": 1001168
-    },
-    {
-      "namespace": "data",
-      "identifier": "/ietf-constrained-voucher-request:voucher/serial-number",
-      "sid": 1001166
     }
   ]
 }
