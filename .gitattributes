@@ -8,4 +8,5 @@
 *.mkd text
 *.xml text
 *.sh text
+*.sid text
 Makefile text
