@@ -7,4 +7,5 @@
 *.txt text
 *.mkd text
 *.xml text
+*.sh text
 Makefile text
