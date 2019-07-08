@@ -12,6 +12,6 @@ then
     export PYANG_RNG_LIBDIR=$p/schema
     export W=$p
 fi
-which pyang >&2
+#which pyang >&2
 pyang "$@"
-    
+

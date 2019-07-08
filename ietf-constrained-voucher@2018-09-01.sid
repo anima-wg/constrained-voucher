@@ -80,6 +80,11 @@
     }, 
     {
       "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/pinned-sha256-of-subject-public-key-info", 
+      "sid": 1001115
+    }, 
+    {
+      "namespace": "data", 
       "identifier": "/ietf-constrained-voucher:voucher/serial-number", 
       "sid": 1001114
     }

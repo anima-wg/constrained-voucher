@@ -85,6 +85,11 @@
     }, 
     {
       "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher-request:voucher/proximity-registrar-sha256-of-subject-public-key-info", 
+      "sid": 1001167
+    }, 
+    {
+      "namespace": "data", 
       "identifier": "/ietf-constrained-voucher-request:voucher/proximity-registrar-subject-public-key-info", 
       "sid": 1001165
     }, 
