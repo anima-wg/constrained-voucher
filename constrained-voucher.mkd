@@ -45,6 +45,7 @@ normative:
   RFC7950:
   RFC5652:
   RFC8152:
+  RFC8174:
   RFC8366:
   RFC3688:
   RFC6020:
@@ -123,7 +124,7 @@ This document follows a similar, but not identical structure as
 Additional sections have been added concerning:
 
 1. Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
-2. Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over coap.
+2. Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over CoAP.
 
 The CBOR definitions for this constrained voucher format are defined using
 the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID
@@ -145,13 +146,13 @@ identically as in that document: artifact, imprint, domain, Join
 Registrar/Coordinator (JRC), Manufacturer Authorized Signing Authority
 (MASA), pledge, Trust of First Use (TOFU), and Voucher.
 
-# Requirements Language {#rfc2119}
+# Requirements Language {#reqlang}
 
-In this document, the key words "MUST", "MUST NOT", "REQUIRED",
-"SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
-and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
-{{RFC2119}} and indicate requirement levels for compliant STuPiD
-implementations.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL 
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", 
+"MAY", and "OPTIONAL" in this document are to be interpreted as 
+described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they 
+appear in all capitals, as shown here.
 
 # Survey of Voucher Types
 
@@ -162,7 +163,7 @@ protection.
 This document does not make any extensions to the types of vouchers.
 
 Time based vouchers are included in this definition, but given that
-constrained devices are extremely unlikely to know the correct time, their
+constrained devices are extremely unlikely to have accurate time, their
 use is very unlikely.  Most users of these constrained vouchers will be
 online and will use live nonces to provide anti-replay protection.
 
@@ -170,7 +171,7 @@ online and will use live nonces to provide anti-replay protection.
 Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 This document defines both a constrained voucher and a constrained voucher-request.
-They are presented in the order voucher-request, followed by voucher response
+They are presented in the order voucher-request, followed by a voucher response
 as this is the time order that they occur.
 
 This document defines both CMS-signed voucher requests and responses, and
@@ -181,7 +182,7 @@ The pinned-domain-cert present in such a voucher, is the certificate of the Regi
 The constrained voucher and constrained voucher request MUST be signed.
 
 The use of the two signing formats permit the use of both PKIX format certificates,
-and also raw public keys (RPK).  When RPKs are used, the voucher produced by
+and raw public keys (RPK).  When RPKs are used, the voucher produced by
 the MASA pins the raw public key of the Registrar: the
 pinned-domain-subject-public-key-info in such a voucher, is the raw public
 key of the Registrar.
@@ -220,7 +221,8 @@ mapping from the BRSKI extension URI path to the EST-coaps URI path.
 | /requestauditlog | /ra |
 {: #est-uri title='BRSKI path to EST-coaps path'}
 
-/requestvoucher and /enrollstatus are needed between pledge and Registrar.
+/requestvoucher, /voucher_status and /enrollstatus are needed between 
+pledge and Registrar.
 
 When discovering the root path for the EST resources, the server MAY return
 the full resource paths and the used content types. This is useful when
@@ -380,7 +382,7 @@ The COSE-Sign1 structure is discussed in section 4.2 of [RFC8152]. The CBOR
 object that carries the body, the signature, and the
 information about the body and signature is called the COSE_Sign1
 structure. It is used when only one signature is used on the body.
-Support for  EDdsa 256 with  Ed25519 is compulsory.
+Support for EdDSA 256 with Ed25519 is compulsory.
 
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 
@@ -483,7 +485,7 @@ EDNOTE: should a separate value be used for Voucher Requests?
 
 ## Media-Type Registry
 
-This section registers the 'application/voucher-cms+cbor' media type and the 'application/voucher-cose+cbor'in the
+This section registers the 'application/voucher-cms+cbor' media type and the 'application/voucher-cose+cbor' in the
 "Media Types" registry.  These media types are used to indicate that
 the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1 structure [RFC8152].
 
