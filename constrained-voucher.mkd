@@ -912,6 +912,14 @@ CMS_ContentInfo:
 
 # COSE examples {#cosesign}
 
+These examples are from the https://minerva.sandelman.ca/ reference code,
+using the unit test case key pairs, with a flow between pledge ("reach"
+code), JRC ("fountain") code, and MASA ("highway") code.  This example
+comes from the spec/files/product/00-D0-E5-F2-00-03 directory.
+
+Thanks to Jim Schaad for verifying the COSE Sign1 objects: faults were found
+and corrected.
+
 ## Device, Registrar and MASA keys
 
 This first section documents the public and private keys used in the
