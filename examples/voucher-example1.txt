@@ -4,7 +4,7 @@
     +4 : "2016-10-21T19:31:42Z", / SID = 1001108, expires-on /
     +1 : 0,                      / SID = 1001105, assertion /
                                  /                "verified" /
-    +11: "JADA123456789",        / SID = 1001115, serial-number /
+    +10: "JADA123456789",        / SID = 1001114, serial-number /
     +5 : h'01020D0F',            / SID = 1001109, idevid-issuer /
     +8 : h'01020D0F',            / SID = 1001112, pinned-domain-cert/
     +3 : true,                   / SID = 1001107, domain-cert

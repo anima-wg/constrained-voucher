@@ -4,13 +4,13 @@
     +4 : "2016-10-21T19:31:42Z", / SID= 1001158, expires-on /
     +1 : 2,                      / SID= 1001155, assertion /
                                  /                "proximity" /
-    +13: "JADA123456789",        / SID= 1001167, serial-number /
+    +10: "JADA123456789",        / SID= 1001164, serial-number /
     +5 : h'01020D0F',            / SID= 1001159, idevid-issuer /
-    +10: h'01020D0F',        / SID=1001064, proximity-registrar-cert/
+    +12: h'01020D0F',        / SID=1001066, proximity-registrar-cert/
     +3 : true,                   / SID= 1001157, domain-cert
                                                   -revocation-checks/
     +6 : "2017-10-07T19:31:42Z", / SID= 1001160, last-renewal-date /
-    +12: h'01020D0F'             / SID= 1001166, proximity-registrar
+    +9 : h'01020D0F'             / SID= 1001163, proximity-registrar
                                          -subject-public-key-info /
   }
 }
