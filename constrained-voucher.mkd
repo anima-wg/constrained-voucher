@@ -40,8 +40,8 @@ normative:
   RFC7049:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
-  RFC7250:
-  RFC7252:
+#  RFC7250:
+#  RFC7252:
   RFC7950:
   RFC5652:
   RFC8152:
@@ -50,37 +50,37 @@ normative:
   RFC3688:
   RFC6020:
   I-D.ietf-anima-bootstrapping-keyinfra:
-  I-D.ietf-core-object-security:
-  I-D.ietf-ace-cbor-web-token:
+#  I-D.ietf-core-object-security:
+#  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
-  ieee802-1AR:
-    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
-    title: "IEEE 802.1AR Secure Device Identifier"
-    author:
-      ins: "IEEE Standard"
-    date: 2009
+#  ieee802-1AR:
+#    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
+#    title: "IEEE 802.1AR Secure Device Identifier"
+#    author:
+#      ins: "IEEE Standard"
+#    date: 2009
 
 informative:
   I-D.ietf-netmod-yang-tree-diagrams:
-  pledge:
-    title: "Dictionary.com Unabridged"
-    target: "http://dictionary.reference.com/browse/pledge"
-    author:
-      -
-        name: Dictionary.com
-    date: 2015
+#  pledge:
+#    title: "Dictionary.com Unabridged"
+#    target: "http://dictionary.reference.com/browse/pledge"
+#    author:
+#      -
+#        name: Dictionary.com
+#    date: 2015
 
-  duckling:
-    title: "The resurrecting duckling: security issues for ad-hoc wireless networks"
-    target: "https://www.cl.cam.ac.uk/~fms27/papers/1999-StajanoAnd-duckling.pdf"
-    author:
-      -
-        ins: F. Stajano
-        name: Frank Stajano
-      -
-        ins: R. Anderson
-        name: Ross Anderson
-    date: 1999
+#  duckling:
+#    title: "The resurrecting duckling: security issues for ad-hoc wireless networks"
+#    target: "https://www.cl.cam.ac.uk/~fms27/papers/1999-StajanoAnd-duckling.pdf"
+#    author:
+#      -
+#        ins: F. Stajano
+#        name: Frank Stajano
+#      -
+#        ins: R. Anderson
+#        name: Ross Anderson
+#    date: 1999
 
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
@@ -461,12 +461,12 @@ the following registration is requested:
     ------------ ------ --------------------------- ------------
     Entry-point | Size | Module name               | RFC Number
     ------------ ------ --------------------------- ------------
-    1001100       50     ietf-constrained-voucher    [ThisRFC]
-    1001150       50     ietf-constrained-voucher    [ThisRFC}
+    2450          50     ietf-constrained-voucher    [ThisRFC]
+    2500          50     ietf-constrained-voucher    [ThisRFC}
                                      -request
     ----------- ------  --------------------------- ------------
 
-Warning: These SID values will change when they transfer to the range 1000 - 59,999 allocated for SIDs in YANG modules defined in RFCs.
+Warning: These SID values are defined in {{I-D.ietf-core-sid}}.
 
 ## The SMI Security for S/MIME CMS Content Type Registry
 
@@ -561,6 +561,9 @@ SID allocation process, and this document was among the first users.
 We are grateful for the suggestions done by Esko Dijk.
 
 # Changelog
+
+-06 
+    New SID values assigned; regenerated examples
 
 -04
     voucher and request-voucher MUST be signed
@@ -706,38 +709,7 @@ A coaps requestauditing message contains the signed CBOR voucher :
     POST coaps://[2001:db8::2:1]:61616]/est/ra
     (Content-Format: application/voucher-cms+cbor)
     Payload =
-308203ba06092a864886f70d010702a08203ab308203a7020101310d300b
-0609608648016503040201300b06092a864886f70d010701a08202413082
-023d308201e2a00302010202087e7661d7b54e4632300a06082a8648ce3d
-040302305d310b3009060355040613025553310b300906035504080c0243
-4131143012060355040a0c0b4578616d706c6520496e6331163014060355
-040b0c0d63657274696669636174696f6e3113301106035504030c0a3830
-322e3141522043413020170d3139303133313131323931365a180f393939
-39313233313233353935395a305c310b3009060355040613025553310b30
-0906035504080c024341310b300906035504070c024c4131143012060355
-040a0c0b6578616d706c6520496e63310c300a060355040b0c03496f5431
-0f300d060355040513065774313233343059301306072a8648ce3d020106
-082a8648ce3d03010703420004c8b421f11c25e47e3ac57123bf2d9fdc49
-4f028bc351cc80c03f150bf50cff958d75419d81a6a245dffae790be95cf
-75f602f9152618f816a2b23b5638e59fd9a3818a30818730090603551d13
-04023000301d0603551d0e0416041496600d8716bf7fd0e752d0ac760777
-ad665d02a0301f0603551d2304183016801468d16551f951bfc82a431d0d
-9f08bc2d205b1160300e0603551d0f0101ff0404030205a0302a0603551d
-1104233021a01f06082b06010505070804a013301106092b06010401b43b
-0a01040401020304300a06082a8648ce3d0403020349003046022100c0d8
-1996d2507d693f3c48eaa5ee9491bda6db214099d98117c63b361374cd86
-022100a774989f4c321a5cf25d832a4d336a08ad67df20f1506421188a0a
-de6d3492363182013f3082013b0201013069305d310b3009060355040613
-025553310b300906035504080c02434131143012060355040a0c0b457861
-6d706c6520496e6331163014060355040b0c0d6365727469666963617469
-6f6e3113301106035504030c0a3830322e31415220434102087e7661d7b5
-4e4632300b0609608648016503040201a069301806092a864886f70d0109
-03310b06092a864886f70d010701301c06092a864886f70d010905310f17
-0d3139303430383130343833365a302f06092a864886f70d010904312204
-20b11d09338bb36672ef0dcb82f4995d911a773dcb6f39e8141b3a14c14d
-f7545a300a06082a8648ce3d0403020447304502200128c3b08a6bd2d5bf
-9fa7511eabefaacaa06651dbb459c4ad46d67e14b4283e022100c3504a9c
-e704e64467f469d110550cea988821304805d74bea5efd3680bd632f
+TO BE FILLED
 ~~~~
 
 A 2.05 Content response returning a log of the voucher (ct=60) will then be:
@@ -779,10 +751,10 @@ A 2.05 Content response returning a log of the voucher (ct=60) will then be:
 The voucher-request example, visualized in CBOR diagnostic notation in {{example2}} is shown as a hexadecimal dump of the binary file.
 
 ~~~
-    A11A000F46C2A90274323031362D31302D30375431393A33313A34325A0
-    474323031362D31302D32315431393A33313A34325A01020d6d4A414441
-    313233343536373839054401020D0F0A4401020D0F03F50674323031372
-    D31302D30375431393A33313A34325A0c4401020D0F
+    A11909C5A90274323031362D31302D30375431393A33313A34325A
+    0474323031362D31302D32315431393A33313A34325A01020D
+    6D4A414441313233343536373839054401020D0F0A4401020D0F03F5
+    0674323031372D31302D30375431393A33313A34325A0C4401020D0F 
 ~~~
 
 The voucher-request example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
@@ -905,9 +877,6 @@ CMS_ContentInfo:
           003c - 2b 59 16 cc 36 63 e7 91-89 39 df df
         unsignedAttrs:
           <EMPTY>
-
-
-
 ~~~
 
 # COSE examples {#cosesign}
