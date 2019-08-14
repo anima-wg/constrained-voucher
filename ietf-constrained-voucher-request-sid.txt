@@ -1,17 +1,22 @@
-           
-      SID Assigned to
---------- -------------------------------------------------- 
-  1001154 data /ietf-constrained-voucher-request:voucher
-  1001155 data .../assertion
-  1001156 data .../created-on
-  1001157 data .../domain-cert-revocation-checks
-  1001158 data .../expires-on
-  1001159 data .../idevid-issuer
-  1001160 data .../last-renewal-date
-  1001161 data /ietf-constrained-voucher-request:voucher/nonce
-  1001162 data .../pinned-domain-cert
-  1001165 data .../prior-signed-voucher-request
-  1001166 data .../proximity-registrar-cert
-  1001167 data mity-registrar-sha256-of-subject-public-key-info
-  1001168 data .../proximity-registrar-subject-public-key-info
-  1001164 data .../serial-number
+ SID  Assigned to: 
+----- ------------------------------------------------------------------
+ 2500 ietf-constrained-voucher-request
+ 2501 /ietf-constrained-voucher-request:voucher
+ 2502 /ietf-constrained-voucher-request:voucher/assertion
+ 2503 /ietf-constrained-voucher-request:voucher/created-on
+ 2504 /ietf-constrained-voucher-request:voucher
+                                        /domain-cert-revocation-checks
+ 2505 /ietf-constrained-voucher-request:voucher/expires-on
+ 2506 /ietf-constrained-voucher-request:voucher/idevid-issuer
+ 2507 /ietf-constrained-voucher-request:voucher/last-renewal-date
+ 2508 /ietf-constrained-voucher-request:voucher/nonce
+ 2509 /ietf-constrained-voucher-request:voucher/pinned-domain-cert
+ 2510 /ietf-constrained-voucher-request:voucher
+                                          /prior-signed-voucher-request
+ 2511 /ietf-constrained-voucher-request:voucher/proximity-registrar-cert
+ 2512 /ietf-constrained-voucher-request:voucher
+                 /proximity-registrar-sha256-of-subject-public-key-info
+ 2513 /ietf-constrained-voucher-request:voucher
+                           /proximity-registrar-subject-public-key-info
+ 2514 /ietf-constrained-voucher-request:voucher/serial-number 
+
