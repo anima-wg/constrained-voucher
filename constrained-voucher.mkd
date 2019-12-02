@@ -369,7 +369,7 @@ a trusted clock source.  As described below, the use of short-lived
 vouchers and/or pledge provided nonce provides a freshness guarantee.
 
 ~~~
-[EDnote: compulsory signing algorithms are ....]
+[EDnote: compulsory signing algorithms are ......]
 ~~~
 
 In {{cmssign}} an example for the CMS signing of the voucher-request is shown.
@@ -380,16 +380,27 @@ The COSE-Sign1 structure is discussed in section 4.2 of [RFC8152]. The CBOR
 object that carries the body, the signature, and the
 information about the body and signature is called the COSE_Sign1
 structure. It is used when only one signature is used on the body.
-Support for EdDSA 256 with Ed25519 is compulsory.
+Support for EdDSA with Ed25519 is compulsory.
 
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 
 ~~~~
-{::include examples/cose-sign1.txt}
+COSE_Sign1(
+  [
+    h'a10127',    #{ "alg": EDdsa }
+    {
+      “kid” : “AsymmetricEd25519”
+    },
+    h'123', #voucher-request binary content
+    h'456', #voucher-request binary public signature
+  ]
+)
 ~~~~
-{: #fig-cose title='The cose-sign1 structure.' align="left"}
+{: #fig-cose title='cose-sign1 example' align="left"}
 
-The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}. In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
+The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}. The value of the "kid" parameter is an example value. Usually a hash of the public key is used to idientify the public key. The distribution of the public key and its hash is done out of band. 
+
+In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
 
 # Design Considerations
 
@@ -553,7 +564,7 @@ either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
 # Acknowledgements
 
-We are very grateful to Jim Schaad for explaining COSE and CMS choices.
+We are very grateful to Jim Schaad for explaining COSE and CMS choices. Also thanks to Jim Schaad for correctinging earlier version of the COSE Sign1 objects.
 
 Michel Veillette did extensive work on pyang to extend it to support the
 SID allocation process, and this document was among the first users.
@@ -598,13 +609,13 @@ This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}}. 
 
 A coaps enrollstatus message can be :
 
-~~~~
+~~~
     GET coaps://[192.0.2.1:8085]/est/es
-~~~~
+~~~
 
 The corresponding coap header fields are shown below.
 
-~~~~
+~~~
   Ver = 1
   T = 0 (CON)
   Code = 0x01 (0.01 is GET)
@@ -618,20 +629,19 @@ The corresponding coap header fields are shown below.
      Option Length = 0x2
      Option Value = "es"
   Payload = [Empty]
-~~~~
+~~~
 
 The Uri-Host and Uri-Port Options are omitted because they coincide with the transport protocol destination address and port respectively.
 
 A 2.05 Content response with an unsigned voucher status (ct=60) will then be:
 
-~~~~
+~~~
    2.05 Content (Content-Format: application/cbor)
-
-~~~~
+~~~
 
 With CoAP fields and payload:
 
-~~~~
+~~~
    Ver=1
    T=2 (ACK)
    Code = 0x45 (2.05 Content)
@@ -648,23 +658,28 @@ With CoAP fields and payload:
      "Reason":"Informative human readable message",
      "reason-context": "Additional information"
      }
+~~~
 
-     Payload (binary) =
+ The binary payload is:
+
+~~~
      A46776657273696F6E6131665374617475730166526561736F6E7822
      496E666F726D61746976652068756D616E207265616461626C65206D
      6573736167656e726561736F6E2D636F6E74657874
      764164646974696F6E616C20696E666F726D6174696F6E
 ~~~
 
+The binary payload disassembles to the above CBOR diagnostic code.
+
 ##voucher_status
 
-A coaps voucher_status message can be :
+A coaps voucher_status message can be:
 
 ~~~~
    GET coaps://[2001:db8::2:1]:61616]/est/vs
 ~~~~
 
-A 2.05 Content response with a non signed CBOR voucher (ct=60) will then be:
+A 2.05 Content response with a non signed CBOR voucher status (ct=60) will then be:
 
 ~~~~
     2.05 Content (Content-Format: application/cbor)
@@ -673,7 +688,6 @@ A 2.05 Content response with a non signed CBOR voucher (ct=60) will then be:
     496E666F726D61746976652068756D616E207265616461626C65206D
     6573736167656e726561736F6E2D636F6E74657874
     764164646974696F6E616C20696E666F726D6174696F6E
-
 ~~~~
 
 ##requestvoucher
@@ -751,10 +765,10 @@ A 2.05 Content response returning a log of the voucher (ct=60) will then be:
 The voucher-request example, visualized in CBOR diagnostic notation in {{example2}} is shown as a hexadecimal dump of the binary file.
 
 ~~~
-    A11909C5A90274323031362D31302D30375431393A33313A34325A
-    0474323031362D31302D32315431393A33313A34325A01020D
-    6D4A414441313233343536373839054401020D0F0A4401020D0F03F5
-    0674323031372D31302D30375431393A33313A34325A0C4401020D0F 
+    a11909c5a90274323031362d31302d30375431393a33313a34325a0474323031
+    362d31302d32315431393a33313a34325a01020d6d4a414441313233343536
+    373839054401020d0f0a4401020d0f03f50674323031372d31302d30375431
+    393a33313a34325a0c4401020d0f 
 ~~~
 
 The voucher-request example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
@@ -782,12 +796,12 @@ CMS_ContentInfo:
             algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
             parameter: <ABSENT>
           issuer: C=US, ST=CA, O=Example Inc, OU=certification,
-                                                       CN=802.1AR CA
+                                                  CN=802.1AR CA
           validity:
             notBefore: Jan 31 11:29:16 2019 GMT
             notAfter: Dec 31 23:59:59 9999 GMT
           subject: C=US, ST=CA, L=LA, O=example Inc,
-                                          OU=IoT/serialNumber=Wt1234
+                                     OU=IoT/serialNumber=Wt1234
           key:
             algor:
               algorithm: id-ecPublicKey (1.2.840.10045.2.1)
@@ -845,7 +859,7 @@ CMS_ContentInfo:
         version: 1
         d.issuerAndSerialNumber:
           issuer: C=US, ST=CA, O=Example Inc, OU=certification,
-                                                     CN=802.1AR CA
+                                                  CN=802.1AR CA
           serialNumber: 9112578475118446130
         digestAlgorithm:
           algorithm: sha256 (2.16.840.1.101.3.4.2.1)
@@ -886,8 +900,7 @@ using the unit test case key pairs, with a flow between pledge ("reach"
 code), JRC ("fountain") code, and MASA ("highway") code.  This example
 comes from the spec/files/product/00-D0-E5-F2-00-03 directory.
 
-Thanks to Jim Schaad for verifying the COSE Sign1 objects: faults were found
-and corrected.
+
 
 ## Device, Registrar and MASA keys
 
@@ -922,8 +935,11 @@ INSERT_FIG_FROM_FILE examples/masa_prime256v1.key END
 
 ## COSE signed requestvoucher with registrar certificate pinned
 
-This voucher request has been signed by the pledge, using the private key
-given above, and has been sent to the JRC over CoAPS.  This example
+~~~
+EDNote: These examples do not parse
+~~~
+
+This voucher request has been signed by the pledge, and has been sent to the JRC over CoAPS.  This example
 uses the proximity-registrar-cert mechanism to request a voucher that
 pins the certificate of the registrar.
 
@@ -931,11 +947,15 @@ This is the CBOR diagnostic format, folded to 60 characters:
 
 INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-03.diag END
 
-This is the raw binary, encoded in base64:
+This is the raw binary, shown as hex dump:
 
 INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-03.b64 END
 
 ## COSE signed parboiled requestvoucher
+
+~~~
+These example do not parse
+~~~~
 
 This voucher request has been signed by the JRC using the private key from
 {{jrcpriv}}.  Contained within this voucher request is the pledge voucher
@@ -962,4 +982,31 @@ INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-03.diag END
 This is the raw binary, encoded in base64:
 
 INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-03.b64 END
+
+## COSE signed request voucher
+
+The headecimal dump of request-voucher shown in {{cmssign}} is used for this example. The cose sign1 object of {{fig-cose}} provides the structure of the cose sign1 example. Using the values "kid" = 4, EDdsa = -8, "alg" = 2, COSE_Sign1 = 18, and using the same value for the "kid" parameter, the CBOR object is:
+
+~~~
+18([h'A10127', {4: h'4173796D6D657472696345643235353139'}, 
+  h'A11909C5A90274323031362D31302D30375431393A33313A34325A04743
+  23031362D31302D32315431393A33313A34325A01020D6D4A414441313233
+  343536373839054401020D0F0A4401020D0F03F50674323031372D31302D3
+  0375431393A33313A34325A0C4401020D0F',
+h'955D82A26B7C0869EE8FE5A09EE3D68DDFFE8FE39E3BCADFA80F2F9A6E13F
+  F0349A2CA131C8F6A9AAF7780BAB671F63CBB158EC17322323C1AB82B1CDC
+  B62A06'])
+~~~ 
+
+The corresponding hexadecimal dump is:
+
+~~~
+  d28443a10127a104514173796d6d657472696345643235353139586ca119
+  09c5a90274323031362d31302d30375431393a33313a34325a0474323031
+  362d31302d32315431393a33313a34325a01020d6d4a4144413132333435
+  36373839054401020d0f0a4401020d0f03f50674323031372d31302d3037
+  5431393a33313a34325a0c4401020d0f5840955d82a26b7c0869ee8fe5a0
+  9ee3d68ddffe8fe39e3bcadfa80f2f9a6e13ff0349a2ca131c8f6a9aaf77
+  80bab671f63cbb158ec17322323c1ab82b1cdcb62a06
+~~~
 
