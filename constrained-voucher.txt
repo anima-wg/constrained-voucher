@@ -5,10 +5,10 @@
 anima Working Group                                        M. Richardson
 Internet-Draft                                  Sandelman Software Works
 Intended status: Standards Track                         P. van der Stok
-Expires: June 4, 2020                             vanderstok consultancy
+Expires: June 6, 2020                             vanderstok consultancy
                                                            P. Kampanakis
                                                            Cisco Systems
-                                                       December 02, 2019
+                                                       December 04, 2019
 
 
        Constrained Voucher Artifacts for Bootstrapping Protocols
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 4, 2020.
+   This Internet-Draft will expire on June 6, 2020.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 1]
+Richardson, et al.        Expires June 6, 2020                  [Page 1]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 2]
+Richardson, et al.        Expires June 6, 2020                  [Page 2]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -165,7 +165,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 3]
+Richardson, et al.        Expires June 6, 2020                  [Page 3]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -221,7 +221,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 4]
+Richardson, et al.        Expires June 6, 2020                  [Page 4]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -277,7 +277,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 5]
+Richardson, et al.        Expires June 6, 2020                  [Page 5]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -333,7 +333,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 6]
+Richardson, et al.        Expires June 6, 2020                  [Page 6]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -389,7 +389,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 7]
+Richardson, et al.        Expires June 6, 2020                  [Page 7]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -445,7 +445,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 8]
+Richardson, et al.        Expires June 6, 2020                  [Page 8]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -501,7 +501,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                  [Page 9]
+Richardson, et al.        Expires June 6, 2020                  [Page 9]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -557,7 +557,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 10]
+Richardson, et al.        Expires June 6, 2020                 [Page 10]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -613,7 +613,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 11]
+Richardson, et al.        Expires June 6, 2020                 [Page 11]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -669,7 +669,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 12]
+Richardson, et al.        Expires June 6, 2020                 [Page 12]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -725,7 +725,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 13]
+Richardson, et al.        Expires June 6, 2020                 [Page 13]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -781,7 +781,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 14]
+Richardson, et al.        Expires June 6, 2020                 [Page 14]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -837,7 +837,7 @@ description
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 15]
+Richardson, et al.        Expires June 6, 2020                 [Page 15]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -893,7 +893,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 16]
+Richardson, et al.        Expires June 6, 2020                 [Page 16]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -949,7 +949,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 17]
+Richardson, et al.        Expires June 6, 2020                 [Page 17]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1005,7 +1005,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 18]
+Richardson, et al.        Expires June 6, 2020                 [Page 18]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1044,9 +1044,9 @@ Internet-Draft             Constrained Voucher             December 2019
 
    COSE_Sign1(
      [
-       h'a10127',    #{ "alg": EDdsa }
+       h'a10127',        # { "alg": EDdsa }
        {
-         "kid" : "AsymmetricEd25519"
+         "kid" : h'789'  # hash(pblic key)
        },
        h'123', #voucher-request binary content
        h'456', #voucher-request binary public signature
@@ -1061,7 +1061,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 19]
+Richardson, et al.        Expires June 6, 2020                 [Page 19]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1117,7 +1117,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 20]
+Richardson, et al.        Expires June 6, 2020                 [Page 20]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1173,7 +1173,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 21]
+Richardson, et al.        Expires June 6, 2020                 [Page 21]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1229,7 +1229,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 22]
+Richardson, et al.        Expires June 6, 2020                 [Page 22]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1285,7 +1285,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 23]
+Richardson, et al.        Expires June 6, 2020                 [Page 23]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1341,7 +1341,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 24]
+Richardson, et al.        Expires June 6, 2020                 [Page 24]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1397,7 +1397,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 25]
+Richardson, et al.        Expires June 6, 2020                 [Page 25]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1453,7 +1453,7 @@ A.1.  enrollstatus
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 26]
+Richardson, et al.        Expires June 6, 2020                 [Page 26]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1509,7 +1509,7 @@ A.2.  voucher_status
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 27]
+Richardson, et al.        Expires June 6, 2020                 [Page 27]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1565,7 +1565,7 @@ A.3.1.  signed requestvoucher
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 28]
+Richardson, et al.        Expires June 6, 2020                 [Page 28]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1621,7 +1621,7 @@ A.4.  requestauditing
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 29]
+Richardson, et al.        Expires June 6, 2020                 [Page 29]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1677,7 +1677,7 @@ B.1.  CMS signed voucher-request example
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 30]
+Richardson, et al.        Expires June 6, 2020                 [Page 30]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1733,7 +1733,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 31]
+Richardson, et al.        Expires June 6, 2020                 [Page 31]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1789,7 +1789,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 32]
+Richardson, et al.        Expires June 6, 2020                 [Page 32]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1845,7 +1845,7 @@ C.1.1.  Device IDevID certificate
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 33]
+Richardson, et al.        Expires June 6, 2020                 [Page 33]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1901,7 +1901,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 34]
+Richardson, et al.        Expires June 6, 2020                 [Page 34]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -1957,7 +1957,7 @@ C.1.5.  MASA Certificate
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 35]
+Richardson, et al.        Expires June 6, 2020                 [Page 35]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -2013,7 +2013,7 @@ C.2.  COSE signed requestvoucher with registrar certificate pinned
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 36]
+Richardson, et al.        Expires June 6, 2020                 [Page 36]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -2069,7 +2069,7 @@ C.3.  COSE signed parboiled requestvoucher
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 37]
+Richardson, et al.        Expires June 6, 2020                 [Page 37]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -2125,7 +2125,7 @@ Internet-Draft             Constrained Voucher             December 2019
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 38]
+Richardson, et al.        Expires June 6, 2020                 [Page 38]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -2181,7 +2181,7 @@ C.4.  COSE signed voucher
 
 
 
-Richardson, et al.        Expires June 4, 2020                 [Page 39]
+Richardson, et al.        Expires June 6, 2020                 [Page 39]
 
 Internet-Draft             Constrained Voucher             December 2019
 
@@ -2209,11 +2209,20 @@ C.5.  COSE signed request voucher
 
    The headecimal dump of request-voucher shown in Appendix B.1 is used
    for this example.  The cose sign1 object of Figure 1 provides the
-   structure of the cose sign1 example.  Using the values "kid" = 4,
-   EDdsa = -8, "alg" = 2, COSE_Sign1 = 18, and using the same value for
-   the "kid" parameter, the CBOR object is:
+   structure of the cose sign1 example.  To identify the public key a
+   hash of the public key is made using murmur3 with seed 42.
 
-   18([h'A10127', {4: h'4173796D6D657472696345643235353139'},
+   public key:
+   84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5 c8 a1
+   04 41 61 b2 64 57 fe 0e ae 08 4d
+
+   murmur3 hash of public key: 0x4727e669  or  1193797225
+
+   Using the values "kid" = 4, EDdsa = -8, "alg" = 2, COSE_Sign1 = 18,
+   and using the murmur3 hash value for the "kid" parameter, the CBOR
+   object is:
+
+   18([h'A10127', {4: 1193797225},
      h'A11909C5A90274323031362D31302D30375431393A33313A34325A04743
      23031362D31302D32315431393A33313A34325A01020D6D4A414441313233
      343536373839054401020D0F0A4401020D0F03F50674323031372D31302D3
@@ -2224,23 +2233,22 @@ C.5.  COSE signed request voucher
 
    The corresponding hexadecimal dump is:
 
-     d28443a10127a104514173796d6d657472696345643235353139586ca119
-     09c5a90274323031362d31302d30375431393a33313a34325a0474323031
-     362d31302d32315431393a33313a34325a01020d6d4a4144413132333435
-     36373839054401020d0f0a4401020d0f03f50674323031372d31302d3037
-     5431393a33313a34325a0c4401020d0f5840955d82a26b7c0869ee8fe5a0
-     9ee3d68ddffe8fe39e3bcadfa80f2f9a6e13ff0349a2ca131c8f6a9aaf77
-     80bab671f63cbb158ec17322323c1ab82b1cdcb62a06
 
 
 
 
-
-
-Richardson, et al.        Expires June 4, 2020                 [Page 40]
+Richardson, et al.        Expires June 6, 2020                 [Page 40]
 
 Internet-Draft             Constrained Voucher             December 2019
 
+
+     d28443a10127a1041a4727e669586ca11909c5a90274323031362d31302d
+     30375431393a33313a34325a0474323031362d31302d32315431393a3331
+     3a34325a01020d6d4a414441313233343536373839054401020d0f0a4401
+     020d0f03f50674323031372d31302d30375431393a33313a34325a0c4401
+     020d0f5840955d82a26b7c0869ee8fe5a09ee3d68ddffe8fe39e3bcadfa8
+     0f2f9a6e13ff0349a2ca131c8f6a9aaf7780bab671f63cbb158ec1732232
+     3c1ab82b1cdcb62a06
 
 Authors' Addresses
 
@@ -2285,12 +2293,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires June 4, 2020                 [Page 41]
+Richardson, et al.        Expires June 6, 2020                 [Page 41]

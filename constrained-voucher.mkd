@@ -387,9 +387,9 @@ The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 ~~~~
 COSE_Sign1(
   [
-    h'a10127',    #{ "alg": EDdsa }
+    h'a10127',        # { "alg": EDdsa }
     {
-      “kid” : “AsymmetricEd25519”
+      “kid” : h'789'  # hash(pblic key)
     },
     h'123', #voucher-request binary content
     h'456', #voucher-request binary public signature
@@ -985,10 +985,20 @@ INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-03.b64 END
 
 ## COSE signed request voucher
 
-The headecimal dump of request-voucher shown in {{cmssign}} is used for this example. The cose sign1 object of {{fig-cose}} provides the structure of the cose sign1 example. Using the values "kid" = 4, EDdsa = -8, "alg" = 2, COSE_Sign1 = 18, and using the same value for the "kid" parameter, the CBOR object is:
+The headecimal dump of request-voucher shown in {{cmssign}} is used for this example. The cose sign1 object of {{fig-cose}} provides the structure of the cose sign1 example.  To identify the public key a hash of the public key is made using murmur3 with seed 42.
 
 ~~~
-18([h'A10127', {4: h'4173796D6D657472696345643235353139'}, 
+public key:
+84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5 c8 a1
+04 41 61 b2 64 57 fe 0e ae 08 4d
+
+murmur3 hash of public key: 0x4727e669  or  1193797225
+~~~
+
+Using the values "kid" = 4, EDdsa = -8, "alg" = 2, COSE_Sign1 = 18, and using the murmur3 hash value for the "kid" parameter, the CBOR object is:
+
+~~~
+18([h'A10127', {4: 1193797225},
   h'A11909C5A90274323031362D31302D30375431393A33313A34325A04743
   23031362D31302D32315431393A33313A34325A01020D6D4A414441313233
   343536373839054401020D0F0A4401020D0F03F50674323031372D31302D3
@@ -1001,12 +1011,12 @@ h'955D82A26B7C0869EE8FE5A09EE3D68DDFFE8FE39E3BCADFA80F2F9A6E13F
 The corresponding hexadecimal dump is:
 
 ~~~
-  d28443a10127a104514173796d6d657472696345643235353139586ca119
-  09c5a90274323031362d31302d30375431393a33313a34325a0474323031
-  362d31302d32315431393a33313a34325a01020d6d4a4144413132333435
-  36373839054401020d0f0a4401020d0f03f50674323031372d31302d3037
-  5431393a33313a34325a0c4401020d0f5840955d82a26b7c0869ee8fe5a0
-  9ee3d68ddffe8fe39e3bcadfa80f2f9a6e13ff0349a2ca131c8f6a9aaf77
-  80bab671f63cbb158ec17322323c1ab82b1cdcb62a06
+  d28443a10127a1041a4727e669586ca11909c5a90274323031362d31302d
+  30375431393a33313a34325a0474323031362d31302d32315431393a3331
+  3a34325a01020d6d4a414441313233343536373839054401020d0f0a4401
+  020d0f03f50674323031372d31302d30375431393a33313a34325a0c4401
+  020d0f5840955d82a26b7c0869ee8fe5a09ee3d68ddffe8fe39e3bcadfa8
+  0f2f9a6e13ff0349a2ca131c8f6a9aaf7780bab671f63cbb158ec1732232
+  3c1ab82b1cdcb62a06
 ~~~
 
