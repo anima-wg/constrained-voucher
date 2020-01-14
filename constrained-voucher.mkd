@@ -333,7 +333,10 @@ The IETF evolution of PKCS#7 is CMS {{RFC5652}}.  The CMS signed voucher is
 much like the equivalent voucher defined in {{RFC8366}}.
 
 A different eContentType of TBD1 is used to indicate that the contents are
-in a different format than in {{RFC8366}}.
+in a different format than in {{RFC8366}}.  The id-ct-animaJSONVoucher
+allocated by {{RFC8366}} indicates a voucher and voucher-request encoded in
+JSON, and the new value TBD1 indicates that the voucher and voucher-request
+are encoded in CBOR.
 
 The ContentInfo structure contains a payload consisting of the CBOR encoded
 voucher. The {{I-D.ietf-core-yang-cbor}} use of delta encoding creates a
