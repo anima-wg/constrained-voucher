@@ -1,6 +1,6 @@
 DRAFT:=constrained-voucher
 VERSION:=$(shell ./getver ${DRAFT}.mkd )
-YANGDATE=2018-09-01
+YANGDATE=2019-09-01
 CWTDATE1=yang/ietf-constrained-voucher@${YANGDATE}.yang
 CWTSIDDATE1=ietf-constrained-voucher@${YANGDATE}.sid
 CWTSIDLIST1=ietf-constrained-voucher-sid.txt
@@ -57,10 +57,10 @@ ${CWTSIDLIST1}: ${CWTDATE1} ${CWTSIDDATE1}
 	${PYANG} --path=../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-constrained-voucher-sid.txt
 
 boot-sid1:
-	${PYANG} --path=../../anima/bootstrap/yang --list-sid --generate-sid-file 1001100:50 ${CWTDATE1}
+	${PYANG} --path=../../anima/bootstrap/yang --list-sid --generate-sid-file 2450:50 ${CWTDATE1}
 
 boot-sid2:
-	${PYANG} --path=../../anima/bootstrap/yang --list-sid --generate-sid-file 1001150:50 ${CWTDATE2}
+	${PYANG} --path=../../anima/bootstrap/yang --list-sid --generate-sid-file 2500:50 ${CWTDATE2}
 
 
 # Base SID value for voucher request: 1001101.

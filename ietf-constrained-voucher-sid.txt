@@ -1,18 +1,16 @@
- SID   Assigned to:
------ ------------------------------------------------------------------
- 2450 ietf-constrained-voucher 
- 2451 /ietf-constrained-voucher:voucher 
- 2452 /ietf-constrained-voucher:voucher/assertion
- 2453 /ietf-constrained-voucher:voucher/created-on 
- 2454 /ietf-constrained-voucher:voucher/domain-cert-revocation-checks 
- 2455 /ietf-constrained-voucher:voucher/expires-on
- 2456 /ietf-constrained-voucher:voucher/idevid-issuer
- 2457 /ietf-constrained-voucher:voucher/last-renewal-date
- 2458 /ietf-constrained-voucher:voucher/nonce
- 2459 /ietf-constrained-voucher:voucher/pinned-domain-cert
- 2460 /ietf-constrained-voucher:voucher
-                            /pinned-domain-subject-public-key-info 
- 2461 /ietf-constrained-voucher:voucher
-                            /pinned-sha256-of-subject-public-key-info
- 2462 /ietf-constrained-voucher:voucher/serial-number 
-
+           
+      SID Assigned to
+--------- -------------------------------------------------- 
+     2451 data /ietf-constrained-voucher:voucher
+     2452 data /ietf-constrained-voucher:voucher/assertion
+     2453 data /ietf-constrained-voucher:voucher/created-on
+     2454 data .../domain-cert-revocation-checks
+     2455 data /ietf-constrained-voucher:voucher/expires-on
+     2456 data /ietf-constrained-voucher:voucher/idevid-issuer
+     2457 data .../last-renewal-date
+     2458 data /ietf-constrained-voucher:voucher/nonce
+     2459 data .../pinned-domain-cert
+     2460 data .../pinned-domain-subject-public-key-info
+     2461 data .../pinned-sha256-of-subject-public-key-info
+     2462 data /ietf-constrained-voucher:voucher/serial-number
+           

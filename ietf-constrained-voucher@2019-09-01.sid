@@ -1,0 +1,92 @@
+{
+  "assignment-ranges": [
+    {
+      "entry-point": 2450, 
+      "size": 50
+    }
+  ], 
+  "module-name": "ietf-constrained-voucher", 
+  "module-revision": "2019-09-01", 
+  "items": [
+    {
+      "namespace": "module", 
+      "identifier": "ietf-constrained-voucher", 
+      "sid": 2450
+    }, 
+    {
+      "namespace": "module", 
+      "identifier": "ietf-restconf", 
+      "sid": 2463
+    }, 
+    {
+      "namespace": "module", 
+      "identifier": "ietf-voucher", 
+      "sid": 2464
+    }, 
+    {
+      "namespace": "module", 
+      "identifier": "ietf-yang-types", 
+      "sid": 2465
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher", 
+      "sid": 2451
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/assertion", 
+      "sid": 2452
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/created-on", 
+      "sid": 2453
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/domain-cert-revocation-checks", 
+      "sid": 2454
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/expires-on", 
+      "sid": 2455
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/idevid-issuer", 
+      "sid": 2456
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/last-renewal-date", 
+      "sid": 2457
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/nonce", 
+      "sid": 2458
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/pinned-domain-cert", 
+      "sid": 2459
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/pinned-domain-subject-public-key-info", 
+      "sid": 2460
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/pinned-sha256-of-subject-public-key-info", 
+      "sid": 2461
+    }, 
+    {
+      "namespace": "data", 
+      "identifier": "/ietf-constrained-voucher:voucher/serial-number", 
+      "sid": 2462
+    }
+  ]
+}
