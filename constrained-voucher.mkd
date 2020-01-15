@@ -488,10 +488,10 @@ Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
 
       Decimal  Description                             References
       -------  --------------------------------------  ----------
-      TBD1      id-ct-animaCBORVoucher                 [ThisRFC]
+      46       id-ct-animaCBORVoucher                  [ThisRFC]
 
-EDNOTE: should a separate value be used for Voucher Requests?
 
+<!-- per IANA #1160164 -->
 
 
 ## Media-Type Registry
