@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Voucher
-docname: draft-ietf-anima-constrained-voucher-07
+docname: draft-ietf-anima-constrained-voucher-08
 
 # stand_alone: true
 
@@ -110,26 +110,28 @@ transported as an extension to the {{I-D.ietf-ace-coap-est}} protocol.
 Enrollment of new nodes into constrained networks with constrained nodes
 present unique challenges.
 
-There are bandwidth and code space issues to contend.  A solution such as
-{{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
+There are bandwidth and code space issues to contend.
+A solution such as {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
 code space or bandwidth required.
 
 This document defines a constrained version of {{RFC8366}}.
-Rather than serializing the YANG definition in JSON, it is serialized into
-CBOR ({{RFC7049}}).
+Rather than serializing the YANG definition in JSON, it is serialized into CBOR ({{RFC7049}}).
 
-This document follows a similar, but not identical structure as
-{{RFC8366}}. Some sections are left out entirely.
+This document follows a similar, but not identical structure as {{RFC8366}}.
+Some sections are left out entirely.
+
+There are three constrained situations described in this document:
+1. CMS signed CBOR encoded vouchers transported using CoAP, protected by DTLS (coaps).
+2. COSE signed CBOR encoded vouchers transported using CoAP, protected by EDHOC.
+3. COSE signed CBOR encoded vouchers, integrated into the key exchange as described by {{!draft-selander-ace-ake-authz}}
+
 Additional sections have been added concerning:
 
 1. Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
 2. Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over CoAP.
 
-The CBOR definitions for this constrained voucher format are defined using
-the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID
-mechanism explained in {{I-D.ietf-core-sid}}.  As the tooling to convert
-YANG documents into an list of SID keys is still in its infancy, the table of
-SID values presented here should be considered normative rather than the
+The CBOR definitions for this constrained voucher format are defined using the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
+As the tooling to convert YANG documents into an list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the
 output of the pyang tool.
 
 Two methods of signing the resulting CBOR object are described in this
@@ -147,71 +149,53 @@ Registrar/Coordinator (JRC), Manufacturer Authorized Signing Authority
 
 # Requirements Language {#reqlang}
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
-NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
-"MAY", and "OPTIONAL" in this document are to be interpreted as
-described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they
-appear in all capitals, as shown here.
+{::boilerplate bcp14}
 
 # Survey of Voucher Types
 
-{{RFC8366}} provides for vouchers that assert proximity, that
-authenticate the registrar and that include different amounts of anti-replay
-protection.
+{{RFC8366}} provides for vouchers that assert proximity, that authenticate the registrar  and that include different amounts of anti-replay protection.
 
 This document does not make any extensions to the types of vouchers.
 
-Time based vouchers are included in this definition, but given that
-constrained devices are extremely unlikely to have accurate time, their
-use is very unlikely.  Most users of these constrained vouchers will be
-online and will use live nonces to provide anti-replay protection.
+Time based vouchers are included in this definition, but given that constrained devices  are extremely unlikely to have accurate time, their use is very unlikely.
+Most users of these constrained vouchers will be online and will use live nonces to provide anti-replay protection.
 
-{{RFC8366}} defined only the voucher artifact, and not the
-Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+{{RFC8366}} defined only the voucher artifact, and not the Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 This document defines both a constrained voucher and a constrained voucher-request.
-They are presented in the order voucher-request, followed by a voucher response
-as this is the time order that they occur.
+They are presented in the order voucher-request, followed by a voucher response as this is the time order that they occur.
 
-This document defines both CMS-signed voucher requests and responses, and
-COSE signed voucher requests and responses.
+This document defines both CMS-signed voucher requests and responses, and COSE signed voucher requests and responses.
 The use of CMS signatures implies the use of PKIX format certificates.
 The pinned-domain-cert present in such a voucher, is the certificate of the Registrar.
 
 The constrained voucher and constrained voucher request MUST be signed.
 
-The use of the two signing formats permit the use of both PKIX format certificates,
-and raw public keys (RPK).  When RPKs are used, the voucher produced by
-the MASA pins the raw public key of the Registrar: the
-pinned-domain-subject-public-key-info in such a voucher, is the raw public
+The use of the two signing formats permit the use of both PKIX format certificates, and raw public keys (RPK).
+
+When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in such a voucher, is the raw public
 key of the Registrar.
 This is described in the YANG definition for the constrained voucher.
 
 # Discovery and URI
 
-This section describes the BRSKI extensions to EST-coaps
-{{I-D.ietf-ace-coap-est}} to transport the voucher between registrar,
-proxy and pledge over CoAP. The extensions are targeted to low-resource
-networks with small packets. Saving header space is important and the
-EST-coaps URI is shorter than the EST URI.
+This section describes the BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between registrar, proxy and pledge over CoAP.
+The extensions are targeted to low-resource networks with small packets.
+Saving header space is important and the EST-coaps URI is shorter than the EST URI.
 
-The presence and location of (path to) the management data are discovered by
-sending a GET request to "/.well-known/core" including a resource type (RT)
-parameter with the value "ace.est" {{RFC6690}}. Upon success, the return
-payload will contain the root resource of the EST resources. It is up to the
-implementation to choose its root resource; throughout this document the
+The presence and location of (path to) the management data are discovered by sending a GET request to "/.well-known/core" including a resource type (RT) parameter with the value "ace.est" {{RFC6690}}.
+Upon success, the return payload will contain the root resource of the EST resources.
+It is up to the implementation to choose its root resource; throughout this document the
 example root resource /est is used.
 
-The EST-coaps server URIs differ from the EST URI by replacing the scheme
-https by coaps and by specifying shorter resource path names:
+The EST-coaps server URIs differ from the EST URI by replacing the scheme https by coaps and by specifying shorter resource path names:
 
 ~~~~
   coaps://www.example.com/est/short-name
 ~~~~
 
-Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and
-corresponding paths which are supported by EST. {{est-uri}} provides the
-mapping from the BRSKI extension URI path to the EST-coaps URI path.
+Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and corresponding paths which are supported by EST.
+{{est-uri}} provides the mapping from the BRSKI extension URI path to the EST-coaps URI path.
 
 | BRSKI | EST-coaps |
 | /requestvoucher| /rv |
@@ -313,13 +297,15 @@ INSERT_FIG_FROM_FILE ietf-constrained-voucher-sid.txt END
 
 ### YANG Module
 
-In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute. Two attributes of the voucher are "refined" to be optional.
+In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute.
+Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-constrained-voucher@DATE.yang END
 
 ### Example voucher artifacts {#example1}
 
-Below a the CBOR serialization of the constrained-voucher is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
+Below a the CBOR serialization of the constrained-voucher is shown in diagnostic CBOR notation.
+The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
 INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
@@ -329,46 +315,30 @@ The signing of the example is shown in {{cmssign}}.
 
 ### CMS signing
 
-The IETF evolution of PKCS#7 is CMS {{RFC5652}}.  The CMS signed voucher is
-much like the equivalent voucher defined in {{RFC8366}}.
+The IETF evolution of PKCS#7 is CMS {{RFC5652}}.
+The CMS signed voucher is much like the equivalent voucher defined in {{RFC8366}}.
 
-A different eContentType of TBD1 is used to indicate that the contents are
-in a different format than in {{RFC8366}}.  The id-ct-animaJSONVoucher
-allocated by {{RFC8366}} indicates a voucher and voucher-request encoded in
-JSON, and the new value TBD1 indicates that the voucher and voucher-request
-are encoded in CBOR.
+A different eContentType of TBD1 is used to indicate that the contents are in a different format than in {{RFC8366}}.
+The id-ct-animaJSONVoucher allocated by {{RFC8366}} indicates a voucher and voucher-request encoded in JSON, and the new value TBD1 indicates that the voucher and voucher-request are encoded in CBOR.
 
-The ContentInfo structure contains a payload consisting of the CBOR encoded
-voucher. The {{I-D.ietf-core-yang-cbor}} use of delta encoding creates a
-canonical ordering for the keys on the wire.  This canonical ordering is not
-important as there is no expectation that the content will be reproduced
-during the validation process.
+The ContentInfo structure contains a payload consisting of the CBOR encoded voucher.
+The {{I-D.ietf-core-yang-cbor}} use of delta encoding creates a canonical ordering for the keys on the wire.
+This canonical ordering is not important as there is no expectation that the content will be reproduced during the validation process.
 
 Normally the recipient is the pledge and the signer is the MASA.
 
-{{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned
-voucher requests from the pledge to the JRC.
-In this specification, voucher-request artifact MUST be signed from the
-pledge to the registrar.  From the JRC to the MASA, the voucher-request
-artifact MUST be signed by the domain owner key which is requesting
-ownership.
+{{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned voucher requests from the pledge to the JRC.
+In this specification, voucher-request artifact MUST be signed from the pledge to the registrar.
+From the JRC to the MASA, the voucher-request artifact MUST be signed by the domain owner key which is requesting ownership.
 
-The considerations of {{RFC5652}} section 5.1, concerning validating
-CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
+The considerations of {{RFC5652}} section 5.1, concerning validating CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
 
-The CMS structure SHOULD also contain all the certificates leading up
-to and including the signer's trust anchor certificate known to the
-recipient.  The inclusion of the trust anchor is unusual in many
-applications, but without it third parties can not accurately audit
-the transaction.
+The CMS structure SHOULD also contain all the certificates leading up to and including the signer's trust anchor certificate known to the recipient.
+The inclusion of the trust anchor is unusual in many applications, but without it third parties can not accurately audit the transaction.
 
-The CMS structure MAY also contain revocation objects for any
-intermediate certificate authorities (CAs) between the voucher-issuer
-and the trust anchor known to the recipient.  However, the use of
-CRLs and other validity mechanisms is discouraged, as the pledge is
-unlikely to be able to perform online checks, and is unlikely to have
-a trusted clock source.  As described below, the use of short-lived
-vouchers and/or pledge provided nonce provides a freshness guarantee.
+The CMS structure MAY also contain revocation objects for any intermediate certificate authorities (CAs) between the voucher-issuer and the trust anchor known to the recipient.
+However, the use of CRLs and other validity mechanisms is discouraged, as the pledge is unlikely to be able to perform online checks, and is unlikely to have a trusted clock source.
+As described below, the use of short-lived vouchers and/or pledge provided nonce provides a freshness guarantee.
 
 ~~~
 [EDnote: compulsory signing algorithms are ......]
@@ -378,10 +348,9 @@ In {{cmssign}} an example for the CMS signing of the voucher-request is shown.
 
 ### COSE signing
 
-The COSE-Sign1 structure is discussed in section 4.2 of [RFC8152]. The CBOR
-object that carries the body, the signature, and the
-information about the body and signature is called the COSE_Sign1
-structure. It is used when only one signature is used on the body.
+The COSE-Sign1 structure is discussed in section 4.2 of {{RFC8152}}.
+The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
+It is used when only one signature is used on the body.
 Support for EdDSA with Ed25519 is compulsory.
 
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
@@ -400,18 +369,18 @@ COSE_Sign1(
 ~~~~
 {: #fig-cose title='cose-sign1 example' align="left"}
 
-The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}. The value of the "kid" parameter is an example value. Usually a hash of the public key is used to idientify the public key. The distribution of the public key and its hash is done out of band.
+The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}.
+The value of the "kid" parameter is an example value.
+Usually a hash of the public key is used to idientify the public key.
+The distribution of the public key and its hash is done out of band.
 
 In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
 
 # Design Considerations
 
-The design considerations for the CBOR encoding of vouchers is much the same
-as for {{RFC8366}}.
+The design considerations for the CBOR encoding of vouchers is much the same as for {{RFC8366}}.
 
-One key difference is that the names of the leaves in the YANG does not have a
-material effect on the size of the resulting CBOR, as the SID translation
-process assigns integers to the names.
+One key difference is that the names of the leaves in the YANG does not have a material effect on the size of the resulting CBOR, as the SID translation process assigns integers to the names.
 
 # Security Considerations
 
@@ -431,7 +400,8 @@ TBD.
 
 ## Resource Type Registry
 
-Additions to the sub-registry "CoAP Resource Type", within the "CoRE parameters" registry are specified below. These can be registered  either in the Expert Review range (0-255) or IETF Review range (256-9999).
+Additions to the sub-registry "CoAP Resource Type", within the "CoRE parameters" registry are specified below.
+These can be registered  either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
      ace.rt.rv needs registration with IANA
      ace.rt.vs needs registration with IANA
@@ -441,8 +411,7 @@ Additions to the sub-registry "CoAP Resource Type", within the "CoRE parameters"
 ## The IETF XML Registry
 
 This document registers two URIs in the IETF XML registry {{RFC3688}}.
-Following the format in {{RFC3688}}, the following registration is
-requested:
+Following the format in {{RFC3688}}, the following registration is requested:
 
       URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
       Registrant Contact: The ANIMA WG of the IETF.
@@ -454,9 +423,7 @@ requested:
 
 ## The YANG Module Names Registry
 
-This document registers two YANG modules in the YANG Module Names
-registry {{RFC6020}}.  Following the format defined in {{RFC6020}}, the
-the following registration is requested:
+This document registers two YANG modules in the YANG Module Names registry {{RFC6020}}.  Following the format defined in {{RFC6020}}, the the following registration is requested:
 
       name:         ietf-constrained-voucher
       namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
@@ -479,12 +446,11 @@ the following registration is requested:
                                      -request
     ----------- ------  --------------------------- ------------
 
-Warning: These SID values are defined in {{I-D.ietf-core-sid}}.
+Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early Allocation.
 
 ## The SMI Security for S/MIME CMS Content Type Registry
 
-This document registers an OID in the "SMI Security for S/MIME CMS
-Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
+This document registers an OID in the "SMI Security for S/MIME CMS Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
 
       Decimal  Description                             References
       -------  --------------------------------------  ----------
@@ -496,9 +462,8 @@ Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
 
 ## Media-Type Registry
 
-This section registers the 'application/voucher-cms+cbor' media type and the 'application/voucher-cose+cbor' in the
-"Media Types" registry.  These media types are used to indicate that
-the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1 structure [RFC8152].
+This section registers the 'application/voucher-cms+cbor' media type and the 'application/voucher-cose+cbor' in the "Media Types" registry.
+These media types are used to indicate that the content is a CBOR voucher either signed with a cms structure or a COSE_Sign1 structure {{RFC8152}}.
 
 ### application/voucher-cms+cbor
 
@@ -566,10 +531,10 @@ either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
 # Acknowledgements
 
-We are very grateful to Jim Schaad for explaining COSE and CMS choices. Also thanks to Jim Schaad for correctinging earlier version of the COSE Sign1 objects.
+We are very grateful to Jim Schaad for explaining COSE and CMS choices.
+Also thanks to Jim Schaad for correctinging earlier version of the COSE Sign1 objects.
 
-Michel Veillette did extensive work on pyang to extend it to support the
-SID allocation process, and this document was among the first users.
+Michel Veillette did extensive work on pyang to extend it to support the SID allocation process, and this document was among the first users.
 
 We are grateful for the suggestions done by Esko Dijk.
 
