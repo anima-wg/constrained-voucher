@@ -123,7 +123,7 @@ Some sections are left out entirely.
 There are three constrained situations described in this document:
 1. CMS signed CBOR encoded vouchers transported using CoAP, protected by DTLS (coaps).
 2. COSE signed CBOR encoded vouchers transported using CoAP, protected by EDHOC.
-3. COSE signed CBOR encoded vouchers, integrated into the key exchange as described by {{!draft-selander-ace-ake-authz}}
+3. COSE signed CBOR encoded vouchers, integrated into the key exchange as described by {{!I-D.selander-ace-ake-authz}}
 
 Additional sections have been added concerning:
 
