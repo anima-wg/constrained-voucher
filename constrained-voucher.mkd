@@ -18,7 +18,6 @@ pi:    # can use array (if all yes) or hash here
 
 author:
 
-
 - ins: M. Richardson
   name: Michael Richardson
   org: Sandelman Software Works
@@ -35,7 +34,7 @@ author:
   email: pkampana@cisco.com
 
 normative:
-  RFC2119:
+#  RFC2119:
   RFC7049:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
@@ -44,7 +43,7 @@ normative:
   RFC7950:
   RFC5652:
   RFC8152:
-  RFC8174:
+#  RFC8174:
   RFC8366:
   RFC3688:
   RFC6020:
@@ -117,12 +116,11 @@ code space or bandwidth required.
 This document defines a constrained version of {{RFC8366}}.
 Rather than serializing the YANG definition in JSON, it is serialized into CBOR ({{RFC7049}}).
 
-This document follows a similar, but not identical structure as {{RFC8366}}.
-Some sections are left out entirely.
+This document follows a similar, but not identical structure as {{RFC8366}} and supplements the brski part to {{I-D.ietf-ace-coap-est}}.
 
 There are three constrained situations described in this document:
 1. CMS signed CBOR encoded vouchers transported using CoAP, protected by DTLS (coaps).
-2. COSE signed CBOR encoded vouchers transported using CoAP, protected by EDHOC.
+2. COSE signed CBOR encoded vouchers transported using CoAP, protected by EDHOC or DTLS.
 3. COSE signed CBOR encoded vouchers, integrated into the key exchange as described by {{!I-D.selander-ace-ake-authz}}
 
 Additional sections have been added concerning:
@@ -163,17 +161,17 @@ Most users of these constrained vouchers will be online and will use live nonces
 {{RFC8366}} defined only the voucher artifact, and not the Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 This document defines both a constrained voucher and a constrained voucher-request.
-They are presented in the order voucher-request, followed by a voucher response as this is the time order that they occur.
+They are presented in the order "voucher-request", followed by a "voucher" response as this is the time order that they occur.
 
 This document defines both CMS-signed voucher requests and responses, and COSE signed voucher requests and responses.
 The use of CMS signatures implies the use of PKIX format certificates.
-The pinned-domain-cert present in such a voucher, is the certificate of the Registrar.
+The pinned-domain-cert present in a voucher, is the certificate of the Registrar.
 
 The constrained voucher and constrained voucher request MUST be signed.
 
 The use of the two signing formats permit the use of both PKIX format certificates, and raw public keys (RPK).
 
-When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in such a voucher, is the raw public
+When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in a voucher, is the raw public
 key of the Registrar.
 This is described in the YANG definition for the constrained voucher.
 
@@ -351,16 +349,16 @@ In {{cmssign}} an example for the CMS signing of the voucher-request is shown.
 The COSE-Sign1 structure is discussed in section 4.2 of {{RFC8152}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
 It is used when only one signature is used on the body.
-Support for EdDSA with Ed25519 is compulsory.
+Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is compulsory.
 
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
 
 ~~~~
 COSE_Sign1(
   [
-    h'a10127',        # { "alg": EDdsa }
+    h'A101382E',        # { "alg": EC256K1 }
     {
-      “kid” : h'789'  # hash(pblic key)
+      “kid” : h'789'  # hash256(public key)
     },
     h'123', #voucher-request binary content
     h'456', #voucher-request binary public signature
@@ -372,7 +370,7 @@ COSE_Sign1(
 The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}.
 The value of the "kid" parameter is an example value.
 Usually a hash of the public key is used to idientify the public key.
-The distribution of the public key and its hash is done out of band.
+The public key and its hash are derived from the relevant certificate (Pledge, Registrar or MASA certificate).
 
 In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
 
@@ -540,6 +538,9 @@ We are grateful for the suggestions done by Esko Dijk.
 
 # Changelog
 
+-08
+    Examples for cose_sign1 are completed and improved.
+
 -06
     New SID values assigned; regenerated examples
 
@@ -657,11 +658,11 @@ A 2.05 Content response with a non signed CBOR voucher status (ct=60) will then 
     764164646974696F6E616C20696E666F726D6174696F6E
 ~~~~
 
-##requestvoucher
+#CMS signed messages
 
 Signed request-voucher-request payloads are sent from pledge to Registrar, as explained in Section 5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
-### signed requestvoucher {#rv}
+## signed requestvoucher {#rv}
 
 A CMS signed requestvoucher message from JRC to MASA is shown below.
 It would be CoAP POSTED to /est/rv.
@@ -724,8 +725,6 @@ A 2.05 Content response returning a log of the voucher (ct=60) will then be:
 
     [EDNOTE: Change JSON to CBOR; Serialize CBOR payload to binary]
 ~~~~
-
-# Signed voucher-request examples
 
 ## CMS signed voucher-request example   {#cmssign}
 
@@ -862,128 +861,112 @@ CMS_ContentInfo:
 
 # COSE examples {#cosesign}
 
-These examples are from the https://minerva.sandelman.ca/ reference code,
-using the unit test case key pairs, with a flow between pledge ("reach"
-code), JRC ("fountain") code, and MASA ("highway") code.  This example
-comes from the spec/files/product/00-D0-E5-F2-00-03 directory.
+These examples are generated on a pie 4 and a PC running BASH. Keys and Certificates have been generated with openssl with the following shell script:
 
+INSERT_FIG_FROM_FILE examples/brski-cert.sh END
 
+The xxxx-comb certificates have been generated as required by libcoap for the DTLS connection generation.
 
-## Device, Registrar and MASA keys
+## Pledge, Registrar and MASA keys
 
 This first section documents the public and private keys used in the
 subsequent test vectors below.  These keys come from test code and are not used in any
 production system, and should only be used only to validate implementations.
 
-### Device IDevID certificate
+### Pledge private key
 
-INSERT_FIG_FROM_FILE examples/device_00-D0-E5-F2-00-03.crt-txt END
-
-### Device private key
-
-INSERT_FIG_FROM_FILE examples/key_00-D0-E5-F2-00-03.pem END
-
-### Registrar Certificate
-
-INSERT_FIG_FROM_FILE examples/jrc-fountain-test.crt END
+INSERT_FIG_FROM_FILE examples/pledge-key.txt END
 
 ### Registrar private key {#jrcpriv}
 
-INSERT_FIG_FROM_FILE examples/jrc-fountain-test.pem END
-
-### MASA Certificate
-
-INSERT_FIG_FROM_FILE examples/masa_prime256v1.crt END
+INSERT_FIG_FROM_FILE examples/registrar-key.txt END
 
 ### MASA private key {#masapriv}
 
-INSERT_FIG_FROM_FILE examples/masa_prime256v1.key END
+INSERT_FIG_FROM_FILE examples/masa-key.txt END
+
+## Pledge, Registrar and MASA certificates
+
+Below the certificates that accompany the keys. The certificate description is followed by the hexadecimal DER of the certificate
+
+### Pledge IDevID certificate
+
+INSERT_FIG_FROM_FILE examples/pledge-cert.txt END
+
+This is the hexadecimal representation in (request-)voucher examples referred to as pledge-cert-hex.
+
+INSERT_FIG_FROM_FILE examples/pledge-cert.hex END
+
+### Registrar Certificate
+
+INSERT_FIG_FROM_FILE examples/registrar-cert.txt END
+
+This the hexadecimal representation, in (request-)voucher examples referred to as regis-cert-hex
+
+INSERT_FIG_FROM_FILE examples/registrar-cert.hex END
+
+### MASA Certificate
+
+INSERT_FIG_FROM_FILE examples/masa-cert.txt END
+
+This is the hexadecimal representation, in (request-)voucher examples referred to as masa-cert-hex.
+
+INSERT_FIG_FROM_FILE examples/masa-cert.hex END
 
 
-## COSE signed requestvoucher with registrar certificate pinned
+## COSE signed voucher request from pledge to Registrar
 
-~~~
-EDNote: These examples do not parse
-~~~
-
-This voucher request has been signed by the pledge, and has been sent to the JRC over CoAPS.  This example
+In this example the voucher request has been signed by the pledge, and has been sent to the JRC over CoAPS.  This example
 uses the proximity-registrar-cert mechanism to request a voucher that
-pins the certificate of the registrar.
-
-This is the CBOR diagnostic format, folded to 60 characters:
-
-INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-03.diag END
-
-This is the raw binary, shown as hex dump:
-
-INSERT_FIG_FROM_FILE examples/vr_00-D0-E5-F2-00-03.b64 END
-
-## COSE signed parboiled requestvoucher
+pins the certificate of the registrar. 
 
 ~~~
-These example do not parse
-~~~~
+    POST coaps://registrar.example.com/est/rv
+    (Content-Format: application/voucher-cose+cbor)
+    signed_request_voucher
+~~~
 
-This voucher request has been signed by the JRC using the private key from
-{{jrcpriv}}.  Contained within this voucher request is the pledge voucher
-request above.
+The payload signed_request_voucher is shown as hexadecimal dump (with lf added):
 
-This is the CBOR diagnostic format, folded to 60 characters:
+INSERT_FIG_FROM_FILE examples/pledge-to-regis.txt END
 
-INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-03.diag END
+The representiation of signed_voucher_request in CBOR diagnostic format is:
 
-This is the raw binary, encoded in base64:
+INSERT_FIG_FROM_FILE examples/pledge-to-regisdiag.txt END
 
-INSERT_FIG_FROM_FILE examples/parboiled_vr_00-D0-E5-F2-00-03.b64 END
 
-## COSE signed voucher
+## COSE signed voucher request from Registrar to MASA
+
+In this example the voucher request has been signed by the JRC using the private key from
+{{jrcpriv}}.  Contained within this voucher request is the voucher
+request from the pledge to JRC.
+
+
+~~~
+    POST coaps://masa.example.com/est/rv
+    (Content-Format: application/voucher-cose+cbor)
+    signed_masa_request_voucher
+~~~
+
+
+The payload signed_masa_voucher_request is shown as hexadecimal dump (with lf added):
+
+INSERT_FIG_FROM_FILE examples/regis-to-MASA.txt END
+
+The representiation of signed_masa_voucher_request in CBOR diagnostic format is:
+
+INSERT_FIG_FROM_FILE examples/regis-to-MASA-diag.txt END
+
+## COSE signed voucher from MASA to Pledge via Registrar
 
 The resulting voucher is created by the MASA and returned via the JRC to the
 Pledge.  It is signed by the MASA's private key {{masapriv}} and can be
-verified by the pledge using the MASA's publie key.
+verified by the pledge using the MASA's public key contained within the MASA certificate.
 
-This is the CBOR diagnostic format, folded to 60 characters:
+This is the raw binary signed_voucher, encoded in hexadecimal (with lf added):
 
-INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-03.diag END
+INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
 
-This is the raw binary, encoded in base64:
+The representiation of signed_voucher in CBOR diagnostic format is:
 
-INSERT_FIG_FROM_FILE examples/voucher_00-D0-E5-F2-00-03.b64 END
-
-## COSE signed request voucher
-
-The headecimal dump of request-voucher shown in {{cmssign}} is used for this example. The cose sign1 object of {{fig-cose}} provides the structure of the cose sign1 example.  To identify the public key a hash of the public key is made using murmur3 with seed 42.
-
-~~~
-public key:
-84 44 de 3a b7 b5 a0 2f 20 ed e7 80 1a f0 76 d6 52 0a e5 c8 a1
-04 41 61 b2 64 57 fe 0e ae 08 4d
-
-murmur3 hash of public key: 0x4727e669  or  1193797225
-~~~
-
-Using the values "kid" = 4, EDdsa = -8, "alg" = 2, COSE_Sign1 = 18, and using the murmur3 hash value for the "kid" parameter, the CBOR object is:
-
-~~~
-18([h'A10127', {4: 1193797225},
-  h'A11909C5A90274323031362D31302D30375431393A33313A34325A04743
-  23031362D31302D32315431393A33313A34325A01020D6D4A414441313233
-  343536373839054401020D0F0A4401020D0F03F50674323031372D31302D3
-  0375431393A33313A34325A0C4401020D0F',
-h'955D82A26B7C0869EE8FE5A09EE3D68DDFFE8FE39E3BCADFA80F2F9A6E13F
-  F0349A2CA131C8F6A9AAF7780BAB671F63CBB158EC17322323C1AB82B1CDC
-  B62A06'])
-~~~
-
-The corresponding hexadecimal dump is:
-
-~~~
-  d28443a10127a1041a4727e669586ca11909c5a90274323031362d31302d
-  30375431393a33313a34325a0474323031362d31302d32315431393a3331
-  3a34325a01020d6d4a414441313233343536373839054401020d0f0a4401
-  020d0f03f50674323031372d31302d30375431393a33313a34325a0c4401
-  020d0f5840955d82a26b7c0869ee8fe5a09ee3d68ddffe8fe39e3bcadfa8
-  0f2f9a6e13ff0349a2ca131c8f6a9aaf7780bab671f63cbb158ec1732232
-  3c1ab82b1cdcb62a06
-~~~
-
+INSERT_FIG_FROM_FILE examples/voucher-from-MASA-diag.txt END
