@@ -1,0 +1,38 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            70:5a:34:7e:67:d2:4d:70:b0:c6:ca:60:ff:fb:75:d9:46:82:e6:0e
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok,
+                OU=manufacturer, CN=masa.stok.nl
+        Validity
+            Not Before: Sep  9 07:42:03 2020 GMT
+            Not After : Sep  9 07:42:03 2021 GMT
+        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok,
+                  OU=manufacturer, CN=masa.stok.nl
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:81:f4:72:ec:9c:47:b2:8e:d1:eb:38:33:41:00:
+                    d3:62:f6:48:50:da:02:d0:56:b2:22:7b:c8:4b:80:
+                    59:95:77:07:d0:c3:58:8c:3c:f2:3c:5b:00:83:79:
+                    54:da:0d:d1:b0:af:a1:c2:e8:cd:2c:3b:d0:86:45:
+                    9f:89:73:0a:cb
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Subject Key Identifier: 
+22:BC:B8:20:D9:C5:6D:2D:5B:B3:BB:64:8B:E0:8B:A7:86:5E:CE:B4
+            X509v3 Authority Key Identifier: 
+                keyid:
+22:BC:B8:20:D9:C5:6D:2D:5B:B3:BB:64:8B:E0:8B:A7:86:5E:CE:B4
+
+            X509v3 Basic Constraints: 
+                CA:TRUE
+    Signature Algorithm: ecdsa-with-SHA256
+         30:45:02:20:04:ac:8d:48:62:a2:a5:04:4f:61:fd:38:83:53:
+         9f:00:e7:d6:4b:4d:30:1b:84:29:d4:2d:35:58:b0:a0:0c:7d:
+         02:21:00:8c:f1:f4:f9:a2:11:fe:64:46:a9:87:9f:58:ca:ea:
+         da:4f:0a:42:32:c2:6a:e8:c5:9d:62:c0:67:f0:b8:44:43
