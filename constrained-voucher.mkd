@@ -215,10 +215,10 @@ following more complete response is possible.
 
   RES: 2.05 Content
   </est>; rt="ace.est"
-  </est/rv>; rt="ace.est/rv";ct=TBD2 TBD3
-  </est/vs>; rt="ace.est/vs";ct=50 60
-  </est/es>; rt="ace.est/es";ct=50 60
-  </est/ra>; rt="ace.est/ra";ct=TBD2 TBD3
+  </est/rv>; rt="ace.est.rv";ct=TBD2 TBD3
+  </est/vs>; rt="ace.est.vs";ct=50 60
+  </est/es>; rt="ace.est.es";ct=50 60
+  </est/ra>; rt="ace.est.ra";ct=TBD2 TBD3
 ~~~~
 
 The return of the content-types allows the client to choose the most appropriate one from multiple content types.
