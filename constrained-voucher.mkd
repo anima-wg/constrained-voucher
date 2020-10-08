@@ -211,14 +211,13 @@ multiple content types are specified for EST-coaps server. For example, the
 following more complete response is possible.
 
 ~~~~
-  REQ: GET /.well-known/core?rt=ace.est*
+  REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
   </est>; rt="ace.est"
-  </est/rv>; rt="ace.est/rv";ct=TBD2 TBD3
-  </est/vs>; rt="ace.est/vs";ct=50 60
-  </est/es>; rt="ace.est/es";ct=50 60
-  </est/ra>; rt="ace.est/ra";ct=TBD2 TBD3
+  </b/rv>; rt="brski.rv";ct=TBD2 TBD3
+  </b/vs>; rt="brski.vs";ct=50 60
+  </b/es>; rt="brski.es";ct=50 60
 ~~~~
 
 The return of the content-types allows the client to choose the most appropriate one from multiple content types.
