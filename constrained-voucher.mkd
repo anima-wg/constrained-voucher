@@ -918,7 +918,7 @@ INSERT_FIG_FROM_FILE examples/masa-cert.hex END
 
 In this example the voucher request has been signed by the pledge, and has been sent to the JRC over CoAPS.  This example
 uses the proximity-registrar-cert mechanism to request a voucher that
-pins the certificate of the registrar. 
+pins the certificate of the registrar.
 
 ~~~
     POST coaps://registrar.example.com/est/rv
