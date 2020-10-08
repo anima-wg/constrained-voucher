@@ -6,11 +6,11 @@
                                  /                "proximity" /
     +13: "JADA123456789",        / SID= 2514, serial-number /
     +5 : h'01020D0F',            / SID= 2506, idevid-issuer /
-    +10: h'01020D0F',            / SID=2511, proximity-registrar-cert/
+    +10: h'cert.der',            / SID=2511, proximity-registrar-cert/
     +3 : true,                   / SID= 2504, domain-cert
                                                   -revocation-checks/
     +6 : "2017-10-07T19:31:42Z", / SID= 2507, last-renewal-date /
-    +12: h'01020D0F'             / SID= 2513, proximity-registrar
+    +12: h'key_info'             / SID= 2513, proximity-registrar
                                          -subject-public-key-info /
   }
 }
