@@ -3,6 +3,10 @@
 
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
+*.sh   text
+*.rb   text
+*.pl   text
+*.b64  text
 *.yang text
 *.txt text
 *.mkd text
