@@ -13,4 +13,3 @@
      2460 data .../pinned-domain-subject-public-key-info
      2461 data .../pinned-sha256-of-subject-public-key-info
      2462 data /ietf-constrained-voucher:voucher/serial-number
-           

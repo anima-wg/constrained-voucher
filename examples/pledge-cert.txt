@@ -1,0 +1,41 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4822678189204992 (0x11223344556600)
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok,
+                OU=manufacturer, CN=masa.stok.nl
+        Validity
+            Not Before: Sep  9 07:42:03 2020 GMT
+            Not After : Dec 31 23:59:59 9999 GMT
+        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, 
+                    OU=manufacturing, 
+       CN=uuid:pledge.1.2.3.4/serialNumber=pledge.1.2.3.4
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:8a:9c:86:ae:bc:0b:71:e9:91:56:42:78:90:3a:
+                    ab:cf:d1:9a:5d:6a:e7:72:55:ee:95:ad:cf:34:02:
+                    3c:96:44:69:cd:de:8c:90:d2:b9:eb:e5:d5:f2:9d:
+                    f1:b6:c6:af:3e:71:8f:ae:1b:04:eb:00:96:29:f4:
+                    ec:a8:64:20:2c
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Key Identifier:
+59:B1:E1:19:F4:68:53:E9:0E:7C:9F:29:D0:FB:5B:1F:AC:C3:82:49
+            X509v3 Authority Key Identifier: 
+                keyid:
+22:BC:B8:20:D9:C5:6D:2D:5B:B3:BB:64:8B:E0:8B:A7:86:5E:CE:B4
+
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+    Signature Algorithm: ecdsa-with-SHA256
+         30:45:02:20:4d:fd:a8:83:78:31:d2:62:a4:e5:48:a2:e0:a7:
+         3b:c5:14:e9:7e:46:13:45:bc:30:fd:1d:e5:d6:63:3e:d8:f4:
+         02:21:00:a8:e5:1e:c2:79:77:90:fc:40:a8:7a:bf:b1:bd:81:
+         8b:ee:d7:56:1a:04:4d:8f:c8:3d:76:5f:4d:6e:36:a2:c2
+

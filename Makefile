@@ -43,10 +43,10 @@ ietf-constrained-voucher-request-tree.txt: ${CWTDATE2}
 	: git add ${DRAFT}.xml
 
 %.txt: %.xml
-	unset DISPLAY; XML_LIBRARY=$(XML_LIBRARY):./src xml2rfc $? $@
+	unset DISPLAY; XML_LIBRARY=$(XML_LIBRARY):./src xml2rfc --text $?
 
 %.html: %.xml
-	unset DISPLAY; XML_LIBRARY=$(XML_LIBRARY):./src xml2rfc --html -o $@ $?
+	unset DISPLAY; XML_LIBRARY=$(XML_LIBRARY):./src xml2rfc --html $?
 
 submit: ${DRAFT}.xml
 	curl -S -F "user=mcr+ietf@sandelman.ca" -F "xml=@${DRAFT}.xml" https://datatracker.ietf.org/api/submit

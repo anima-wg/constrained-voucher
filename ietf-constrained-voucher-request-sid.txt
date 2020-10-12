@@ -15,4 +15,3 @@
      2512 data mity-registrar-sha256-of-subject-public-key-info
      2513 data .../proximity-registrar-subject-public-key-info
      2514 data .../serial-number
-           

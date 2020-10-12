@@ -6,11 +6,11 @@
                                  /                "verified" /
     +11: "JADA123456789",        / SID = 2462, serial-number /
     +5 : h'01020D0F',            / SID = 2456, idevid-issuer /
-    +8 : h'01020D0F',            / SID = 2459, pinned-domain-cert/
+    +8 : h'cert.der',            / SID = 2459, pinned-domain-cert/
     +3 : true,                   / SID = 2454, domain-cert
                                                  -revocation-checks /
     +6 : "2017-10-07T19:31:42Z", / SID = 2457, last-renewal-date /
-    +9 : h'01020D0F'             / SID = 2460, pinned-domain
+    +9 : h'key-info'             / SID = 2460, pinned-domain
                                            -subject-public-key-info /
   }
 }
