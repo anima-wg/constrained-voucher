@@ -51,22 +51,22 @@ ietf-constrained-voucher-request-tree.txt: ${CWTDATE2}
 submit: ${DRAFT}.xml
 	curl -S -F "user=mcr+ietf@sandelman.ca" -F "xml=@${DRAFT}.xml" https://datatracker.ietf.org/api/submit
 
-# Base SID value for voucher: 1001150.
+# Base SID value for voucher: 2450
 ${CWTSIDLIST1}: ${CWTDATE1} ${CWTSIDDATE1}
 	mkdir -p yang
-	${PYANG} --path=../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-constrained-voucher-sid.txt
+	${PYANG} --path=../../anima/bootstrap/yang --sid-list --sid-update-file=${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-constrained-voucher-sid.txt
 
 boot-sid1:
-	${PYANG} --path=../../anima/bootstrap/yang --list-sid --generate-sid-file 2450:50 ${CWTDATE1}
+	${PYANG} --path=../../anima/bootstrap/yang --sid-list --generate-sid-file 2450:50 ${CWTDATE1}
 
 boot-sid2:
-	${PYANG} --path=../../anima/bootstrap/yang --list-sid --generate-sid-file 2500:50 ${CWTDATE2}
+	${PYANG} --path=../../anima/bootstrap/yang --sid-list --generate-sid-file 2500:50 ${CWTDATE2}
 
 
-# Base SID value for voucher request: 1001101.
+# Base SID value for voucher request: 2500
 ${CWTSIDLIST2}: ${CWTDATE2}  ${CWTSIDDATE2}
 	mkdir -p yang
-	${PYANG} --path=../../anima/bootstrap/yang --list-sid --update-sid-file ${CWTSIDDATE2} ${CWTDATE2} | ./truncate-sid-table >ietf-constrained-voucher-request-sid.txt
+	${PYANG} --path=../../anima/bootstrap/yang --sid-list --sid-update-file=${CWTSIDDATE2} ${CWTDATE2} | ./truncate-sid-table >ietf-constrained-voucher-request-sid.txt
 
 
 version:
