@@ -211,14 +211,13 @@ multiple content types are specified for EST-coaps server. For example, the
 following more complete response is possible.
 
 ~~~~
-  REQ: GET /.well-known/core?rt=ace.est*
+  REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  </est>; rt="ace.est"
-  </est/rv>; rt="brski.rv";ct=TBD2 TBD3
-  </est/vs>; rt="brski.vs";ct=50 60
-  </est/es>; rt="brski.es";ct=50 60
-  </est/ra>; rt="brski.ra";ct=TBD2 TBD3
+  </b>; rt="brski"
+  </b/rv>; rt="brski.rv";ct=TBD2 TBD3
+  </b/vs>; rt="brski.vs";ct=50 60
+  </b/es>; rt="brski.es";ct=50 60
 ~~~~
 
 The return of the content-types allows the client to choose the most appropriate one from multiple content types.
@@ -229,7 +228,10 @@ and ct=TBD3 stands for Content-Format "application/voucher-cose+cbor".
 Content-Formats TBD2 and TBD3 are defined in this document.
 
 The Content-Format ("application/json") 50 MAY be supported.
-Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported.
+Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported by the Registrar.
+
+The Pledge and MASA need to support one or more formats for the voucher.
+The MASA needds to support whatever formats that the pledge's produced by that manufacturer supports.
 
 # Artifacts
 
@@ -918,7 +920,7 @@ INSERT_FIG_FROM_FILE examples/masa-cert.hex END
 
 In this example the voucher request has been signed by the pledge, and has been sent to the JRC over CoAPS.  This example
 uses the proximity-registrar-cert mechanism to request a voucher that
-pins the certificate of the registrar. 
+pins the certificate of the registrar.
 
 ~~~
     POST coaps://registrar.example.com/est/rv
