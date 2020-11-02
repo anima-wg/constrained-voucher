@@ -214,7 +214,7 @@ following more complete response is possible.
   REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  </est>; rt="ace.est"
+  </b>; rt="brski"
   </b/rv>; rt="brski.rv";ct=TBD2 TBD3
   </b/vs>; rt="brski.vs";ct=50 60
   </b/es>; rt="brski.es";ct=50 60
@@ -228,7 +228,10 @@ and ct=TBD3 stands for Content-Format "application/voucher-cose+cbor".
 Content-Formats TBD2 and TBD3 are defined in this document.
 
 The Content-Format ("application/json") 50 MAY be supported.
-Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported.
+Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported by the Registrar.
+
+The Pledge and MASA need to support one or more formats for the voucher.
+The MASA needds to support whatever formats that the pledge's produced by that manufacturer supports.
 
 # Artifacts
 
