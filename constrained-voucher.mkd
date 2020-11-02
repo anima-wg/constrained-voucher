@@ -210,6 +210,16 @@ the full resource paths and the used content types. This is useful when
 multiple content types are specified for EST-coaps server. For example, the
 following more complete response is possible.
 
+[ EDNOTE: spell out where voucher artifacts are used in
+  BRSKI flows since the APIs ]
+
+[ EDNOTE: The /requestauditlog and /voucher-status are exchanged by the
+Registrar and MASA. The JRC will likely talk to MASA over a normal
+(not constrained) medium. Do we need /ra and /vs? Do we need to
+remove them from the example too? Also what happens to the
+voucher-request and response in this case? Is MASA supposed to
+support contrained vouchers? ]
+
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
 
@@ -327,24 +337,30 @@ This canonical ordering is not important as there is no expectation that the con
 
 Normally the recipient is the pledge and the signer is the MASA.
 
-{{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned voucher requests from the pledge to the JRC.
-In this specification, voucher-request artifact MUST be signed from the pledge to the registrar.
-From the JRC to the MASA, the voucher-request artifact MUST be signed by the domain owner key which is requesting ownership.
+{{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned
+voucher requests from the pledge to the JRC.
+In this specification, voucher-request artifact is not signed from the
+pledge to the registrar.  [EDNOTE: Confirm that voucher requests do not
+need to be signed ] From the JRC to the MASA, the voucher-request
+artifact MUST be signed by the domain owner key which is requesting
+ownership.
 
-The considerations of {{RFC5652}} section 5.1, concerning validating CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
+The considerations of {{RFC5652}} section 5.1, concerning validating
+CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
 
-The CMS structure SHOULD also contain all the certificates leading up to and including the signer's trust anchor certificate known to the recipient.
-The inclusion of the trust anchor is unusual in many applications, but without it third parties can not accurately audit the transaction.
+The CMS structure SHOULD also contain all the certificates leading up
+to and including the signer's trust anchor certificate known to the
+recipient.  The inclusion of the trust anchor is unusual in many
+applications, but without it third parties can not accurately audit
+the transaction.
 
-The CMS structure MAY also contain revocation objects for any intermediate certificate authorities (CAs) between the voucher-issuer and the trust anchor known to the recipient.
-However, the use of CRLs and other validity mechanisms is discouraged, as the pledge is unlikely to be able to perform online checks, and is unlikely to have a trusted clock source.
-As described below, the use of short-lived vouchers and/or pledge provided nonce provides a freshness guarantee.
-
-~~~
-[EDnote: compulsory signing algorithms are ......]
-~~~
-
-In {{cmssign}} an example for the CMS signing of the voucher-request is shown.
+The CMS structure MAY also contain revocation objects for any
+intermediate certificate authorities (CAs) between the voucher-issuer
+and the trust anchor known to the recipient.  However, the use of
+CRLs and other validity mechanisms is discouraged, as the pledge is
+unlikely to be able to perform online checks, and is unlikely to have
+a trusted clock source.  As described below, the use of short-lived
+vouchers and/or pledge provided nonce provides a freshness guarantee.
 
 ### COSE signing
 
@@ -354,6 +370,7 @@ It is used when only one signature is used on the body.
 Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is compulsory.
 
 The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
+Support for EdDSA is encouraged. [EDNOTE: Expand and add a reference why. ]
 
 ~~~~
 COSE_Sign1(
