@@ -11,6 +11,8 @@ then
     export PYANG_XSLT_DIR=$p/xslt
     export PYANG_RNG_LIBDIR=$p/schema
     export W=$p
+elif [ -x ~/.local/bin/pyang ]; then
+    PATH=$HOME/.local/bin:$PATH export PATH
 fi
 #which pyang >&2
 pyang "$@"
