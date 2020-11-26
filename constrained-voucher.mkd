@@ -671,10 +671,13 @@ A 2.05 Content response with a non signed CBOR voucher status (ct=60) will then 
 ~~~~
     2.05 Content (Content-Format: application/cbor)
     Payload =
-    A46776657273696F6E6131665374617475730166526561736F6E7822
-    496E666F726D61746976652068756D616E207265616461626C65206D
-    6573736167656e726561736F6E2D636F6E74657874
-    764164646974696F6E616C20696E666F726D6174696F6E
+INSERT_TEXT_FROM_FILE examples/voucher_status.hex END
+~~~~
+
+The payload above is represented in hexadecimal.
+
+~~~~
+INSERT_TEXT_FROM_FILE examples/voucher_status.diag END
 ~~~~
 
 #CMS signed messages
