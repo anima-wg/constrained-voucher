@@ -4,7 +4,7 @@ all: vr_00-D0-E5-F2-00-03.b64 vr_00-D0-E5-F2-00-03.diag \
 	parboiled_vr_00-D0-E5-F2-00-03.b64 parboiled_vr_00-D0-E5-F2-00-03.diag \
 	voucher_00-D0-E5-F2-00-03.b64 voucher_00-D0-E5-F2-00-03.diag \
 	key_00-D0-E5-F2-00-03.pem device_00-D0-E5-F2-00-03.crt-txt \
-	masa_00-D0-E5-F2-00-03.crt-txt
+	masa_00-D0-E5-F2-00-03.crt-txt voucher_status.hex
 
 %.b64:  %.vrq
 	base64 -w 60 $< >$@
@@ -20,6 +20,15 @@ all: vr_00-D0-E5-F2-00-03.b64 vr_00-D0-E5-F2-00-03.diag \
 
 %.crt-txt: %.crt
 	openssl x509 -noout -text -in $< | sed -e's/  / /g' | fold -60 >$@
+
+#%.diag: %.hex
+#	xxd -r -p $< | cbor2diag.rb | fold -60 >$@
+
+%.bin: %.diag
+	diag2cbor.rb $< | fold -60 >$@
+
+%.hex: %.bin
+	xxd -p $< | fold -60 >$@
 
 update:
 	cp /corp/projects/pandora/reach/spec/files/product/00-D0-E5-F2-00-03/vr_00-D0-E5-F2-00-03.vrq .

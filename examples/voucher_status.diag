@@ -1,0 +1,6 @@
+{"version": 1,
+ "status": false,
+ "reason": "Informative human readable message",
+ "reason-context": {1: "Additional information"}
+}
+
