@@ -663,7 +663,7 @@ The binary payload disassembles to the above CBOR diagnostic code.
 A coaps voucher_status message can be:
 
 ~~~~
-   GET coaps://[2001:db8::2:1]:61616]/est/vs
+   POST coaps://[2001:db8::2:1]:61616]/est/vs
 ~~~~
 
 A 2.05 Content response with a non signed CBOR voucher status (ct=60) will then be:
