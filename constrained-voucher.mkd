@@ -33,6 +33,11 @@ author:
   org: Cisco Systems
   email: pkampana@cisco.com
 
+- ins: E. Dijk
+  name: Esko Dijk
+  org: IoTconsultancy.nl
+  email: esko.dijk@iotconsultancy.nl
+
 normative:
 #  RFC2119:
   RFC7049:
