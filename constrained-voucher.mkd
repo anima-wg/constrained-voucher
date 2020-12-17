@@ -123,10 +123,12 @@ Rather than serializing the YANG definition in JSON, it is serialized into CBOR 
 
 This document follows a similar, but not identical structure as {{RFC8366}} and supplements the brski part to {{I-D.ietf-ace-coap-est}}.
 
-There are three constrained situations described in this document:
-1. CMS signed CBOR encoded vouchers transported using CoAP, protected by DTLS (coaps).
-2. COSE signed CBOR encoded vouchers transported using CoAP, protected by EDHOC or DTLS.
-3. COSE signed CBOR encoded vouchers, integrated into the key exchange as described by {{!I-D.selander-ace-ake-authz}}
+This document describes a single new voucher format.
+It is a COSE-signed CBOR-encoded voucher transported using secured CoAP or HTTP.
+The CoAP connection is protected either by OSCORE+EDHOC, or DTLS (CoAPS).
+
+There is additional work when the voucher is integrated into the key-exchange, described in {{!I-D.selander-ace-ake-authz}}.
+This work is not in scope for this document.
 
 Additional sections have been added concerning:
 
@@ -134,14 +136,7 @@ Additional sections have been added concerning:
 2. Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over CoAP.
 
 The CBOR definitions for this constrained voucher format are defined using the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
-As the tooling to convert YANG documents into an list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the
-output of the pyang tool.
-
-Two methods of signing the resulting CBOR object are described in this
-document:
-
-1. One is CMS {{RFC5652}}.
-2. The other is COSE_Sign1 {{RFC8152}} objects.
+As the tooling to convert YANG documents into an list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the output of the pyang tool.
 
 # Terminology          {#Terminology}
 
@@ -168,8 +163,6 @@ Most users of these constrained vouchers will be online and will use live nonces
 This document defines both a constrained voucher and a constrained voucher-request.
 They are presented in the order "voucher-request", followed by a "voucher" response as this is the time order that they occur.
 
-This document defines both CMS-signed voucher requests and responses, and COSE signed voucher requests and responses.
-The use of CMS signatures implies the use of PKIX format certificates.
 The pinned-domain-cert present in a voucher, is the certificate of the Registrar.
 
 The constrained voucher and constrained voucher request MUST be signed.
@@ -324,50 +317,7 @@ The enum value of the assertion field is calculated to be zero by following the 
 
 INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
-The signing of the example is shown in {{cmssign}}.
-
-## Signing voucher and voucher-request artifacts
-
-### CMS signing
-
-The IETF evolution of PKCS#7 is CMS {{RFC5652}}.
-The CMS signed voucher is much like the equivalent voucher defined in {{RFC8366}}.
-
-A different eContentType of TBD1 is used to indicate that the contents are in a different format than in {{RFC8366}}.
-The id-ct-animaJSONVoucher allocated by {{RFC8366}} indicates a voucher and voucher-request encoded in JSON, and the new value TBD1 indicates that the voucher and voucher-request are encoded in CBOR.
-
-The ContentInfo structure contains a payload consisting of the CBOR encoded voucher.
-The {{I-D.ietf-core-yang-cbor}} use of delta encoding creates a canonical ordering for the keys on the wire.
-This canonical ordering is not important as there is no expectation that the content will be reproduced during the validation process.
-
-Normally the recipient is the pledge and the signer is the MASA.
-
-{{I-D.ietf-anima-bootstrapping-keyinfra}} supports both signed and unsigned
-voucher requests from the pledge to the JRC.
-In this specification, voucher-request artifact is not signed from the
-pledge to the registrar.  [EDNOTE: Confirm that voucher requests do not
-need to be signed ] From the JRC to the MASA, the voucher-request
-artifact MUST be signed by the domain owner key which is requesting
-ownership.
-
-The considerations of {{RFC5652}} section 5.1, concerning validating
-CMS objects which are really PKCS7 objects (cmsVersion=1) applies.
-
-The CMS structure SHOULD also contain all the certificates leading up
-to and including the signer's trust anchor certificate known to the
-recipient.  The inclusion of the trust anchor is unusual in many
-applications, but without it third parties can not accurately audit
-the transaction.
-
-The CMS structure MAY also contain revocation objects for any
-intermediate certificate authorities (CAs) between the voucher-issuer
-and the trust anchor known to the recipient.  However, the use of
-CRLs and other validity mechanisms is discouraged, as the pledge is
-unlikely to be able to perform online checks, and is unlikely to have
-a trusted clock source.  As described below, the use of short-lived
-vouchers and/or pledge provided nonce provides a freshness guarantee.
-
-### COSE signing
+## Signing voucher and voucher-request artifacts with COSE
 
 The COSE-Sign1 structure is discussed in section 4.2 of {{RFC8152}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
@@ -709,182 +659,6 @@ A 2.04 Changed response returning CBOR voucher signed with a cms structure(ct=TB
     2.04 Changed (Content-Format: application/voucher-cms+cbor)
 ~~~~
 INSERT_FIG_FROM_FILE examples/cms-voucher2.b64 END
-
-##requestauditing  {#ra}
-
-A coaps requestauditing message contains the signed CBOR voucher :
-
-~~~~
-    POST coaps://[2001:db8::2:1]:61616]/est/ra
-    (Content-Format: application/voucher-cms+cbor)
-    Payload =
-TO BE FILLED
-~~~~
-
-A 2.05 Content response returning a log of the voucher (ct=60) will then be:
-
-~~~~
-    2.05 Content (Content-Format: application/cbor)
-    Payload =
-{
- "version":"1",
- "events":[
-   {
-    "date":"<date/time of the entry>",
-    "domainID":"<domainID extracted from voucher-request>",
-    "nonce":"<any nonce if supplied (or the exact string 'NULL')>"
-    "assertion":"<the value from the voucher assertion leaf>"
-    "truncated":"<the number of domainID entries truncated>"
-   },
-   {
-    "date":"<date/time of the entry>",
-    "domainID":"<anotherDomainID extracted from voucher-request>",
-    "nonce":"<any nonce if supplied (or the exact string 'NULL')>"
-    "assertion":"<the value from the voucher assertion leaf>"
-   }
- ],
-  "truncation": {
-    "nonced duplicates": "<total number of entries truncated>",
-    "nonceless duplicates": "<total number of entries truncated>",
-    "arbitrary": "<number of domainID entries removed entirely>"
-  }
-}
-
-    [EDNOTE: Change JSON to CBOR; Serialize CBOR payload to binary]
-~~~~
-
-## CMS signed voucher-request example   {#cmssign}
-
-The voucher-request example, visualized in CBOR diagnostic notation in {{example2}} is shown as a hexadecimal dump of the binary file.
-
-~~~
-    a11909c5a90274323031362d31302d30375431393a33313a34325a0474323031
-    362d31302d32315431393a33313a34325a01020d6d4a414441313233343536
-    373839054401020d0f0a4401020d0f03f50674323031372d31302d30375431
-    393a33313a34325a0c4401020d0f
-~~~
-
-The voucher-request example has been signed by using the WT1234 certificate and key pair shown in Appendix C of {{I-D.ietf-ace-coap-est}}.
-The CMS signing of the binary voucher-request leads to a binary signed voucher-request, shown with a hexadecimal representation shown in the payload of the request part of {{rv}} and {{ra}}.
-
-The breakdown of the CMS signed binary voucher-request file is visualized below:
-
-~~~
-CMS_ContentInfo:
-  contentType: pkcs7-signedData (1.2.840.113549.1.7.2)
-  d.signedData:
-    version: 1
-    digestAlgorithms:
-        algorithm: sha256 (2.16.840.1.101.3.4.2.1)
-        parameter: <ABSENT>
-    encapContentInfo:
-      eContentType: pkcs7-data (1.2.840.113549.1.7.1)
-      eContent: <ABSENT>
-    certificates:
-      d.certificate:
-        cert_info:
-          version: 2
-          serialNumber: 9112578475118446130
-          signature:
-            algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-            parameter: <ABSENT>
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
-                                                  CN=802.1AR CA
-          validity:
-            notBefore: Jan 31 11:29:16 2019 GMT
-            notAfter: Dec 31 23:59:59 9999 GMT
-          subject: C=US, ST=CA, L=LA, O=example Inc,
-                                     OU=IoT/serialNumber=Wt1234
-          key:
-            algor:
-              algorithm: id-ecPublicKey (1.2.840.10045.2.1)
-              parameter: OBJECT:prime256v1 (1.2.840.10045.3.1.7)
-            public_key:  (0 unused bits)
-              0000 - 04 c8 b4 21 f1 1c 25 e4-7e 3a c5 71 23 bf
-              000e - 2d 9f dc 49 4f 02 8b c3-51 cc 80 c0 3f 15
-              001c - 0b f5 0c ff 95 8d 75 41-9d 81 a6 a2 45 df
-              002a - fa e7 90 be 95 cf 75 f6-02 f9 15 26 18 f8
-              0038 - 16 a2 b2 3b 56 38 e5 9f-d9
-          issuerUID: <ABSENT>
-          subjectUID: <ABSENT>
-          extensions:
-              object: X509v3 Basic Constraints (2.5.29.19)
-              critical: BOOL ABSENT
-              value:
-                0000 - 30
-                0002 - <SPACES/NULS>
-
-              object: X509v3 Subject Key Identifier (2.5.29.14)
-              critical: BOOL ABSENT
-              value:
-                0000 - 04 14 96 60 0d 87 16 bf-7f d0 e7 52 d0
-                000d - ac 76 07 77 ad 66 5d 02-a0
-
-              object: X509v3 Authority Key Identifier (2.5.29.35)
-              critical: BOOL ABSENT
-              value:
-                0000 - 30 16 80 14 68 d1 65 51-f9 51 bf c8 2a
-                000d - 43 1d 0d 9f 08 bc 2d 20-5b 11 60
-
-              object: X509v3 Key Usage (2.5.29.15)
-              critical: TRUE
-              value:
-                0000 - 03 02 05 a0
-
-              object: X509v3 Subject Alternative Name (2.5.29.17)
-              critical: BOOL ABSENT
-              value:
-                0000 - 30 21 a0 1f 06 08 2b 06-01 05 05 07 08
-                000d - 04 a0 13 30 11 06 09 2b-06 01 04 01 b4
-                001a - 3b 0a 01 04 04 01 02 03-04
-        sig_alg:
-          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-          parameter: <ABSENT>
-        signature:  (0 unused bits)
-          0000 - 30 46 02 21 00 c0 d8 19-96 d2 50 7d 69 3f 3c
-          000f - 48 ea a5 ee 94 91 bd a6-db 21 40 99 d9 81 17
-          001e - c6 3b 36 13 74 cd 86 02-21 00 a7 74 98 9f 4c
-          002d - 32 1a 5c f2 5d 83 2a 4d-33 6a 08 ad 67 df 20
-          003c - f1 50 64 21 18 8a 0a de-6d 34 92 36
-    crls:
-      <EMPTY>
-    signerInfos:
-        version: 1
-        d.issuerAndSerialNumber:
-          issuer: C=US, ST=CA, O=Example Inc, OU=certification,
-                                                  CN=802.1AR CA
-          serialNumber: 9112578475118446130
-        digestAlgorithm:
-          algorithm: sha256 (2.16.840.1.101.3.4.2.1)
-          parameter: <ABSENT>
-        signedAttrs:
-            object: contentType (1.2.840.113549.1.9.3)
-            value.set:
-              OBJECT:pkcs7-data (1.2.840.113549.1.7.1)
-
-            object: signingTime (1.2.840.113549.1.9.5)
-            value.set:
-              UTCTIME:Jul  3 08:53:30 2019 GMT
-
-            object: messageDigest (1.2.840.113549.1.9.4)
-            value.set:
-              OCTET STRING:
-                0000 - d4 b0 5c dd c8 b4 91 28-4a 18 ca 25 9d
-                000d - be d0 60 23 cf ad a0 aa-c2 95 ac e9 3f
-                001a - 0b 4f 44 9e 25
-                0020 - <SPACES/NULS>
-        signatureAlgorithm:
-          algorithm: ecdsa-with-SHA256 (1.2.840.10045.4.3.2)
-          parameter: <ABSENT>
-        signature:
-          0000 - 30 46 02 21 00 e5 e1 7f-23 c3 aa 14 9f 35 64
-          000f - 1e c4 4a 0f 68 fe b0 16-3b e6 7c 06 51 af bf
-          001e - 5a a0 99 59 e0 28 1f 02-21 00 b4 07 2f 7c c4
-          002d - f9 26 0c 6d 47 a7 93 56-de b8 da f7 23 f0 af
-          003c - 2b 59 16 cc 36 63 e7 91-89 39 df df
-        unsignedAttrs:
-          <EMPTY>
-~~~
 
 # COSE examples {#cosesign}
 
