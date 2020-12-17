@@ -119,10 +119,10 @@ Rather than serializing the YANG definition in JSON, it is serialized into CBOR 
 This document follows a similar, but not identical structure as {{RFC8366}} and supplements the brski part to {{I-D.ietf-ace-coap-est}}.
 
 This document describes a single new voucher format.
-It is a COSE-signed CBOR-encoded vouchers transported using CoAP.
+It is a COSE-signed CBOR-encoded voucher transported using secured CoAP or HTTP.
 The CoAP connection is protected either by OSCORE+EDHOC, or DTLS (CoAPS).
 
-There is additional work where the voucher is integrated into the key-exchange, described in {{!I-D.selander-ace-ake-authz}}.
+There is additional work when the voucher is integrated into the key-exchange, described in {{!I-D.selander-ace-ake-authz}}.
 This work is not in scope for this document.
 
 Additional sections have been added concerning:
