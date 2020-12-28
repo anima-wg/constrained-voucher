@@ -3,39 +3,34 @@ Certificate:
         Version: 3 (0x2)
         Serial Number: 4822678189204992 (0x11223344556600)
         Signature Algorithm: ecdsa-with-SHA256
-        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok,
-                OU=manufacturer, CN=masa.stok.nl
+        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=manufacturer, 
+                                                      CN=masa.stok.nl
         Validity
-            Not Before: Sep  9 07:42:03 2020 GMT
+            Not Before: Dec  9 10:02:36 2020 GMT
             Not After : Dec 31 23:59:59 9999 GMT
-        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, 
-                    OU=manufacturing, 
-       CN=uuid:pledge.1.2.3.4/serialNumber=pledge.1.2.3.4
+        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=manufacturing,
+                   CN=uuid:pledge.1.2.3.4/serialNumber=pledge.1.2.3.4
         Subject Public Key Info:
             Public Key Algorithm: id-ecPublicKey
                 Public-Key: (256 bit)
                 pub:
-                    04:8a:9c:86:ae:bc:0b:71:e9:91:56:42:78:90:3a:
-                    ab:cf:d1:9a:5d:6a:e7:72:55:ee:95:ad:cf:34:02:
-                    3c:96:44:69:cd:de:8c:90:d2:b9:eb:e5:d5:f2:9d:
-                    f1:b6:c6:af:3e:71:8f:ae:1b:04:eb:00:96:29:f4:
-                    ec:a8:64:20:2c
+                    04:d6:b7:6f:74:88:bd:80:ae:5f:28:41:2c:72:02:
+                    ef:5f:98:b4:81:e1:d9:10:4c:f8:1b:66:d4:3e:5c:
+                    ea:da:73:e6:a8:38:a9:f1:35:11:85:b6:cd:e2:04:
+                    10:be:fe:d5:0b:3b:14:69:2e:e1:b0:6a:bc:55:40:
+                    60:eb:95:5c:54
                 ASN1 OID: prime256v1
                 NIST CURVE: P-256
         X509v3 extensions:
             X509v3 Basic Constraints: 
                 CA:FALSE
-            X509v3 Subject Key Identifier:
-59:B1:E1:19:F4:68:53:E9:0E:7C:9F:29:D0:FB:5B:1F:AC:C3:82:49
             X509v3 Authority Key Identifier: 
                 keyid:
-22:BC:B8:20:D9:C5:6D:2D:5B:B3:BB:64:8B:E0:8B:A7:86:5E:CE:B4
+      E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
 
-            X509v3 Key Usage: critical
-                Digital Signature, Key Encipherment
     Signature Algorithm: ecdsa-with-SHA256
-         30:45:02:20:4d:fd:a8:83:78:31:d2:62:a4:e5:48:a2:e0:a7:
-         3b:c5:14:e9:7e:46:13:45:bc:30:fd:1d:e5:d6:63:3e:d8:f4:
-         02:21:00:a8:e5:1e:c2:79:77:90:fc:40:a8:7a:bf:b1:bd:81:
-         8b:ee:d7:56:1a:04:4d:8f:c8:3d:76:5f:4d:6e:36:a2:c2
+         30:46:02:21:00:d2:e6:45:3b:b0:c3:00:b3:25:8d:f1:83:fe:
+         d9:37:c1:a2:49:65:69:7f:6b:b9:ef:2c:05:07:06:31:ac:17:
+         bd:02:21:00:e2:ce:9e:7b:7f:74:50:33:ad:9e:ff:12:4e:e9:
+         a6:f3:b8:36:65:ab:7d:80:bb:56:88:bc:03:1d:e5:1e:31:6f
 

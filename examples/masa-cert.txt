@@ -2,37 +2,47 @@ Certificate:
     Data:
         Version: 3 (0x2)
         Serial Number:
-            70:5a:34:7e:67:d2:4d:70:b0:c6:ca:60:ff:fb:75:d9:46:82:e6:0e
+            14:26:b8:1c:ce:d8:c3:e8:14:05:cb:87:67:0d:be:ef:d5:81:25:b4
         Signature Algorithm: ecdsa-with-SHA256
-        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok,
-                OU=manufacturer, CN=masa.stok.nl
+        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, 
+            OU=manufacturer, CN=masa.stok.nl
+
         Validity
-            Not Before: Sep  9 07:42:03 2020 GMT
-            Not After : Sep  9 07:42:03 2021 GMT
-        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok,
-                  OU=manufacturer, CN=masa.stok.nl
+            Not Before: Dec  9 10:02:36 2020 GMT
+            Not After : Sep  5 10:02:36 2023 GMT
+        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, 
+            OU=manufacturer, CN=masa.stok.nl
         Subject Public Key Info:
             Public Key Algorithm: id-ecPublicKey
                 Public-Key: (256 bit)
                 pub:
-                    04:81:f4:72:ec:9c:47:b2:8e:d1:eb:38:33:41:00:
-                    d3:62:f6:48:50:da:02:d0:56:b2:22:7b:c8:4b:80:
-                    59:95:77:07:d0:c3:58:8c:3c:f2:3c:5b:00:83:79:
-                    54:da:0d:d1:b0:af:a1:c2:e8:cd:2c:3b:d0:86:45:
-                    9f:89:73:0a:cb
+                    04:59:80:94:66:14:94:20:30:3c:66:08:85:55:86:
+                    db:e7:d4:d1:d7:7a:d2:a3:1a:0c:73:6b:01:0d:02:
+                    12:15:d6:1f:f3:6e:c8:d4:84:60:43:3b:21:c5:83:
+                    80:1e:fc:e2:37:85:77:97:94:d4:aa:34:b5:b6:c6:
+                    ed:f3:17:5c:f1
                 ASN1 OID: prime256v1
                 NIST CURVE: P-256
         X509v3 extensions:
             X509v3 Subject Key Identifier: 
-22:BC:B8:20:D9:C5:6D:2D:5B:B3:BB:64:8B:E0:8B:A7:86:5E:CE:B4
+      E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
             X509v3 Authority Key Identifier: 
                 keyid:
-22:BC:B8:20:D9:C5:6D:2D:5B:B3:BB:64:8B:E0:8B:A7:86:5E:CE:B4
+       E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
 
-            X509v3 Basic Constraints: 
+            X509v3 Basic Constraints: critical
                 CA:TRUE
+            X509v3 Extended Key Usage: 
+                CMC Registration Authority,
+                TLS Web Server Authentication,
+                TLS Web Client Authentication
+            X509v3 Key Usage: critical
+                Digital Signature, Non Repudiation, Key Encipherment, 
+                      Data Encipherment, Certificate Sign, CRL Sign
     Signature Algorithm: ecdsa-with-SHA256
-         30:45:02:20:04:ac:8d:48:62:a2:a5:04:4f:61:fd:38:83:53:
-         9f:00:e7:d6:4b:4d:30:1b:84:29:d4:2d:35:58:b0:a0:0c:7d:
-         02:21:00:8c:f1:f4:f9:a2:11:fe:64:46:a9:87:9f:58:ca:ea:
-         da:4f:0a:42:32:c2:6a:e8:c5:9d:62:c0:67:f0:b8:44:43
+         30:44:02:20:2e:c5:f2:24:72:70:20:ea:6e:74:8b:13:93:67:
+         8a:e6:fe:fb:8d:56:7f:f5:34:18:a9:ef:a5:0f:c3:99:ca:53:
+         02:20:3d:dc:91:d0:e9:6a:69:20:01:fb:e4:20:40:de:7c:7d:
+         98:ed:d8:84:53:61:84:a7:f9:13:06:4c:a9:b2:8f:5c
+
+
