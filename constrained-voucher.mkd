@@ -557,7 +557,7 @@ This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}}. 
 A coaps enrollstatus message can be :
 
 ~~~
-    GET coaps://[192.0.2.1:8085]/est/es
+    POST coaps://[192.0.2.1:8085]/est/es
 ~~~
 
 The corresponding coap header fields are shown below.
@@ -565,7 +565,7 @@ The corresponding coap header fields are shown below.
 ~~~
   Ver = 1
   T = 0 (CON)
-  Code = 0x01 (0.01 is GET)
+  Code = 0x02 (0.02 is POST)
   Options
    Option  (Uri-Path)
      Option Delta = 0xb   (option nr = 11)
