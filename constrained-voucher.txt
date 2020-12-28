@@ -1,0 +1,2464 @@
+
+
+
+
+anima Working Group                                        M. Richardson
+Internet-Draft                                  Sandelman Software Works
+Intended status: Standards Track                         P. van der Stok
+Expires: July 1, 2021                             vanderstok consultancy
+                                                           P. Kampanakis
+                                                           Cisco Systems
+                                                                 E. Dijk
+                                                       IoTconsultancy.nl
+                                                       December 28, 2020
+
+
+       Constrained Voucher Artifacts for Bootstrapping Protocols
+                draft-ietf-anima-constrained-voucher-10
+
+Abstract
+
+   This document defines a strategy to securely assign a pledge to an
+   owner, using an artifact signed, directly or indirectly, by the
+   pledge's manufacturer.  This artifact is known as a "voucher".
+
+   This document builds upon the work in [RFC8366], encoding the
+   resulting artifact in CBOR.  Use with two signature technologies are
+   described.
+
+   Additionally, this document explains how constrained vouchers may be
+   transported as an extension to the [I-D.ietf-ace-coap-est] protocol.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on July 1, 2021.
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 1]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+Copyright Notice
+
+   Copyright (c) 2020 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  Requirements Language . . . . . . . . . . . . . . . . . . . .   4
+   4.  Survey of Voucher Types . . . . . . . . . . . . . . . . . . .   4
+   5.  Discovery and URI . . . . . . . . . . . . . . . . . . . . . .   5
+   6.  Artifacts . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     6.1.  Voucher Request artifact  . . . . . . . . . . . . . . . .   7
+       6.1.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .   7
+       6.1.2.  SID values  . . . . . . . . . . . . . . . . . . . . .   8
+       6.1.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .   9
+       6.1.4.  Example voucher request artifact  . . . . . . . . . .  13
+     6.2.  Voucher artifact  . . . . . . . . . . . . . . . . . . . .  13
+       6.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  14
+       6.2.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  14
+       6.2.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  15
+       6.2.4.  Example voucher artifacts . . . . . . . . . . . . . .  17
+     6.3.  Signing voucher and voucher-request artifacts with COSE .  18
+   7.  Design Considerations . . . . . . . . . . . . . . . . . . . .  19
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  19
+     8.1.  Clock Sensitivity . . . . . . . . . . . . . . . . . . . .  19
+     8.2.  Protect Voucher PKI in HSM  . . . . . . . . . . . . . . .  19
+     8.3.  Test Domain Certificate Validity when Signing . . . . . .  19
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  19
+     9.1.  Resource Type Registry  . . . . . . . . . . . . . . . . .  19
+     9.2.  The IETF XML Registry . . . . . . . . . . . . . . . . . .  20
+     9.3.  The YANG Module Names Registry  . . . . . . . . . . . . .  20
+     9.4.  The RFC SID range assignment sub-registry . . . . . . . .  20
+     9.5.  The SMI Security for S/MIME CMS Content Type Registry . .  21
+     9.6.  Media-Type Registry . . . . . . . . . . . . . . . . . . .  21
+       9.6.1.  application/voucher-cms+cbor  . . . . . . . . . . . .  21
+       9.6.2.  application/voucher-cose+cbor . . . . . . . . . . . .  21
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 2]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+     9.7.  CoAP Content-Format Registry  . . . . . . . . . . . . . .  22
+   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  22
+   11. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .  23
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  23
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  23
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  25
+   Appendix A.  EST messages to EST-coaps  . . . . . . . . . . . . .  25
+     A.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  25
+     A.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  27
+   Appendix B.  CMS signed messages  . . . . . . . . . . . . . . . .  27
+     B.1.  signed requestvoucher . . . . . . . . . . . . . . . . . .  27
+   Appendix C.  COSE examples  . . . . . . . . . . . . . . . . . . .  29
+     C.1.  Pledge, Registrar and MASA keys . . . . . . . . . . . . .  33
+       C.1.1.  Pledge private key  . . . . . . . . . . . . . . . . .  33
+       C.1.2.  Registrar private key . . . . . . . . . . . . . . . .  33
+       C.1.3.  MASA private key  . . . . . . . . . . . . . . . . . .  33
+     C.2.  Pledge, Registrar and MASA certificates . . . . . . . . .  34
+       C.2.1.  Pledge IDevID certificate . . . . . . . . . . . . . .  34
+       C.2.2.  Registrar Certificate . . . . . . . . . . . . . . . .  36
+       C.2.3.  MASA Certificate  . . . . . . . . . . . . . . . . . .  38
+     C.3.  COSE signed voucher request from pledge to Registrar  . .  40
+     C.4.  COSE signed voucher request from Registrar to MASA  . . .  42
+     C.5.  COSE signed voucher from MASA to Pledge via Registrar . .  43
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  44
+
+1.  Introduction
+
+   Enrollment of new nodes into constrained networks with constrained
+   nodes present unique challenges.
+
+   There are bandwidth and code space issues to contend.  A solution
+   such as [I-D.ietf-anima-bootstrapping-keyinfra] may be too large in
+   terms of code space or bandwidth required.
+
+   This document defines a constrained version of [RFC8366].  Rather
+   than serializing the YANG definition in JSON, it is serialized into
+   CBOR ([RFC7049]).
+
+   This document follows a similar, but not identical structure as
+   [RFC8366] and supplements the brski part to [I-D.ietf-ace-coap-est].
+
+   This document describes a single new voucher format.  It is a COSE-
+   signed CBOR-encoded voucher transported using secured CoAP or HTTP.
+   The CoAP connection is protected either by OSCORE+EDHOC, or DTLS
+   (CoAPS).
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 3]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   There is additional work when the voucher is integrated into the key-
+   exchange, described in [I-D.selander-ace-ake-authz].  This work is
+   not in scope for this document.
+
+   Additional sections have been added concerning:
+
+   1.  Addition of voucher-request specification as defined in
+       [I-D.ietf-anima-bootstrapping-keyinfra],
+
+   2.  Addition to [I-D.ietf-ace-coap-est] of voucher transport requests
+       over CoAP.
+
+   The CBOR definitions for this constrained voucher format are defined
+   using the mechanism describe in [I-D.ietf-core-yang-cbor] using the
+   SID mechanism explained in [I-D.ietf-core-sid].  As the tooling to
+   convert YANG documents into an list of SID keys is still in its
+   infancy, the table of SID values presented here should be considered
+   normative rather than the output of the pyang tool.
+
+2.  Terminology
+
+   The following terms are defined in [RFC8366], and are used
+   identically as in that document: artifact, imprint, domain, Join
+   Registrar/Coordinator (JRC), Manufacturer Authorized Signing
+   Authority (MASA), pledge, Trust of First Use (TOFU), and Voucher.
+
+3.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+4.  Survey of Voucher Types
+
+   [RFC8366] provides for vouchers that assert proximity, that
+   authenticate the registrar and that include different amounts of
+   anti-replay protection.
+
+   This document does not make any extensions to the types of vouchers.
+
+   Time based vouchers are included in this definition, but given that
+   constrained devices are extremely unlikely to have accurate time,
+   their use is very unlikely.  Most users of these constrained vouchers
+   will be online and will use live nonces to provide anti-replay
+   protection.
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 4]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   [RFC8366] defined only the voucher artifact, and not the Voucher
+   Request artifact, which was defined in
+   [I-D.ietf-anima-bootstrapping-keyinfra].
+
+   This document defines both a constrained voucher and a constrained
+   voucher-request.  They are presented in the order "voucher-request",
+   followed by a "voucher" response as this is the time order that they
+   occur.
+
+   The pinned-domain-cert present in a voucher, is the certificate of
+   the Registrar.
+
+   The constrained voucher and constrained voucher request MUST be
+   signed.
+
+   The use of the two signing formats permit the use of both PKIX format
+   certificates, and raw public keys (RPK).
+
+   When RPKs are used, the voucher produced by the MASA pins the raw
+   public key of the Registrar: the pinned-domain-subject-public-key-
+   info in a voucher, is the raw public key of the Registrar.  This is
+   described in the YANG definition for the constrained voucher.
+
+5.  Discovery and URI
+
+   This section describes the BRSKI extensions to EST-coaps
+   [I-D.ietf-ace-coap-est] to transport the voucher between registrar,
+   proxy and pledge over CoAP.  The extensions are targeted to low-
+   resource networks with small packets.  Saving header space is
+   important and the EST-coaps URI is shorter than the EST URI.
+
+   The presence and location of (path to) the management data are
+   discovered by sending a GET request to "/.well-known/core" including
+   a resource type (RT) parameter with the value "ace.est" [RFC6690].
+   Upon success, the return payload will contain the root resource of
+   the EST resources.  It is up to the implementation to choose its root
+   resource; throughout this document the example root resource /est is
+   used.
+
+   The EST-coaps server URIs differ from the EST URI by replacing the
+   scheme https by coaps and by specifying shorter resource path names:
+
+     coaps://www.example.com/est/short-name
+
+   Figure 5 in section 3.2.2 of [RFC7030] enumerates the operations and
+   corresponding paths which are supported by EST.  Table 1 provides the
+   mapping from the BRSKI extension URI path to the EST-coaps URI path.
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 5]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+                     +------------------+-----------+
+                     | BRSKI            | EST-coaps |
+                     +------------------+-----------+
+                     | /requestvoucher  | /rv       |
+                     |                  |           |
+                     | /voucher_status  | /vs       |
+                     |                  |           |
+                     | /enrollstatus    | /es       |
+                     |                  |           |
+                     | /requestauditlog | /ra       |
+                     +------------------+-----------+
+
+                   Table 1: BRSKI path to EST-coaps path
+
+   /requestvoucher, /voucher_status and /enrollstatus are needed between
+   pledge and Registrar.
+
+   When discovering the root path for the EST resources, the server MAY
+   return the full resource paths and the used content types.  This is
+   useful when multiple content types are specified for EST-coaps
+   server.  For example, the following more complete response is
+   possible.
+
+   [ EDNOTE: spell out where voucher artifacts are used in BRSKI flows
+   since the APIs ]
+
+   [ EDNOTE: The /requestauditlog and /voucher-status are exchanged by
+   the Registrar and MASA.  The JRC will likely talk to MASA over a
+   normal (not constrained) medium.  Do we need /ra and /vs?  Do we need
+   to remove them from the example too?  Also what happens to the
+   voucher-request and response in this case?  Is MASA supposed to
+   support contrained vouchers? ]
+
+     REQ: GET /.well-known/core?rt=brski*
+
+     RES: 2.05 Content
+     </b>; rt="brski"
+     </b/rv>; rt="brski.rv";ct=TBD2 TBD3
+     </b/vs>; rt="brski.vs";ct=50 60
+     </b/es>; rt="brski.es";ct=50 60
+
+   The return of the content-types allows the client to choose the most
+   appropriate one from multiple content types.
+
+   ct=TBD2 stands for Content-Format "application/voucher-cms+cbor, and
+   ct=TBD3 stands for Content-Format "application/voucher-cose+cbor".
+
+   Content-Formats TBD2 and TBD3 are defined in this document.
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 6]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   The Content-Format ("application/json") 50 MAY be supported.
+   Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be
+   supported by the Registrar.
+
+   The Pledge and MASA need to support one or more formats for the
+   voucher.  The MASA needds to support whatever formats that the
+   pledge's produced by that manufacturer supports.
+
+6.  Artifacts
+
+   This section describes the abstract (tree) definition as explained in
+   [I-D.ietf-netmod-yang-tree-diagrams] first.  This provides a high-
+   level view of the contents of each artifact.
+
+   Then the assigned SID values are presented.  These have been assigned
+   using the rules in [I-D.ietf-core-sid], with an allocation that was
+   made via the http://comi.space service.
+
+6.1.  Voucher Request artifact
+
+6.1.1.  Tree Diagram
+
+   The following diagram is largely a duplicate of the contents of
+   [RFC8366], with the addition of proximity-registrar-subject-public-
+   key-info, proximity-registrar-cert, and prior-signed-voucher-request.
+
+   prior-signed-voucher-request is only used between the Registrar and
+   the MASA.  proximity-registrar-subject-public-key-info replaces
+   proximity-registrar-cert for the extremely constrained cases.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 7]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   module: ietf-constrained-voucher-request
+
+     grouping voucher-request-constrained-grouping
+       +-- voucher
+          +-- created-on?
+          |       yang:date-and-time
+          +-- expires-on?
+          |       yang:date-and-time
+          +-- assertion
+          |       enumeration
+          +-- serial-number
+          |       string
+          +-- idevid-issuer?
+          |       binary
+          +-- pinned-domain-cert?
+          |       binary
+          +-- domain-cert-revocation-checks?
+          |       boolean
+          +-- nonce?
+          |       binary
+          +-- last-renewal-date?
+          |       yang:date-and-time
+          +-- proximity-registrar-subject-public-key-info?
+          |       binary
+          +-- proximity-registrar-sha256-of-subject-public-key-info?
+          |       binary
+          +-- proximity-registrar-cert?
+          |       binary
+          +-- prior-signed-voucher-request?
+                  binary
+
+6.1.2.  SID values
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 8]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+ SID  Assigned to:
+----- ------------------------------------------------------------------
+ 2500 ietf-constrained-voucher-request
+ 2501 /ietf-constrained-voucher-request:voucher
+ 2502 /ietf-constrained-voucher-request:voucher/assertion
+ 2503 /ietf-constrained-voucher-request:voucher/created-on
+ 2504 /ietf-constrained-voucher-request:voucher
+                                        /domain-cert-revocation-checks
+ 2505 /ietf-constrained-voucher-request:voucher/expires-on
+ 2506 /ietf-constrained-voucher-request:voucher/idevid-issuer
+ 2507 /ietf-constrained-voucher-request:voucher/last-renewal-date
+ 2508 /ietf-constrained-voucher-request:voucher/nonce
+ 2509 /ietf-constrained-voucher-request:voucher/pinned-domain-cert
+ 2510 /ietf-constrained-voucher-request:voucher
+                                          /prior-signed-voucher-request
+ 2511 /ietf-constrained-voucher-request:voucher/proximity-registrar-cert
+ 2512 /ietf-constrained-voucher-request:voucher
+                 /proximity-registrar-sha256-of-subject-public-key-info
+ 2513 /ietf-constrained-voucher-request:voucher
+                           /proximity-registrar-subject-public-key-info
+ 2514 /ietf-constrained-voucher-request:voucher/serial-number
+
+
+6.1.3.  YANG Module
+
+   In the constrained-voucher-request YANG module, the voucher is
+   "augmented" within the "used" grouping statement such that one
+   continuous set of SID values is generated for the constrained-
+   voucher-request module name, all voucher attributes, and the
+   constrained-voucher-request attribute.  Two attributes of the voucher
+   are "refined" to be optional.
+
+  <CODE BEGINS> file "ietf-constrained-voucher-request@2019-08-01.yang"
+  module ietf-constrained-voucher-request {
+    yang-version 1.1;
+
+    namespace
+      "urn:ietf:params:xml:ns:yang:ietf-constrained-voucher-request";
+    prefix "constrained";
+
+    import ietf-restconf {
+      prefix rc;
+      description
+        "This import statement is only present to access
+         the yang-data extension defined in RFC 8040.";
+      reference "RFC 8040: RESTCONF Protocol";
+    }
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                  [Page 9]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+    import ietf-voucher {
+      prefix "v";
+    }
+
+    organization
+     "IETF ANIMA Working Group";
+
+    contact
+     "WG Web:   <http://tools.ietf.org/wg/anima/>
+      WG List:  <mailto:anima@ietf.org>
+      Author:   Michael Richardson
+                <mailto:mcr+ietf@sandelman.ca>
+      Author:   Peter van der Stok
+                <mailto: consultancy@vanderstok.org>
+      Author:   Panos Kampanakis
+                <mailto: pkampana@cisco.com>";
+    description
+     "This module defines the format for a voucher request,
+      which is produced by a pledge to request a voucher.
+      The voucher-request is sent to the potential owner's
+      Registrar, which in turn sends the voucher request to
+      the manufacturer or delegate (MASA).
+
+      A voucher is then returned to the pledge, binding the
+      pledge to the owner.  This is a constrained version of the
+      voucher-request present in
+      draft-ietf-anima-bootstrap-keyinfra.txt.
+
+      This version provides a very restricted subset appropriate
+      for very constrained devices.
+      In particular, it assumes that nonce-ful operation is
+      always required, that expiration dates are rather weak, as no
+      clocks can be assumed, and that the Registrar is identified
+      by a pinned Raw Public Key.
+
+      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+      'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY',
+      and 'OPTIONAL' in the module text are to be interpreted as
+      described in RFC 2119.";
+
+    revision "2019-08-01" {
+      description
+       "Initial version";
+      reference
+       "RFC XXXX: Voucher Profile for Constrained Devices";
+    }
+
+    rc:yang-data voucher-request-constrained-artifact {
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 10]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+      // YANG data template for a voucher.
+      uses voucher-request-constrained-grouping;
+    }
+
+    // Grouping defined for future usage
+    grouping voucher-request-constrained-grouping {
+      description
+        "Grouping to allow reuse/extensions in future work.";
+
+      uses v:voucher-artifact-grouping {
+
+        refine voucher/created-on {
+            mandatory  false;
+        }
+
+        refine voucher/pinned-domain-cert {
+            mandatory  false;
+        }
+
+
+        augment "voucher" {
+          description "Base the constrained voucher-request upon the
+            regular one";
+
+          leaf proximity-registrar-subject-public-key-info {
+            type binary;
+            description
+              "The proximity-registrar-subject-public-key-info replaces
+               the proximit-registrar-cert in constrained uses of
+               the voucher-request.
+               The proximity-registrar-subject-public-key-info is the
+               Raw Public Key of the Registrar. This field is encoded
+               as specified in RFC7250, section 3.
+               The ECDSA algorithm MUST be supported.
+               The EdDSA algorithm as specified in
+               draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
+               Support for the DSA algorithm is not recommended.
+               Support for the RSA algorithm is MAY, but due to
+               size is discouraged.";
+          }
+
+          leaf proximity-registrar-sha256-of-subject-public-key-info {
+            type binary;
+            description
+              "The proximity-registrar-sha256-of-subject-public-key-info
+               is an alternative to
+               proximity-registrar-subject-public-key-info.
+               and pinned-domain-cert.  In many cases the
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 11]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+               public key of the domain has already been transmitted
+               during the key agreement protocol, and it is wasteful
+               to transmit the public key another two times.
+               The use of a hash of public key info, at 32-bytes for
+               sha256 is a significant savings compared to an RSA
+               public key, but is only a minor savings compared to
+               a 256-bit ECDSA public-key.
+               Algorithm agility is provided by extensions to this
+               specifications which define new leaf for other hash
+               types.";
+          }
+
+          leaf proximity-registrar-cert {
+            type binary;
+            description
+              "An X.509 v3 certificate structure as specified by
+               RFC 5280,
+               Section 4 encoded using the ASN.1 distinguished encoding
+               rules (DER), as specified in ITU-T X.690.
+
+               The first certificate in the Registrar TLS server
+               certificate_list sequence  (see [RFC5246]) presented by
+               the Registrar to the Pledge. This MUST be populated in a
+               Pledge's voucher request if the proximity assertion is
+               populated.";
+          }
+
+          leaf prior-signed-voucher-request {
+            type binary;
+            description
+              "If it is necessary to change a voucher, or re-sign and
+               forward a voucher that was previously provided along a
+               protocol path, then the previously signed voucher
+               SHOULD be included in this field.
+
+               For example, a pledge might sign a proximity voucher,
+               which an intermediate registrar then re-signs to
+               make its own proximity assertion.  This is a simple
+               mechanism for a chain of trusted parties to change a
+               voucher, while maintaining the prior signature
+               information.
+
+               The pledge MUST ignore all prior voucher information
+               when accepting a voucher for imprinting. Other
+               parties MAY examine the prior signed voucher
+               information for the purposes of policy decisions.
+               For example this information could be useful to a
+               MASA to determine that both pledge and registrar
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 12]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+               agree on proximity assertions. The MASA SHOULD
+               remove all prior-signed-voucher-request information when
+               signing a voucher for imprinting so as to minimize the
+               final voucher size.";
+          }
+        }
+      }
+    }
+  }
+  <CODE ENDS>
+
+6.1.4.  Example voucher request artifact
+
+   Below is a CBOR serialization of the constrained-voucher-request is
+   shown in diagnostic CBOR notation.  The enum value of the assertion
+   field is calculated to be zero by following the algorithm described
+   in section 9.6.4.2 of [RFC7950].
+
+  {
+    2501: {
+      +2 : "2016-10-07T19:31:42Z", / SID= 2503, created-on /
+      +4 : "2016-10-21T19:31:42Z", / SID= 2505, expires-on /
+      +1 : 2,                      / SID= 2502, assertion /
+                                   /                "proximity" /
+      +13: "JADA123456789",        / SID= 2514, serial-number /
+      +5 : h'01020D0F',            / SID= 2506, idevid-issuer /
+      +10: h'cert.der',            / SID=2511, proximity-registrar-cert/
+      +3 : true,                   / SID= 2504, domain-cert
+                                                    -revocation-checks/
+      +6 : "2017-10-07T19:31:42Z", / SID= 2507, last-renewal-date /
+      +12: h'key_info'             / SID= 2513, proximity-registrar
+                                           -subject-public-key-info /
+    }
+  }
+
+
+
+
+6.2.  Voucher artifact
+
+   The voucher's primary purpose is to securely assign a pledge to an
+   owner.  The voucher informs the pledge which entity it should
+   consider to be its owner.
+
+   This document defines a voucher that is a CBOR encoded instance of
+   the YANG module defined in Section 5.3 that has been signed with CMS
+   or with COSE.
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 13]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+6.2.1.  Tree Diagram
+
+   The following diagram is largely a duplicate of the contents of
+   [RFC8366], with only the addition of pinned-domain-subject-public-
+   key-info.
+
+   module: ietf-constrained-voucher
+
+     grouping voucher-constrained-grouping
+       +-- voucher
+          +-- created-on?
+          |       yang:date-and-time
+          +-- expires-on?
+          |       yang:date-and-time
+          +-- assertion                                   enumeration
+          +-- serial-number                               string
+          +-- idevid-issuer?                              binary
+          +-- pinned-domain-cert?                         binary
+          +-- domain-cert-revocation-checks?              boolean
+          +-- nonce?                                      binary
+          +-- last-renewal-date?
+          |       yang:date-and-time
+          +-- pinned-domain-subject-public-key-info?      binary
+          +-- pinned-sha256-of-subject-public-key-info?   binary
+
+6.2.2.  SID values
+
+ SID   Assigned to:
+----- ------------------------------------------------------------------
+ 2450 ietf-constrained-voucher
+ 2451 /ietf-constrained-voucher:voucher
+ 2452 /ietf-constrained-voucher:voucher/assertion
+ 2453 /ietf-constrained-voucher:voucher/created-on
+ 2454 /ietf-constrained-voucher:voucher/domain-cert-revocation-checks
+ 2455 /ietf-constrained-voucher:voucher/expires-on
+ 2456 /ietf-constrained-voucher:voucher/idevid-issuer
+ 2457 /ietf-constrained-voucher:voucher/last-renewal-date
+ 2458 /ietf-constrained-voucher:voucher/nonce
+ 2459 /ietf-constrained-voucher:voucher/pinned-domain-cert
+ 2460 /ietf-constrained-voucher:voucher
+                            /pinned-domain-subject-public-key-info
+ 2461 /ietf-constrained-voucher:voucher
+                            /pinned-sha256-of-subject-public-key-info
+ 2462 /ietf-constrained-voucher:voucher/serial-number
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 14]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+6.2.3.  YANG Module
+
+   In the constrained-voucher YANG module, the voucher is "augmented"
+   within the "used" grouping statement such that one continuous set of
+   SID values is generated for the constrained-voucher module name, all
+   voucher attributes, and the constrained-voucher attribute.  Two
+   attributes of the voucher are "refined" to be optional.
+
+<CODE BEGINS> file "ietf-constrained-voucher@2019-08-01.yang"
+module ietf-constrained-voucher {
+  yang-version 1.1;
+
+  namespace
+    "urn:ietf:params:xml:ns:yang:ietf-constrained-voucher";
+  prefix "constrained";
+
+  import ietf-restconf {
+    prefix rc;
+    description
+      "This import statement is only present to access
+       the yang-data extension defined in RFC 8040.";
+    reference "RFC 8040: RESTCONF Protocol";
+  }
+
+  import ietf-voucher {
+    prefix "v";
+  }
+
+  organization
+   "IETF ANIMA Working Group";
+
+  contact
+   "WG Web:   <http://tools.ietf.org/wg/anima/>
+    WG List:  <mailto:anima@ietf.org>
+    Author:   Michael Richardson
+              <mailto:mcr+ietf@sandelman.ca>
+    Author:   Peter van der Stok
+              <mailto: consultancy@vanderstok.org>
+    Author:   Panos Kampanakis
+              <mailto: pkampana@cisco.com>";
+description
+  "This module defines the format for a voucher, which is produced
+   by a pledge's manufacturer or delegate (MASA) to securely assign
+   one or more pledges to an 'owner', so that the pledges may
+   establis a secure connection to the owner's network
+   infrastructure.
+
+   This version provides a very restricted subset appropriate
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 15]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   for very constrained devices.
+   In particular, it assumes that nonce-ful operation is
+   always required, that expiration dates are rather weak, as no
+   clocks can be assumed, and that the Registrar is identified
+   by a pinned Raw Public Key.
+
+   The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+   'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY',
+   and 'OPTIONAL' in the module text are to be interpreted as
+   described in RFC 2119.";
+
+  revision "2019-08-01" {
+    description
+     "Initial version";
+    reference
+     "RFC XXXX: Voucher Profile for Constrained Devices";
+  }
+
+  rc:yang-data voucher-constrained-artifact {
+    // YANG data template for a voucher.
+    uses voucher-constrained-grouping;
+  }
+
+  // Grouping defined for future usage
+  grouping voucher-constrained-grouping {
+    description
+      "Grouping to allow reuse/extensions in future work.";
+
+    uses v:voucher-artifact-grouping {
+
+      refine voucher/created-on {
+          mandatory  false;
+      }
+
+      refine voucher/pinned-domain-cert {
+          mandatory  false;
+      }
+
+      augment "voucher" {
+        description "Base the constrained voucher
+                                   upon the regular one";
+        leaf pinned-domain-subject-public-key-info {
+          type binary;
+          description
+            "The pinned-domain-subject-public-key-info replaces the
+             pinned-domain-cert in constrained uses of
+             the voucher. The pinned-domain-subject-public-key-info
+             is the Raw Public Key of the Registrar.
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 16]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+             This field is encoded as specified in RFC7250,
+             section 3.
+             The ECDSA algorithm MUST be supported.
+             The EdDSA algorithm as specified in
+             draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
+             Support for the DSA algorithm is not recommended.
+             Support for the RSA algorithm is a MAY.";
+        }
+
+        leaf pinned-sha256-of-subject-public-key-info {
+          type binary;
+          description
+            "The pinned-hash-subject-public-key-info is a second
+             alternative to pinned-domain-cert.  In many cases the
+             public key of the domain has already been transmitted
+             during the key agreement process, and it is wasteful
+             to transmit the public key another two times.
+             The use of a hash of public key info, at 32-bytes for
+             sha256 is a significant savings compared to an RSA
+             public key, but is only a minor savings compared to
+             a 256-bit ECDSA public-key.
+             Algorithm agility is provided by extensions to this
+             specifications which define new leaf for other hash types";
+        }
+      }
+    }
+  }
+}
+<CODE ENDS>
+
+6.2.4.  Example voucher artifacts
+
+   Below a the CBOR serialization of the constrained-voucher is shown in
+   diagnostic CBOR notation.  The enum value of the assertion field is
+   calculated to be zero by following the algorithm described in section
+   9.6.4.2 of [RFC7950].
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 17]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   {
+     2451: {
+       +2 : "2016-10-07T19:31:42Z", / SID = 2453, created-on /
+       +4 : "2016-10-21T19:31:42Z", / SID = 2455, expires-on /
+       +1 : 0,                      / SID = 2452, assertion /
+                                    /                "verified" /
+       +11: "JADA123456789",        / SID = 2462, serial-number /
+       +5 : h'01020D0F',            / SID = 2456, idevid-issuer /
+       +8 : h'cert.der',            / SID = 2459, pinned-domain-cert/
+       +3 : true,                   / SID = 2454, domain-cert
+                                                    -revocation-checks /
+       +6 : "2017-10-07T19:31:42Z", / SID = 2457, last-renewal-date /
+       +9 : h'key-info'             / SID = 2460, pinned-domain
+                                              -subject-public-key-info /
+     }
+   }
+
+
+
+
+6.3.  Signing voucher and voucher-request artifacts with COSE
+
+   The COSE-Sign1 structure is discussed in section 4.2 of [RFC8152].
+   The CBOR object that carries the body, the signature, and the
+   information about the body and signature is called the COSE_Sign1
+   structure.  It is used when only one signature is used on the body.
+   Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is
+   compulsory.
+
+   The supported COSE-sign1 object stucture is shown in Figure 1.
+   Support for EdDSA is encouraged.  [EDNOTE: Expand and add a reference
+   why. ]
+
+   COSE_Sign1(
+     [
+       h'A101382E',        # { "alg": EC256K1 }
+       {
+         "kid" : h'789'  # hash256(public key)
+       },
+       h'123', #voucher-request binary content
+       h'456', #voucher-request binary public signature
+     ]
+   )
+
+                       Figure 1: cose-sign1 example
+
+   The [COSE-registry] specifies the integers that replace the strings
+   and the mnemonics in Figure 1.  The value of the "kid" parameter is
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 18]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   an example value.  Usually a hash of the public key is used to
+   idientify the public key.  The public key and its hash are derived
+   from the relevant certificate (Pledge, Registrar or MASA
+   certificate).
+
+   In Appendix C a binary cose-sign1 object is shown based on the
+   voucher-request example of Section 6.1.4.
+
+7.  Design Considerations
+
+   The design considerations for the CBOR encoding of vouchers is much
+   the same as for [RFC8366].
+
+   One key difference is that the names of the leaves in the YANG does
+   not have a material effect on the size of the resulting CBOR, as the
+   SID translation process assigns integers to the names.
+
+   The request to the registrar with resource /est/vs returns a simple
+   (ACK, 2.05).  The client should be aware that also a (ACK, 0.0) can
+   be returned that is an acknowledgement of the request reception and
+   signifies that the response will come later.
+
+8.  Security Considerations
+
+8.1.  Clock Sensitivity
+
+   TBD.
+
+8.2.  Protect Voucher PKI in HSM
+
+   TBD.
+
+8.3.  Test Domain Certificate Validity when Signing
+
+   TBD.
+
+9.  IANA Considerations
+
+9.1.  Resource Type Registry
+
+   Additions to the sub-registry "CoAP Resource Type", within the "CoRE
+   parameters" registry are specified below.  These can be registered
+   either in the Expert Review range (0-255) or IETF Review range
+   (256-9999).
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 19]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+    ace.rt.rv needs registration with IANA
+    ace.rt.vs needs registration with IANA
+    ace.rt.es needs registration with IANA
+    ace.rt.ra needs registration with IANA
+
+9.2.  The IETF XML Registry
+
+   This document registers two URIs in the IETF XML registry [RFC3688].
+   Following the format in [RFC3688], the following registration is
+   requested:
+
+     URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
+     Registrant Contact: The ANIMA WG of the IETF.
+     XML: N/A, the requested URI is an XML namespace.
+
+     URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher-request
+     Registrant Contact: The ANIMA WG of the IETF.
+     XML: N/A, the requested URI is an XML namespace.
+
+9.3.  The YANG Module Names Registry
+
+   This document registers two YANG modules in the YANG Module Names
+   registry [RFC6020].  Following the format defined in [RFC6020], the
+   the following registration is requested:
+
+     name:         ietf-constrained-voucher
+     namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
+     prefix:       vch
+     reference:    RFC XXXX
+
+     name:         ietf-constrained-voucher-request
+     namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained
+                                              -voucher-request
+     prefix:       vch
+     reference:    RFC XXXX
+
+9.4.  The RFC SID range assignment sub-registry
+
+   ------------ ------ --------------------------- ------------
+   Entry-point | Size | Module name               | RFC Number
+   ------------ ------ --------------------------- ------------
+   2450          50     ietf-constrained-voucher    [ThisRFC]
+   2500          50     ietf-constrained-voucher    [ThisRFC}
+                                    -request
+   ----------- ------  --------------------------- ------------
+
+   Warning: These SID values are defined in [I-D.ietf-core-sid], not as
+   an Early Allocation.
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 20]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+9.5.  The SMI Security for S/MIME CMS Content Type Registry
+
+   This document registers an OID in the "SMI Security for S/MIME CMS
+   Content Type" registry (1.2.840.113549.1.9.16.1), with the value:
+
+     Decimal  Description                             References
+     -------  --------------------------------------  ----------
+     46       id-ct-animaCBORVoucher                  [ThisRFC]
+
+9.6.  Media-Type Registry
+
+   This section registers the 'application/voucher-cms+cbor' media type
+   and the 'application/voucher-cose+cbor' in the "Media Types"
+   registry.  These media types are used to indicate that the content is
+   a CBOR voucher either signed with a cms structure or a COSE_Sign1
+   structure [RFC8152].
+
+9.6.1.  application/voucher-cms+cbor
+
+   Type name:  application
+   Subtype name:  voucher-cms+cbor
+   Required parameters:  none
+   Optional parameters:  none
+   Encoding considerations:  CMS-signed CBOR vouchers are CBOR
+     encoded.
+   Security considerations:  See Security Considerations, Section
+   Interoperability considerations:  The format is designed to be
+     broadly interoperable.
+   Published specification:  THIS RFC.
+   Applications that use this media type:  ANIMA, 6tisch, and other
+     zero-touch imprinting systems
+   Additional information:
+     Magic number(s):  None
+     File extension(s):  .vch
+     Macintosh file type code(s):  none
+   Person & email address to contact for further information:  IETF
+     ANIMA WG
+   Intended usage:  LIMITED
+   Restrictions on usage:  NONE
+   Author:  ANIMA WG
+   Change controller:  IETF
+   Provisional registration? (standards tree only):  NO
+
+9.6.2.  application/voucher-cose+cbor
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 21]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   Type name:  application
+   Subtype name:  voucher-cose+cbor
+   Required parameters:  none
+   Optional parameters:  cose-type
+   Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects
+                             signed with one signer.
+   Security considerations:  See Security Considerations, Section
+   Interoperability considerations:  The format is designed to be
+     broadly interoperable.
+   Published specification:  THIS RFC.
+   Applications that use this media type:  ANIMA, 6tisch, and other
+     zero-touch imprinting systems
+   Additional information:
+     Magic number(s):  None
+     File extension(s):  .vch
+     Macintosh file type code(s):  none
+   Person & email address to contact for further information:  IETF
+     ANIMA WG
+   Intended usage:  LIMITED
+   Restrictions on usage:  NONE
+   Author:  ANIMA WG
+   Change controller:  IETF
+   Provisional registration? (standards tree only):  NO
+
+9.7.  CoAP Content-Format Registry
+
+   Additions to the sub-registry "CoAP Content-Formats", within the
+   "CoRE Parameters" registry are needed for two media types.  These can
+   be registered either in the Expert Review range (0-255) or IETF
+   Review range (256-9999).
+
+   Media type                    mime type    Encoding   ID  References
+   ----------------------------  -----------  --------- ---- ----------
+   application/voucher-cms+cbor      - -        CBOR    TBD2  [This RFC]
+   application/voucher-cose+cbor "COSE-Sign1"   CBOR    TBD3  [This RFC]
+
+10.  Acknowledgements
+
+   We are very grateful to Jim Schaad for explaining COSE and CMS
+   choices.  Also thanks to Jim Schaad for correctinging earlier version
+   of the COSE Sign1 objects.
+
+   Michel Veillette did extensive work on pyang to extend it to support
+   the SID allocation process, and this document was among the first
+   users.
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 22]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+11.  Changelog
+
+   -10 Design considerations extended Examples made consistent
+
+   -08 Examples for cose_sign1 are completed and improved.
+
+   -06 New SID values assigned; regenerated examples
+
+   -04 voucher and request-voucher MUST be signed examples for signed
+   request are added in appendix IANA SID registration is updated SID
+   values in examples are aligned signed cms examples aligned with new
+   SIDs
+
+   -03
+
+   Examples are inverted.
+
+   -02
+
+   Example of requestvoucher with unsigned appllication/cbor is added
+   attributes of voucher "refined" to optional
+   CBOR serialization of vouchers improved
+   Discovery port numbers are specified
+
+   -01
+
+   application/json is optional, application/cbor is compulsory
+   Cms and cose mediatypes are introduced
+
+12.  References
+
+12.1.  Normative References
+
+   [I-D.ietf-ace-coap-est]
+              Stok, P., Kampanakis, P., Richardson, M., and S. Raza,
+              "EST over secure CoAP (EST-coaps)", draft-ietf-ace-coap-
+              est-18 (work in progress), January 2020.
+
+   [I-D.ietf-anima-bootstrapping-keyinfra]
+              Pritikin, M., Richardson, M., Eckert, T., Behringer, M.,
+              and K. Watsen, "Bootstrapping Remote Secure Key
+              Infrastructures (BRSKI)", draft-ietf-anima-bootstrapping-
+              keyinfra-45 (work in progress), November 2020.
+
+   [I-D.ietf-core-sid]
+              Veillette, M., Pelov, A., and I. Petrov, "YANG Schema Item
+              iDentifier (YANG SID)", draft-ietf-core-sid-14 (work in
+              progress), July 2020.
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 23]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   [I-D.ietf-core-yang-cbor]
+              Veillette, M., Petrov, I., and A. Pelov, "CBOR Encoding of
+              Data Modeled with YANG", draft-ietf-core-yang-cbor-13
+              (work in progress), July 2020.
+
+   [I-D.selander-ace-ake-authz]
+              Selander, G., Mattsson, J., Vucinic, M., Richardson, M.,
+              and A. Schellenbaum, "Lightweight Authorization for
+              Authenticated Key Exchange.", draft-selander-ace-ake-
+              authz-02 (work in progress), November 2020.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC3688]  Mealling, M., "The IETF XML Registry", BCP 81, RFC 3688,
+              DOI 10.17487/RFC3688, January 2004,
+              <https://www.rfc-editor.org/info/rfc3688>.
+
+   [RFC5652]  Housley, R., "Cryptographic Message Syntax (CMS)", STD 70,
+              RFC 5652, DOI 10.17487/RFC5652, September 2009,
+              <https://www.rfc-editor.org/info/rfc5652>.
+
+   [RFC6020]  Bjorklund, M., Ed., "YANG - A Data Modeling Language for
+              the Network Configuration Protocol (NETCONF)", RFC 6020,
+              DOI 10.17487/RFC6020, October 2010,
+              <https://www.rfc-editor.org/info/rfc6020>.
+
+   [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
+              Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
+              October 2013, <https://www.rfc-editor.org/info/rfc7049>.
+
+   [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
+              RFC 7950, DOI 10.17487/RFC7950, August 2016,
+              <https://www.rfc-editor.org/info/rfc7950>.
+
+   [RFC8152]  Schaad, J., "CBOR Object Signing and Encryption (COSE)",
+              RFC 8152, DOI 10.17487/RFC8152, July 2017,
+              <https://www.rfc-editor.org/info/rfc8152>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 24]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   [RFC8366]  Watsen, K., Richardson, M., Pritikin, M., and T. Eckert,
+              "A Voucher Artifact for Bootstrapping Protocols",
+              RFC 8366, DOI 10.17487/RFC8366, May 2018,
+              <https://www.rfc-editor.org/info/rfc8366>.
+
+12.2.  Informative References
+
+   [COSE-registry]
+              IANA, ., "CBOR Object Signing and Encryption (COSE)
+              registry", 2017,
+              <https://www.iana.org/assignments/cose/cose.xhtml>.
+
+   [I-D.ietf-netmod-yang-tree-diagrams]
+              Bjorklund, M. and L. Berger, "YANG Tree Diagrams", draft-
+              ietf-netmod-yang-tree-diagrams-06 (work in progress),
+              February 2018.
+
+   [RFC6690]  Shelby, Z., "Constrained RESTful Environments (CoRE) Link
+              Format", RFC 6690, DOI 10.17487/RFC6690, August 2012,
+              <https://www.rfc-editor.org/info/rfc6690>.
+
+   [RFC7030]  Pritikin, M., Ed., Yee, P., Ed., and D. Harkins, Ed.,
+              "Enrollment over Secure Transport", RFC 7030,
+              DOI 10.17487/RFC7030, October 2013,
+              <https://www.rfc-editor.org/info/rfc7030>.
+
+Appendix A.  EST messages to EST-coaps
+
+   This section extends the examples from Appendix A of
+   [I-D.ietf-ace-coap-est].  The CoAP headers are only worked out for
+   the enrollstatus example.
+
+A.1.  enrollstatus
+
+   A coaps enrollstatus message can be :
+
+       GET coaps://[192.0.2.1:8085]/est/es
+
+   The corresponding coap header fields are shown below.
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 25]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+     Ver = 1
+     T = 0 (CON)
+     Code = 0x01 (0.01 is GET)
+     Options
+      Option  (Uri-Path)
+        Option Delta = 0xb   (option nr = 11)
+        Option Length = 0x3
+        Option Value = "est"
+      Option  (Uri-Path)
+        Option Delta = 0x0   (option nr = 11)
+        Option Length = 0x2
+        Option Value = "es"
+     Payload = [Empty]
+
+   The Uri-Host and Uri-Port Options are omitted because they coincide
+   with the transport protocol destination address and port
+   respectively.
+
+   A 2.05 Content response with an unsigned voucher status (ct=60) will
+   then be:
+
+      2.05 Content (Content-Format: application/cbor)
+
+   With CoAP fields and payload:
+
+      Ver=1
+      T=2 (ACK)
+      Code = 0x45 (2.05 Content)
+      Options
+        Option1 (Content-Format)
+        Option Delta = 0xC  (option nr 12)
+        Option Length = 0x2
+        Option Value = 60 (application/cbor)
+
+        Payload (CBOR diagnostic) =
+        {
+        "version":"1",
+        "Status": 1,   / 1 = Success, 0 = Fail  /
+        "Reason":"Informative human readable message",
+        "reason-context": "Additional information"
+        }
+
+   The binary payload is:
+
+        A46776657273696F6E6131665374617475730166526561736F6E7822
+        496E666F726D61746976652068756D616E207265616461626C65206D
+        6573736167656e726561736F6E2D636F6E74657874
+        764164646974696F6E616C20696E666F726D6174696F6E
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 26]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   The binary payload disassembles to the above CBOR diagnostic code.
+
+A.2.  voucher_status
+
+   A coaps voucher_status message can be:
+
+      POST coaps://[2001:db8::2:1]:61616]/est/vs
+
+   A 2.05 Content response with a non signed CBOR voucher status (ct=60)
+   will then be:
+
+       2.05 Content (Content-Format: application/cbor)
+       Payload =
+   a46776657273696f6e6131665374617475730166526561736f6e7822496e666f7
+   26d61746976652068756d616e207265616461626c65206d6573736167656e7265
+   61736f6e2d636f6e74657874764164646974696f6e616c20696e666f726d61746
+   96f6e
+
+   The payload above is represented in hexadecimal.
+
+   {"version": "1", "Status": 1, "Reason": "Informative human
+   readable message", "reason-context": "Additional information"}
+
+Appendix B.  CMS signed messages
+
+   Signed request-voucher-request payloads are sent from pledge to
+   Registrar, as explained in Section 5.2 of
+   [I-D.ietf-anima-bootstrapping-keyinfra].
+
+B.1.  signed requestvoucher
+
+   A CMS signed requestvoucher message from JRC to MASA is shown below.
+   It would be CoAP POSTED to /est/rv.
+
+       POST coaps://[2001:db8::2:1]:61616]/est/rv
+       (Content-Format: application/voucher-cms+cbor)
+
+   The payload would be in binary, but is presented in base64 in this
+   document.
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 27]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   MIIDugYJKoZIhvcNAQcCoIIDqzCCA6cCAQExDTALBglghkgBZQMEAgEwCwYJ
+   KoZIhvcNAQcBoIICQTCCAj0wggHioAMCAQICCH52Yde1TkYyMAoGCCqGSM49
+   BAMCMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEUMBIGA1UECgwLRXhh
+   bXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRpb24xEzARBgNVBAMMCjgw
+   Mi4xQVIgQ0EwIBcNMTkwMTMxMTEyOTE2WhgPOTk5OTEyMzEyMzU5NTlaMFwx
+   CzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTELMAkGA1UEBwwCTEExFDASBgNV
+   BAoMC2V4YW1wbGUgSW5jMQwwCgYDVQQLDANJb1QxDzANBgNVBAUTBld0MTIz
+   NDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMi0IfEcJeR+OsVxI78tn9xJ
+   TwKLw1HMgMA/FQv1DP+VjXVBnYGmokXf+ueQvpXPdfYC+RUmGPgWorI7Vjjl
+   n9mjgYowgYcwCQYDVR0TBAIwADAdBgNVHQ4EFgQUlmANhxa/f9DnUtCsdgd3
+   rWZdAqAwHwYDVR0jBBgwFoAUaNFlUflRv8gqQx0Nnwi8LSBbEWAwDgYDVR0P
+   AQH/BAQDAgWgMCoGA1UdEQQjMCGgHwYIKwYBBQUHCASgEzARBgkrBgEEAbQ7
+   CgEEBAECAwQwCgYIKoZIzj0EAwIDSQAwRgIhAMDYGZbSUH1pPzxI6qXulJG9
+   ptshQJnZgRfGOzYTdM2GAiEAp3SYn0wyGlzyXYMqTTNqCK1n3yDxUGQhGIoK
+   3m00kjYxggE/MIIBOwIBATBpMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJD
+   QTEUMBIGA1UECgwLRXhhbXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRp
+   b24xEzARBgNVBAMMCjgwMi4xQVIgQ0ECCH52Yde1TkYyMAsGCWCGSAFlAwQC
+   AaBpMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+   DTE5MDQwODEwNDgzNlowLwYJKoZIhvcNAQkEMSIEILEdCTOLs2Zy7w3LgvSZ
+   XZEadz3LbznoFBs6FMFN91RaMAoGCCqGSM49BAMCBEcwRQIgASjDsIpr0tW/
+   n6dRHqvvqsqgZlHbtFnErUbWfhS0KD4CIQDDUEqc5wTmRGf0adEQVQzqmIgh
+   MEgF10vqXv02gL1jLw==
+
+   A 2.04 Changed response returning CBOR voucher signed with a cms
+   structure(ct=TBD2) will then be:
+
+       2.04 Changed (Content-Format: application/voucher-cms+cbor)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 28]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   MIIDuwYJKoZIhvcNAQcCoIIDrDCCA6gCAQExDTALBglghkgBZQMEAgEwCwYJ
+   KoZIhvcNAQcBoIICQTCCAj0wggHioAMCAQICCH52Yde1TkYyMAoGCCqGSM49
+   BAMCMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEUMBIGA1UECgwLRXhh
+   bXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRpb24xEzARBgNVBAMMCjgw
+   Mi4xQVIgQ0EwIBcNMTkwMTMxMTEyOTE2WhgPOTk5OTEyMzEyMzU5NTlaMFwx
+   CzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTELMAkGA1UEBwwCTEExFDASBgNV
+   BAoMC2V4YW1wbGUgSW5jMQwwCgYDVQQLDANJb1QxDzANBgNVBAUTBld0MTIz
+   NDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABMi0IfEcJeR+OsVxI78tn9xJ
+   TwKLw1HMgMA/FQv1DP+VjXVBnYGmokXf+ueQvpXPdfYC+RUmGPgWorI7Vjjl
+   n9mjgYowgYcwCQYDVR0TBAIwADAdBgNVHQ4EFgQUlmANhxa/f9DnUtCsdgd3
+   rWZdAqAwHwYDVR0jBBgwFoAUaNFlUflRv8gqQx0Nnwi8LSBbEWAwDgYDVR0P
+   AQH/BAQDAgWgMCoGA1UdEQQjMCGgHwYIKwYBBQUHCASgEzARBgkrBgEEAbQ7
+   CgEEBAECAwQwCgYIKoZIzj0EAwIDSQAwRgIhAMDYGZbSUH1pPzxI6qXulJG9
+   ptshQJnZgRfGOzYTdM2GAiEAp3SYn0wyGlzyXYMqTTNqCK1n3yDxUGQhGIoK
+   3m00kjYxggFAMIIBPAIBATBpMF0xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJD
+   QTEUMBIGA1UECgwLRXhhbXBsZSBJbmMxFjAUBgNVBAsMDWNlcnRpZmljYXRp
+   b24xEzARBgNVBAMMCjgwMi4xQVIgQ0ECCH52Yde1TkYyMAsGCWCGSAFlAwQC
+   AaBpMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8X
+   DTE5MDQwODA3MzQxMFowLwYJKoZIhvcNAQkEMSIEIP2rKa+J8LVdwYEmB2he
+   uxsz05As0zoAAYkeyNqsh4fiMAoGCCqGSM49BAMCBEgwRgIhALOd2FKbe9FG
+   kN4Pg7FIgF+//cQv/N+v7tDZMzGBAFN0AiEAu5BI0oQ4o0wZcrDyKoU2GbeX
+   hlG/g+OgTUftYMJ32so=
+
+Appendix C.  COSE examples
+
+   These examples are generated on a pie 4 and a PC running BASH.  Keys
+   and Certificates have been generated with openssl with the following
+   shell script:
+
+#!/bin/bash
+#try-cert.sh
+export dir=./brski/intermediate
+export cadir=./brski
+export cnfdir=./conf
+export format=pem
+export default_crl_days=30
+sn=8
+
+DevID=pledge.1.2.3.4
+serialNumber="serialNumber=$DevID"
+export hwType=1.3.6.1.4.1.6715.10.1
+export hwSerialNum=01020304 # Some hex
+export subjectAltName="otherName:1.3.6.1.5.5.7.8.4;SEQ:hmodname"
+echo  $hwType - $hwSerialNum
+echo $serialNumber
+OPENSSL_BIN="openssl"
+
+# remove all files
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 29]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+rm -r ./brski/*
+#
+# initialize file structure
+# root level
+cd $cadir
+mkdir certs crl csr newcerts private
+chmod 700 private
+touch index.txt
+touch serial
+echo 11223344556600 >serial
+echo 1000 > crlnumber
+# intermediate level
+mkdir intermediate
+cd intermediate
+mkdir certs crl csr newcerts private
+chmod 700 private
+touch index.txt
+echo 11223344556600 >serial
+echo 1000 > crlnumber
+cd ../..
+
+
+
+# file structure is cleaned start filling
+
+echo "#############################"
+echo "create registrar keys and certificates "
+echo "#############################"
+
+
+echo "create root registrar certificate using ecdsa with sha 256 key"
+$OPENSSL_BIN ecparam -name prime256v1 -genkey \
+   -noout -out $cadir/private/ca-regis.key
+
+$OPENSSL_BIN req -new -x509 \
+ -config $cnfdir/openssl-regis.cnf \
+ -key $cadir/private/ca-regis.key \
+ -out $cadir/certs/ca-regis.crt \
+ -extensions v3_ca\
+ -days 365 \
+ -subj "/C=NL/ST=NB/L=Helmond/O=vanderstok/OU=consultancy \
+/CN=registrar.stok.nl"
+
+# Combine authority certificate and key
+echo "Combine authority certificate and key"
+$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+   -inkey $cadir/private/ca-regis.key \
+   -in $cadir/certs/ca-regis.crt -export \
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 30]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   -out $cadir/certs/ca-regis-comb.pfx
+
+# converteer authority pkcs12 file to pem
+echo "converteer authority pkcs12 file to pem"
+$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+   -in $cadir/certs/ca-regis-comb.pfx \
+   -out $cadir/certs/ca-regis-comb.crt -nodes
+
+#show certificate in registrar combined certificate
+$OPENSSL_BIN  x509 -in $cadir/certs/ca-regis-comb.crt -text
+
+#
+# Certificate Authority for MASA
+#
+echo "#############################"
+echo "create MASA keys and certificates "
+echo "#############################"
+
+echo "create root MASA certificate using ecdsa with sha 256 key"
+$OPENSSL_BIN ecparam -name prime256v1 -genkey -noout \
+   -out $cadir/private/ca-masa.key
+
+$OPENSSL_BIN req -new -x509 \
+ -config $cnfdir/openssl-masa.cnf \
+ -days 1000 -key $cadir/private/ca-masa.key \
+  -out $cadir/certs/ca-masa.crt \
+ -extensions v3_ca\
+ -subj "/C=NL/ST=NB/L=Helmond/O=vanderstok/OU=manufacturer\
+/CN=masa.stok.nl"
+
+# Combine authority certificate and key
+echo "Combine authority certificate and key for masa"
+$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+   -inkey $cadir/private/ca-masa.key \
+   -in $cadir/certs/ca-masa.crt -export \
+   -out $cadir/certs/ca-masa-comb.pfx
+
+# converteer authority pkcs12 file to pem for masa
+echo "converteer authority pkcs12 file to pem for masa"
+$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+   -in $cadir/certs/ca-masa-comb.pfx \
+   -out $cadir/certs/ca-masa-comb.crt -nodes
+
+#show certificate in pledge combined certificate
+$OPENSSL_BIN  x509 -in $cadir/certs/ca-masa-comb.crt -text
+
+
+#
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 31]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+# Certificate for Pledge derived from MASA certificate
+#
+echo "#############################"
+echo "create pledge keys and certificates "
+echo "#############################"
+
+
+# Pledge derived Certificate
+
+echo "create pledge derived certificate using ecdsa with sha 256 key"
+$OPENSSL_BIN ecparam -name prime256v1 -genkey -noout \
+   -out $dir/private/pledge.key
+
+echo "create pledge certificate request"
+$OPENSSL_BIN req -nodes -new -sha256 \
+   -key $dir/private/pledge.key -out $dir/csr/pledge.csr \
+  -subj "/C=NL/ST=NB/L=Helmond/O=vanderstok/OU=manufacturing\
+ /CN=uuid:$DevID/$serialNumber"
+
+# Sign pledge derived Certificate
+echo "sign pledge derived certificate "
+$OPENSSL_BIN ca -config $cnfdir/openssl-pledge.cnf \
+ -extensions 8021ar_idevid\
+ -days 365 -in $dir/csr/pledge.csr \
+ -out $dir/certs/pledge.crt
+
+# Add pledge key and pledge certificate to pkcs12 file
+echo "Add derived pledge key and derived pledge \
+ certificate to pkcs12 file"
+$OPENSSL_BIN pkcs12  -passin pass:watnietweet -passout pass:watnietweet\
+   -inkey $dir/private/pledge.key \
+   -in $dir/certs/pledge.crt -export \
+   -out $dir/certs/pledge-comb.pfx
+
+# converteer pledge pkcs12 file to pem
+echo "converteer pledge pkcs12 file to pem"
+$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+   -in $dir/certs/pledge-comb.pfx \
+   -out $dir/certs/pledge-comb.crt -nodes
+
+#show certificate in pledge-comb.crt
+$OPENSSL_BIN  x509 -in $dir/certs/pledge-comb.crt -text
+
+#show private key in pledge-comb.crt
+$OPENSSL_BIN ecparam -name prime256v1\
+  -in $dir/certs/pledge-comb.crt -text
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 32]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   The xxxx-comb certificates have been generated as required by libcoap
+   for the DTLS connection generation.
+
+C.1.  Pledge, Registrar and MASA keys
+
+   This first section documents the public and private keys used in the
+   subsequent test vectors below.  These keys come from test code and
+   are not used in any production system, and should only be used only
+   to validate implementations.
+
+C.1.1.  Pledge private key
+
+   Private-Key: (256 bit)
+   priv:
+       9b:4d:43:b6:a9:e1:7c:04:93:45:c3:13:d9:b5:f0:
+       41:a9:6a:9c:45:79:73:b8:62:f1:77:03:3a:fc:c2:
+       9c:9a
+   pub:
+       04:d6:b7:6f:74:88:bd:80:ae:5f:28:41:2c:72:02:
+       ef:5f:98:b4:81:e1:d9:10:4c:f8:1b:66:d4:3e:5c:
+       ea:da:73:e6:a8:38:a9:f1:35:11:85:b6:cd:e2:04:
+       10:be:fe:d5:0b:3b:14:69:2e:e1:b0:6a:bc:55:40:
+       60:eb:95:5c:54
+   ASN1 OID: prime256v1
+   NIST CURVE: P-256
+
+C.1.2.  Registrar private key
+
+   Private-Key: (256 bit)
+   priv:
+       81:df:bb:50:a3:45:58:06:b5:56:3b:46:de:f3:e9:
+       e9:00:ae:98:13:9e:2f:36:68:81:fc:d9:65:24:fb:
+       21:7e
+   pub:
+       04:50:7a:c8:49:1a:8c:69:c7:b5:c3:1d:03:09:ed:
+       35:ba:13:f5:88:4c:e6:2b:88:cf:30:18:15:4f:a0:
+       59:b0:20:ec:6b:eb:b9:4e:02:b8:93:40:21:89:8d:
+       a7:89:c7:11:ce:a7:13:39:f5:0e:34:8e:df:0d:92:
+       3e:d0:2d:c7:b7
+   ASN1 OID: prime256v1
+   NIST CURVE: P-256
+
+C.1.3.  MASA private key
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 33]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   Private-Key: (256 bit)
+   priv:
+       c6:bb:a5:8f:b6:d3:c4:75:28:d8:d3:d9:46:c3:31:
+       83:6d:00:0a:9a:38:ce:22:5c:e9:d9:ea:3b:98:32:
+       ec:31
+   pub:
+       04:59:80:94:66:14:94:20:30:3c:66:08:85:55:86:
+       db:e7:d4:d1:d7:7a:d2:a3:1a:0c:73:6b:01:0d:02:
+       12:15:d6:1f:f3:6e:c8:d4:84:60:43:3b:21:c5:83:
+       80:1e:fc:e2:37:85:77:97:94:d4:aa:34:b5:b6:c6:
+       ed:f3:17:5c:f1
+   ASN1 OID: prime256v1
+   NIST CURVE: P-256
+
+C.2.  Pledge, Registrar and MASA certificates
+
+   Below the certificates that accompany the keys.  The certificate
+   description is followed by the hexadecimal DER of the certificate
+
+C.2.1.  Pledge IDevID certificate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 34]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4822678189204992 (0x11223344556600)
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=manufacturer,
+                                                      CN=masa.stok.nl
+        Validity
+            Not Before: Dec  9 10:02:36 2020 GMT
+            Not After : Dec 31 23:59:59 9999 GMT
+        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=manufacturing,
+                   CN=uuid:pledge.1.2.3.4/serialNumber=pledge.1.2.3.4
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:d6:b7:6f:74:88:bd:80:ae:5f:28:41:2c:72:02:
+                    ef:5f:98:b4:81:e1:d9:10:4c:f8:1b:66:d4:3e:5c:
+                    ea:da:73:e6:a8:38:a9:f1:35:11:85:b6:cd:e2:04:
+                    10:be:fe:d5:0b:3b:14:69:2e:e1:b0:6a:bc:55:40:
+                    60:eb:95:5c:54
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Basic Constraints:
+                CA:FALSE
+            X509v3 Authority Key Identifier:
+                keyid:
+      E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
+
+    Signature Algorithm: ecdsa-with-SHA256
+         30:46:02:21:00:d2:e6:45:3b:b0:c3:00:b3:25:8d:f1:83:fe:
+         d9:37:c1:a2:49:65:69:7f:6b:b9:ef:2c:05:07:06:31:ac:17:
+         bd:02:21:00:e2:ce:9e:7b:7f:74:50:33:ad:9e:ff:12:4e:e9:
+         a6:f3:b8:36:65:ab:7d:80:bb:56:88:bc:03:1d:e5:1e:31:6f
+
+
+   This is the hexadecimal representation in (request-)voucher examples
+   referred to as pledge-cert-hex.
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 35]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   30820226308201cba003020102020711223344556600300a06082a8648ce3d04
+   0302306f310b3009060355040613024e4c310b300906035504080c024e423110
+   300e06035504070c0748656c6d6f6e6431133011060355040a0c0a76616e6465
+   7273746f6b31153013060355040b0c0c6d616e75666163747572657231153013
+   06035504030c0c6d6173612e73746f6b2e6e6c3020170d323031323039313030
+   3233365a180f39393939313233313233353935395a308190310b300906035504
+   0613024e4c310b300906035504080c024e423110300e06035504070c0748656c
+   6d6f6e6431133011060355040a0c0a76616e64657273746f6b31163014060355
+   040b0c0d6d616e75666163747572696e67311c301a06035504030c1375756964
+   3a706c656467652e312e322e332e34311730150603550405130e706c65646765
+   2e312e322e332e343059301306072a8648ce3d020106082a8648ce3d03010703
+   420004d6b76f7488bd80ae5f28412c7202ef5f98b481e1d9104cf81b66d43e5c
+   eada73e6a838a9f1351185b6cde20410befed50b3b14692ee1b06abc554060eb
+   955c54a32e302c30090603551d1304023000301f0603551d23041830168014e4
+   0393b4c3d3f42a80a47718f6964903011768a3300a06082a8648ce3d04030203
+   49003046022100d2e6453bb0c300b3258df183fed937c1a24965697f6bb9ef2c
+   05070631ac17bd022100e2ce9e7b7f745033ad9eff124ee9a6f3b83665ab7d80
+   bb5688bc031de51e316f
+
+C.2.2.  Registrar Certificate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 36]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+ Certificate:
+     Data:
+         Version: 3 (0x2)
+         Serial Number:
+             70:56:ea:aa:30:66:d8:82:6a:55:5b:90:88:d4:62:bf:9c:f2:8c:fd
+         Signature Algorithm: ecdsa-with-SHA256
+         Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
+                                                  CN=registrar.stok.nl
+         Validity
+             Not Before: Dec  9 10:02:36 2020 GMT
+             Not After : Dec  9 10:02:36 2021 GMT
+         Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
+                                                   CN=registrar.stok.nl
+         Subject Public Key Info:
+             Public Key Algorithm: id-ecPublicKey
+                 Public-Key: (256 bit)
+                 pub:
+                     04:50:7a:c8:49:1a:8c:69:c7:b5:c3:1d:03:09:ed:
+                     35:ba:13:f5:88:4c:e6:2b:88:cf:30:18:15:4f:a0:
+                     59:b0:20:ec:6b:eb:b9:4e:02:b8:93:40:21:89:8d:
+                     a7:89:c7:11:ce:a7:13:39:f5:0e:34:8e:df:0d:92:
+                     3e:d0:2d:c7:b7
+                 ASN1 OID: prime256v1
+                 NIST CURVE: P-256
+         X509v3 extensions:
+             X509v3 Subject Key Identifier:
+       08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
+             X509v3 Authority Key Identifier:
+                 keyid:
+       08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
+
+             X509v3 Basic Constraints: critical
+                 CA:TRUE
+             X509v3 Extended Key Usage:
+                 CMC Registration Authority, TLS Web Server
+                 Authentication, TLS Web Client Authentication
+             X509v3 Key Usage: critical
+                 Digital Signature, Non Repudiation, Key Encipherment,
+                 Data Encipherment, Certificate Sign, CRL Sign
+     Signature Algorithm: ecdsa-with-SHA256
+          30:44:02:20:74:4c:99:00:85:13:b2:f1:bc:fd:f9:02:1a:46:
+          fb:17:4c:f8:83:a2:7c:a1:d9:3f:ae:ac:f3:1e:4e:dd:12:c6:
+          02:20:11:47:14:db:f5:1a:5e:78:f5:81:b9:42:1c:6e:47:02:
+          ab:53:72:70:c5:ba:fb:2d:16:c3:de:9a:a1:82:c3:5f
+
+
+   This the hexadecimal representation, in (request-)voucher examples
+   referred to as regis-cert-hex
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 37]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   308202753082021ca00302010202147056eaaa3066d8826a555b9088d462bf9c
+   f28cfd300a06082a8648ce3d0403023073310b3009060355040613024e4c310b
+   300906035504080c024e423110300e06035504070c0748656c6d6f6e64311330
+   11060355040a0c0a76616e64657273746f6b31143012060355040b0c0b636f6e
+   73756c74616e6379311a301806035504030c117265676973747261722e73746f
+   6b2e6e6c301e170d3230313230393130303233365a170d323131323039313030
+   3233365a3073310b3009060355040613024e4c310b300906035504080c024e42
+   3110300e06035504070c0748656c6d6f6e6431133011060355040a0c0a76616e
+   64657273746f6b31143012060355040b0c0b636f6e73756c74616e6379311a30
+   1806035504030c117265676973747261722e73746f6b2e6e6c3059301306072a
+   8648ce3d020106082a8648ce3d03010703420004507ac8491a8c69c7b5c31d03
+   09ed35ba13f5884ce62b88cf3018154fa059b020ec6bebb94e02b8934021898d
+   a789c711cea71339f50e348edf0d923ed02dc7b7a3818d30818a301d0603551d
+   0e0416041408c2bf36887f79412185872f16a7aca6efb3d2b3301f0603551d23
+   04183016801408c2bf36887f79412185872f16a7aca6efb3d2b3300f0603551d
+   130101ff040530030101ff30270603551d250420301e06082b0601050507031c
+   06082b0601050507030106082b06010505070302300e0603551d0f0101ff0404
+   030201f6300a06082a8648ce3d04030203470030440220744c99008513b2f1bc
+   fdf9021a46fb174cf883a27ca1d93faeacf31e4edd12c60220114714dbf51a5e
+   78f581b9421c6e4702ab537270c5bafb2d16c3de9aa182c35f
+
+C.2.3.  MASA Certificate
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 38]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+ Certificate:
+     Data:
+         Version: 3 (0x2)
+         Serial Number:
+             14:26:b8:1c:ce:d8:c3:e8:14:05:cb:87:67:0d:be:ef:d5:81:25:b4
+         Signature Algorithm: ecdsa-with-SHA256
+         Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok,
+             OU=manufacturer, CN=masa.stok.nl
+
+         Validity
+             Not Before: Dec  9 10:02:36 2020 GMT
+             Not After : Sep  5 10:02:36 2023 GMT
+         Subject: C=NL, ST=NB, L=Helmond, O=vanderstok,
+             OU=manufacturer, CN=masa.stok.nl
+         Subject Public Key Info:
+             Public Key Algorithm: id-ecPublicKey
+                 Public-Key: (256 bit)
+                 pub:
+                     04:59:80:94:66:14:94:20:30:3c:66:08:85:55:86:
+                     db:e7:d4:d1:d7:7a:d2:a3:1a:0c:73:6b:01:0d:02:
+                     12:15:d6:1f:f3:6e:c8:d4:84:60:43:3b:21:c5:83:
+                     80:1e:fc:e2:37:85:77:97:94:d4:aa:34:b5:b6:c6:
+                     ed:f3:17:5c:f1
+                 ASN1 OID: prime256v1
+                 NIST CURVE: P-256
+         X509v3 extensions:
+             X509v3 Subject Key Identifier:
+       E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
+             X509v3 Authority Key Identifier:
+                 keyid:
+        E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
+
+             X509v3 Basic Constraints: critical
+                 CA:TRUE
+             X509v3 Extended Key Usage:
+                 CMC Registration Authority,
+                 TLS Web Server Authentication,
+                 TLS Web Client Authentication
+             X509v3 Key Usage: critical
+                 Digital Signature, Non Repudiation, Key Encipherment,
+                       Data Encipherment, Certificate Sign, CRL Sign
+     Signature Algorithm: ecdsa-with-SHA256
+          30:44:02:20:2e:c5:f2:24:72:70:20:ea:6e:74:8b:13:93:67:
+          8a:e6:fe:fb:8d:56:7f:f5:34:18:a9:ef:a5:0f:c3:99:ca:53:
+          02:20:3d:dc:91:d0:e9:6a:69:20:01:fb:e4:20:40:de:7c:7d:
+          98:ed:d8:84:53:61:84:a7:f9:13:06:4c:a9:b2:8f:5c
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 39]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   This is the hexadecimal representation, in (request-)voucher examples
+   referred to as masa-cert-hex.
+
+   3082026d30820214a00302010202141426b81cced8c3e81405cb87670dbeefd5
+   8125b4300a06082a8648ce3d040302306f310b3009060355040613024e4c310b
+   300906035504080c024e423110300e06035504070c0748656c6d6f6e64311330
+   11060355040a0c0a76616e64657273746f6b31153013060355040b0c0c6d616e
+   7566616374757265723115301306035504030c0c6d6173612e73746f6b2e6e6c
+   301e170d3230313230393130303233365a170d3233303930353130303233365a
+   306f310b3009060355040613024e4c310b300906035504080c024e423110300e
+   06035504070c0748656c6d6f6e6431133011060355040a0c0a76616e64657273
+   746f6b31153013060355040b0c0c6d616e756661637475726572311530130603
+   5504030c0c6d6173612e73746f6b2e6e6c3059301306072a8648ce3d02010608
+   2a8648ce3d0301070342000459809466149420303c6608855586dbe7d4d1d77a
+   d2a31a0c736b010d021215d61ff36ec8d48460433b21c583801efce237857797
+   94d4aa34b5b6c6edf3175cf1a3818d30818a301d0603551d0e04160414e40393
+   b4c3d3f42a80a47718f6964903011768a3301f0603551d23041830168014e403
+   93b4c3d3f42a80a47718f6964903011768a3300f0603551d130101ff04053003
+   0101ff30270603551d250420301e06082b0601050507031c06082b0601050507
+   030106082b06010505070302300e0603551d0f0101ff0404030201f6300a0608
+   2a8648ce3d040302034700304402202ec5f224727020ea6e748b1393678ae6fe
+   fb8d567ff53418a9efa50fc399ca5302203ddc91d0e96a692001fbe42040de7c
+   7d98edd884536184a7f913064ca9b28f5c
+
+C.3.  COSE signed voucher request from pledge to Registrar
+
+   In this example the voucher request has been signed by the pledge,
+   and has been sent to the JRC over CoAPS.  This example uses the
+   proximity-registrar-cert mechanism to request a voucher that pins the
+   certificate of the registrar.
+
+       POST coaps://registrar.example.com/est/rv
+       (Content-Format: application/voucher-cose+cbor)
+       signed_request_voucher
+
+   The payload signed_request_voucher is shown as hexadecimal dump (with
+   lf added):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 40]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+d28444a101382ea104582097113db094eee8eae48683e7337875c0372164be89d023a5f3d
+f52699c0fbfb55902d2a11909c5a60274323032302d31322d32335431323a30353a32325a
+0474323032322d31322d32335431323a30353a32325a01020750684ca83e27230aff97630
+cf2c1ec409a0d6e706c656467652e312e322e332e340a590279308202753082021ca00302
+010202147056eaaa3066d8826a555b9088d462bf9cf28cfd300a06082a8648ce3d0403023
+073310b3009060355040613024e4c310b300906035504080c024e423110300e0603550407
+0c0748656c6d6f6e6431133011060355040a0c0a76616e64657273746f6b3114301206035
+5040b0c0b636f6e73756c74616e6379311a301806035504030c117265676973747261722e
+73746f6b2e6e6c301e170d3230313230393130303233365a170d323131323039313030323
+3365a3073310b3009060355040613024e4c310b300906035504080c024e423110300e0603
+5504070c0748656c6d6f6e6431133011060355040a0c0a76616e64657273746f6b3114301
+2060355040b0c0b636f6e73756c74616e6379311a301806035504030c1172656769737472
+61722e73746f6b2e6e6c3059301306072a8648ce3d020106082a8648ce3d0301070342000
+4507ac8491a8c69c7b5c31d0309ed35ba13f5884ce62b88cf3018154fa059b020ec6bebb9
+4e02b8934021898da789c711cea71339f50e348edf0d923ed02dc7b7a3818d30818a301d0
+603551d0e0416041408c2bf36887f79412185872f16a7aca6efb3d2b3301f0603551d2304
+183016801408c2bf36887f79412185872f16a7aca6efb3d2b3300f0603551d130101ff040
+530030101ff30270603551d250420301e06082b0601050507031c06082b06010505070301
+06082b06010505070302300e0603551d0f0101ff0404030201f6300a06082a8648ce3d040
+30203470030440220744c99008513b2f1bcfdf9021a46fb174cf883a27ca1d93faeacf31e
+4edd12c60220114714dbf51a5e78f581b9421c6e4702ab537270c5bafb2d16c3de9aa182c
+35f58473045022063766c7bbd1b339dbc398e764af3563e93b25a69104befe9aac2b3336b
+8f56e1022100cd0419559ad960ccaed4dee3f436eca40b7570b25a52eb60332bc1f299148
+4e9
+
+   The representiation of signed_voucher_request in CBOR diagnostic
+   format is:
+
+Diagnose(signed_request_voucher) =
+18([
+h'A101382E',     # {"alg": -47}
+{4: h'97113DB094EEE8EAE48683E7337875C0372164BE89D023A5F3DF52699C0FBFB5'},
+h'request_voucher',
+h'3045022063766C7BBD1B339DBC398E764AF3563E93B25A69104BEFE9AAC2B3336B8F56E
+1022100CD0419559AD960CCAED4DEE3F436ECA40B7570B25A52EB60332BC1F2991484E9'
+])
+
+Diagnose(request_voucher) =
+{2501: {2: "2020-12-23T12:05:22Z",
+        4: "2022-12-23T12:05:22Z",
+        1: 2,
+        7: h'684CA83E27230AFF97630CF2C1EC409A',
+        13: "pledge.1.2.3.4",
+        10: h'regis-cert-hex'}}
+
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 41]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+C.4.  COSE signed voucher request from Registrar to MASA
+
+   In this example the voucher request has been signed by the JRC using
+   the private key from Appendix C.1.2.  Contained within this voucher
+   request is the voucher request from the pledge to JRC.
+
+       POST coaps://masa.example.com/est/rv
+       (Content-Format: application/voucher-cose+cbor)
+       signed_masa_request_voucher
+
+   The payload signed_masa_voucher_request is shown as hexadecimal dump
+   (with lf added):
+
+d28444a101382ea1045820e8735bc4b470c3aa6a7aa9aa8ee584c09c11131b205efec5d03
+13bad84c5cd05590414a11909c5a60274323032302d31322d32385431303a30333a33355a
+0474323032322d31322d32385431303a30333a33355a07501551631f6e0416bd162ba53ea
+00c2a050d6e706c656467652e312e322e332e3405587131322d32385431303a30333a3335
+5a07501551631f6e0416bd162ba53ea00c2a050d6e706c656467652e312e322e332e34055
+87131322d32385431303a300000000000000000000000000416bd162ba53ea00c2a050d6e
+706c656467652e312e322e332e3405587131322d32385431303a09590349d28444a101382
+ea104582097113db094eee8eae48683e7337875c0372164be89d023a5f3df52699c0fbfb5
+5902d2a11909c5a60274323032302d31322d32385431303a30333a33355a0474323032322
+d31322d32385431303a30333a33355a010207501551631f6e0416bd162ba53ea00c2a050d
+6e706c656467652e312e322e332e340a590279308202753082021ca00302010202147056e
+aaa3066d8826a555b9088d462bf9cf28cfd300a06082a8648ce3d0403023073310b300906
+0355040613024e4c310b300906035504080c024e423110300e06035504070c0748656c6d6
+f6e6431133011060355040a0c0a76616e64657273746f6b31143012060355040b0c0b636f
+6e73756c74616e6379311a301806035504030c117265676973747261722e73746f6b2e6e6
+c301e170d3230313230393130303233365a170d3231313230393130303233365a3073310b
+3009060355040613024e4c310b300906035504080c024e423110300e06035504070c07486
+56c6d6f6e6431133011060355040a0c0a76616e64657273746f6b31143012060355040b0c
+0b636f6e73756c74616e6379311a301806035504030c117265676973747261722e73746f6
+b2e6e6c3059301306072a8648ce3d020106082a8648ce3d03010703420004507ac8491a8c
+69c7b5c31d0309ed35ba13f5884ce62b88cf3018154fa059b020ec6bebb94e02b89340218
+98da789c711cea71339f50e348edf0d923ed02dc7b7a3818d30818a301d0603551d0e0416
+041408c2bf36887f79412185872f16a7aca6efb3d2b3301f0603551d2304183016801408c
+2bf36887f79412185872f16a7aca6efb3d2b3300f0603551d130101ff040530030101ff30
+270603551d250420301e06082b0601050507031c06082b0601050507030106082b0601050
+5070302300e0603551d0f0101ff0404030201f6300a06082a8648ce3d0403020347003044
+0220744c99008513b2f1bcfdf9021a46fb174cf883a27ca1d93faeacf31e4edd12c602201
+14714dbf51a5e78f581b9421c6e4702ab537270c5bafb2d16c3de9aa182c35f5847304502
+2063766c7bbd1b339dbc398e764af3563e93b25a69104befe9aac2b3336b8f56e1022100c
+d0419559ad960ccaed4dee3f436eca40b7570b25a52eb60332bc1f2991484e95847304502
+2100e6b45558c1b806bba23f4ac626c9bdb6fd354ef4330d8dfb7c529f29cca934c802203
+c1f2ccbbac89733d17ee7775bc2654c5f1cc96afba2741cc31532444aa8fed8
+
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 42]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   The representiation of signed_masa_voucher_request in CBOR diagnostic
+   format is:
+
+Diagnose(signed_registrar_request-voucher)
+18([
+h'A101382E',     # {"alg": -47}
+h'E8735BC4B470C3AA6A7AA9AA8EE584C09C11131B205EFEC5D0313BAD84C5CD0
+5'},
+h'registrar_request_voucher',
+h'3045022100E6B45558C1B806BBA23F4AC626C9BDB6FD354EF4330D8DFB7C529
+F29CCA934C802203C1F2CCBBAC89733D17EE7775BC2654C5F1CC96AFBA2741CC3
+1532444AA8FED8'
+])
+
+Diagnose(registrar_request_voucher)
+{2501:
+    {2: "2020-12-28T10:03:35Z",
+     4: "2022-12-28T10:03:35Z",
+     7: h'1551631F6E0416BD162BA53EA00C2A05',
+    13: "pledge.1.2.3.4",
+     5: h'31322D32385431303A30333A33355A07501551631F6E0416BD162BA53EA00C2
+A050D6E706C656467652E312E322E332E3405587131322D32385431303A300000
+000000000000000000000416BD162BA53EA00C2A050D6E706C656467652E312E3
+22E332E3405587131322D32385431303A',
+     9: h'signed_request_voucher'}}
+
+C.5.  COSE signed voucher from MASA to Pledge via Registrar
+
+   The resulting voucher is created by the MASA and returned via the JRC
+   to the Pledge.  It is signed by the MASA's private key Appendix C.1.3
+   and can be verified by the pledge using the MASA's public key
+   contained within the MASA certificate.
+
+   This is the raw binary signed_voucher, encoded in hexadecimal (with
+   lf added):
+
+d28444a101382ea104582039920a34ee92d3148ab3a729f58611193270c9029f7784daf11
+2614b19445d5158cfa1190993a70274323032302d31322d32335431353a30333a31325a04
+74323032302d31322d32335431353a32333a31325a010007506508e06b2959d5089d7a316
+9ea889a490b6e706c656467652e312e322e332e340858753073310b300906035504061302
+4e4c310b300906035504080c024e423110300e06035504070c0748656c6d6f6e643113301
+1060355040a0c0a76616e64657273746f6b31143012060355040b0c0b636f6e73756c7461
+6e6379311a301806035504030c117265676973747261722e73746f6b2e6e6c03f45847304
+5022022515d96cd12224ee5d3ac673237163bba24ad84815699285d9618f463ee73fa0221
+00a6bff9d8585c1c9256371ece94da3d26264a5dfec0a354fe7b3aef58344c512f
+
+
+   The representiation of signed_voucher in CBOR diagnostic format is:
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 43]
+
+Internet-Draft             Constrained Voucher             December 2020
+
+
+   Diagnose(signed_voucher) =
+   18([
+   h'A101382E',     # {"alg": -47}
+   {4: h'39920A34EE92D3148AB3A729F58611193270C9029F7784DAF112614B194
+   45D51'},
+   h'voucher',
+   h'3045022022515D96CD12224EE5D3AC673237163BBA24AD84815699285D9618F
+   463EE73FA022100A6BFF9D8585C1C9256371ECE94DA3D26264A5DFEC0A354FE7B
+   3AEF58344C512F'
+   ])
+
+
+   Diagnose(voucher) =
+   {2451:
+      {2: "2020-12-23T15:03:12Z",
+       4: "2020-12-23T15:23:12Z",
+       1: 0,
+       7: h'6508E06B2959D5089D7A3169EA889A49',
+      11: "pledge.1.2.3.4",
+       8: h'regis-cert-hex',
+       3: false}}
+
+Authors' Addresses
+
+   Michael Richardson
+   Sandelman Software Works
+
+   Email: mcr+ietf@sandelman.ca
+
+
+   Peter van der Stok
+   vanderstok consultancy
+
+   Email: consultancy@vanderstok.org
+
+
+   Panos Kampanakis
+   Cisco Systems
+
+   Email: pkampana@cisco.com
+
+
+   Esko Dijk
+   IoTconsultancy.nl
+
+   Email: esko.dijk@iotconsultancy.nl
+
+
+
+
+
+Richardson, et al.        Expires July 1, 2021                 [Page 44]

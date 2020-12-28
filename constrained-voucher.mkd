@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Voucher
-docname: draft-ietf-anima-constrained-voucher-09
+docname: draft-ietf-anima-constrained-voucher-10
 
 # stand_alone: true
 
@@ -354,6 +354,8 @@ The design considerations for the CBOR encoding of vouchers is much the same as 
 
 One key difference is that the names of the leaves in the YANG does not have a material effect on the size of the resulting CBOR, as the SID translation process assigns integers to the names.
 
+The request to the registrar with resource /est/vs returns a simple (ACK, 2.05). The client should be aware that also a (ACK, 0.0) can be returned that is an acknowledgement of the request reception and signifies that the response will come later.
+
 # Security Considerations
 
 ## Clock Sensitivity
@@ -508,9 +510,12 @@ Also thanks to Jim Schaad for correctinging earlier version of the COSE Sign1 ob
 
 Michel Veillette did extensive work on pyang to extend it to support the SID allocation process, and this document was among the first users.
 
-We are grateful for the suggestions done by Esko Dijk.
 
 # Changelog
+
+-10 
+    Design considerations extended
+    Examples made consistent
 
 -08
     Examples for cose_sign1 are completed and improved.
@@ -626,13 +631,13 @@ A 2.05 Content response with a non signed CBOR voucher status (ct=60) will then 
 ~~~~
     2.05 Content (Content-Format: application/cbor)
     Payload =
-INSERT_TEXT_FROM_FILE examples/voucher_status.hex END
+INSERT_TEXT_FROM_FILE examples/voucher-status.hex END
 ~~~~
 
 The payload above is represented in hexadecimal.
 
 ~~~~
-INSERT_TEXT_FROM_FILE examples/voucher_status.diag END
+INSERT_TEXT_FROM_FILE examples/voucher-statusdiag.txt END
 ~~~~
 
 #CMS signed messages
@@ -756,7 +761,7 @@ INSERT_FIG_FROM_FILE examples/regis-to-MASA.txt END
 
 The representiation of signed_masa_voucher_request in CBOR diagnostic format is:
 
-INSERT_FIG_FROM_FILE examples/regis-to-MASA-diag.txt END
+INSERT_FIG_FROM_FILE examples/regis-to-MASAdiag.txt END
 
 ## COSE signed voucher from MASA to Pledge via Registrar
 
@@ -764,10 +769,10 @@ The resulting voucher is created by the MASA and returned via the JRC to the
 Pledge.  It is signed by the MASA's private key {{masapriv}} and can be
 verified by the pledge using the MASA's public key contained within the MASA certificate.
 
-This is the raw binary signed_voucher, encoded in hexadecimal (with lf added):
+This is the raw binary signed_voucher, encoded in hexadecimal (with lf added): 
 
 INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
 
 The representiation of signed_voucher in CBOR diagnostic format is:
 
-INSERT_FIG_FROM_FILE examples/voucher-from-MASA-diag.txt END
+INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END 
