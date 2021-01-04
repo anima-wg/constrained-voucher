@@ -354,7 +354,7 @@ The design considerations for the CBOR encoding of vouchers is much the same as 
 
 One key difference is that the names of the leaves in the YANG does not have a material effect on the size of the resulting CBOR, as the SID translation process assigns integers to the names.
 
-The request to the registrar with resource /est/vs returns a simple (ACK, 2.05). The client should be aware that also a (ACK, 0.0) can be returned that is an acknowledgement of the request reception and signifies that the response will come later.
+Any POST request to the registrar with resource /est/vs or /est/es returns a 2.05 response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.05) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.05) response in a separate CoAP message.
 
 # Security Considerations
 
