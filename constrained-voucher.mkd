@@ -163,15 +163,14 @@ Most users of these constrained vouchers will be online and will use live nonces
 This document defines both a constrained voucher and a constrained voucher-request.
 They are presented in the order "voucher-request", followed by a "voucher" response as this is the time order that they occur.
 
-The pinned-domain-cert present in a voucher, is the certificate of the Registrar.
-
 The constrained voucher and constrained voucher request MUST be signed.
 
 The use of the two signing formats permit the use of both PKIX format certificates, and raw public keys (RPK).
 
 When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in a voucher, is the raw public
-key of the Registrar.
-This is described in the YANG definition for the constrained voucher.
+key of the Registrar. This is described in the YANG definition for the constrained voucher.
+When PKIX format certificates are used, the pinned-domain-cert present in a voucher can be either the certificate of the Registrar or the certificate of the CA that issued the Registrar's certificate.
+
 
 # Discovery and URI
 
@@ -724,9 +723,9 @@ INSERT_FIG_FROM_FILE examples/masa-cert.hex END
 
 ## COSE signed voucher request from pledge to Registrar
 
-In this example the voucher request has been signed by the pledge, and has been sent to the JRC over CoAPS.  This example
-uses the proximity-registrar-cert mechanism to request a voucher that
-pins the certificate of the registrar.
+In this example the voucher request has been signed by the pledge, and has been sent to the JRC over CoAPS. 
+The pledge uses the proximity assertion together with an included proximity-registrar-cert field to inform 
+MASA about its proximity to the specific registrar.
 
 ~~~
     POST coaps://registrar.example.com/est/rv
