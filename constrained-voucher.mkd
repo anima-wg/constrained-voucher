@@ -312,8 +312,9 @@ INSERT_FIG_FROM_FILE ietf-constrained-voucher@DATE.yang END
 
 ### Example voucher artifacts {#example1}
 
-Below a the CBOR serialization of the constrained-voucher is shown in diagnostic CBOR notation.
+Below the CBOR serialization of an example constrained voucher is shown in CBOR diagnostic notation.
 The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
+Four dots ("....") in a CBOR byte string denotes a sequence of bytes that are not shown for brevity.
 
 INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
