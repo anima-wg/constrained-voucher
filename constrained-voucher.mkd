@@ -222,10 +222,10 @@ support contrained vouchers? ]
   REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  </b>; rt="brski"
-  </b/rv>; rt="brski.rv";ct=TBD2 TBD3
-  </b/vs>; rt="brski.vs";ct=50 60
-  </b/es>; rt="brski.es";ct=50 60
+  </b>;rt="brski"
+  </b/rv>;rt="brski.rv";ct=TBD2 TBD3
+  </b/vs>;rt="brski.vs";ct=50 60
+  </b/es>;rt="brski.es";ct=50 60
 ~~~~
 
 The return of the content-types allows the client to choose the most appropriate one from multiple content types.
@@ -277,7 +277,8 @@ INSERT_FIG_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 
 ### Example voucher request artifact {#example2}
 
-Below is a CBOR serialization of the constrained-voucher-request is shown in diagnostic CBOR notation. The enum value of the assertion field is calculated to be zero by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
+Below is a CBOR serialization of an example constrained voucher request from a pledge to a registrar, shown in CBOR diagnostic notation. The enum value of the assertion field is calculated to be 2 by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
+Four dots ("....") in a CBOR byte string denotes a sequence of bytes that are not shown for brevity.
 
 INSERT_FIG_FROM_FILE examples/voucher-request-example1.txt END
 
