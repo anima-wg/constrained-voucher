@@ -210,8 +210,8 @@ following more complete response is possible.
 The constrained BRSKI-EST protocol described below is between the Pledge and the Registrar only.
 (probably via an enrollment proxy, such as described in {{?I-D.ietf-anima-constrained-join-proxy}})
 
-The Pledge MAY perform a discovery operation on the "/.well-known/core?rt=brski" resource if it wishes to discovery possibly shorter URLs for the functions, or if it has the possibility to
-use a variety of onboarding protocols or certificate enrollment protocols.
+The Pledge MAY perform a discovery operation on the "/.well-known/core?rt=brski" resource if it wishes to discover possibly shorter URLs for the functions, or if it has the possibility to
+use a variety of onboarding protocols or certificate enrollment protocols and it wants to discover which of these protocols are available.
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
