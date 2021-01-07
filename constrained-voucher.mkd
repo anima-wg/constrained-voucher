@@ -269,17 +269,17 @@ The voucher is a statement from the MASA to the Pledge indicating who the Pledge
 This section deals with the question of how that identity is determined.
 
 Section 5.5 of {{I-D.ietf-anima-bootstrapping-keyinfra}} indicates some of the flexibility that is possible.
-The advice is to include only certificates in the CMS structure which should participate in the chain that is to be pinned.
+The advice is for the Registrar to include only certificates in the CMS structure which should participate in the chain that is to be pinned.
 The MASA is expected to evaluate the certificates, forming them into a chain.
-For instance, for a two-level certification authority, where the voucher-request has been signed b the "Registrar":
+For instance, for a two-level certification authority, where the voucher-request has been signed by the "Registrar":
 
 INSERT_FIG_FROM_FILE two-ca-chain.txt END
 
 The MASA, having assembled the chain will use the top-most ("priv-CA") as the object that is pinned in the resulting voucher.
 A Registrar that wished to have only the intermediate CA pinned would omit the "priv-CA" certificate from the voucher-request.
 
-When using constrained vouchers, the COSE Sign1 object contains a protected and unprotected header, and according to {{I-D.ietf-cose-x509}}, would put the certificates in an "x5bag" attribute
-placed in the unprotected header.
+When using constrained vouchers, the COSE Sign1 object contains a protected and unprotected header, and according to {{I-D.ietf-cose-x509}}, 
+would carry the certificates of the chain in an "x5bag" attribute placed in the unprotected header.
 
 ## Pinning of Raw Public Keys
 
