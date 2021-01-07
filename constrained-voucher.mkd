@@ -243,20 +243,20 @@ The MASA needds to support whatever formats that the pledge's produced by that m
 # BRSKI-MASA protocol {#brski-masa}
 
 {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
-This document does change that.
+This document does not change that.
 The use of CoAP for the BRSKI-MASA connection is NOT supported.
 
-Some consideration was made to doing this for consistency but:
+Some consideration was made to specify CoAP support for consistency but:
 
-* the Registrar is not expected to be so constrained that it can not support HTTPS client connections.
+* the Registrar is not expected to be so constrained that it cannot support HTTPS client connections.
 
 * the technology and experience to build Internet-scale HTTPS responders (which the MASA is) is common, while the experience doing the same for CoAP is much less common.
 
-* in many Enterprise environments, outgoing UDP connections are often suspicious, and there seems to be no advantage to using CoAP in that environment.
+* in many Enterprise networks, outgoing UDP connections are often treated as suspicious, and there seems to be no advantage to using CoAP in that environment.
 
 * a Registrar is likely to provide onboarding services to both constrained and non-constrained devices.  Such a Registrar would need to speak HTTPS anyway.
 
-* similarly, a manufacturer is likely to have both constrained and non-constrained devices, so there may be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
+* similarly, a manufacturer is likely to offer both constrained and non-constrained devices, so there may in practice be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
 
 # Artifacts
 
