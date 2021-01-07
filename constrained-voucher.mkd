@@ -47,11 +47,11 @@ normative:
 #  RFC7252:
   RFC7950:
   RFC5652:
-  RFC8152:
 #  RFC8174:
   RFC8366:
   RFC3688:
   RFC6020:
+  I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-anima-bootstrapping-keyinfra:
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
@@ -100,12 +100,10 @@ This document defines a strategy to securely assign a pledge to an
 owner, using an artifact signed, directly or indirectly, by the
 pledge's manufacturer.  This artifact is known as a "voucher".
 
-This document builds upon the work in {{RFC8366}}, encoding
-the resulting artifact in CBOR.  Use with two signature technologies are
-described.
+This document builds upon the work in [RFC8366] and of [BRSKI], but encoding
+the resulting artifacts in CBOR, and conducting the transaction over CoAP rather than HTTPS.  with
 
-Additionally, this document explains how constrained vouchers may be
-transported as an extension to the {{I-D.ietf-ace-coap-est}} protocol.
+The use of Raw Public Keys rather than certificates is also explained.
 
 --- middle
 
@@ -118,14 +116,17 @@ There are bandwidth and code space issues to contend.
 A solution such as {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
 code space or bandwidth required.
 
-This document defines a constrained version of {{RFC8366}}.
-Rather than serializing the YANG definition in JSON, it is serialized into CBOR ({{RFC7049}}).
+This document defines a constrained version of {{RFC8366}}, along with the constrained
+version of {{RFC7030}} being replaced by {{I-D.ietf-ace-coap-est}}.
+
+While {{RFC8366}} is by default serialized to JSON with a signature in CMS,
+this document defines a serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
 
 This document follows a similar, but not identical structure as {{RFC8366}} and supplements the brski part to {{I-D.ietf-ace-coap-est}}.
 
 This document describes a single new voucher format.
 It is a COSE-signed CBOR-encoded voucher transported using secured CoAP or HTTP.
-The CoAP connection is protected either by OSCORE+EDHOC, or DTLS (CoAPS).
+The CoAP connection is to be protected by either OSCORE+EDHOC, or DTLS (CoAPS).
 
 There is additional work when the voucher is integrated into the key-exchange, described in {{!I-D.selander-ace-ake-authz}}.
 This work is not in scope for this document.
@@ -153,7 +154,7 @@ Registrar/Coordinator (JRC), Manufacturer Authorized Signing Authority
 
 {{RFC8366}} provides for vouchers that assert proximity, that authenticate the registrar  and that include different amounts of anti-replay protection.
 
-This document does not make any extensions to the types of vouchers.
+This document does not make any extensions to the semantic meanings of vouchers, only the encoding has been changed.
 
 Time based vouchers are included in this definition, but given that constrained devices  are extremely unlikely to have accurate time, their use is very unlikely.
 Most users of these constrained vouchers will be online and will use live nonces to provide anti-replay protection.
@@ -161,16 +162,12 @@ Most users of these constrained vouchers will be online and will use live nonces
 {{RFC8366}} defined only the voucher artifact, and not the Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 This document defines both a constrained voucher and a constrained voucher-request.
-They are presented in the order "voucher-request", followed by a "voucher" response as this is the time order that they occur.
+They are presented in the order "voucher-request", followed by a "voucher" response as this is
+the order that they occur in the protocol.
 
 The constrained voucher and constrained voucher request MUST be signed.
 
 The use of the two signing formats permit the use of both PKIX format certificates, and raw public keys (RPK).
-
-When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in a voucher, is the raw public
-key of the Registrar. This is described in the YANG definition for the constrained voucher.
-When PKIX format certificates are used, the pinned-domain-cert present in a voucher can be either the certificate of the Registrar or the certificate of the CA that issued the Registrar's certificate.
-
 
 # Discovery and URI
 
