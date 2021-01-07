@@ -41,6 +41,7 @@ while(<>) {
     }
     elsif(/INSERT_FIG_FROM_FILE (.*) END/) {
         insert($1, 1, 0);
+    }
     elsif(/INSERT_CODE_FROM_FILE (.*) END/) {
         insert($1, 1, 1);
     } else {

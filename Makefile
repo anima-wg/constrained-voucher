@@ -39,7 +39,7 @@ ietf-constrained-voucher-request-tree.txt: ${CWTDATE2}
 	${PYANG} --path=../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-constrained-voucher-request-tree.txt
 
 %.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-constrained-voucher-tree.txt ietf-constrained-voucher-request-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2} ${EXAMPLES}
-	kramdown-rfc2629 ${DRAFT}.mkd | ./insert-figures >${DRAFT}.xml
+	kramdown-rfc2629 ${DRAFT}.mkd | perl insert-figures >${DRAFT}.xml
 	: git add ${DRAFT}.xml
 
 %.txt: %.xml
