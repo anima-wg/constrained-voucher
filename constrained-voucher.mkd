@@ -3,7 +3,7 @@ title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Voucher
 docname: draft-ietf-anima-constrained-voucher-10
 
-# stand_alone: true
+stand_alone: true
 
 ipr: trust200902
 area: Internet
@@ -196,26 +196,22 @@ Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and correspon
 | /requestvoucher| /rv |
 | /voucher_status | /vs |
 | /enrollstatus | /es  |
-| /requestauditlog | /ra |
 {: #est-uri title='BRSKI path to EST-coaps path'}
 
-/requestvoucher, /voucher_status and /enrollstatus are needed between
-pledge and Registrar.
+/requestvoucher, /voucher_status and /enrollstatus occur between the Pledge and Registrar (the BRSKI-EST protocol) and also between Registrar and MASA, but, as described in {{brski-masa}}, this document addresses only the BRSKI-EST portion of the protocol.
 
 When discovering the root path for the EST resources, the server MAY return
 the full resource paths and the used content types. This is useful when
 multiple content types are specified for EST-coaps server. For example, the
 following more complete response is possible.
 
-[ EDNOTE: spell out where voucher artifacts are used in
-  BRSKI flows since the APIs ]
+# BRSKI-EST protocol {#brski-est}
 
-[ EDNOTE: The /requestauditlog and /voucher-status are exchanged by the
-Registrar and MASA. The JRC will likely talk to MASA over a normal
-(not constrained) medium. Do we need /ra and /vs? Do we need to
-remove them from the example too? Also what happens to the
-voucher-request and response in this case? Is MASA supposed to
-support contrained vouchers? ]
+The constrained BRSKI-EST protocol described below is between the Pledge and the Registrar only.
+(probably via an enrollment proxy, such as described in {{?I-D.ietf-anima-constrained-join-proxy}})
+
+The Pledge MAY perform a discovery operation on the "/.well-known/core?rt=brski" resource if it wishes to discovery possibly shorter URLs for the functions, or if it has the possibility to
+use a variety of onboarding protocols or certificate enrollment protocols.
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
@@ -226,6 +222,11 @@ support contrained vouchers? ]
   </b/vs>;rt="brski.vs";ct=50 60
   </b/es>;rt="brski.es";ct=50 60
 ~~~~
+
+The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski" end points defined in {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.
+
+Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the "/.well-known/brski" URLs, and MUST not distinguish between them.
+In particular, a Pledge MAY use the longer and shorter URLs in combination.
 
 The return of the content-types allows the client to choose the most appropriate one from multiple content types.
 
@@ -238,6 +239,24 @@ Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported by the
 
 The Pledge and MASA need to support one or more formats for the voucher.
 The MASA needds to support whatever formats that the pledge's produced by that manufacturer supports.
+
+# BRSKI-MASA protocol {#brski-masa}
+
+{{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
+This document does change that.
+The use of CoAP for the BRSKI-MASA connection is NOT supported.
+
+Some consideration was made to doing this for consistency but:
+
+* the Registrar is not expected to be so constrained that it can not support HTTPS client connections.
+
+* the technology and experience to build Internet-scale HTTPS responders (which the MASA is) is common, while the experience doing the same for CoAP is much less common.
+
+* in many Enterprise environments, outgoing UDP connections are often suspicious, and there seems to be no advantage to using CoAP in that environment.
+
+* a Registrar is likely to provide onboarding services to both constrained and non-constrained devices.  Such a Registrar would need to speak HTTPS anyway.
+
+* similarly, a manufacturer is likely to have both constrained and non-constrained devices, so there may be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
 
 # Artifacts
 
