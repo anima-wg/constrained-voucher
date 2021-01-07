@@ -56,6 +56,7 @@ normative:
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
+  I-D.ietf-cose-x509:
 #  ieee802-1AR:
 #    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
 #    title: "IEEE 802.1AR Secure Device Identifier"
@@ -262,7 +263,7 @@ Some consideration was made to doing this for consistency but:
 
 * similarly, a manufacturer is likely to have both constrained and non-constrained devices, so there may be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
 
-# Pinning of Voucher Artifacts {#pinning}
+# Pinning in Voucher Artifacts {#pinning}
 
 The voucher is a statement from the MASA to the Pledge indicating who the Pledge's owner is.
 This section deals with the question of how that identity is determined.
@@ -270,9 +271,20 @@ This section deals with the question of how that identity is determined.
 Section 5.5 of {{I-D.ietf-anima-bootstrapping-keyinfra}} indicates some of the flexibility that is possible.
 The advice is to include only certificates in the CMS structure which should participate in the chain that is to be pinned.
 The MASA is expected to evaluate the certificates, forming them into a chain.
-For instance, for a two-level certification authority:
+For instance, for a two-level certification authority, where the voucher-request has been signed b the "Registrar":
 
 INSERT_FIG_FROM_FILE two-ca-chain.txt END
+
+The MASA, having assembled the chain will use the top-most ("priv-CA") as the object that is pinned in the resulting voucher.
+A Registrar that wished to have only the intermediate CA pinned would omit the "priv-CA" certificate from the voucher-request.
+
+When using constrained vouchers, the COSE Sign1 object contains a protected and unprotected header, and according to {{I-D.ietf-cose-x509}}, would put the certificates in an "x5bag" attribute
+placed in the unprotected header.
+
+## Pinning of Raw Public Keys
+
+To Be Written
+
 
 # Artifacts
 
