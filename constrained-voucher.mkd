@@ -331,7 +331,7 @@ INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
 ## Signing voucher and voucher-request artifacts with COSE
 
-The COSE-Sign1 structure is discussed in section 4.2 of {{RFC8152}}.
+The COSE-Sign1 structure is discussed in section 4.2 of {{I-D.ietf-cose-rfc8152bis-struct}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
 It is used when only one signature is used on the body.
 Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is compulsory.
@@ -438,7 +438,7 @@ Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early 
 
 This section registers the the 'application/voucher-cose+cbor' in the "Media Types" registry.
 These media types are used to indicate that the content is a CBOR voucher either signed with
-a COSE_Sign1 structure {{RFC8152}}.
+a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
 
 ### application/voucher-cose+cbor
 
