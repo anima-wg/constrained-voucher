@@ -1,9 +1,8 @@
 #!/usr/bin/perl
 
 sub insert {
-    local($file, $wrapped) = @_;
+    local($file, $wrapped, $codewrapped) = @_;
 
-    my $codewrapper=0;
     my $file;
     my $basefile;
     $file = $1;
@@ -38,10 +37,12 @@ sub insert {
 
 while(<>) {
     if(/INSERT_TEXT_FROM_FILE (.*) END/) {
-        insert($1, 0);
+        insert($1, 0, 0);
     }
     elsif(/INSERT_FIG_FROM_FILE (.*) END/) {
-        insert($1, 1);
+        insert($1, 1, 0);
+    elsif(/INSERT_CODE_FROM_FILE (.*) END/) {
+        insert($1, 1, 1);
     } else {
         print;
     }
