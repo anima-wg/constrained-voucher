@@ -169,6 +169,13 @@ The constrained voucher and constrained voucher request MUST be signed.
 
 The use of the two signing formats permit the use of both PKIX format certificates, and raw public keys (RPK).
 
+When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in a voucher, is the raw public
+key of the Registrar.
+
+This is described in the YANG definition for the constrained voucher and in section {{pinning}}.
+
+When PKIX format certificates are used, the pinned-domain-cert present in a voucher can be either the certificate of the Registrar or the certificate of the CA that issued the Registrar's certificate.
+
 # Discovery and URI
 
 This section describes the BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between registrar, proxy and pledge over CoAP.
@@ -254,6 +261,18 @@ Some consideration was made to doing this for consistency but:
 * a Registrar is likely to provide onboarding services to both constrained and non-constrained devices.  Such a Registrar would need to speak HTTPS anyway.
 
 * similarly, a manufacturer is likely to have both constrained and non-constrained devices, so there may be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
+
+# Pinning of Voucher Artifacts {#pinning}
+
+The voucher is a statement from the MASA to the Pledge indicating who the Pledge's owner is.
+This section deals with the question of how that identity is determined.
+
+Section 5.5 of {{I-D.ietf-anima-bootstrapping-keyinfra}} indicates some of the flexibility that is possible.
+The advice is to include only certificates in the CMS structure which should participate in the chain that is to be pinned.
+The MASA is expected to evaluate the certificates, forming them into a chain.
+For instance, for a two-level certification authority:
+
+INSERT_FIG_FROM_FILE two-ca-chain.txt END
 
 # Artifacts
 
