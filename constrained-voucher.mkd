@@ -96,48 +96,44 @@ informative:
 
 --- abstract
 
-This document defines a strategy to securely assign a pledge to an
-owner, using an artifact signed, directly or indirectly, by the
-pledge's manufacturer.  This artifact is known as a "voucher".
+This document defines a protocol to securely assign a pledge to an
+owner and to enroll it into the owner's network. The protocol uses an artifact that is signed, directly 
+or indirectly, by the pledge's manufacturer.  This artifact is known as a "voucher".
 
-This document builds upon the work in [RFC8366] and of [BRSKI], but encoding
-the resulting artifacts in CBOR, and conducting the transaction over CoAP rather than HTTPS.  with
+This document builds upon the work in [RFC8366] and [BRSKI], but defines an encoding of 
+the voucher in CBOR rather than JSON, and enables the pledge to perform its transactions using CoAP rather than HTTPS. 
 
-The use of Raw Public Keys rather than certificates is also explained.
+The use of Raw Public Keys instead of X.509 certificates for security operations is also explained.
 
 --- middle
 
 # Introduction
 
-Enrollment of new nodes into constrained networks with constrained nodes
-present unique challenges.
+Secure enrollment of new nodes into constrained networks with constrained nodes
+presents unique challenges. There are network bandwidth and code size issues to contend with.
+A solution for autonomous enrollment such as {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
+code size or bandwidth required.
 
-There are bandwidth and code space issues to contend.
-A solution such as {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
-code space or bandwidth required.
+Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained
+version of BRSKI {{I-D.ietf-anima-bootstrapping-keyinfra}} that makes use of the constrained CoAP-based version of EST 
+{{I-D.ietf-ace-coap-est}} rather than regular EST {{RFC7030}} .
 
-This document defines a constrained version of {{RFC8366}}, along with the constrained
-version of {{RFC7030}} being replaced by {{I-D.ietf-ace-coap-est}}.
+While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS,
+this document defines a new voucher serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
+This COSE-signed CBOR-encoded voucher can be transported using secured CoAP or HTTP.
+The CoAP connection (between pledge and registrar) is to be protected by either OSCORE+EDHOC, or DTLS (CoAPS). The HTTP connection 
+(between registrar and MASA) is to be protected using TLS (HTTPS).
 
-While {{RFC8366}} is by default serialized to JSON with a signature in CMS,
-this document defines a serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
+This document has a similar structure to {{RFC8366}} but adds sections concerning:
 
-This document follows a similar, but not identical structure as {{RFC8366}} and supplements the brski part to {{I-D.ietf-ace-coap-est}}.
+1. Voucher-request artifact specification based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}},
+2. Voucher(-request) transport over CoAP based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}} and on {{I-D.ietf-ace-coap-est}}.
 
-This document describes a single new voucher format.
-It is a COSE-signed CBOR-encoded voucher transported using secured CoAP or HTTP.
-The CoAP connection is to be protected by either OSCORE+EDHOC, or DTLS (CoAPS).
+The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
+As the tooling to convert YANG documents into a list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the output of the pyang tool.
 
 There is additional work when the voucher is integrated into the key-exchange, described in {{!I-D.selander-ace-ake-authz}}.
 This work is not in scope for this document.
-
-Additional sections have been added concerning:
-
-1. Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
-2. Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over CoAP.
-
-The CBOR definitions for this constrained voucher format are defined using the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
-As the tooling to convert YANG documents into an list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the output of the pyang tool.
 
 # Terminology          {#Terminology}
 
