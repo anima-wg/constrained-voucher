@@ -97,8 +97,9 @@ informative:
 --- abstract
 
 This document defines a protocol to securely assign a pledge to an
-owner and to enroll it into the owner's network. The protocol uses an artifact that is signed, directly 
-or indirectly, by the pledge's manufacturer.  This artifact is known as a "voucher".
+owner and to enroll it into the owner's network. 
+The protocol uses an artifact that is signed by the pledge's manufacturer.  
+This artifact is known as a "voucher".
 
 This document builds upon the work in [RFC8366] and [BRSKI], but defines an encoding of 
 the voucher in CBOR rather than JSON, and enables the pledge to perform its transactions using CoAP rather than HTTPS. 
