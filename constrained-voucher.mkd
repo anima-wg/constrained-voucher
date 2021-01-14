@@ -47,11 +47,11 @@ normative:
 #  RFC7252:
   RFC7950:
   RFC5652:
-  RFC8152:
 #  RFC8174:
   RFC8366:
   RFC3688:
   RFC6020:
+  I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-anima-bootstrapping-keyinfra:
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
@@ -96,47 +96,45 @@ informative:
 
 --- abstract
 
-This document defines a strategy to securely assign a pledge to an
-owner, using an artifact signed, directly or indirectly, by the
-pledge's manufacturer.  This artifact is known as a "voucher".
+This document defines a protocol to securely assign a pledge to an
+owner and to enroll it into the owner's network. 
+The protocol uses an artifact that is signed by the pledge's manufacturer.  
+This artifact is known as a "voucher".
 
-This document builds upon the work in {{RFC8366}}, encoding
-the resulting artifact in CBOR.  Use with two signature technologies are
-described.
+This document builds upon the work in [RFC8366] and [BRSKI], but defines an encoding of 
+the voucher in CBOR rather than JSON, and enables the pledge to perform its transactions using CoAP rather than HTTPS. 
 
-Additionally, this document explains how constrained vouchers may be
-transported as an extension to the {{I-D.ietf-ace-coap-est}} protocol.
+The use of Raw Public Keys instead of X.509 certificates for security operations is also explained.
 
 --- middle
 
 # Introduction
 
-Enrollment of new nodes into constrained networks with constrained nodes
-present unique challenges.
+Secure enrollment of new nodes into constrained networks with constrained nodes
+presents unique challenges. There are network bandwidth and code size issues to contend with.
+A solution for autonomous enrollment such as {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
+code size or bandwidth required.
 
-There are bandwidth and code space issues to contend.
-A solution such as {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
-code space or bandwidth required.
+Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained
+version of BRSKI {{I-D.ietf-anima-bootstrapping-keyinfra}} that makes use of the constrained CoAP-based version of EST 
+{{I-D.ietf-ace-coap-est}} rather than regular EST {{RFC7030}} .
 
-This document defines a constrained version of {{RFC8366}}.
-Rather than serializing the YANG definition in JSON, it is serialized into CBOR ({{RFC7049}}).
+While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS,
+this document defines a new voucher serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
+This COSE-signed CBOR-encoded voucher can be transported using secured CoAP or HTTP.
+The CoAP connection (between pledge and registrar) is to be protected by either OSCORE+EDHOC, or DTLS (CoAPS). The HTTP connection 
+(between registrar and MASA) is to be protected using TLS (HTTPS).
 
-This document follows a similar, but not identical structure as {{RFC8366}} and supplements the brski part to {{I-D.ietf-ace-coap-est}}.
+This document has a similar structure to {{RFC8366}} but adds sections concerning:
 
-This document describes a single new voucher format.
-It is a COSE-signed CBOR-encoded voucher transported using secured CoAP or HTTP.
-The CoAP connection is protected either by OSCORE+EDHOC, or DTLS (CoAPS).
+1. Voucher-request artifact specification based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}},
+2. Voucher(-request) transport over CoAP based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}} and on {{I-D.ietf-ace-coap-est}}.
+
+The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
+As the tooling to convert YANG documents into a list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the output of the pyang tool.
 
 There is additional work when the voucher is integrated into the key-exchange, described in {{!I-D.selander-ace-ake-authz}}.
 This work is not in scope for this document.
-
-Additional sections have been added concerning:
-
-1. Addition of voucher-request specification as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}},
-2. Addition to {{I-D.ietf-ace-coap-est}} of voucher transport requests over CoAP.
-
-The CBOR definitions for this constrained voucher format are defined using the mechanism describe in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
-As the tooling to convert YANG documents into an list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the output of the pyang tool.
 
 # Terminology          {#Terminology}
 
@@ -153,7 +151,7 @@ Registrar/Coordinator (JRC), Manufacturer Authorized Signing Authority
 
 {{RFC8366}} provides for vouchers that assert proximity, that authenticate the registrar  and that include different amounts of anti-replay protection.
 
-This document does not make any extensions to the types of vouchers.
+This document does not make any extensions to the semantic meanings of vouchers, only the encoding has been changed.
 
 Time based vouchers are included in this definition, but given that constrained devices  are extremely unlikely to have accurate time, their use is very unlikely.
 Most users of these constrained vouchers will be online and will use live nonces to provide anti-replay protection.
@@ -161,16 +159,12 @@ Most users of these constrained vouchers will be online and will use live nonces
 {{RFC8366}} defined only the voucher artifact, and not the Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
 
 This document defines both a constrained voucher and a constrained voucher-request.
-They are presented in the order "voucher-request", followed by a "voucher" response as this is the time order that they occur.
+They are presented in the order "voucher-request", followed by a "voucher" response as this is
+the order that they occur in the protocol.
 
 The constrained voucher and constrained voucher request MUST be signed.
 
 The use of the two signing formats permit the use of both PKIX format certificates, and raw public keys (RPK).
-
-When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in a voucher, is the raw public
-key of the Registrar. This is described in the YANG definition for the constrained voucher.
-When PKIX format certificates are used, the pinned-domain-cert present in a voucher can be either the certificate of the Registrar or the certificate of the CA that issued the Registrar's certificate.
-
 
 # Discovery and URI
 
@@ -334,7 +328,7 @@ INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
 ## Signing voucher and voucher-request artifacts with COSE
 
-The COSE-Sign1 structure is discussed in section 4.2 of {{RFC8152}}.
+The COSE-Sign1 structure is discussed in section 4.2 of {{I-D.ietf-cose-rfc8152bis-struct}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
 It is used when only one signature is used on the body.
 Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is compulsory.
@@ -441,7 +435,7 @@ Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early 
 
 This section registers the the 'application/voucher-cose+cbor' in the "Media Types" registry.
 These media types are used to indicate that the content is a CBOR voucher either signed with
-a COSE_Sign1 structure {{RFC8152}}.
+a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
 
 ### application/voucher-cose+cbor
 
