@@ -263,20 +263,45 @@ Some consideration was made to specify CoAP support for consistency but:
 # Pinning in Voucher Artifacts {#pinning}
 
 The voucher is a statement from the MASA to the Pledge indicating who the Pledge's owner is.
-This section deals with the question of how that identity is determined.
+This section deals with the question of how that owner's identity is determined and how it is encoded within the voucher.
 
-Section 5.5 of {{I-D.ietf-anima-bootstrapping-keyinfra}} indicates some of the flexibility that is possible.
-The advice is for the Registrar to include only certificates in the CMS structure which should participate in the chain that is to be pinned.
-The MASA is expected to evaluate the certificates, forming them into a chain.
-For instance, for a two-level certification authority, where the voucher-request has been signed by the "Registrar":
+## Registrar Identity Selection and Encoding
+
+Section 5.5 of {{I-D.ietf-anima-bootstrapping-keyinfra}} describes BRSKI policies for selection of the owner identity. It indicates some of the flexibility that is possible for the Registrar.
+The recommendation made there is for the Registrar to include only certificates in the (CMS) signing structure which participate in the certificate chain that is to be pinned.
+
+The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain. 
+For instance, for a domain with a two-level certification authority, where the voucher-request has been signed by "Registrar" its signing structure includes two additional CA certificates:
 
 INSERT_FIG_FROM_FILE two-ca-chain.txt END
 
-The MASA, having assembled the chain will use the top-most ("priv-CA") as the object that is pinned in the resulting voucher.
-A Registrar that wished to have only the intermediate CA pinned would omit the "priv-CA" certificate from the voucher-request.
+When the Registrar is using a COSE-signed constrained format voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}}, 
+would carry all the certificates of the chain in an "x5bag" attribute placed in the unprotected header.
 
-When using constrained vouchers, the COSE Sign1 object contains a protected and unprotected header, and according to {{I-D.ietf-cose-x509}}, 
-would carry the certificates of the chain in an "x5bag" attribute placed in the unprotected header.
+## MASA Pinning Policy
+
+The MASA, having assembled and verified the chain in the signing structure, will now need to select a certificate to pin in the voucher in case there are multiple available. 
+(For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.) 
+The BRSKI policy for pinning by the MASA as described in Section 5.5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}} leaves much flexibility to the vendor. The present 
+document adds the following rules to the MASA pinning policy, in order to reduce on average the duration of BRSKI/EST on constrained, low-bandwidth networks:
+
+1. for a voucher containing a nonce, it SHOULD select the most specific CA certificate in the chain.
+2. for a nonceless voucher, it SHOULD select the highest-level (CA/RA) certificate in the chain that is allowed under the MASA's policy for this specific customer (domain).
+
+The rationale for 1. is that in case of a voucher with nonce, the voucher is valid only in scope of the present DTLS connection between Pledge and Registrar anyway, so it would have no 
+benefit to pin a higher-level CA. By pinning the most specific CA the constrained Pledge can validate its DTLS connection using less crypto operations. The
+rationale for pinning a CA instead of the Registrar's End-Entity certificate directly is the following benefit on constrained networks: the pinned certificate in the voucher 
+can in common cases be re-used as a Domain CA trust anchor during the EST enrollment and during the operational phase that follows after EST enrollment, as explained elsewhere in this document.
+Doing so avoids an additional transmission of this trust anchor over the network during the EST enrollment, saving potentially 100s of bytes and a CoAP transaction. 
+
+The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of {{I-D.ietf-anima-bootstrapping-keyinfra}}).
+
+Using the previous example of a domain with a two-level certification authority, the most specific CA ("Sub-CA") is the identity that is pinned by MASA in a nonceful voucher.
+A Registrar that wished to have only the Registrar's End-Entity certificate pinned would omit the "priv-CA" and "Sub-CA" certificates from the voucher-request.
+
+In case of a nonceless voucher, the MASA would depending on trust level pin only "Registrar" certificate (low trust in customer), or the "Sub-CA" certificate (in case of 
+medium trust, implying that any registrar of that sub-domain is acceptable), or even the "priv-CA" certificate (in case of high trust in the customer, and possibly a pre-agreed need of the 
+customer to obtain flexible long-lived vouchers). 
 
 ## Pinning of Raw Public Keys
 
