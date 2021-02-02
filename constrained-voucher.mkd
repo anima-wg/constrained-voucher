@@ -150,31 +150,33 @@ Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, noncele
 
 {::boilerplate bcp14}
 
-# Survey of Voucher Types
+# Survey of Voucher Types {#survey}
 
-{{RFC8366}} provides for vouchers that assert proximity, that authenticate the Registrar  and that include different amounts of anti-replay protection.
+{{RFC8366}} provides for vouchers that assert proximity, that authenticate the Registrar and that can offer varying levels of anti-replay protection.
 
-This document does not make any extensions to the semantic meanings of vouchers, only the encoding has been changed.
+This document does not make any extensions to the semantic meanings of vouchers, only the encoding has been changed to optimize for constrained devices and networks.
 
-Time based vouchers are included in this definition, but given that constrained devices  are extremely unlikely to have accurate time, their use is very unlikely.
-Most users of these constrained vouchers will be online and will use live nonces to provide anti-replay protection.
+Time-based vouchers are supported in this definition, but given that constrained devices are extremely unlikely to have accurate time, their use is very unlikely.
+Most Pledges using these constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection.
 
 {{RFC8366}} defined only the voucher artifact, and not the Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
-
 This document defines both a constrained voucher and a constrained voucher-request.
 They are presented in the order "voucher-request", followed by a "voucher" response as this is
 the order that they occur in the protocol.
 
-The constrained voucher and constrained voucher request MUST be signed.
+The constrained voucher request MUST be signed by the Pledge. It can sign using its IDevID X.509 certificate, or if an IDevID is not available its manufacturer-installed raw public key (RPK). 
+The constrained voucher MUST be signed by the MASA.
 
-The use of the two signing formats permit the use of both PKIX format certificates, and raw public keys (RPK).
+For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's X.509 certificate, or using a raw public key (RPK)
+of the Registrar.
+For the constrained voucher also these two methods are supported to indicate (pin) a trusted domain identity: using either a pinned domain X.509 certificate, or a pinned raw public key (RPK).
 
-When RPKs are used, the voucher produced by the MASA pins the raw public key of the Registrar: the pinned-domain-subject-public-key-info in a voucher, is the raw public
-key of the Registrar.
+When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the raw public key of the Registrar in the "pinned-domain-subject-public-key-info" field of a voucher.
+This is described in more detail in the YANG definition for the constrained voucher and in section {{pinning}}.
 
-This is described in the YANG definition for the constrained voucher and in section {{pinning}}.
-
-When PKIX format certificates are used, the pinned-domain-cert present in a voucher can be either the certificate of the Registrar or the certificate of the CA that issued the Registrar's certificate.
+When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate. That can be either the End-Entity certificate of 
+the Registrar, or the certificate of a domain CA of the Registrar's domain. However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then 
+MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
 
 # Discovery and URI
 
@@ -304,7 +306,18 @@ customer to obtain flexible long-lived vouchers).
 
 ## Pinning of Raw Public Keys
 
-To Be Written
+Specifically for constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of an X.509 certificate.
+If an RPK is pinned it MUST be the RPK of the Registrar.
+
+When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in the "pinned-domain-subject-public-key-info" field of a voucher.
+This is described in more detail in the YANG definition for the constrained voucher. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
+another method for certificate-less enrollment and the Registrar has to support this method also. How the Pledge discovers this method and details of the enrollment method are out of scope of this document. 
+
+When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate. That can be either the End-Entity certificate of 
+the Registrar, or the certificate of a domain CA of the Registrar's domain. However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then 
+MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
+
+To Be Completed further (TBD): Note, the above paragraphs are duplicated from the section {{survey}} so we may have to resolve this duplication.
 
 
 # Artifacts
