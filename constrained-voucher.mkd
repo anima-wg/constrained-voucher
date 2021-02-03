@@ -274,7 +274,15 @@ previous section.
 A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS connection is using.
 This avoids the Pledge having to reconnect using DTLS, in order to access these resources.
 
-### Optional Pledge Optimization
+### Pledge Extensions
+
+A constrained Pledge SHOULD NOT perform the optional "CSR attributes request" (/att) to minimize network traffic and reduce code size 
+(i.e. by not implementing the complex CSR attributes parsing code). 
+
+When creating the CSR, the Pledge selects itself which attributes to include. One or more Subject Distinguished Name fields MUST be included.
+If the Pledge has no specific information on what attributes/fields are desired in the CSR, it MUST use the Subject Distinguished Name fields
+from its IDevID unmodified. The Pledge may receive such information via the voucher (encoded in a vendor-specific way) or some other, out-of-band 
+means.
 
 A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic and code size:
 if the BRSKI-received voucher, validating the current EST server, contains a pinned domain CA certificate, the Pledge provisionally considers
