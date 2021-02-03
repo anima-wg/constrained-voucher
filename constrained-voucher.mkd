@@ -116,9 +116,7 @@ presents unique challenges. There are network bandwidth and code size issues to 
 A solution for autonomous enrollment such as {{I-D.ietf-anima-bootstrapping-keyinfra}} may be too large in terms of
 code size or bandwidth required.
 
-Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained
-version of BRSKI {{I-D.ietf-anima-bootstrapping-keyinfra}} that makes use of the constrained CoAP-based version of EST, EST-coaps
-{{I-D.ietf-ace-coap-est}} rather than EST over HTTPS {{RFC7030}}.
+Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained version of BRSKI {{I-D.ietf-anima-bootstrapping-keyinfra}} that makes use of the constrained CoAP-based version of EST, EST-coaps {{I-D.ietf-ace-coap-est}} rather than EST over HTTPS {{RFC7030}}.
 
 While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS,
 this document defines a new voucher serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
