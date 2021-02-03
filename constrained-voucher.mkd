@@ -117,8 +117,8 @@ A solution for autonomous enrollment such as {{I-D.ietf-anima-bootstrapping-keyi
 code size or bandwidth required.
 
 Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained
-version of BRSKI {{I-D.ietf-anima-bootstrapping-keyinfra}} that makes use of the constrained CoAP-based version of EST
-{{I-D.ietf-ace-coap-est}} rather than regular EST {{RFC7030}} .
+version of BRSKI {{I-D.ietf-anima-bootstrapping-keyinfra}} that makes use of the constrained CoAP-based version of EST, EST-coaps
+{{I-D.ietf-ace-coap-est}} rather than EST over HTTPS {{RFC7030}}.
 
 While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS,
 this document defines a new voucher serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
@@ -178,7 +178,7 @@ When the Pledge is known by MASA to support PKIX format certificates, the "pinne
 the Registrar, or the certificate of a domain CA of the Registrar's domain. However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then
 MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
 
-# Discovery and URI
+# Discovery and URI {#discovery-uri}
 
 This section describes the BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar, join proxy and Pledge over CoAP.
 The extensions are targeted to low-resource networks with small packets.
@@ -211,22 +211,36 @@ the full resource paths and the used content types. This is useful when
 multiple content types are specified for EST-coaps server. For example, the
 following more complete response is possible.
 
-# BRSKI-EST protocol {#brski-est}
+# BRSKI-EST Protocol {#brski-est}
 
+<<<<<<< HEAD
 The constrained BRSKI-EST protocol described below is between the Pledge and the Registrar only.
 (probably via a join proxy, such as described in {{?I-D.ietf-anima-constrained-join-proxy}})
+=======
+The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
+(probably via a join proxy, such as described in {{?I-D.ietf-anima-constrained-join-proxy}})
+It extends both the BRSKI and EST-coaps protocols.
+>>>>>>> 7f55a0f... fixes in discovery section, removal of obsolete TBD2, Link Format syntax fixes
 
-The Pledge MAY perform a discovery operation on the "/.well-known/core?rt=brski" resource if it wishes to discover possibly shorter URLs for the functions, or if it has the possibility to
+## Discovery, URIs and Content Formats
+
+TBD: content overlaps with {{discovery-uri}}, to be fixed - issue #79
+
+The Pledge MAY perform a discovery operation on the "/.well-known/core?rt=brski*" resource of the Registrar if it wishes to discover possibly shorter URLs for the functions, or if it has the possibility to
 use a variety of onboarding protocols or certificate enrollment protocols and it wants to discover which of these protocols are available.
+
+For example, if the Registrar supports a short BRSKI URL (/b) and supports the voucher format "application/voucher-cose+cbor" (TBD3), and status reporting in both CBOR and JSON formats:
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  </b>;rt="brski"
-  </b/rv>;rt="brski.rv";ct=TBD2 TBD3
-  </b/vs>;rt="brski.vs";ct=50 60
-  </b/es>;rt="brski.es";ct=50 60
+  Content-Format: 40
+  Payload:
+  </b>;rt=brski,
+  </b/rv>;rt=brski.rv;ct=TBD3,
+  </b/vs>;rt=brski.vs;ct="50 60",
+  </b/es>;rt=brski.es;ct="50 60"
 ~~~~
 
 The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski" end points defined in {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.
@@ -234,16 +248,16 @@ The Registrar is under no obligation to provide shorter URLs, and MAY respond to
 Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the "/.well-known/brski" URLs, and MUST NOT distinguish between them.
 In particular, a Pledge MAY use the longer and shorter URLs in combination.
 
-The return of the content-types in the "ct" attribute allows the client to choose the most appropriate one from multiple content types.
-Note that ct=TBD3 stands for Content-Format "application/voucher-cose+cbor"; both Content-Formats TBD2 and TBD3 are defined in this document.
+The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
+Note that Content-Format TBD3 is defined in this document.
 
-The Content-Format ("application/json") 50 MAY be supported.
-Content-Formats ("application/cbor") 60, TBD2, and TBD3 MUST be supported by the Registrar.
+The Content-Format ("application/json") 50 MAY be supported and 60 MUST be supported by the Registrar for the "vs" and "es" resources.
+Content-Format TBD3 MUST be supported by the Registrar for the "rv" resource. If the "ct" attribute is not indicated for this resource, this implies that at least TBD3 is supported.
 
-The Pledge and MASA need to support one or more formats for the voucher.
+The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
 
-# BRSKI-MASA protocol {#brski-masa}
+# BRSKI-MASA Protocol {#brski-masa}
 
 {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
 This document does not change that.
