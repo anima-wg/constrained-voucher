@@ -336,7 +336,10 @@ The recommendation made there is for the Registrar to include only certificates 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain. 
 For instance, for a domain with a two-level certification authority, where the voucher-request has been signed by "Registrar" its signing structure includes two additional CA certificates:
 
-INSERT_FIG_FROM_FILE two-ca-chain.txt END
+~~~~
+INSERT_TEXT_FROM_FILE two-ca-chain.txt END
+~~~~
+{: #fig-twoca title='Two Level PKI'}
 
 When the Registrar is using a COSE-signed constrained format voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}}, 
 would carry all the certificates of the chain in an "x5bag" attribute placed in the unprotected header.
@@ -345,11 +348,11 @@ would carry all the certificates of the chain in an "x5bag" attribute placed in 
 
 The MASA, having assembled and verified the chain in the signing structure, will now need to select a certificate to pin in the voucher in case there are multiple available. 
 (For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.) 
-The BRSKI policy for pinning by the MASA as described in Section 5.5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}} leaves much flexibility to the manufacturer. The present 
-document adds the following rules to the MASA pinning policy, in order to reduce on average the duration of BRSKI/EST on constrained, low-bandwidth networks:
+The BRSKI policy for pinning by the MASA as described in Section 5.5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}} leaves much flexibility to the manufacturer. 
+The present document adds the following rules to the MASA pinning policy, in order to reduce on average the duration of BRSKI/EST on constrained, low-bandwidth networks:
 
-1. for a voucher containing a nonce, it SHOULD select the most specific CA certificate in the chain.
-2. for a nonceless voucher, it SHOULD select the highest-level (CA/RA) certificate in the chain that is allowed under the MASA's policy for this specific customer (domain).
+1. for a voucher containing a nonce, it SHOULD select the most specific CA certificate in the chain (this is certificate 3 in {{fig-twoca}}).
+2. for a nonceless voucher, it SHOULD select the highest-level (CA/RA) certificate in the chain that is allowed under the MASA's policy for this specific customer (domain).  This is certificate 1 in {{fig-twoca}}.
 
 The rationale for 1. is that in case of a voucher with nonce, the voucher is valid only in scope of the present DTLS connection between Pledge and Registrar anyway, so it would have no 
 benefit to pin a higher-level CA. By pinning the most specific CA the constrained Pledge can validate its DTLS connection using less crypto operations. The
@@ -370,6 +373,11 @@ customer to obtain flexible long-lived vouchers).
 
 Specifically for constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of an X.509 certificate.
 If an RPK is pinned it MUST be the RPK of the Registrar.
+
+~~~~
+INSERT_TEXT_FROM_FILE pinning-options.txt END
+~~~~
+{: #fig-pinning title='Raw Public Key pinning'}
 
 When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in the "pinned-domain-subject-public-key-info" field of a voucher.
 This is described in more detail in the YANG definition for the constrained voucher. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
