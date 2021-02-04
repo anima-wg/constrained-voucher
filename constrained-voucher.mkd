@@ -284,7 +284,7 @@ The MASA, having assembled and verified the chain in the signing structure, will
 The BRSKI policy for pinning by the MASA as described in Section 5.5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}} leaves much flexibility to the manufacturer. The present 
 document adds the following rules to the MASA pinning policy, in order to reduce on average the duration of BRSKI/EST on constrained, low-bandwidth networks:
 
-1. for a voucher containing a nonce, it SHOULD select the most specific CA certificate in the chain.
+1. for a voucher containing a nonce, it SHOULD select the most specific (lowest-level) CA certificate in the chain.
 2. for a nonceless voucher, it SHOULD select the highest-level (CA/RA) certificate in the chain that is allowed under the MASA's policy for this specific customer (domain).
 
 The rationale for 1. is that in case of a voucher with nonce, the voucher is valid only in scope of the present DTLS connection between Pledge and Registrar anyway, so it would have no 
