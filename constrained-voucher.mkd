@@ -388,11 +388,12 @@ INSERT_TEXT_FROM_FILE pinning-options.txt END
 When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in the "pinned-domain-subject-public-key-info" field of a voucher.
 This is described in more detail in the YANG definition for the constrained voucher. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
 another method for certificate-less enrollment and the Registrar has to support this method also.
+It is possible that the Pledge will not enroll, but instead only a network join operation will occur, such as described in {{!I-D.ietf-6tisch-minimal-security}}.
 How the Pledge discovers this method and details of the enrollment method are out of scope of this document.
 
-When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate. That can be either the End-Entity certificate of
-the Registrar, or the certificate of a domain CA of the Registrar's domain. However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then
-MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
+When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate.
+That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain.
+However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA SHOULD pin the RPK (RPK3 in figure {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
 
 To Be Completed further (TBD): Note, the above paragraphs are duplicated from the section {{survey}} so we may have to resolve this duplication.
 
