@@ -276,12 +276,12 @@ This avoids the Pledge having to reconnect using DTLS, in order to access these 
 
 ### Pledge Extensions
 
-A constrained Pledge SHOULD NOT perform the optional "CSR attributes request" (/att) to minimize network traffic and reduce code size 
-(i.e. by not implementing the complex CSR attributes parsing code). 
+A constrained Pledge SHOULD NOT perform the optional "CSR attributes request" (/att) to minimize network traffic and reduce code size
+(i.e. by not implementing the complex CSR attributes parsing code).
 
 When creating the CSR, the Pledge selects itself which attributes to include. One or more Subject Distinguished Name fields MUST be included.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, it MUST use the Subject Distinguished Name fields
-from its IDevID unmodified. The Pledge may receive such information via the voucher (encoded in a vendor-specific way) or some other, out-of-band 
+from its IDevID unmodified. The Pledge may receive such information via the voucher (encoded in a vendor-specific way) or some other, out-of-band
 means.
 
 A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic and code size:
@@ -342,7 +342,10 @@ The recommendation made there is for the Registrar to include only certificates 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain.
 For instance, for a domain with a two-level certification authority, where the voucher-request has been signed by "Registrar" its signing structure includes two additional CA certificates:
 
-INSERT_FIG_FROM_FILE two-ca-chain.txt END
+~~~~
+INSERT_TEXT_FROM_FILE two-ca-chain.txt END
+~~~~
+{: #fig-twoca title='Two Level PKI'}
 
 When the Registrar is using a COSE-signed constrained format voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}},
 would carry all the certificates of the chain in an "x5bag" attribute placed in the unprotected header.
@@ -376,6 +379,11 @@ customer to obtain flexible long-lived vouchers).
 
 Specifically for constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of an X.509 certificate.
 If an RPK is pinned it MUST be the RPK of the Registrar.
+
+~~~~
+INSERT_TEXT_FROM_FILE pinning-options.txt END
+~~~~
+{: #fig-pinning title='Raw Public Key pinning'}
 
 When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in the "pinned-domain-subject-public-key-info" field of a voucher.
 This is described in more detail in the YANG definition for the constrained voucher. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
