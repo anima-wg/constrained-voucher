@@ -210,7 +210,7 @@ the full resource paths and the used content types. This is useful when
 multiple content types are specified for EST-coaps server. For example, the
 following more complete response is possible.
 
-<!-- -------------------------------------------------------------------- -->
+<!-- ******************************************************************** -->
 
 # BRSKI-EST Protocol {#brski-est}
 
@@ -307,38 +307,7 @@ is when the Registrar is configured to not support a request for a single CA cer
 enrolled into the domain needs to use at least multiple CAs. In such exception case the Registrar returns the CoAP response 4.06 Not Acceptable to indicate
 that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=certs-only" is available.
 
-<!-- ------------------------------------------------------------------ -->
-
-## Extensions to BRSKI {#brski-extensions}
-
-A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use discovery for BRSKI resources, since it is more efficient to just try
-the supported enrollment method via the well-known BRSKI/EST-coaps resources, and it avoids the Pledge having to do complex CoRE Link Format parsing.
-A Registrar SHOULD host any discoverable BRSKI resources on the same (UDP) server port that the Pledge's DTLS connection is using.
-This avoids the Pledge having to reconnect using DTLS, in order to access these resources.
-
-## Extensions to EST-coaps {#brski-est-extensions}
-
-A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use discovery for EST-coaps resources, for similar reasons as stated in the
-previous section.
-A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS connection is using.
-This avoids the Pledge having to reconnect using DTLS, in order to access these resources.
-
-### Optional Pledge Optimization
-
-A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic and code size:
-if the BRSKI-received voucher, validating the current EST server, contains a pinned domain CA certificate, the Pledge provisionally considers
-this single certificate as the sole EST trust anchor, in other words, the single result of "CA certificates request"
-(/crts) to the EST server. Using this trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID.
-Then, the Pledge attempts to validate that the trust anchor CA is the signer of the LDevID. If this is the case, the Pledge finally accepts
-the pinned domain CA certificate as the legitimate trust anchor CA for its domain and it also accepts its LDevID.
-If this is not the case, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust
-anchors since these obviously differ from the (temporary) pinned domain CA. When doing this request, the Pledge MAY use a CoAP Accept Option
-with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one. Such limiting to only one has the
-advantages that storage requirements for CA certificates are reduced, network traffic can be reduced, and code size can be reduced (by not having to parse the alternative
-format 281 "application/pkcs7-mime;smime-type=certs-only" and not having to support CoAP block-wise transfer).
-
-If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID, then the Pledge
-MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
+<!-- ******************************************************************** -->
 
 ### Registrar Extensions
 
@@ -366,7 +335,7 @@ Some consideration was made to specify CoAP support for consistency but:
 
 * similarly, a manufacturer is likely to offer both constrained and non-constrained devices, so there may in practice be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
 
-<!-- ------------------------------------------------------------------ -->
+<!-- ******************************************************************** -->
 
 # Pinning in Voucher Artifacts {#pinning}
 
@@ -436,7 +405,7 @@ However, if the Pledge is known to also support RPK pinning and the MASA intends
 
 To Be Completed further (TBD): Note, the above paragraphs are duplicated from the section {{survey}} so we may have to resolve this duplication.
 
-<!-- ------------------------------------------------------------------ -->
+<!-- ******************************************************************** -->
 
 # Artifacts
 
