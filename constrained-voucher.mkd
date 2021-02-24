@@ -148,34 +148,37 @@ Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, noncele
 
 {::boilerplate bcp14}
 
-# Survey of Voucher Types {#survey}
+# Overview of Protocol {#survey}
 
 {{RFC8366}} provides for vouchers that assert proximity, that authenticate the Registrar and that can offer varying levels of anti-replay protection.
 
-This document does not make any extensions to the semantic meanings of vouchers, only the encoding has been changed to optimize for constrained devices and networks.
+This document does not make any extensions to the semantic meaning of vouchers, only the encoding has been changed to optimize for constrained devices and networks.
 
-Time-based vouchers are supported in this definition, but given that constrained devices are extremely unlikely to have accurate time, their use is very unlikely.
-Most Pledges using these constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection.
+Time-based vouchers are supported in this definition, but given that constrained devices are extremely unlikely to have accurate time, their use will be uncommon.
+Most Pledges using these constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection rather than expiry times.
 
-{{RFC8366}} defined only the voucher artifact, and not the Voucher Request artifact, which was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+{{RFC8366}} defines the voucher artifact, while the Voucher Request artifact was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+
 This document defines both a constrained voucher and a constrained voucher-request.
 They are presented in the order "voucher-request", followed by a "voucher" response as this is
 the order that they occur in the protocol.
 
 The constrained voucher request MUST be signed by the Pledge.
 It can sign using its IDevID X.509 certificate, or if an IDevID is not available its manufacturer-installed raw public key (RPK).
+{{rpk-considerations}} provides additional details on PKIX-less operations.
+
 The constrained voucher MUST be signed by the MASA.
 
-For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's X.509 certificate, or using a raw public key (RPK)
-of the Registrar.
+For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's X.509 certificate, or using a raw public key (RPK) of the Registrar.
+
 For the constrained voucher also these two methods are supported to indicate (pin) a trusted domain identity: using either a pinned domain X.509 certificate, or a pinned raw public key (RPK).
 
 When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the raw public key of the Registrar in the "pinned-domain-subject-public-key-info" field of a voucher.
 This is described in more detail in the YANG definition for the constrained voucher and in section {{pinning}}.
 
-When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate. That can be either the End-Entity certificate of
-the Registrar, or the certificate of a domain CA of the Registrar's domain. However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then
-MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
+When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate. 
+That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain.
+However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
 
 # Discovery and URI {#discovery-uri}
 
@@ -519,6 +522,8 @@ The design considerations for the CBOR encoding of vouchers is much the same as 
 One key difference is that the names of the leaves in the YANG does not have a material effect on the size of the resulting CBOR, as the SID translation process assigns integers to the names.
 
 Any POST request to the Registrar with resource /est/vs or /est/es returns a 2.05 response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.05) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.05) response in a separate CoAP message.
+
+# Raw Public Key Use Considerations {#rpk-considerations}
 
 # Security Considerations
 
