@@ -57,12 +57,12 @@ normative:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
   I-D.ietf-cose-x509:
-#  ieee802-1AR:
-#    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
-#    title: "IEEE 802.1AR Secure Device Identifier"
-#    author:
-#      ins: "IEEE Standard"
-#    date: 2009
+  ieee802-1AR:
+    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
+    title: "IEEE 802.1AR Secure Device Identifier"
+    author:
+      ins: "IEEE Standard"
+    date: 2009
 
 informative:
   I-D.ietf-netmod-yang-tree-diagrams:
@@ -505,6 +505,92 @@ The design considerations for the CBOR encoding of vouchers is much the same as 
 One key difference is that the names of the leaves in the YANG does not have a material effect on the size of the resulting CBOR, as the SID translation process assigns integers to the names.
 
 Any POST request to the Registrar with resource /est/vs or /est/es returns a 2.05 response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.05) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.05) response in a separate CoAP message.
+
+# Raw Public Key Use Considerations {#rpk-considerations}
+
+There is a strong desire to be able to build constrained (IoT) devices which have a minimal amount of code, and which do a minimal amount of network traffic.
+Note that these are two goals, and these two goals may be at odds.
+
+One piece of code that is complex, hard to test, and never seems critical for application design is the PKIX certification validation code.
+This section explains how a device can be onboarded with the minimal amount of PKIX related code.
+
+## The IDevID artifact
+
+The BRSKI protocol is based upon the Pledge identifying itself with an RFC5280 format (X509v3, PKIX) certificate.
+The details of how it becomes an IDevID is defined in {{ieee802-1AR}}.
+While the Pledge device needs to have an IDevID object, it does not need to manipulate it.
+It can regard the IDevID as an opaque object which is placed into a DTLS setup.
+
+The IDevID certificate will have an associated private key.
+The Pledge will need to use that private key for the DTLS connection, and for signing of the voucher-request.
+However, none of these operations require any kind of manipulation of certificates.
+The private key can be loaded in whatever format is appropriate and efficient for the hardware.
+(EDNOTE: are there lwig references that would make sense here?)
+
+## The Registrar Trust Anchor
+
+When the Pledge first connects to the Registrar, the connection to the Registrar is provisional, as explained in section 5.6.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+The Registrar provides its public key in a TLSServerCertificate, and the Pledge uses that to validate that integrity of the (D)TLS connection, but it does not validate the identity of
+the provided certificate.
+
+If instead of using a (TLSServer)Certificate of type X509 (see section 4.4.2 of {{RFC8446}}),
+a RawPublicKey object is used, then the Pledge does not need to any decoding of the RF5280 format certifiate to get the public key.
+
+## The Voucher Request
+
+The Pledge can put the Registrar's public key into the proximity-registrar-subject-public-key-info
+(PRSPKI) field of the voucher-request.
+(The proximity-registrar-sha256-of-subject-public-key-info can also be used if the 32-bytes of hash turned out to be smaller than a typical ECDSA key.)
+
+As the format of the PRSPKI field is identical to the TLS Certificate RawPublicKey, no manipulation at all is needed to insert this into a voucher-request.
+
+## The Voucher Reply
+
+A returned voucher will have a pinned-domain-subject-public-key-info field with the identical key as was found in the proximity field above, as well as in the TLS connection.
+Validation of this is what takes the connection out of the provisional state (see {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.6.2).
+
+The voucher needs to be validated first.
+The Pledge needs to have a public key to validate the signature from the MASA on the voucher.
+
+Certificate chains may be included in the COSE-signed Constrained Vouchers described in this document, using the x5bag attribute from {{I-D.ietf-cose-x509}}.
+However, this would require that the Pledge is able to form a certificate chain and validate it against a built-in Trust Anchor.
+
+A simpler method is that the MASA would sign the Voucher directly with a key pair for which the Pledge has the public key built-in to its firmware.
+That is, the MASA would use a degenerate PKI of level one.
+
+This has significant advantages on the Pledge, but presents security issues for the MASA, as it needs to keep a private online for signing purposes.
+Loss or compromise of that key would result in significant damage to the BRSKI mechanism.
+
+There are a few mitigations that can be applied.
+
+The first is that different Pledges can be loaded with different anchors.
+For instance, if there are ten key pairs loaded into the MASA, numbered 0 through 9, then Pledges with serial numbers ending in the same digit would use only the corresponding key.
+This can be generalized to large numbers, with each addition reducing the number of Pledges affected by a single compromise.
+
+Keys can also be rotated over time, with new keys generated each week, or according to some other schedule known only to the manufacturer.
+The exact mapping can remain confidential to the manufacturer.
+
+The above mechanism would not help with loss or compromise if every key was loaded in the MASA.
+As the IDevID contains a pointer to the MASA, each Pledge can also refer the Registrar to a specific MASA (the one with the right key loaded), by changing the MASA URL encoded into the IDevID.
+This is a form of sharding: it may also have benefits when it comes to managing load when it is expected that many thousand of devices per second will attempt to onboard.
+
+The document {{I-D.richardson-anima-masa-considerations}} section 2.4 has more details.
+
+## Enrollment
+
+This document makes the use of the /crts call to retrieve an CSR Attributes object optional.
+
+A Pledge that does not do this does not need to change the Certificate Signing Request (CSR) that it sends to the Registrar.
+The ASN.1 bits of the CSR can therefore be treated almost as a binary blob, signed with the IDevID.
+
+(EDNOTE: Can the signing even be done ahead of time?  Is there any live proof of possession?)
+
+The resulting LDevID that is received, if arranged to be paired with the existing private key used for the IDevID, can then be treated as a binary blob to be sent when authenticating other
+(D)TLS connections.
+
+XXX - how does the Pledge validate the Registrar in the future?
+
+XXX - if we the next step is to do EAP-TLS for WPA-Enteprise use, can we get a Raw Public Key for the server somewhere?
 
 # Security Considerations
 
