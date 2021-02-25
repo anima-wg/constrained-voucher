@@ -632,9 +632,9 @@ either in the Expert Review range (0-255) or IETF Review range (256-9999).
 # Acknowledgements
 
 We are very grateful to Jim Schaad for explaining COSE and CMS choices.
-Also thanks to Jim Schaad for correctinging earlier version of the COSE Sign1 objects.
+Also thanks to Jim Schaad for correcting earlier version of the COSE Sign1 objects.
 
-Michel Veillette did extensive work on pyang to extend it to support the SID allocation process, and this document was among the first users.
+Michel Veillette did extensive work on pyang to extend it to support the SID allocation process, and this document was among its first uses.
 
 
 # Changelog
