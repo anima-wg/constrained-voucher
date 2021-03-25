@@ -10,8 +10,8 @@
      2457 data .../last-renewal-date
      2458 data /ietf-constrained-voucher:voucher/nonce
      2459 data .../pinned-domain-cert
-     2460 data .../pinned-domain-subject-public-key-info
-     2461 data .../pinned-sha256-of-subject-public-key-info
+     2460 data .../pinned-domain-pubk
+     2461 data .../pinned-domain-pubk-sha256
      2462 data /ietf-constrained-voucher:voucher/serial-number
            
  WARNING, obsolete definitions

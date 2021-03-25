@@ -78,15 +78,15 @@ description
       augment "voucher" {
         description "Base the constrained voucher
                                    upon the regular one";
-        leaf pinned-domain-subject-public-key-info {
+        leaf pinned-domain-pubk {
           type binary;
           description
-            "The pinned-domain-subject-public-key-info replaces the
+            "The pinned-domain-pubk replaces the
              pinned-domain-cert in constrained uses of
-             the voucher. The pinned-domain-subject-public-key-info
+             the voucher. The pinned-domain-pubk
              is the Raw Public Key of the Registrar.
-             This field is encoded as specified in RFC7250,
-             section 3.
+             This field is encoded as a Subject Public Key Info block
+             as specified in RFC7250, in section 3.
              The ECDSA algorithm MUST be supported.
              The EdDSA algorithm as specified in
              draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
@@ -94,10 +94,10 @@ description
              Support for the RSA algorithm is a MAY.";
         }
 
-        leaf pinned-sha256-of-subject-public-key-info {
+        leaf pinned-domain-pubk-sha256 {
           type binary;
           description
-            "The pinned-hash-subject-public-key-info is a second
+            "The pinned-domain-pubk-sha256 is a second
              alternative to pinned-domain-cert.  In many cases the
              public key of the domain has already been transmitted
              during the key agreement process, and it is wasteful
