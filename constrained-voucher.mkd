@@ -180,16 +180,16 @@ When the Pledge is known by MASA to support PKIX format certificates, the "pinne
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain.
 However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
 
-# Discovery and URI {#discovery-uri}
+<!-- ******************************************************************** -->
 
-This section describes the BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar, join proxy and Pledge over CoAP.
+# BRSKI-EST Protocol {#brski-est}
+
+This section describes the BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar, Join Proxy and Pledge over CoAP.
 The extensions are targeted to low-resource networks with small packets.
-Saving header space is important and the EST-coaps URI is shorter than the EST URI.
 
-The presence and location of (path to) the management data are discovered by sending a GET request to "/.well-known/core" including a resource type (RT) parameter with the value "ace.est" {{RFC6690}}.
-Upon success, the return payload will contain the root resource of the EST resources.
-It is up to the implementation to choose its root resource; throughout this document the
-example root resource /est is used.
+The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
+
+Saving header space is important and this is the reason that EST-coaps URI is shorter than the EST URI.
 
 The EST-coaps server URIs differ from the EST URI by replacing the scheme https by coaps and by specifying shorter resource path names:
 
@@ -197,8 +197,13 @@ The EST-coaps server URIs differ from the EST URI by replacing the scheme https 
   coaps://www.example.com/est/short-name
 ~~~~
 
+
+## Discovery, URIs and Content Formats
+
 Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and corresponding paths which are supported by EST.
 {{est-uri}} provides the mapping from the BRSKI extension URI path to the EST-coaps URI path.
+
+The Protocol uses the same "/.well-known/brski" prefix that is defined in {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5, but the final component is shortened as follows:
 
 | BRSKI | EST-coaps |
 | /requestvoucher| /rv |
@@ -206,33 +211,9 @@ Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and correspon
 | /enrollstatus | /es  |
 {: #est-uri title='BRSKI path to EST-coaps path'}
 
-/requestvoucher, /voucher_status and /enrollstatus occur between the Pledge and Registrar (the BRSKI-EST protocol) and also between Registrar and MASA, but, as described in {{brski-masa}}, this document addresses only the BRSKI-EST portion of the protocol.
+Note that /requestvoucher, /voucher_status and /enrollstatus occur between the Pledge and Registrar (the BRSKI-EST protocol), but also between Registrar and MASA, but, as described in {{brski-masa}}, this document addresses only the BRSKI-EST portion of the protocol.
 
-When discovering the root path for the EST resources, the server MAY return
-the full resource paths and the used content types. This is useful when
-multiple content types are specified for EST-coaps server. For example, the
-following more complete response is possible.
-
-<!-- ******************************************************************** -->
-
-# BRSKI-EST Protocol {#brski-est}
-
-The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
-(probably via a join proxy, such as described in {{?I-D.ietf-anima-constrained-join-proxy}}) It extends both
-the BRSKI and EST-coaps protocols.
-
-## Discovery, URIs and Content Formats
-
-The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
-(probably via a join proxy, such as described in {{?I-D.ietf-anima-constrained-join-proxy}})
-It extends both the BRSKI and EST-coaps protocols.
-
-## Discovery, URIs and Content Formats
-
-TBD: content overlaps with {{discovery-uri}}, to be fixed - issue #79
-
-The Pledge MAY perform a discovery operation on the "/.well-known/core?rt=brski*" resource of the Registrar if it wishes to discover possibly shorter URLs for the functions, or if it has the possibility to
-use a variety of onboarding protocols or certificate enrollment protocols and it wants to discover which of these protocols are available.
+Pledges that wish to further reduce the size can do a discovery operation using the {{RFC6690}} section 4.   It would look like: "/.well-known/core?rt=brski*" query to the Registrar.
 
 For example, if the Registrar supports a short BRSKI URL (/b) and supports the voucher format "application/voucher-cose+cbor" (TBD3), and status reporting in both CBOR and JSON formats:
 
@@ -252,6 +233,10 @@ The Registrar is under no obligation to provide shorter URLs, and MAY respond to
 
 Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the "/.well-known/brski" URLs, and MUST NOT distinguish between them.
 In particular, a Pledge MAY use the longer and shorter URLs in combination.
+
+When discovering the root path for the EST resources, the server MAY return
+the full resource paths and the content types which are supported at those end-points.
+This is useful when multiple content types are specified for EST-coaps server.
 
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
 Note that Content-Format TBD3 is defined in this document.
