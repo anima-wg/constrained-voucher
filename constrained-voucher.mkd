@@ -510,6 +510,24 @@ Any POST request to the Registrar with resource /est/vs or /est/es returns a 2.0
 
 # Raw Public Key Use Considerations {#rpk-considerations}
 
+This section explains changes that can be done to reduce how many bytes that are sent as part of the certificates.
+The use of a raw public key in the pinning process can significantly reduce the number of bytes and round trips, but it comes with a few significant operational limitations.
+
+## The Registrar Trust Anchor
+
+When the Pledge first connects to the Registrar, the connection to the Registrar is provisional, as explained in section 5.6.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+The Registrar provides its public key in a TLSServerCertificate, and the Pledge uses that to validate that integrity of the (D)TLS connection, but it does not validate the identity of
+the provided certificate.
+
+As the TLSServer Certificate object is never verified directly by the pledge, sending it can be considered superfluous.
+Instead of using a (TLSServer)Certificate of type X509 (see section 4.4.2 of {{RFC8446}}),
+a RawPublicKey object is used.
+
+A Registrar operating in a mixed environment can determine whether to send a Certificate or a Raw Public key is determined by the pledge including the server\_certificate\_type of RawPublicKey.
+This is shown in section 5 of {{RFC7250}}.
+
+The Pledge continues to send a client\_certificate\_type of X509.
+
 # Security Considerations
 
 ## Clock Sensitivity
