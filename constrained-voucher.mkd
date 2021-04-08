@@ -57,12 +57,12 @@ normative:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
   I-D.ietf-cose-x509:
-#  ieee802-1AR:
-#    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
-#    title: "IEEE 802.1AR Secure Device Identifier"
-#    author:
-#      ins: "IEEE Standard"
-#    date: 2009
+  ieee802-1AR:
+    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
+    title: "IEEE 802.1AR Secure Device Identifier"
+    author:
+      ins: "IEEE Standard"
+    date: 2009
 
 informative:
   I-D.ietf-netmod-yang-tree-diagrams:
