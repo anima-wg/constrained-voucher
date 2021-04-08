@@ -43,7 +43,8 @@ normative:
   RFC7049:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
-#  RFC7250:
+  RFC7250:
+  RFC8446:
 #  RFC7252:
   RFC7950:
   RFC5652:
@@ -92,6 +93,7 @@ informative:
     author:
       ins: "IANA"
     date: 2017
+  I-D.richardson-anima-masa-considerations:
   RFC6690:
   RFC7030:
 
@@ -544,7 +546,7 @@ Validation of this is what takes the connection out of the provisional state (se
 The voucher needs to be validated first.
 The Pledge needs to have a public key to validate the signature from the MASA on the voucher.
 
-The MASA signing key is based upon a PKI (see {{draft-richardson-anima-masa-considerations}} section 2.3) , then a certificate chain may need to be included with the voucher in order that the pledge is able to validate the signature.
+The MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} section 2.3) , then a certificate chain may need to be included with the voucher in order that the pledge is able to validate the signature.
 In CMS signed artifacts, the CMS structure has an place for such certificates.
 In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used.
 
