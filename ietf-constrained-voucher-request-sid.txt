@@ -12,8 +12,8 @@
      2509 data .../pinned-domain-cert
      2510 data .../prior-signed-voucher-request
      2511 data .../proximity-registrar-cert
-     2512 data mity-registrar-sha256-of-subject-public-key-info
-     2513 data .../proximity-registrar-subject-public-key-info
+     2513 data .../proximity-registrar-pubk
+     2512 data .../proximity-registrar-pubk-sha256
      2514 data .../serial-number
            
  WARNING, obsolete definitions
