@@ -107,11 +107,11 @@ module ietf-constrained-voucher-request {
           description
             "The proximity-registrar-pubk-sha256
              is an alternative to
-             proximity-registrar-subject-public-key-info.
-             and pinned-domain-cert.  In many cases the
-             public key of the domain has already been transmitted
-             during the key agreement protocol, and it is wasteful
-             to transmit the public key another two times.
+             proximity-registrar-pubk and pinned-domain-cert.
+             In many cases the public key of the domain has already
+             been transmitted during the key agreement protocol,
+             and it is wasteful to transmit the public key another
+             two times.
              The use of a hash of public key info, at 32-bytes for
              sha256 is a significant savings compared to an RSA
              public key, but is only a minor savings compared to
