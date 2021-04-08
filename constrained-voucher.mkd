@@ -536,6 +536,18 @@ The Pledge puts the Registrar's public key into the proximity-registrar-pubk
 
 As the format of the pubk field is identical to the TLS Certificate RawPublicKey, no manipulation at all is needed to insert this into a voucher-request.
 
+## The Voucher Reply
+
+A returned voucher will have a pinned-domain-subk field with the identical key as was found in the proximity field above, as well as in the TLS connection.
+Validation of this is what takes the connection out of the provisional state (see {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.6.2).
+
+The voucher needs to be validated first.
+The Pledge needs to have a public key to validate the signature from the MASA on the voucher.
+
+The MASA signing key is based upon a PKI (see {{draft-richardson-anima-masa-considerations}} section 2.3) , then a certificate chain may need to be included with the voucher in order that the pledge is able to validate the signature.
+In CMS signed artifacts, the CMS structure has an place for such certificates.
+In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used.
+
 # Security Considerations
 
 ## Clock Sensitivity
