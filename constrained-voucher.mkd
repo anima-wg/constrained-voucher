@@ -528,6 +528,14 @@ This is shown in section 5 of {{RFC7250}}.
 
 The Pledge continues to send a client\_certificate\_type of X509.
 
+## The Voucher Request
+
+The Pledge puts the Registrar's public key into the proximity-registrar-pubk
+(PRSPKI) field of the voucher-request.
+(The proximity-registrar-pubk-sha256 can also be used if the 32-bytes of hash turned out to be smaller than a typical ECDSA key.)
+
+As the format of the pubk field is identical to the TLS Certificate RawPublicKey, no manipulation at all is needed to insert this into a voucher-request.
+
 # Security Considerations
 
 ## Clock Sensitivity
