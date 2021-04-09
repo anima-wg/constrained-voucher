@@ -80,32 +80,32 @@ Table of Contents
    4.  Overview of Protocol  . . . . . . . . . . . . . . . . . . . .   5
    5.  BRSKI-EST Protocol  . . . . . . . . . . . . . . . . . . . . .   6
      5.1.  Discovery, URIs and Content Formats . . . . . . . . . . .   6
-     5.2.  Extensions to BRSKI . . . . . . . . . . . . . . . . . . .   8
-     5.3.  Extensions to EST-coaps . . . . . . . . . . . . . . . . .   8
-       5.3.1.  Pledge Extensions . . . . . . . . . . . . . . . . . .   8
-       5.3.2.  Registrar Extensions  . . . . . . . . . . . . . . . .  10
-   6.  BRSKI-MASA Protocol . . . . . . . . . . . . . . . . . . . . .  10
-   7.  Pinning in Voucher Artifacts  . . . . . . . . . . . . . . . .  11
-     7.1.  Registrar Identity Selection and Encoding . . . . . . . .  11
-     7.2.  MASA Pinning Policy . . . . . . . . . . . . . . . . . . .  12
-     7.3.  Pinning of Raw Public Keys  . . . . . . . . . . . . . . .  13
-   8.  Artifacts . . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     8.1.  Voucher Request artifact  . . . . . . . . . . . . . . . .  14
-       8.1.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  14
-       8.1.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  15
+     5.2.  Extensions to BRSKI . . . . . . . . . . . . . . . . . . .   9
+     5.3.  Extensions to EST-coaps . . . . . . . . . . . . . . . . .   9
+       5.3.1.  Pledge Extensions . . . . . . . . . . . . . . . . . .   9
+       5.3.2.  Registrar Extensions  . . . . . . . . . . . . . . . .  11
+   6.  BRSKI-MASA Protocol . . . . . . . . . . . . . . . . . . . . .  11
+   7.  Pinning in Voucher Artifacts  . . . . . . . . . . . . . . . .  12
+     7.1.  Registrar Identity Selection and Encoding . . . . . . . .  12
+     7.2.  MASA Pinning Policy . . . . . . . . . . . . . . . . . . .  13
+     7.3.  Pinning of Raw Public Keys  . . . . . . . . . . . . . . .  14
+   8.  Artifacts . . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     8.1.  Voucher Request artifact  . . . . . . . . . . . . . . . .  15
+       8.1.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  15
+       8.1.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  16
        8.1.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  16
-       8.1.4.  Example voucher request artifact  . . . . . . . . . .  19
-     8.2.  Voucher artifact  . . . . . . . . . . . . . . . . . . . .  20
-       8.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  20
-       8.2.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  20
-       8.2.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  21
-       8.2.4.  Example voucher artifacts . . . . . . . . . . . . . .  24
+       8.1.4.  Example voucher request artifact  . . . . . . . . . .  20
+     8.2.  Voucher artifact  . . . . . . . . . . . . . . . . . . . .  21
+       8.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  21
+       8.2.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  21
+       8.2.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  22
+       8.2.4.  Example voucher artifacts . . . . . . . . . . . . . .  25
      8.3.  Signing voucher and voucher-request artifacts with
-           COSE  . . . . . . . . . . . . . . . . . . . . . . . . . .  24
-   9.  Design Considerations . . . . . . . . . . . . . . . . . . . .  25
-   10. Raw Public Key Use Considerations . . . . . . . . . . . . . .  25
-   11. Security Considerations . . . . . . . . . . . . . . . . . . .  25
-     11.1.  Clock Sensitivity  . . . . . . . . . . . . . . . . . . .  25
+           COSE  . . . . . . . . . . . . . . . . . . . . . . . . . .  25
+   9.  Design Considerations . . . . . . . . . . . . . . . . . . . .  26
+   10. Raw Public Key Use Considerations . . . . . . . . . . . . . .  26
+   11. Security Considerations . . . . . . . . . . . . . . . . . . .  26
+     11.1.  Clock Sensitivity  . . . . . . . . . . . . . . . . . . .  26
 
 
 
@@ -114,37 +114,37 @@ Richardson, et al.       Expires 11 October 2021                [Page 2]
 Internet-Draft             Constrained Voucher                April 2021
 
 
-     11.2.  Protect Voucher PKI in HSM . . . . . . . . . . . . . . .  26
-     11.3.  Test Domain Certificate Validity when Signing  . . . . .  26
-   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  26
-     12.1.  Resource Type Registry . . . . . . . . . . . . . . . . .  26
-     12.2.  The IETF XML Registry  . . . . . . . . . . . . . . . . .  26
-     12.3.  The YANG Module Names Registry . . . . . . . . . . . . .  26
-     12.4.  The RFC SID range assignment sub-registry  . . . . . . .  27
-     12.5.  Media-Type Registry  . . . . . . . . . . . . . . . . . .  27
-       12.5.1.  application/voucher-cose+cbor  . . . . . . . . . . .  27
-     12.6.  CoAP Content-Format Registry . . . . . . . . . . . . . .  28
-   13. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  28
-   14. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .  29
-   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
-     15.1.  Normative References . . . . . . . . . . . . . . . . . .  29
-     15.2.  Informative References . . . . . . . . . . . . . . . . .  31
-   Appendix A.  EST messages to EST-coaps  . . . . . . . . . . . . .  32
-     A.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  32
-     A.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  33
+     11.2.  Protect Voucher PKI in HSM . . . . . . . . . . . . . . .  27
+     11.3.  Test Domain Certificate Validity when Signing  . . . . .  27
+   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  27
+     12.1.  Resource Type Registry . . . . . . . . . . . . . . . . .  27
+     12.2.  The IETF XML Registry  . . . . . . . . . . . . . . . . .  27
+     12.3.  The YANG Module Names Registry . . . . . . . . . . . . .  27
+     12.4.  The RFC SID range assignment sub-registry  . . . . . . .  28
+     12.5.  Media-Type Registry  . . . . . . . . . . . . . . . . . .  28
+       12.5.1.  application/voucher-cose+cbor  . . . . . . . . . . .  28
+     12.6.  CoAP Content-Format Registry . . . . . . . . . . . . . .  29
+   13. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  29
+   14. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .  30
+   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
+     15.1.  Normative References . . . . . . . . . . . . . . . . . .  30
+     15.2.  Informative References . . . . . . . . . . . . . . . . .  32
+   Appendix A.  Constrained BRSKI-EST messages . . . . . . . . . . .  33
+     A.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  33
+     A.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  34
    Appendix B.  COSE examples  . . . . . . . . . . . . . . . . . . .  34
-     B.1.  Pledge, Registrar and MASA keys . . . . . . . . . . . . .  37
-       B.1.1.  Pledge private key  . . . . . . . . . . . . . . . . .  37
+     B.1.  Pledge, Registrar and MASA keys . . . . . . . . . . . . .  38
+       B.1.1.  Pledge private key  . . . . . . . . . . . . . . . . .  38
        B.1.2.  Registrar private key . . . . . . . . . . . . . . . .  38
-       B.1.3.  MASA private key  . . . . . . . . . . . . . . . . . .  38
+       B.1.3.  MASA private key  . . . . . . . . . . . . . . . . . .  39
      B.2.  Pledge, Registrar and MASA certificates . . . . . . . . .  39
        B.2.1.  Pledge IDevID certificate . . . . . . . . . . . . . .  39
-       B.2.2.  Registrar Certificate . . . . . . . . . . . . . . . .  40
-       B.2.3.  MASA Certificate  . . . . . . . . . . . . . . . . . .  42
-     B.3.  COSE signed voucher request from Pledge to Registrar  . .  44
-     B.4.  COSE signed voucher request from Registrar to MASA  . . .  46
-     B.5.  COSE signed voucher from MASA to Pledge via Registrar . .  47
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  48
+       B.2.2.  Registrar Certificate . . . . . . . . . . . . . . . .  41
+       B.2.3.  MASA Certificate  . . . . . . . . . . . . . . . . . .  43
+     B.3.  COSE signed voucher request from Pledge to Registrar  . .  45
+     B.4.  COSE signed voucher request from Registrar to MASA  . . .  47
+     B.5.  COSE signed voucher from MASA to Pledge via Registrar . .  49
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  50
 
 1.  Introduction
 
@@ -300,7 +300,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 5.  BRSKI-EST Protocol
 
-   This section describes the BRSKI extensions to EST-coaps
+   This section describes the constrained BRSKI extensions to EST-coaps
    [I-D.ietf-ace-coap-est] to transport the voucher between Registrar,
    Join Proxy and Pledge over CoAP.  The extensions are targeted to low-
    resource networks with small packets.
@@ -308,23 +308,23 @@ Internet-Draft             Constrained Voucher                April 2021
    The constrained BRSKI-EST protocol described in this section is
    between the Pledge and the Registrar only.
 
-   Saving header space is important and this is the reason that EST-
-   coaps URI is shorter than the EST URI.
-
-   The EST-coaps server URIs differ from the EST URI by replacing the
-   scheme https by coaps and by specifying shorter resource path names:
-
-     coaps://www.example.com/est/short-name
-
 5.1.  Discovery, URIs and Content Formats
 
-   Figure 5 in section 3.2.2 of [RFC7030] enumerates the operations and
-   corresponding paths which are supported by EST.  Table 1 provides the
-   mapping from the BRSKI extension URI path to the EST-coaps URI path.
+   Saving header space is important and this is the reason that the EST-
+   coaps and constrained-BRSKI URIs are shorter than the respective EST
+   and BRSKI URIs.
 
-   The Protocol uses the same "/.well-known/brski" prefix that is
-   defined in [I-D.ietf-anima-bootstrapping-keyinfra] section 5, but the
-   final component is shortened as follows:
+   The EST-coaps server URIs differ from the EST URIs by replacing the
+   scheme https by coaps and by specifying shorter resource path names.
+   Below are some examples; the first two using a discovered short path
+   name and the last one using the well-known URI of EST which requires
+   no discovery.
+
+     coaps://server.example.com/est/<short-name>
+     coaps://server.example.com/e/<short-name>
+     coaps://server.example.com/.well-known/est/<short-name>
+
+
 
 
 
@@ -338,31 +338,61 @@ Richardson, et al.       Expires 11 October 2021                [Page 6]
 Internet-Draft             Constrained Voucher                April 2021
 
 
-                      +=================+===========+
-                      | BRSKI           | EST-coaps |
-                      +=================+===========+
-                      | /requestvoucher | /rv       |
-                      +-----------------+-----------+
-                      | /voucher_status | /vs       |
-                      +-----------------+-----------+
-                      | /enrollstatus   | /es       |
-                      +-----------------+-----------+
+   Similarly the constrained BRSKI server URIs differ from the BRSKI
+   URIs by replacing the scheme https by coaps and by specifying shorter
+   resource path names.  Below are some examples; the first two using a
+   discovered short path name and the last one using the well-known URI
+   prefix which requires no discovery.  This is the same "/.well-known/
+   brski" prefix as defined in [I-D.ietf-anima-bootstrapping-keyinfra]
+   Section 5.
 
-                        Table 1: BRSKI path to EST-
-                                 coaps path
+     coaps://server.example.com/brski/<short-name>
+     coaps://server.example.com/b/<short-name>
+     coaps://server.example.com/.well-known/brski/<short-name>
+
+   Figure 5 in section 3.2.2 of [RFC7030] enumerates the operations
+   supported by EST, for which Table 1 in Section 5.1 of
+   [I-D.ietf-ace-coap-est] enumerates the corresponding short path
+   names.  Similarly, Table 1 provides the mapping from the supported
+   BRSKI extension URI paths to the constrained-BRSKI URI paths.
+
+             +=================+============================+
+             | BRSKI resource  | constrained-BRSKI resource |
+             +=================+============================+
+             | /requestvoucher | /rv                        |
+             +-----------------+----------------------------+
+             | /voucher_status | /vs                        |
+             +-----------------+----------------------------+
+             | /enrollstatus   | /es                        |
+             +-----------------+----------------------------+
+
+                   Table 1: BRSKI URI paths mapping to
+                       constrained BRSKI URI paths
 
    Note that /requestvoucher, /voucher_status and /enrollstatus occur
-   between the Pledge and Registrar (the BRSKI-EST protocol), but also
-   between Registrar and MASA, but, as described in Section 6, this
-   document addresses only the BRSKI-EST portion of the protocol.
+   between the Pledge and Registrar (in scope of the BRSKI-EST
+   protocol), but also between Registrar and MASA, but, as described in
+   Section 5, this document addresses only the BRSKI-EST portion of the
+   protocol.
 
-   Pledges that wish to further reduce the size can do a discovery
-   operation using the [RFC6690] section 4.  It would look like:
+   Pledges that wish to reduce the size of the CoAP headers by
+   eliminating the "/.well-known/brski" path can do a discovery
+   operation using [RFC6690] Section 4.  It would look like a CoAP GET
    "/.well-known/core?rt=brski*" query to the Registrar.
 
    For example, if the Registrar supports a short BRSKI URL (/b) and
    supports the voucher format "application/voucher-cose+cbor" (TBD3),
    and status reporting in both CBOR and JSON formats:
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021                [Page 7]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
      REQ: GET /.well-known/core?rt=brski*
 
@@ -375,29 +405,22 @@ Internet-Draft             Constrained Voucher                April 2021
      </b/es>;rt=brski.es;ct="50 60"
 
    The Registrar is under no obligation to provide shorter URLs, and MAY
-   respond to this query with only the "/.well-known/brski" end points
-   defined in [I-D.ietf-anima-bootstrapping-keyinfra] section 5.
+   respond to this query with only the "/.well-known/brski/<short-name>"
+   end points for the short names as defined in Table 1.
 
    Registrars that have implemented shorter URLs MUST also respond in
-   equivalent ways to the "/.well-known/brski" URLs, and MUST NOT
-   distinguish between them.  In particular, a Pledge MAY use the longer
-   and shorter URLs in combination.
+   equivalent ways to the "/.well-known/brski/<short-name>" URLs, and
+   MUST NOT distinguish between them.  In particular, a Pledge MAY use
+   the longer and shorter URLs in combination.
 
-
-
-
-
-
-
-Richardson, et al.       Expires 11 October 2021                [Page 7]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
-   When discovering the root path for the EST resources, the server MAY
-   return the full resource paths and the content types which are
-   supported at those end-points.  This is useful when multiple content
-   types are specified for EST-coaps server.
+   When responding to a discovery request for BRSKI resources, the
+   server MAY in addition return the full resource paths and the content
+   types which are supported at those end-points as shown in above
+   example.  This is useful when multiple content types are specified
+   for a particular resource on the server.  The server responds with
+   only the root path for the BRSKI resource (rt=brski, resource /b in
+   above example) and no others in case the client queries for only
+   rt=brski type resources.
 
    The return of multiple content-types in the "ct" attribute allows the
    Pledge to choose the most appropriate one.  Note that Content-Format
@@ -413,6 +436,19 @@ Internet-Draft             Constrained Voucher                April 2021
    TBD3) for the voucher and for the voucher request.  The MASA needs to
    support all formats that the Pledge, produced by that manufacturer,
    supports.
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021                [Page 8]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 5.2.  Extensions to BRSKI
 
@@ -440,16 +476,6 @@ Internet-Draft             Constrained Voucher                April 2021
    request" (/att) to minimize network traffic and reduce code size
    (i.e. by not implementing the complex CSR attributes parsing code).
 
-
-
-
-
-
-Richardson, et al.       Expires 11 October 2021                [Page 8]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
    When creating the CSR, the Pledge selects itself which attributes to
    include.  One or more Subject Distinguished Name fields MUST be
    included.  If the Pledge has no specific information on what
@@ -469,6 +495,16 @@ Internet-Draft             Constrained Voucher                April 2021
 
    2.  Using this trust anchor it proceeds with EST simple enrollment
        (/sen) to obtain its provisionally trusted LDevID.
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021                [Page 9]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
    3.  Then, the Pledge attempts to validate that the trust anchor CA is
        the signer of the LDevID.  If this is the case, the Pledge
@@ -495,17 +531,6 @@ Internet-Draft             Constrained Voucher                April 2021
        then the Pledge MUST abort the enrollment process and report the
        error using the enrollment status telemetry (/es).
 
-
-
-
-
-
-
-Richardson, et al.       Expires 11 October 2021                [Page 9]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
    The Content-Format ("application/json") 50 MAY be supported and 60
    MUST be supported by the Registrar for the /vs and /es resources.
    Content-Format TBD3 MUST be supported by the Registrar for the /rv
@@ -523,6 +548,19 @@ Internet-Draft             Constrained Voucher                April 2021
    returns the CoAP response 4.06 Not Acceptable to indicate that only
    the default Content-Format of 281 "application/pkcs7-mime;smime-
    type=certs-only" is available.
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 10]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 5.3.2.  Registrar Extensions
 
@@ -555,13 +593,6 @@ Internet-Draft             Constrained Voucher                April 2021
       responders (which the MASA is) is common, while the experience
       doing the same for CoAP is much less common.
 
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 10]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
    *  in many Enterprise networks, outgoing UDP connections are often
       treated as suspicious, and there seems to be no advantage to using
       CoAP in that environment.
@@ -576,6 +607,16 @@ Internet-Draft             Constrained Voucher                April 2021
       is intended to be a function that can easily be oursourced to a
       third-party service provider, reducing the complexity would also
       seem to reduce the cost of that function.
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 11]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 7.  Pinning in Voucher Artifacts
 
@@ -601,23 +642,6 @@ Internet-Draft             Constrained Voucher                April 2021
    been signed by "Registrar" its signing structure includes two
    additional CA certificates:
 
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 11]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
     .-------------.
     | priv-CA (1) |
     '-------------'
@@ -640,6 +664,15 @@ Internet-Draft             Constrained Voucher                April 2021
    unprotected header, and according to [I-D.ietf-cose-x509], would
    carry all the certificates of the chain in an "x5bag" attribute
    placed in the unprotected header.
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 12]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 7.2.  MASA Pinning Policy
 
@@ -666,14 +699,6 @@ Internet-Draft             Constrained Voucher                April 2021
    Pledge and Registrar anyway, so it would have no benefit to pin a
    higher-level CA.  By pinning the most specific CA the constrained
    Pledge can validate its DTLS connection using less crypto operations.
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 12]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
    The rationale for pinning a CA instead of the Registrar's End-Entity
    certificate directly is the following benefit on constrained
    networks: the pinned certificate in the voucher can in common cases
@@ -697,6 +722,14 @@ Internet-Draft             Constrained Voucher                April 2021
    level pin only "Registrar" certificate (low trust in customer), or
    the "Sub-CA" certificate (in case of medium trust, implying that any
    Registrar of that sub-domain is acceptable), or even the "priv-CA"
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 13]
+
+Internet-Draft             Constrained Voucher                April 2021
+
+
    certificate (in case of high trust in the customer, and possibly a
    pre-agreed need of the customer to obtain flexible long-lived
    vouchers).
@@ -723,13 +756,6 @@ Internet-Draft             Constrained Voucher                April 2021
    |   [RPK3]     |
    '--------------'
 
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 13]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
                       Figure 2: Raw Public Key pinning
 
    When the Pledge is known by MASA to support RPK but not X.509
@@ -744,6 +770,21 @@ Internet-Draft             Constrained Voucher                April 2021
    described in [I-D.ietf-6tisch-minimal-security].  How the Pledge
    discovers this method and details of the enrollment method are out of
    scope of this document.
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 14]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
    When the Pledge is known by MASA to support PKIX format certificates,
    the "pinned-domain-cert" field present in a voucher typically pins a
@@ -778,18 +819,28 @@ Internet-Draft             Constrained Voucher                April 2021
    proximity-registrar-pubk-sha256, proximity-registrar-cert, and prior-
    signed-voucher-request.
 
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 14]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
    prior-signed-voucher-request is only used between the Registrar and
    the MASA. proximity-registrar-pubk or proximity-registrar-pubk-sha256
    optionally replaces proximity-registrar-cert for the extremely
    constrained cases.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 15]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
    module: ietf-constrained-voucher-request
 
@@ -831,17 +882,6 @@ Internet-Draft             Constrained Voucher                April 2021
 
     WARNING, obsolete definitions
 
-
-
-
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 15]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
 8.1.3.  YANG Module
 
    In the constrained-voucher-request YANG module, the voucher is
@@ -850,6 +890,13 @@ Internet-Draft             Constrained Voucher                April 2021
    voucher-request module name, all voucher attributes, and the
    constrained-voucher-request attribute.  Two attributes of the voucher
    are "refined" to be optional.
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 16]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
    <CODE BEGINS> file "ietf-constrained-voucher-request@2020-03-25.yang"
    module ietf-constrained-voucher-request {
@@ -890,14 +937,6 @@ Internet-Draft             Constrained Voucher                April 2021
        Registrar, which in turn sends the voucher request to
        the manufacturer or delegate (MASA).
 
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 16]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
        A voucher is then returned to the pledge, binding the
        pledge to the owner.  This is a constrained version of the
        voucher-request present in
@@ -907,6 +946,14 @@ Internet-Draft             Constrained Voucher                April 2021
        for very constrained devices.
        In particular, it assumes that nonce-ful operation is
        always required, that expiration dates are rather weak, as no
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 17]
+
+Internet-Draft             Constrained Voucher                April 2021
+
+
        clocks can be assumed, and that the Registrar is identified
        by a pinned Raw Public Key.
 
@@ -947,13 +994,6 @@ Internet-Draft             Constrained Voucher                April 2021
            description "Base the constrained voucher-request upon the
              regular one";
 
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 17]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
            leaf proximity-registrar-pubk {
              type binary;
              description
@@ -962,6 +1002,14 @@ Internet-Draft             Constrained Voucher                April 2021
                 the voucher-request.
                 The proximity-registrar-pubk is the
                 Raw Public Key of the Registrar. This field is encoded
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 18]
+
+Internet-Draft             Constrained Voucher                April 2021
+
+
                 as specified in RFC7250, section 3.
                 The ECDSA algorithm MUST be supported.
                 The EdDSA algorithm as specified in
@@ -1002,14 +1050,6 @@ Internet-Draft             Constrained Voucher                April 2021
                 certificate_list sequence  (see [RFC5246]) presented by
                 the Registrar to the Pledge. This MUST be populated in a
                 Pledge's voucher request if the proximity assertion is
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 18]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
                 populated.";
            }
 
@@ -1018,6 +1058,14 @@ Internet-Draft             Constrained Voucher                April 2021
              description
                "If it is necessary to change a voucher, or re-sign and
                 forward a voucher that was previously provided along a
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 19]
+
+Internet-Draft             Constrained Voucher                April 2021
+
+
                 protocol path, then the previously signed voucher
                 SHOULD be included in this field.
 
@@ -1061,7 +1109,15 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 19]
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 20]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1117,7 +1173,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 20]
+Richardson, et al.       Expires 11 October 2021               [Page 21]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1173,7 +1229,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 21]
+Richardson, et al.       Expires 11 October 2021               [Page 22]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1229,7 +1285,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 22]
+Richardson, et al.       Expires 11 October 2021               [Page 23]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1285,7 +1341,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 23]
+Richardson, et al.       Expires 11 October 2021               [Page 24]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1341,7 +1397,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 24]
+Richardson, et al.       Expires 11 October 2021               [Page 25]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1371,19 +1427,19 @@ Internet-Draft             Constrained Voucher                April 2021
 
 9.  Design Considerations
 
-   The design considerations for the CBOR encoding of vouchers is much
+   The design considerations for the CBOR encoding of vouchers are much
    the same as for [RFC8366].
 
    One key difference is that the names of the leaves in the YANG does
    not have a material effect on the size of the resulting CBOR, as the
    SID translation process assigns integers to the names.
 
-   Any POST request to the Registrar with resource /est/vs or /est/es
-   returns a 2.05 response with empty payload.  The client should be
-   aware that the server may use a piggybacked CoAP response (ACK, 2.05)
-   but may also respond with a separate CoAP response, i.e. first an
-   (ACK, 0.0) that is an acknowledgement of the request reception
-   followed by a (CON, 2.05) response in a separate CoAP message.
+   Any POST request to the Registrar with resource /vs or /es returns a
+   2.04 Changed response with empty payload.  The client should be aware
+   that the server may use a piggybacked CoAP response (ACK, 2.04) but
+   may also respond with a separate CoAP response, i.e. first an (ACK,
+   0.0) that is an acknowledgement of the request reception followed by
+   a (CON, 2.04) response in a separate CoAP message.
 
 10.  Raw Public Key Use Considerations
 
@@ -1397,7 +1453,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 25]
+Richardson, et al.       Expires 11 October 2021               [Page 26]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1453,7 +1509,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 26]
+Richardson, et al.       Expires 11 October 2021               [Page 27]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1509,7 +1565,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 27]
+Richardson, et al.       Expires 11 October 2021               [Page 28]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1565,7 +1621,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 28]
+Richardson, et al.       Expires 11 October 2021               [Page 29]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1621,7 +1677,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 29]
+Richardson, et al.       Expires 11 October 2021               [Page 30]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1677,7 +1733,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 30]
+Richardson, et al.       Expires 11 October 2021               [Page 31]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1733,7 +1789,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 31]
+Richardson, et al.       Expires 11 October 2021               [Page 32]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -1747,19 +1803,19 @@ Internet-Draft             Constrained Voucher                April 2021
               DOI 10.17487/RFC7030, October 2013,
               <https://www.rfc-editor.org/info/rfc7030>.
 
-Appendix A.  EST messages to EST-coaps
+Appendix A.  Constrained BRSKI-EST messages
 
    This section extends the examples from Appendix A of
-   [I-D.ietf-ace-coap-est].  The CoAP headers are only worked out for
-   the enrollstatus example.
+   [I-D.ietf-ace-coap-est] with the constrained BRSKI requests.  The
+   CoAP headers are only worked out for the enrollstatus example.
 
 A.1.  enrollstatus
 
    A coaps enrollstatus message can be :
 
-       POST coaps://192.0.2.1:8085/est/es
+       POST coaps://192.0.2.1:8085/b/es
 
-   The corresponding coap header fields are shown below.
+   The corresponding CoAP header fields are shown below.
 
      Ver = 1
      T = 0 (CON)
@@ -1767,51 +1823,39 @@ A.1.  enrollstatus
      Options
       Option  (Uri-Path)
         Option Delta = 0xb   (option nr = 11)
-        Option Length = 0x3
-        Option Value = "est"
+        Option Length = 0x1
+        Option Value = "b"
       Option  (Uri-Path)
         Option Delta = 0x0   (option nr = 11)
         Option Length = 0x2
         Option Value = "es"
-     Payload = [Empty]
+     Payload Marker = 0xFF
+     Payload = <binary CBOR enrollstatus document>
 
    The Uri-Host and Uri-Port Options are omitted because they coincide
    with the transport protocol destination address and port
    respectively.
 
-   A 2.05 Content response with an unsigned voucher status (ct=60) will
-   then be:
+   A 2.04 Changed response will then be:
 
-      2.05 Content (Content-Format: application/cbor)
+      2.04 Changed
 
-   With CoAP fields and payload:
-
+   With CoAP fields:
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 32]
+
+Richardson, et al.       Expires 11 October 2021               [Page 33]
 
 Internet-Draft             Constrained Voucher                April 2021
 
 
       Ver=1
       T=2 (ACK)
-      Code = 0x45 (2.05 Content)
-      Options
-        Option1 (Content-Format)
-        Option Delta = 0xC  (option nr 12)
-        Option Length = 0x2
-        Option Value = 60 (application/cbor)
+      Code = 0x44 (2.04 Changed)
 
-        Payload (CBOR diagnostic) =
-        {
-        "version":"1",
-        "Status": 1,   / 1 = Success, 0 = Fail  /
-        "Reason":"Informative human readable message",
-        "reason-context": "Additional information"
-        }
-
-   The binary payload is:
+   TBD - remove this payload or modify example to be the request payload
+   of the POST. // The binary payload is:
 
         A46776657273696F6E6131665374617475730166526561736F6E7822
         496E666F726D61746976652068756D616E207265616461626C65206D
@@ -1824,10 +1868,12 @@ A.2.  voucher_status
 
    A coaps voucher_status message can be:
 
-      POST coaps://[2001:db8::2:1]:61616/est/vs
+      POST coaps://[2001:db8::2:1]:61616/b/vs
 
-   A 2.05 Content response with a non signed CBOR voucher status (ct=60)
-   will then be:
+   A 2.04 Changed response will then be:
+
+   TBD modify this example to let Pledge POST status to Registrar -
+   direction change.  Change 2.05 to 2.04.
 
        2.05 Content (Content-Format: application/cbor)
        Payload =
@@ -1841,20 +1887,24 @@ A.2.  voucher_status
 {"version": "1", "Status": 1, "Reason": "Informative human
 readable message", "reason-context": "Additional information"}<CODE ENDS>
 
-
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 33]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
 Appendix B.  COSE examples
 
    These examples are generated on a pie 4 and a PC running BASH.  Keys
    and Certificates have been generated with openssl with the following
    shell script:
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 34]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 #!/bin/bash
 #try-cert.sh
@@ -1898,19 +1948,18 @@ cd ../..
 
 
 
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 34]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
 # file structure is cleaned start filling
 
 echo "#############################"
 echo "create registrar keys and certificates "
 echo "#############################"
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 35]
+
+Internet-Draft             Constrained Voucher                April 2021
 
 
 echo "create root registrar certificate using ecdsa with sha 256 key"
@@ -1954,20 +2003,20 @@ $OPENSSL_BIN ecparam -name prime256v1 -genkey -noout \
    -out $cadir/private/ca-masa.key
 
 $OPENSSL_BIN req -new -x509 \
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 35]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
  -config $cnfdir/openssl-masa.cnf \
  -days 1000 -key $cadir/private/ca-masa.key \
   -out $cadir/certs/ca-masa.crt \
  -extensions v3_ca\
  -subj "/C=NL/ST=NB/L=Helmond/O=vanderstok/OU=manufacturer\
 /CN=masa.stok.nl"
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 36]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 # Combine authority certificate and key
 echo "Combine authority certificate and key for masa"
@@ -2010,14 +2059,6 @@ $OPENSSL_BIN req -nodes -new -sha256 \
 echo "sign pledge derived certificate "
 $OPENSSL_BIN ca -config $cnfdir/openssl-pledge.cnf \
  -extensions 8021ar_idevid\
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 36]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
  -days 365 -in $dir/csr/pledge.csr \
  -out $dir/certs/pledge.crt
 
@@ -2025,6 +2066,14 @@ Internet-Draft             Constrained Voucher                April 2021
 echo "Add derived pledge key and derived pledge \
  certificate to pkcs12 file"
 $OPENSSL_BIN pkcs12  -passin pass:watnietweet -passout pass:watnietweet\
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 37]
+
+Internet-Draft             Constrained Voucher                April 2021
+
+
    -inkey $dir/private/pledge.key \
    -in $dir/certs/pledge.crt -export \
    -out $dir/certs/pledge-comb.pfx
@@ -2055,25 +2104,6 @@ B.1.  Pledge, Registrar and MASA keys
 
 B.1.1.  Pledge private key
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 37]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
    Private-Key: (256 bit)
    priv:
        9b:4d:43:b6:a9:e1:7c:04:93:45:c3:13:d9:b5:f0:
@@ -2090,6 +2120,15 @@ Internet-Draft             Constrained Voucher                April 2021
    <CODE ENDS>
 
 B.1.2.  Registrar private key
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 38]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
    Private-Key: (256 bit)
    priv:
@@ -2123,19 +2162,29 @@ B.1.3.  MASA private key
    NIST CURVE: P-256
    <CODE ENDS>
 
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 38]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
 B.2.  Pledge, Registrar and MASA certificates
 
    Below the certificates that accompany the keys.  The certificate
    description is followed by the hexadecimal DER of the certificate
 
 B.2.1.  Pledge IDevID certificate
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 39]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 Certificate:
     Data:
@@ -2181,7 +2230,14 @@ Certificate:
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 39]
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 40]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -2237,7 +2293,7 @@ B.2.2.  Registrar Certificate
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 40]
+Richardson, et al.       Expires 11 October 2021               [Page 41]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -2293,7 +2349,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 41]
+Richardson, et al.       Expires 11 October 2021               [Page 42]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -2349,7 +2405,7 @@ B.2.3.  MASA Certificate
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 42]
+Richardson, et al.       Expires 11 October 2021               [Page 43]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -2405,7 +2461,7 @@ Internet-Draft             Constrained Voucher                April 2021
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 43]
+Richardson, et al.       Expires 11 October 2021               [Page 44]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -2439,7 +2495,7 @@ B.3.  COSE signed voucher request from Pledge to Registrar
    cert field to inform MASA about its proximity to the specific
    Registrar.
 
-       POST coaps://registrar.example.com/est/rv
+       POST coaps://registrar.example.com/b/rv
        (Content-Format: application/voucher-cose+cbor)
        signed_request_voucher
 
@@ -2461,7 +2517,7 @@ B.3.  COSE signed voucher request from Pledge to Registrar
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 44]
+Richardson, et al.       Expires 11 October 2021               [Page 45]
 
 Internet-Draft             Constrained Voucher                April 2021
 
@@ -2517,23 +2573,66 @@ Diagnose(request_voucher) =
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 45]
+Richardson, et al.       Expires 11 October 2021               [Page 46]
 
 Internet-Draft             Constrained Voucher                April 2021
 
 
 B.4.  COSE signed voucher request from Registrar to MASA
 
+   TBD - modify example to use full paths to MASA, not short-names.
+   Also not use CoAP but HTTP protocol.
+
    In this example the voucher request has been signed by the JRC using
    the private key from Appendix B.1.2.  Contained within this voucher
    request is the voucher request from the Pledge to JRC.
 
-       POST coaps://masa.example.com/est/rv
+       POST coaps://masa.example.com/b/rv
        (Content-Format: application/voucher-cose+cbor)
        signed_masa_request_voucher
 
    The payload signed_masa_voucher_request is shown as hexadecimal dump
    (with lf added):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 47]
+
+Internet-Draft             Constrained Voucher                April 2021
+
 
 d28444a101382ea1045820e8735bc4b470c3aa6a7aa9aa8ee584c09c11131b205efec5d03
 13bad84c5cd05590414a11909c5a60274323032302d31322d32385431303a30333a33355a
@@ -2570,16 +2669,26 @@ c1f2ccbbac89733d17ee7775bc2654c5f1cc96afba2741cc31532444aa8fed8
 
 <CODE ENDS>
 
+   The representiation of signed_masa_voucher_request in CBOR diagnostic
+   format is:
 
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 46]
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 48]
 
 Internet-Draft             Constrained Voucher                April 2021
 
-
-   The representiation of signed_masa_voucher_request in CBOR diagnostic
-   format is:
 
 Diagnose(signed_registrar_request-voucher)
 18([
@@ -2627,14 +2736,15 @@ d28444a101382ea104582039920a34ee92d3148ab3a729f58611193270c9029f7784daf11
 
 <CODE ENDS>
 
+   The representiation of signed_voucher in CBOR diagnostic format is:
 
 
-Richardson, et al.       Expires 11 October 2021               [Page 47]
+
+
+Richardson, et al.       Expires 11 October 2021               [Page 49]
 
 Internet-Draft             Constrained Voucher                April 2021
 
-
-   The representiation of signed_voucher in CBOR diagnostic format is:
 
    Diagnose(signed_voucher) =
    18([
@@ -2682,63 +2792,9 @@ Authors' Addresses
    Esko Dijk
    IoTconsultancy.nl
 
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 48]
-
-Internet-Draft             Constrained Voucher                April 2021
-
-
    Email: esko.dijk@iotconsultancy.nl
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.       Expires 11 October 2021               [Page 49]
+Richardson, et al.       Expires 11 October 2021               [Page 50]

@@ -185,36 +185,47 @@ However, if the Pledge is known to also support RPK pinning and the MASA intends
 
 # BRSKI-EST Protocol {#brski-est}
 
-This section describes the BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar, Join Proxy and Pledge over CoAP.
+This section describes the constrained BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar, Join Proxy and Pledge over CoAP.
 The extensions are targeted to low-resource networks with small packets.
 
 The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
 
-Saving header space is important and this is the reason that EST-coaps URI is shorter than the EST URI.
-
-The EST-coaps server URIs differ from the EST URI by replacing the scheme https by coaps and by specifying shorter resource path names:
-
-~~~~
-  coaps://www.example.com/est/short-name
-~~~~
-
 
 ## Discovery, URIs and Content Formats
 
-Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations and corresponding paths which are supported by EST.
-{{est-uri}} provides the mapping from the BRSKI extension URI path to the EST-coaps URI path.
+Saving header space is important and this is the reason that the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
 
-The Protocol uses the same "/.well-known/brski" prefix that is defined in {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5, but the final component is shortened as follows:
+The EST-coaps server URIs differ from the EST URIs by replacing the scheme https by coaps and by specifying shorter resource path names. Below are some examples;
+the first two using a discovered short path name and the last one using the well-known URI of EST which requires no discovery.
 
-| BRSKI | EST-coaps |
+~~~~
+  coaps://server.example.com/est/<short-name>
+  coaps://server.example.com/e/<short-name>
+  coaps://server.example.com/.well-known/est/<short-name>
+~~~~
+
+Similarly the constrained BRSKI server URIs differ from the BRSKI URIs by replacing the scheme https by coaps and by specifying shorter resource path names. Below are some examples;
+the first two using a discovered short path name and the last one using the well-known URI prefix which requires no discovery.
+This is the same "/.well-known/brski" prefix as defined in {{I-D.ietf-anima-bootstrapping-keyinfra}} Section 5.
+
+~~~~
+  coaps://server.example.com/brski/<short-name>
+  coaps://server.example.com/b/<short-name>
+  coaps://server.example.com/.well-known/brski/<short-name>
+~~~~
+
+Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations supported by EST, for which Table 1 in Section 5.1 of {{I-D.ietf-ace-coap-est}} enumerates the corresponding
+short path names. Similarly, {{est-uri}} provides the mapping from the supported BRSKI extension URI paths to the constrained-BRSKI URI paths.
+
+| BRSKI resource | constrained-BRSKI resource |
 | /requestvoucher| /rv |
 | /voucher_status | /vs |
 | /enrollstatus | /es  |
-{: #est-uri title='BRSKI path to EST-coaps path'}
+{: #est-uri title='BRSKI URI paths mapping to constrained BRSKI URI paths'}
 
-Note that /requestvoucher, /voucher_status and /enrollstatus occur between the Pledge and Registrar (the BRSKI-EST protocol), but also between Registrar and MASA, but, as described in {{brski-masa}}, this document addresses only the BRSKI-EST portion of the protocol.
+Note that /requestvoucher, /voucher_status and /enrollstatus occur between the Pledge and Registrar (in scope of the BRSKI-EST protocol), but also between Registrar and MASA, but, as described in {{brski-est}}, this document addresses only the BRSKI-EST portion of the protocol.
 
-Pledges that wish to further reduce the size can do a discovery operation using the {{RFC6690}} section 4.   It would look like: "/.well-known/core?rt=brski*" query to the Registrar.
+Pledges that wish to reduce the size of the CoAP headers by eliminating the "/.well-known/brski" path can do a discovery operation using {{RFC6690}} Section 4. It would look like a CoAP GET "/.well-known/core?rt=brski*" query to the Registrar.
 
 For example, if the Registrar supports a short BRSKI URL (/b) and supports the voucher format "application/voucher-cose+cbor" (TBD3), and status reporting in both CBOR and JSON formats:
 
@@ -230,14 +241,15 @@ For example, if the Registrar supports a short BRSKI URL (/b) and supports the v
   </b/es>;rt=brski.es;ct="50 60"
 ~~~~
 
-The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski" end points defined in {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.
+The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" end points for the short names as defined in {{est-uri}}.
 
-Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the "/.well-known/brski" URLs, and MUST NOT distinguish between them.
+Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the "/.well-known/brski/\<short-name\>" URLs, and MUST NOT distinguish between them.
 In particular, a Pledge MAY use the longer and shorter URLs in combination.
 
-When discovering the root path for the EST resources, the server MAY return
-the full resource paths and the content types which are supported at those end-points.
-This is useful when multiple content types are specified for EST-coaps server.
+When responding to a discovery request for BRSKI resources, the server MAY in addition return
+the full resource paths and the content types which are supported at those end-points as shown in above example.
+This is useful when multiple content types are specified for a particular resource on the server.
+The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources.
 
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
 Note that Content-Format TBD3 is defined in this document.
@@ -504,11 +516,11 @@ In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request
 
 # Design Considerations
 
-The design considerations for the CBOR encoding of vouchers is much the same as for {{RFC8366}}.
+The design considerations for the CBOR encoding of vouchers are much the same as for {{RFC8366}}.
 
 One key difference is that the names of the leaves in the YANG does not have a material effect on the size of the resulting CBOR, as the SID translation process assigns integers to the names.
 
-Any POST request to the Registrar with resource /est/vs or /est/es returns a 2.05 response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.05) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.05) response in a separate CoAP message.
+Any POST request to the Registrar with resource /vs or /es returns a 2.04 Changed response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.04) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.04) response in a separate CoAP message.
 
 # Raw Public Key Use Considerations {#rpk-considerations}
 
@@ -666,19 +678,19 @@ Michel Veillette did extensive work on pyang to extend it to support the SID all
 
 --- back
 
-#EST messages to EST-coaps
+#Constrained BRSKI-EST messages
 
-This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}}. The CoAP headers are only worked out for the enrollstatus example.
+This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}} with the constrained BRSKI requests. The CoAP headers are only worked out for the enrollstatus example.
 
 ##enrollstatus {#es}
 
 A coaps enrollstatus message can be :
 
 ~~~
-    POST coaps://192.0.2.1:8085/est/es
+    POST coaps://192.0.2.1:8085/b/es
 ~~~
 
-The corresponding coap header fields are shown below.
+The corresponding CoAP header fields are shown below.
 
 ~~~
   Ver = 1
@@ -687,45 +699,33 @@ The corresponding coap header fields are shown below.
   Options
    Option  (Uri-Path)
      Option Delta = 0xb   (option nr = 11)
-     Option Length = 0x3
-     Option Value = "est"
+     Option Length = 0x1
+     Option Value = "b"
    Option  (Uri-Path)
      Option Delta = 0x0   (option nr = 11)
      Option Length = 0x2
      Option Value = "es"
-  Payload = [Empty]
+  Payload Marker = 0xFF
+  Payload = <binary CBOR enrollstatus document>
 ~~~
 
 The Uri-Host and Uri-Port Options are omitted because they coincide with the transport protocol destination address and port respectively.
 
-A 2.05 Content response with an unsigned voucher status (ct=60) will then be:
+A 2.04 Changed response will then be:
 
 ~~~
-   2.05 Content (Content-Format: application/cbor)
+   2.04 Changed
 ~~~
 
-With CoAP fields and payload:
+With CoAP fields:
 
 ~~~
    Ver=1
    T=2 (ACK)
-   Code = 0x45 (2.05 Content)
-   Options
-     Option1 (Content-Format)
-     Option Delta = 0xC  (option nr 12)
-     Option Length = 0x2
-     Option Value = 60 (application/cbor)
-
-     Payload (CBOR diagnostic) =
-     {
-     "version":"1",
-     "Status": 1,   / 1 = Success, 0 = Fail  /
-     "Reason":"Informative human readable message",
-     "reason-context": "Additional information"
-     }
+   Code = 0x44 (2.04 Changed)
 ~~~
 
- The binary payload is:
+TBD - remove this payload or modify example to be the request payload of the POST. //  The binary payload is:
 
 ~~~
      A46776657273696F6E6131665374617475730166526561736F6E7822
@@ -741,10 +741,12 @@ The binary payload disassembles to the above CBOR diagnostic code.
 A coaps voucher_status message can be:
 
 ~~~~
-   POST coaps://[2001:db8::2:1]:61616/est/vs
+   POST coaps://[2001:db8::2:1]:61616/b/vs
 ~~~~
 
-A 2.05 Content response with a non signed CBOR voucher status (ct=60) will then be:
+A 2.04 Changed response will then be:
+
+TBD modify this example to let Pledge POST status to Registrar - direction change. Change 2.05 to 2.04.
 
 ~~~~
     2.05 Content (Content-Format: application/cbor)
@@ -820,7 +822,7 @@ The Pledge uses the proximity assertion together with an included proximity-regi
 MASA about its proximity to the specific Registrar.
 
 ~~~
-    POST coaps://registrar.example.com/est/rv
+    POST coaps://registrar.example.com/b/rv
     (Content-Format: application/voucher-cose+cbor)
     signed_request_voucher
 ~~~
@@ -836,13 +838,16 @@ INSERT_FIG_FROM_FILE examples/pledge-to-regisdiag.txt END
 
 ## COSE signed voucher request from Registrar to MASA
 
+TBD - modify example to use full paths to MASA, not short-names.
+Also not use CoAP but HTTP protocol.
+
 In this example the voucher request has been signed by the JRC using the private key from
 {{jrcpriv}}.  Contained within this voucher request is the voucher
 request from the Pledge to JRC.
 
 
 ~~~
-    POST coaps://masa.example.com/est/rv
+    POST coaps://masa.example.com/b/rv
     (Content-Format: application/voucher-cose+cbor)
     signed_masa_request_voucher
 ~~~
