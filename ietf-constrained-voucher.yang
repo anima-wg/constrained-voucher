@@ -29,11 +29,12 @@ module ietf-constrained-voucher {
               <mailto: consultancy@vanderstok.org>
     Author:   Panos Kampanakis
               <mailto: pkampana@cisco.com>";
+
 description
   "This module defines the format for a voucher, which is produced
-   by a pledge's manufacturer or delegate (MASA) to securely assign
-   one or more pledges to an 'owner', so that the pledges may
-   establis a secure connection to the owner's network
+   by a pledge's manufacturer or its delegate (MASA) to securely assign
+   one or more pledges to an 'owner', so that a pledge may
+   establish a secure connection to the owner's network
    infrastructure.
 
    This version provides a very restricted subset appropriate
@@ -41,7 +42,8 @@ description
    In particular, it assumes that nonce-ful operation is
    always required, that expiration dates are rather weak, as no
    clocks can be assumed, and that the Registrar is identified
-   by a pinned Raw Public Key.
+   by either a pinned Raw Public Key of the Registrar, or by a 
+   pinned X.509 certificate of the Registrar or domain CA.
 
    The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
    'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY',
@@ -81,7 +83,7 @@ description
         leaf pinned-domain-pubk {
           type binary;
           description
-            "The pinned-domain-pubk replaces the
+            "The pinned-domain-pubk may replace the
              pinned-domain-cert in constrained uses of
              the voucher. The pinned-domain-pubk
              is the Raw Public Key of the Registrar.
@@ -107,7 +109,7 @@ description
              public key, but is only a minor savings compared to
              a 256-bit ECDSA public-key.
              Algorithm agility is provided by extensions to this
-             specifications which define new leaf for other hash types";
+             specification which can define a new leaf for another hash type.";
         }
       }
     }
