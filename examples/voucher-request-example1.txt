@@ -1,19 +1,14 @@
 {
   2501: {
-    +2 : "2016-10-07T19:31:42Z", / SID= 2503, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID= 2505, expires-on /
-    +1 : 2,                      / SID= 2502, assertion /
-                                 /                "proximity" /
-    +13: "JADA123456789",        / SID= 2514, serial-number /
-    +5 : h'01020D0F',            / SID= 2506, idevid-issuer /
+    +2 : "2016-10-07T19:31:42Z", / SID=2503, created-on /
+    +4 : "2016-10-21T19:31:42Z", / SID=2505, expires-on /
+    +1 : 2,                      / SID=2502, assertion "proximity" /
+    +13: "JADA123456789",        / SID=2514, serial-number /
+    +5 : h'01020D0F',            / SID=2506, idevid-issuer /
     +10: h'cert.der',            / SID=2511, proximity-registrar-cert/
-    +3 : true,                   / SID= 2504, domain-cert
-                                                  -revocation-checks/
-    +6 : "2017-10-07T19:31:42Z", / SID= 2507, last-renewal-date /
-    +12: h'key_info'             / SID= 2513, proximity-registrar
-                                         -subject-public-key-info /
+    +3 : true,                   / SID=2504, domain-cert
+                                                   -revocation-checks/
+    +6 : "2017-10-07T19:31:42Z", / SID=2507, last-renewal-date /
+    +12: h'key_info'             / SID=2513, proximity-registrar-pubk/
   }
 }
-
-
-
