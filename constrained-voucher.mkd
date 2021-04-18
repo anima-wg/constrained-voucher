@@ -43,7 +43,8 @@ normative:
   RFC7049:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
-#  RFC7250:
+  RFC7250:
+  RFC8446:
 #  RFC7252:
   RFC7950:
   RFC5652:
@@ -57,12 +58,12 @@ normative:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
   I-D.ietf-cose-x509:
-#  ieee802-1AR:
-#    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
-#    title: "IEEE 802.1AR Secure Device Identifier"
-#    author:
-#      ins: "IEEE Standard"
-#    date: 2009
+  ieee802-1AR:
+    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
+    title: "IEEE 802.1AR Secure Device Identifier"
+    author:
+      ins: "IEEE Standard"
+    date: 2009
 
 informative:
   I-D.ietf-netmod-yang-tree-diagrams:
@@ -92,6 +93,7 @@ informative:
     author:
       ins: "IANA"
     date: 2017
+  I-D.richardson-anima-masa-considerations:
   RFC6690:
   RFC7030:
 
@@ -523,6 +525,44 @@ One key difference is that the names of the leaves in the YANG does not have a m
 Any POST request to the Registrar with resource /vs or /es returns a 2.04 Changed response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.04) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.04) response in a separate CoAP message.
 
 # Raw Public Key Use Considerations {#rpk-considerations}
+
+This section explains changes that can be done to reduce how many bytes that are sent as part of the certificates.
+The use of a raw public key in the pinning process can significantly reduce the number of bytes and round trips, but it comes with a few significant operational limitations.
+
+## The Registrar Trust Anchor
+
+When the Pledge first connects to the Registrar, the connection to the Registrar is provisional, as explained in section 5.6.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}}.
+The Registrar provides its public key in a TLSServerCertificate, and the Pledge uses that to validate that integrity of the (D)TLS connection, but it does not validate the identity of
+the provided certificate.
+
+As the TLSServer Certificate object is never verified directly by the pledge, sending it can be considered superfluous.
+Instead of using a (TLSServer)Certificate of type X509 (see section 4.4.2 of {{RFC8446}}),
+a RawPublicKey object is used.
+
+A Registrar operating in a mixed environment can determine whether to send a Certificate or a Raw Public key is determined by the pledge including the server\_certificate\_type of RawPublicKey.
+This is shown in section 5 of {{RFC7250}}.
+
+The Pledge continues to send a client\_certificate\_type of X509.
+
+## The Voucher Request
+
+The Pledge puts the Registrar's public key into the proximity-registrar-pubk
+(PRSPKI) field of the voucher-request.
+(The proximity-registrar-pubk-sha256 can also be used if the 32-bytes of hash turned out to be smaller than a typical ECDSA key.)
+
+As the format of the pubk field is identical to the TLS Certificate RawPublicKey, no manipulation at all is needed to insert this into a voucher-request.
+
+## The Voucher Reply
+
+A returned voucher will have a pinned-domain-subk field with the identical key as was found in the proximity field above, as well as in the TLS connection.
+Validation of this is what takes the connection out of the provisional state (see {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.6.2).
+
+The voucher needs to be validated first.
+The Pledge needs to have a public key to validate the signature from the MASA on the voucher.
+
+The MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} section 2.3) , then a certificate chain may need to be included with the voucher in order that the pledge is able to validate the signature.
+In CMS signed artifacts, the CMS structure has an place for such certificates.
+In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used.
 
 # Security Considerations
 
