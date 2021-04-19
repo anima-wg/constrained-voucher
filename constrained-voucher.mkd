@@ -165,11 +165,10 @@ This document defines both a constrained voucher and a constrained voucher-reque
 They are presented in the order "voucher-request", followed by a "voucher" response as this is
 the order that they occur in the protocol.
 
-The constrained voucher request MUST be signed by the Pledge.
-It can sign using its IDevID X.509 certificate, or if an IDevID is not available its manufacturer-installed raw public key (RPK).
+The Pledge MUST incorporate its IDevID X.509 certificate in the voucher_request and sign it, or if not available, MUST incorporate its manufacturer-installed raw public key (RPK) and sign it.
 {{rpk-considerations}} provides additional details on PKIX-less operations.
 
-The constrained voucher MUST be signed by the MASA.
+The MASA MUST sign the certificate or the RPK in the returned voucher.
 
 For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's X.509 certificate, or using a raw public key (RPK) of the Registrar.
 
@@ -279,25 +278,23 @@ This avoids the Pledge having to reconnect using DTLS, in order to access these 
 
 ### Pledge Extensions
 
-A constrained Pledge SHOULD NOT perform the optional "CSR attributes request" (/att) to minimize network traffic and reduce code size (i.e. by not implementing the complex CSR attributes parsing code).
+A constrained Pledge SHOULD NOT support the optional "CSR attributes request" (/att) to minimize network traffic and reduce code size.
 
-When creating the CSR, the Pledge selects itself which attributes to include. One or more Subject Distinguished Name fields MUST be included.
+When creating the CSR, the Pledge selects which attributes to include. One or more Subject Distinguished Name fields MUST be included.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
-The Pledge may receive such information via the voucher (encoded in a vendor-specific way) or some other, out-of-band means.
+The Pledge can receive such information via the voucher (encoded in a vendor-specific way) or some other, out-of-band means.
 
 A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic and code size:
 
-1. if the BRSKI-received voucher, validating the current EST server, contains a pinned domain CA certificate, the Pledge provisionally considers this single certificate as the sole EST trust anchor, in other words, the single result of "CA certificates request" (/crts) to the EST server.
+1. if the voucher, that validates the current REgistrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words, the result of "CA certificates request" (/crts) to the Registrar.
 
 2. Using this trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID.
 
-3. Then, the Pledge attempts to validate that the trust anchor CA is the signer of the LDevID.
-If this is the case, the Pledge finally accepts the pinned domain CA certificate as the legitimate trust anchor CA for its domain and it also accepts its LDevID.
+3. If the Pledge validates that the trust anchor CA is used to sign the LDevID, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor CA for the Registrar's domain and accepts the associated LDevID.
 
 4. If this is not the case, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchors since these obviously differ from the (temporary) pinned domain CA.
 
 5. When doing this request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
-Such limiting to only one has the advantages that storage requirements for CA certificates are reduced, network traffic can be reduced, and code size can be reduced (by not having to parse the alternative format 281 "application/pkcs7-mime;smime-type=certs-only" and not having to support CoAP block-wise transfer).
 
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
@@ -323,8 +320,8 @@ that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=c
 # BRSKI-MASA Protocol {#brski-masa}
 
 {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
-This document does not change that.
-The use of CoAP for the BRSKI-MASA connection is NOT supported.
+This document does not change that. At the moment of writing the creation of coaps based MASA's is deemed unrealistic.
+The use of CoAP for the BRSKI-MASA connection can be the subject of another document. 
 
 Some consideration was made to specify CoAP support for consistency but:
 
@@ -342,8 +339,8 @@ Some consideration was made to specify CoAP support for consistency but:
 
 # Pinning in Voucher Artifacts {#pinning}
 
-The voucher is a statement from the MASA to the Pledge indicating who the Pledge's owner is.
-This section deals with the question of how that owner's identity is determined and how it is encoded within the voucher.
+The voucher is a statement from the MASA to the Pledge indicating the  owner of the Pledge.
+This section describes how the owner's identity is determined and how it is encoded within the voucher.
 
 ## Registrar Identity Selection and Encoding
 
@@ -351,7 +348,7 @@ Section 5.5 of {{I-D.ietf-anima-bootstrapping-keyinfra}} describes BRSKI policie
 The recommendation made there is for the Registrar to include only certificates in the (CMS) signing structure which participate in the certificate chain that is to be pinned.
 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain.
-For instance, for a domain with a two-level certification authority, where the voucher-request has been signed by "Registrar" its signing structure includes two additional CA certificates:
+For instance, for a domain with a two-level certification authority (see {{fig-twoca}}, where the voucher-request has been signed by "Registrar" its signing structure includes two additional CA certificates:
 
 ~~~~
 INSERT_TEXT_FROM_FILE two-ca-chain.txt END
@@ -359,23 +356,22 @@ INSERT_TEXT_FROM_FILE two-ca-chain.txt END
 {: #fig-twoca title='Two Level PKI'}
 
 When the Registrar is using a COSE-signed constrained format voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}},
-would carry all the certificates of the chain in an "x5bag" attribute placed in the unprotected header.
+would carry all the certificates of the chain in an "x5bag" or "x5chain" attribute placed in the unprotected header.
 
 ## MASA Pinning Policy
 
 The MASA, having assembled and verified the chain in the signing structure, will now need to select a certificate to pin in the voucher in case there are multiple available.
 (For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.)
 The BRSKI policy for pinning by the MASA as described in Section 5.5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}} leaves much flexibility to the manufacturer. The present
-document adds the following rules to the MASA pinning policy, in order to reduce on average the duration of BRSKI/EST on constrained, low-bandwidth networks:
+document adds the following rules to the MASA pinning policy to reduce the newtwork load:
 
 1. for a voucher containing a nonce, it SHOULD select the most specific (lowest-level) CA certificate in the chain.
-2. for a nonceless voucher, it SHOULD select the least-specific (highest-level) CA certificate in the chain that is allowed under the MASA's policy for this specific customer (domain).
+2. for a nonceless voucher, it SHOULD select the least-specific (highest-level) CA certificate in the chain that is allowed under the MASA's policy for this specific domain.
 
 The rationale for 1. is that in case of a voucher with nonce, the voucher is valid only in scope of the present DTLS connection between Pledge and Registrar anyway, so it would have no
 benefit to pin a higher-level CA. By pinning the most specific CA the constrained Pledge can validate its DTLS connection using less crypto operations. The
 rationale for pinning a CA instead of the Registrar's End-Entity certificate directly is the following benefit on constrained networks: the pinned certificate in the voucher
 can in common cases be re-used as a Domain CA trust anchor during the EST enrollment and during the operational phase that follows after EST enrollment, as explained elsewhere in this document.
-Doing so avoids an additional transmission of this trust anchor over the network during the EST enrollment, saving potentially 100s of bytes and a CoAP transaction.
 
 The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of {{I-D.ietf-anima-bootstrapping-keyinfra}}).
 
@@ -405,7 +401,7 @@ How the Pledge discovers this method and details of the enrollment method are ou
 
 When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate.
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain.
-However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA SHOULD pin the RPK (RPK3 in figure {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
+However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA SHOULD pin the RPK (RPK3 in figure {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
 
 To Be Completed further (TBD): Note, the above paragraphs are duplicated from the section {{survey}} so we may have to resolve this duplication.
 
