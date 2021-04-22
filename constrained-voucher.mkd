@@ -165,10 +165,11 @@ This document defines both a constrained voucher and a constrained voucher-reque
 They are presented in the order "voucher-request", followed by a "voucher" response as this is
 the order that they occur in the protocol.
 
-The Pledge MUST incorporate its IDevID X.509 certificate in the voucher_request and sign it, or if not available, MUST incorporate its manufacturer-installed raw public key (RPK) and sign it.
+The constrained voucher request MUST be signed by the Pledge.
+It signs using the private key associated with its IDevID X.509 certificate, or if an IDevID is not available, then the private key associated with its manufacturer-installed raw public key (RPK).
 {{rpk-considerations}} provides additional details on PKIX-less operations.
 
-The MASA MUST sign the certificate or the RPK in the returned voucher.
+The constrained voucher MUST be signed by the MASA.
 
 For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's X.509 certificate, or using a raw public key (RPK) of the Registrar.
 
