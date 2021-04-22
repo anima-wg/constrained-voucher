@@ -642,7 +642,7 @@ Internet-Draft             Constrained Voucher                April 2021
    been signed by "Registrar" its signing structure includes two
    additional CA certificates: the root CA (priv-CA) and an intermediate 
    CA (Sub-CA). The arrows in Figure 1 show the order in which the 
-   certaficates are signed/issued ((1) signed (2), (2) singed (3)).
+   certificates are signed/issued ((1) signed (2), (2) signed (3)).
 
     .-------------.
     | priv-CA (1) |
