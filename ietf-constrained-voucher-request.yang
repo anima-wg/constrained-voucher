@@ -29,24 +29,26 @@ module ietf-constrained-voucher-request {
               <mailto: consultancy@vanderstok.org>
     Author:   Panos Kampanakis
               <mailto: pkampana@cisco.com>";
+
   description
    "This module defines the format for a voucher request,
     which is produced by a pledge to request a voucher.
     The voucher-request is sent to the potential owner's
     Registrar, which in turn sends the voucher request to
-    the manufacturer or delegate (MASA).
+    the manufacturer or its delegate (MASA).
 
     A voucher is then returned to the pledge, binding the
     pledge to the owner.  This is a constrained version of the
     voucher-request present in
-    draft-ietf-anima-bootstrap-keyinfra.txt.
+    {{I-D.ietf-anima-bootstrap-keyinfra}}
 
     This version provides a very restricted subset appropriate
     for very constrained devices.
     In particular, it assumes that nonce-ful operation is
     always required, that expiration dates are rather weak, as no
     clocks can be assumed, and that the Registrar is identified
-    by a pinned Raw Public Key.
+    by either a pinned Raw Public Key of the Registrar, or by a 
+    pinned X.509 certificate of the Registrar or domain CA.
 
     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
     'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY',
@@ -89,7 +91,7 @@ module ietf-constrained-voucher-request {
           type binary;
           description
             "The proximity-registrar-pubk replaces
- 	     the proximit-registrar-cert in constrained uses of
+             the proximity-registrar-cert in constrained uses of
              the voucher-request.
              The proximity-registrar-pubk is the
              Raw Public Key of the Registrar. This field is encoded
@@ -98,7 +100,7 @@ module ietf-constrained-voucher-request {
              The EdDSA algorithm as specified in
              draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
              Support for the DSA algorithm is not recommended.
-             Support for the RSA algorithm is MAY, but due to
+             Support for the RSA algorithm is a MAY, but due to 
              size is discouraged.";
         }
 
@@ -106,7 +108,7 @@ module ietf-constrained-voucher-request {
           type binary;
           description
             "The proximity-registrar-pubk-sha256
-             is an alternative to
+             is an alternative to both 
              proximity-registrar-pubk and pinned-domain-cert.
              In many cases the public key of the domain has already
              been transmitted during the key agreement protocol,
@@ -117,8 +119,8 @@ module ietf-constrained-voucher-request {
              public key, but is only a minor savings compared to
              a 256-bit ECDSA public-key.
              Algorithm agility is provided by extensions to this
-             specifications which define new leaf for other hash
-             types.";
+             specification which may define a new leaf for another hash 
+             type.";
         }
 
         leaf proximity-registrar-cert {
@@ -131,7 +133,8 @@ module ietf-constrained-voucher-request {
 
              The first certificate in the Registrar TLS server
              certificate_list sequence  (see [RFC5246]) presented by
-             the Registrar to the Pledge. This MUST be populated in a
+             the Registrar to the Pledge. This field or one of its 
+             alternatives MUST be populated in a 
              Pledge's voucher request if the proximity assertion is
              populated.";
         }
@@ -155,7 +158,7 @@ module ietf-constrained-voucher-request {
              when accepting a voucher for imprinting. Other
              parties MAY examine the prior signed voucher
              information for the purposes of policy decisions.
-             For example this information could be useful to a
+             For example, this information could be useful to a
              MASA to determine that both pledge and registrar
              agree on proximity assertions. The MASA SHOULD
              remove all prior-signed-voucher-request information when
