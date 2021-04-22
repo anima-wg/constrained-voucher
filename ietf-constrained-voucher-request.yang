@@ -40,7 +40,7 @@ module ietf-constrained-voucher-request {
     A voucher is then returned to the pledge, binding the
     pledge to the owner.  This is a constrained version of the
     voucher-request present in
-    draft-ietf-anima-bootstrap-keyinfra.
+    {{I-D.ietf-anima-bootstrap-keyinfra}}
 
     This version provides a very restricted subset appropriate
     for very constrained devices.
