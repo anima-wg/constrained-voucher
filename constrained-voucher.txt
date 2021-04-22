@@ -640,7 +640,9 @@ Internet-Draft             Constrained Voucher                April 2021
    certificate selected from the chain.  For instance, for a domain with
    a two-level certification authority, where the voucher-request has
    been signed by "Registrar" its signing structure includes two
-   additional CA certificates:
+   additional CA certificates: the root CA (priv-CA) and an intermediate 
+   CA (Sub-CA). The arrows in Figure 1 show the order in which the 
+   certificates are signed/issued ((1) signed (2), (2) signed (3)).
 
     .-------------.
     | priv-CA (1) |
