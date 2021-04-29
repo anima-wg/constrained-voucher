@@ -359,7 +359,7 @@ INSERT_TEXT_FROM_FILE two-ca-chain.txt END
 When the Registrar is using a COSE-signed constrained format voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}},
 would carry all the certificates of the chain in an "x5bag" or "x5chain" attribute placed in the unprotected header.
 
-## MASA Pinning Policy
+## MASA Pinning Policy {#masa-pinning-policy}
 
 The MASA, having assembled and verified the chain in the signing structure, will now need to select a certificate to pin in the voucher in case there are multiple available.
 (For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.)
@@ -921,3 +921,90 @@ INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
 The representiation of signed_voucher in CBOR diagnostic format is:
 
 INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END
+
+# Examples of validation of certificate chains
+
+This section is provided as an informative review of APIs available for independant verifiation of certificate chains as explained in {{masa-pinning-policy}}.
+
+## OpensSSL
+
+from openssl's apps/verify.c
+
+~~~~
+    X509 *x = NULL;
+    int i = 0, ret = 0;
+    X509_STORE_CTX *csc;
+    STACK_OF(X509) *chain = NULL;
+    int num_untrusted;
+
+    x = load_cert(file, "certificate file");
+    if (x == NULL)
+        goto end;
+
+    csc = X509_STORE_CTX_new();
+    if (csc == NULL) {
+        BIO_printf(bio_err, "error %s: X.509 store context allocation failed\n",
+                   (file == NULL) ? "stdin" : file);
+        goto end;
+    }
+
+    X509_STORE_set_flags(ctx, vflags);
+    if (!X509_STORE_CTX_init(csc, ctx, x, uchain)) {
+        X509_STORE_CTX_free(csc);
+        BIO_printf(bio_err,
+                   "error %s: X.509 store context initialization failed\n",
+                   (file == NULL) ? "stdin" : file);
+        goto end;
+    }
+    if (tchain != NULL)
+        X509_STORE_CTX_set0_trusted_stack(csc, tchain);
+    if (crls != NULL)
+        X509_STORE_CTX_set0_crls(csc, crls);
+
+    i = X509_verify_cert(csc);
+    if (i > 0 && X509_STORE_CTX_get_error(csc) == X509_V_OK) {
+        BIO_printf(bio_out, "%s: OK\n", (file == NULL) ? "stdin" : file);
+        ret = 1;
+        if (show_chain) {
+            int j;
+
+            chain = X509_STORE_CTX_get1_chain(csc);
+            num_untrusted = X509_STORE_CTX_get_num_untrusted(csc);
+            BIO_printf(bio_out, "Chain:\n");
+            for (j = 0; j < sk_X509_num(chain); j++) {
+                X509 *cert = sk_X509_value(chain, j);
+                BIO_printf(bio_out, "depth=%d: ", j);
+                X509_NAME_print_ex_fp(stdout,
+                                      X509_get_subject_name(cert),
+                                      0, get_nameopt());
+                if (j < num_untrusted)
+                    BIO_printf(bio_out, " (untrusted)");
+                BIO_printf(bio_out, "\n");
+            }
+            sk_X509_pop_free(chain, X509_free);
+        }
+    } else {
+        BIO_printf(bio_err,
+                   "error %s: verification failed\n",
+                   (file == NULL) ? "stdin" : file);
+    }
+    X509_STORE_CTX_free(csc);
+~~~~
+
+
+## mbedTLS
+
+
+~~~~
+    mbedtls_x509_crt cert;
+    mbedtls_x509_crt caCert;
+    uint32_t         certVerifyResultFlags;
+    ...
+    int result = mbedtls_x509_crt_verify(&cert, &caCert, NULL, NULL,
+                                 &certVerifyResultFlags, NULL, NULL);
+~~~~
+
+## wolfSSL
+
+To be added.
+
