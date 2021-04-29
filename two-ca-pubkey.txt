@@ -5,10 +5,13 @@
           |
           v
    .-------------.
-   | Sub-CA (P2) |<-----P2-pinned
+   | domain (P2) |
+   | Sub-CA      |<-----P2-pinned
    '-------------'
           |
           v
  .----------------.
+ |   domain       |
  | Registrar(P3)  |<----P3-pinned
+ | EE certificate |
  '----------------'
