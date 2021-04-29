@@ -356,7 +356,7 @@ INSERT_TEXT_FROM_FILE two-ca-chain.txt END
 When the Registrar is using a COSE-signed constrained format voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}},
 would carry all the certificates of the chain in an "x5bag" or "x5chain" attribute placed in the unprotected header.
 
-## MASA Pinning Policy
+## MASA Pinning Policy {#masa-pinning-policy}
 
 The MASA, having assembled and verified the chain in the signing structure, will now need to select a certificate to pin in the voucher in case there are multiple available.
 (For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.)
@@ -722,6 +722,63 @@ The handling of certificates usually includes the checking of a certificate chai
 
 A libary can be used to construct a (D)TLS connection. It is useful to realize that differences beetween (D)TLS implementations will occur due to the differences in the certicate checks supported by the library. On top of that, checks between client and server certificates enforced by (D)TLS are not always helpful for a BRSKI implementation. For example, the certificates of Pledge and Registrar are usually not related when the BRSKI protocol is started. It must be verified that checks on the relation between client and server certificates do not hamper a succeful DTLS connection establishment.
 
+## OpensSSL
+
+from openssl's apps/verify.c
+
+~~~~
+    X509 *x = NULL;
+    int i = 0, ret = 0;
+    X509_STORE_CTX *csc;
+    STACK_OF(X509) *chain = NULL;
+    int num_untrusted;
+
+    x = load_cert(file, "certificate file");
+    if (x == NULL)
+        goto end;
+
+    csc = X509_STORE_CTX_new();
+    if (csc == NULL) {
+        BIO_printf(bio_err, "error %s: X.509 store context allocation failed\n",
+                   (file == NULL) ? "stdin" : file);
+        goto end;
+    }
+
+    X509_STORE_set_flags(ctx, vflags);
+    if (!X509_STORE_CTX_init(csc, ctx, x, uchain)) {
+        X509_STORE_CTX_free(csc);
+        BIO_printf(bio_err,
+                   "error %s: X.509 store context initialization failed\n",
+                   (file == NULL) ? "stdin" : file);
+        goto end;
+    }
+    if (tchain != NULL)
+        X509_STORE_CTX_set0_trusted_stack(csc, tchain);
+    if (crls != NULL)
+        X509_STORE_CTX_set0_crls(csc, crls);
+
+    i = X509_verify_cert(csc);
+    X509_STORE_CTX_free(csc);
+~~~~
+
+
+## mbedTLS
+
+
+~~~~
+    mbedtls_x509_crt cert;
+    mbedtls_x509_crt caCert;
+    uint32_t         certVerifyResultFlags;
+    ...
+    int result = mbedtls_x509_crt_verify(&cert, &caCert, NULL, NULL,
+                                 &certVerifyResultFlags, NULL, NULL);
+~~~~
+
+## wolfSSL
+
+To be added.
+
+
 #Constrained BRSKI-EST messages
 
 This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}} with the constrained BRSKI requests. The CoAP headers are only worked out for the enrollstatus example.
@@ -918,3 +975,4 @@ INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
 The representiation of signed_voucher in CBOR diagnostic format is:
 
 INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END
+
