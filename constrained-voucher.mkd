@@ -175,11 +175,11 @@ For the constrained voucher request this document defines two distinct methods f
 
 For the constrained voucher also these two methods are supported to indicate (pin) a trusted domain identity: using either a pinned domain X.509 certificate, or a pinned raw public key (RPK).
 
-When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk" field 
+When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk" field
 or "pinned-domain-pubk-sha256" field of a voucher.
 This is described in more detail in the YANG definition for the constrained voucher and in section {{pinning}}.
 
-When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate. 
+When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate.
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain.
 However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA MAY pin the RPK of the Registrar instead of the Registrar's End-Entity certificate in order to save space in the voucher.
 
@@ -322,7 +322,7 @@ that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=c
 
 {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
 This document does not change that. At the moment of writing the creation of coaps based MASA's is deemed unrealistic.
-The use of CoAP for the BRSKI-MASA connection can be the subject of another document. 
+The use of CoAP for the BRSKI-MASA connection can be the subject of another document.
 
 Some consideration was made to specify CoAP support for consistency but:
 
@@ -393,7 +393,7 @@ INSERT_TEXT_FROM_FILE pinning-options.txt END
 ~~~~
 {: #fig-pinning title='Raw Public Key pinning'}
 
-When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk" 
+When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
 or "pinned-domain-pubk-sha256" field of a voucher.
 This is described in more detail in the YANG definition for the constrained voucher. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
 another method for certificate-less enrollment and the Registrar has to support this method also.
@@ -423,7 +423,7 @@ via the http://comi.space service.
 ### Tree Diagram
 
 The following diagram is largely a duplicate of the contents of {{RFC8366}},
-with the addition of the fields proximity-registrar-pubk, proximity-registrar-pubk-sha256, 
+with the addition of the fields proximity-registrar-pubk, proximity-registrar-pubk-sha256,
 proximity-registrar-cert, and prior-signed-voucher-request.
 
 prior-signed-voucher-request is only used between the Registrar and the MASA.
