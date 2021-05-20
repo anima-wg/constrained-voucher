@@ -717,7 +717,7 @@ Michel Veillette did extensive work on pyang to extend it to support the SID all
 
 --- back
 
-#Library support for BRSKI {{libsup}}
+#Library support for BRSKI {#libsup}
 
 For the implementation of BRSKI, the use of a software library to manipulate certificates and use crypto algorithms is often beneficial. Two C-based examples are OPENSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
 
