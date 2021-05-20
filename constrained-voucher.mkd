@@ -1,7 +1,7 @@
 ---
 title: Constrained Voucher Artifacts for Bootstrapping Protocols
 abbrev: Constrained Voucher
-docname: draft-ietf-anima-constrained-voucher-10
+docname: draft-ietf-anima-constrained-voucher-11
 
 stand_alone: true
 
@@ -126,10 +126,8 @@ This COSE-signed CBOR-encoded voucher can be transported using secured CoAP or H
 The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC, or DTLS (CoAPS). The HTTP connection
 (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
-This document has a similar structure to {{RFC8366}} but adds sections concerning:
-
-1. Voucher-request artifact specification based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}},
-2. Voucher(-request) transport over CoAP based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}} and on {{I-D.ietf-ace-coap-est}}.
+This document specifies a constrained voucher-request artifact based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}}, and 
+voucher(-request) transport over CoAP based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}} and on {{I-D.ietf-ace-coap-est}}.
 
 The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
 As the tooling to convert YANG documents into a list of SID keys is still in its infancy, the table of SID values presented here should be considered normative rather than the output of the pyang tool.
@@ -155,12 +153,13 @@ Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, noncele
 {{RFC8366}} provides for vouchers that assert proximity, that authenticate the Registrar and that can offer varying levels of anti-replay protection.
 
 This document does not make any extensions to the semantic meaning of vouchers, only the encoding has been changed to optimize for constrained devices and networks.
+The two main parts of the BRSKI protocol are named separately in this document: BRSKI-EST for the protocol between Pledge and Registrar, and BRSKI-MASA for the
+protocol between the Registrar and the MASA.
 
 Time-based vouchers are supported in this definition, but given that constrained devices are extremely unlikely to have accurate time, their use will be uncommon.
 Most Pledges using these constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection rather than expiry times.
 
 {{RFC8366}} defines the voucher artifact, while the Voucher Request artifact was defined in {{I-D.ietf-anima-bootstrapping-keyinfra}}.
-
 This document defines both a constrained voucher and a constrained voucher-request.
 They are presented in the order "voucher-request", followed by a "voucher" response as this is
 the order that they occur in the protocol.
@@ -180,12 +179,12 @@ This is not a hardship as the pledges are constructed by a manufacturer who also
 
 The MASA therefore knows if the pledge supports PKIX operations, PKIX format certificates, or if the pledge is limited to Raw Public Keys (RPK).
 Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar identity.
-This is described in more detail in the YANG definition for the constrained voucher and in section {{pinning}}, and the RPK case in {{pinned-with-rpk}}.
+This is described in more detail in {{yang-voucher}}, {{pinning}} and {{pinned-with-rpk}} (for RPK specifically).
 
 # BRSKI-EST Protocol {#brski-est}
 
-This section describes the constrained BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar, Join Proxy and Pledge over CoAP.
-The extensions are targeted to low-resource networks with small packets.
+This section describes the constrained BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar and Pledge (optionally via a Join Proxy) over CoAP.
+The extensions are targeting low-resource networks with small packets.
 
 The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
 
@@ -214,7 +213,7 @@ This is the same "/.well-known/brski" prefix as defined in {{I-D.ietf-anima-boot
 ~~~~
 
 Figure 5 in section 3.2.2 of {{RFC7030}} enumerates the operations supported by EST, for which Table 1 in Section 5.1 of {{I-D.ietf-ace-coap-est}} enumerates the corresponding
-short path names. Similarly, {{est-uri}} provides the mapping from the supported BRSKI extension URI paths to the constrained-BRSKI URI paths.
+EST-coaps short path names. Similarly, {{est-uri}} provides the mapping from the supported BRSKI extension URI paths to the constrained-BRSKI URI paths.
 
 | BRSKI resource | constrained-BRSKI resource |
 | /requestvoucher| /rv |
@@ -222,9 +221,10 @@ short path names. Similarly, {{est-uri}} provides the mapping from the supported
 | /enrollstatus | /es  |
 {: #est-uri title='BRSKI URI paths mapping to constrained BRSKI URI paths'}
 
-Note that /requestvoucher, /voucher_status and /enrollstatus occur between the Pledge and Registrar (in scope of the BRSKI-EST protocol), but also between Registrar and MASA, but, as described in {{brski-est}}, this document addresses only the BRSKI-EST portion of the protocol.
+Note that /requestvoucher indicated above occurs between the Pledge and Registrar (in scope of the BRSKI-EST protocol), but it also occurs between Registrar and MASA. However,  
+as described in {{brski-est}}, this section and above table addresses only the BRSKI-EST protocol.
 
-Pledges that wish to reduce the size of the CoAP headers by eliminating the "/.well-known/brski" path can do a discovery operation using {{RFC6690}} Section 4. It would look like a CoAP GET "/.well-known/core?rt=brski*" query to the Registrar.
+Pledges that wish to discover the available BRSKI bootstrap options/formats, or reduce the size of the CoAP headers by eliminating the "/.well-known/brski" path, can do a discovery operation using {{RFC6690}} Section 4 by sending a discovery query to the Registrar.
 
 For example, if the Registrar supports a short BRSKI URL (/b) and supports the voucher format "application/voucher-cose+cbor" (TBD3), and status reporting in both CBOR and JSON formats:
 
@@ -242,41 +242,48 @@ For example, if the Registrar supports a short BRSKI URL (/b) and supports the v
 
 The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" end points for the short names as defined in {{est-uri}}.
 
-Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the "/.well-known/brski/\<short-name\>" URLs, and MUST NOT distinguish between them.
+Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the corresponding "/.well-known/brski/\<short-name\>" URLs, and MUST NOT distinguish between them.
 In particular, a Pledge MAY use the longer and shorter URLs in combination.
 
 When responding to a discovery request for BRSKI resources, the server MAY in addition return
 the full resource paths and the content types which are supported at those end-points as shown in above example.
 This is useful when multiple content types are specified for a particular resource on the server.
-The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources.
+The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources. 
+(So, a query for rt=brski, without the wildcard character.)
 
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
-Note that Content-Format TBD3 is defined in this document.
+Note that Content-Format TBD3 ("application/voucher-cose+cbor") is defined in this document.
 
-The Content-Format ("application/json") 50 MAY be supported and 60 MUST be supported by the Registrar for the /vs and /es resources.
+The Content-Format 50 ("application/json") MAY be supported and 60 ("application/cbor") MUST be supported by the Registrar for the /vs and /es resources.
 Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
-If the "ct" attribute is not indicated for this resource, this implies that at least TBD3 is supported.
+If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least TBD3 is supported.
 
 The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
 
 ## Extensions to BRSKI {#brski-extensions}
 
-A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use discovery for BRSKI resources, since it is more efficient to just try
-the supported enrollment method via the well-known BRSKI/EST-coaps resources, and it avoids the Pledge having to do complex CoRE Link Format parsing.
-A Registrar SHOULD host any discoverable BRSKI resources on the same (UDP) server port that the Pledge's DTLS connection is using.
-This avoids the Pledge having to reconnect using DTLS, in order to access these resources.
+A Pledge that only supports the BRSKI bootstrap method and already knows the IP address and port of a Registrar or Join Proxy to use SHOULD NOT use discovery. 
+In such case it is more efficient to just try its supported bootstrap method (e.g. /rv) via the well-known BRSKI resource on the known address and port. This avoids 
+the Pledge having to unnecessarily implement CoRE Link Format parsing. The method via which the Pledge learns the address/port of a Registrar or Join Proxy to use 
+is out of scope of this document.
+
+A Registrar SHOULD host any discoverable BRSKI resources on the same (UDP) server port that the Pledge's initial DTLS connection is using.
+This avoids the overhead of the Pledge having to reconnect using DTLS, in order to access discovered resource(s).
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
-A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use discovery for EST-coaps resources, for similar reasons as stated in the
-previous section.
-A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS connection is using.
-This avoids the Pledge having to reconnect using DTLS, in order to access these resources.
+A Pledge that already is DTLS-connected to either a Join Proxy or Registrar, and which only supports the EST-coaps enrollment method, SHOULD NOT use discovery for EST-coaps resources.
+This is because it is more efficient to just try its supported enrollment method (e.g. /sen) via the well-known EST resource on the current DTLS connection. 
+This avoids an additional round-trip of packets and avoids the Pledge having to unnecessarily implement CoRE Link Format parsing.
 
-### Pledge Extensions
+A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS initial connection is using.
+This avoids the Pledge having to reconnect using DTLS, in order to proceed with EST enrollment after the BRSKI bootstrap.
+[TBD EDNOTE: a Registrar that does host EST resources on another port won't be able to onboard Pledges that skip the discovery, so not interoperable. Should we fix this?]
 
-A constrained Pledge SHOULD NOT support the optional "CSR attributes request" (/att) to minimize network traffic and reduce code size.
+### Pledge Extensions {#brski-extensions-pledge}
+
+A constrained Pledge SHOULD NOT support the optional EST "CSR attributes request" (/att) to minimize network traffic and reduce code size.
 
 When creating the CSR, the Pledge selects which attributes to include. One or more Subject Distinguished Name fields MUST be included.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
@@ -284,44 +291,42 @@ The Pledge can receive such information via the voucher (encoded in a vendor-spe
 
 A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic and code size:
 
-1. if the voucher, that validates the current REgistrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words, the result of "CA certificates request" (/crts) to the Registrar.
+1. if the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words, 
+it provisionally accepts this CA certificate as if it were the result of "CA certificates request" (/crts) to the Registrar.
 
-2. Using this trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID.
+2. Using this CA certificate as trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID.
 
-3. If the Pledge validates that the trust anchor CA is used to sign the LDevID, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor CA for the Registrar's domain and accepts the associated LDevID.
+3. If the Pledge validates that the trust anchor CA was used to sign its LDevID, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor CA for the Registrar's domain and accepts the associated LDevID.
 
-4. If this is not the case, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchors since these obviously differ from the (temporary) pinned domain CA.
+4. If the trust anchor CA was NOT used to sign its LDevID, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these differ from the (temporary) pinned domain CA.
 
-5. When doing this request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
+5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
 
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
-
-The Content-Format ("application/json") 50 MAY be supported and 60 MUST be supported by the Registrar for the /vs and /es resources.
-Content-Format TBD3 MUST be supported by the Registrar for the /rv resource. If the "ct" attribute is not indicated for this resource, this implies that at least TBD3 is supported.
-
-When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 it SHOULD return only the
-single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request. The only exception case
-is when the Registrar is configured to not support a request for a single CA certificate for operational or security reasons, e.g. because every device
-enrolled into the domain needs to use at least multiple CAs. In such exception case the Registrar returns the CoAP response 4.06 Not Acceptable to indicate
-that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=certs-only" is available.
 
 <!-- ******************************************************************** -->
 
 ### Registrar Extensions
 
-When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 it SHOULD return only the
+The Content-Format 50 MAY be supported and 60 MUST be supported by the Registrar for the /vs and /es resources.
+Content-Format TBD3 MUST be supported by the Registrar for the /rv resource. 
+
+When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 ("application/pkix-cert") it SHOULD return only the
 single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request. The only exception case
 is when the Registrar is configured to not support a request for a single CA certificate for operational or security reasons, e.g. because every device
 enrolled into the domain needs to use at least multiple CAs. In such exception case the Registrar returns the CoAP response 4.06 Not Acceptable to indicate
-that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=certs-only" is available.
+that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=certs-only" which supports multiple certificates is available.
 
 # BRSKI-MASA Protocol {#brski-masa}
 
 {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
-This document does not change that. At the moment of writing the creation of coaps based MASA's is deemed unrealistic.
-The use of CoAP for the BRSKI-MASA connection can be the subject of another document.
+This document does not change that. The Registrar MAY use the new format "application/voucher-cose+cbor" in its voucher request to MASA, or the existing BRSKI 
+format "application/voucher-cms+json" defined by {{I-D.ietf-anima-bootstrapping-keyinfra}}. The MASA MUST support both formats. The Registrar indicates the voucher 
+format it wants to receive from MASA using the HTTP Accept header.
 
-Some consideration was made to specify CoAP support for consistency but:
+At the moment of writing the creation of coaps based MASAs is deemed unrealistic.
+The use of CoAP for the BRSKI-MASA connection can be the subject of another document.
+Some consideration was made to specify CoAP support for consistency, but:
 
 * the Registrar is not expected to be so constrained that it cannot support HTTPS client connections.
 
@@ -343,25 +348,25 @@ This section describes how the owner's identity is determined and how it is enco
 ## Registrar Identity Selection and Encoding
 
 Section 5.5 of {{I-D.ietf-anima-bootstrapping-keyinfra}} describes BRSKI policies for selection of the owner identity. It indicates some of the flexibility that is possible for the Registrar.
-The recommendation made there is for the Registrar to include only certificates in the (CMS) signing structure which participate in the certificate chain that is to be pinned.
+The recommendation made there is for the Registrar to include only certificates in the voucher request (CMS) signing structure which participate in the certificate chain that is to be pinned.
 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain.
-For instance, for a domain with a two-level certification authority (see {{fig-twoca}}, where the voucher-request has been signed by "Registrar" its signing structure includes two additional CA certificates:
+For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the voucher-request has been signed by "Registrar", its signing structure includes two additional CA certificates:
 
 ~~~~
 INSERT_TEXT_FROM_FILE two-ca-chain.txt END
 ~~~~
-{: #fig-twoca title='Two Level PKI'}
+{: #fig-twoca title='Two-Level CA PKI'}
 
-When the Registrar is using a COSE-signed constrained format voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}},
+When the Registrar is using a COSE-signed constrained voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}},
 would carry all the certificates of the chain in an "x5bag" or "x5chain" attribute placed in the unprotected header.
 
 ## MASA Pinning Policy {#masa-pinning-policy}
 
-The MASA, having assembled and verified the chain in the signing structure, will now need to select a certificate to pin in the voucher in case there are multiple available.
+The MASA, having assembled and verified the chain in the signing structure of the voucher request, will now need to select a certificate to pin in the voucher in case there are multiple available.
 (For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.)
 The BRSKI policy for pinning by the MASA as described in Section 5.5.2 of {{I-D.ietf-anima-bootstrapping-keyinfra}} leaves much flexibility to the manufacturer. The present
-document adds the following rules to the MASA pinning policy to reduce the newtwork load:
+document adds the following rules to the MASA pinning policy to reduce the network load:
 
 1. for a voucher containing a nonce, it SHOULD select the most specific (lowest-level) CA certificate in the chain.
 2. for a nonceless voucher, it SHOULD select the least-specific (highest-level) CA certificate in the chain that is allowed under the MASA's policy for this specific domain.
@@ -369,15 +374,15 @@ document adds the following rules to the MASA pinning policy to reduce the newtw
 The rationale for 1. is that in case of a voucher with nonce, the voucher is valid only in scope of the present DTLS connection between Pledge and Registrar anyway, so it would have no
 benefit to pin a higher-level CA. By pinning the most specific CA the constrained Pledge can validate its DTLS connection using less crypto operations. The
 rationale for pinning a CA instead of the Registrar's End-Entity certificate directly is the following benefit on constrained networks: the pinned certificate in the voucher
-can in common cases be re-used as a Domain CA trust anchor during the EST enrollment and during the operational phase that follows after EST enrollment, as explained elsewhere in this document.
+can in common cases be re-used as a Domain CA trust anchor during the EST enrollment and during the operational phase that follows after EST enrollment, as explained in {{brski-extensions-pledge}}.
 
 The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of {{I-D.ietf-anima-bootstrapping-keyinfra}}).
 
 Using the previous example of a domain with a two-level certification authority, the most specific CA ("Sub-CA") is the identity that is pinned by MASA in a nonced voucher.
-A Registrar that wished to have only the Registrar's End-Entity certificate pinned would omit the "priv-CA" and "Sub-CA" certificates from the voucher-request.
+A Registrar that wished to have only the Registrar's End-Entity certificate pinned would omit the "domain CA" and "Sub-CA" certificates from the voucher-request.
 
 In case of a nonceless voucher, the MASA would depending on trust level pin only "Registrar" certificate (low trust in customer), or the "Sub-CA" certificate (in case of
-medium trust, implying that any Registrar of that sub-domain is acceptable), or even the "priv-CA" certificate (in case of high trust in the customer, and possibly a pre-agreed need of the
+medium trust, implying that any Registrar of that sub-domain is acceptable), or even the "domain CA" certificate (in case of high trust in the customer, and possibly a pre-agreed need of the
 customer to obtain flexible long-lived vouchers).
 
 ## Pinning of Raw Public Keys {#pinned-with-rpk}
@@ -385,30 +390,29 @@ customer to obtain flexible long-lived vouchers).
 Specifically for constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of an X.509 certificate.
 If an RPK is pinned it MUST be the RPK of the Registrar.
 
-~~~~
-INSERT_TEXT_FROM_FILE pinning-options.txt END
-~~~~
-{: #fig-pinning title='Raw Public Key pinning'}
-
 When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
 or "pinned-domain-pubk-sha256" field of a voucher.
-This is described in more detail in the YANG definition for the constrained voucher. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
+This is described in more detail in {{yang-voucher}}. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
 another method for certificate-less enrollment and the Registrar has to support this method also.
 It is possible that the Pledge will not enroll, but instead only a network join operation will occur, such as described in {{!I-D.ietf-6tisch-minimal-security}}.
 How the Pledge discovers this method and details of the enrollment method are out of scope of this document.
 
 When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate.
-That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain.
-However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA SHOULD pin the RPK (RPK3 in figure {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
+That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain as specified in {{masa-pinning-policy}}.
+However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA SHOULD pin the RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
 
-To Be Completed further (TBD): Note, the above paragraphs are duplicated from the section {{survey}} so we may have to resolve this duplication.
+~~~~
+INSERT_TEXT_FROM_FILE pinning-options.txt END
+~~~~
+{: #fig-pinning title='Raw Public Key pinning'}
 
 <!-- ******************************************************************** -->
 
 # Artifacts
 
-This section describes the abstract (tree) definition as explained
-in {{I-D.ietf-netmod-yang-tree-diagrams}} first.  This provides a high-level
+This section describes for both the voucher request and
+the voucher first the abstract (tree) definition as explained
+in {{I-D.ietf-netmod-yang-tree-diagrams}}.  This provides a high-level
 view of the contents of each artifact.
 
 Then the assigned SID values are presented. These have been assigned using
@@ -425,7 +429,7 @@ proximity-registrar-cert, and prior-signed-voucher-request.
 
 prior-signed-voucher-request is only used between the Registrar and the MASA.
 proximity-registrar-pubk or proximity-registrar-pubk-sha256 optionally replaces proximity-registrar-cert
-for the extremely constrained cases.
+for the most constrained cases where RPK is used by the Pledge.
 
 INSERT_FIG_FROM_FILE ietf-constrained-voucher-request-tree.txt END
 
@@ -433,9 +437,9 @@ INSERT_FIG_FROM_FILE ietf-constrained-voucher-request-tree.txt END
 
 INSERT_FIG_FROM_FILE ietf-constrained-voucher-request-sid.txt END
 
-### YANG Module
+### YANG Module {#yang-voucher-request}
 
-In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attribute. Two attributes of the voucher are "refined" to be optional.
+In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attributes. Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
 
@@ -464,9 +468,9 @@ INSERT_FIG_FROM_FILE ietf-constrained-voucher-tree.txt END
 INSERT_FIG_FROM_FILE ietf-constrained-voucher-sid.txt END
 
 
-### YANG Module
+### YANG Module {#yang-voucher}
 
-In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attribute.
+In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attributes.
 Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-constrained-voucher@DATE.yang END
@@ -484,44 +488,45 @@ INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 The COSE-Sign1 structure is discussed in section 4.2 of {{I-D.ietf-cose-rfc8152bis-struct}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
 It is used when only one signature is used on the body.
-Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is compulsory.
+Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is REQUIRED.
+Support for EdDSA is encouraged. [TBD EDNOTE: Expand and add a reference why. ]
 
-The supported COSE-sign1 object stucture is shown in {{fig-cose}}.
-Support for EdDSA is encouraged. [EDNOTE: Expand and add a reference why. ]
+An example of the supported COSE-sign1 object structure is shown in {{fig-cose}}.
 
 ~~~~
 COSE_Sign1(
   [
     h'A101382E',        # { "alg": EC256K1 }
     {
-      “kid” : h'789'  # hash256(public key)
+      "kid" : h'7890....1234'  # hash256(public key)
     },
-    h'123', #voucher-request binary content
-    h'456', #voucher-request binary public signature
+    h'1234....5678', #voucher-request binary content
+    h'4567....1234', #voucher-request binary public signature
   ]
 )
 ~~~~
-{: #fig-cose title='cose-sign1 example' align="left"}
+{: #fig-cose title='cose-sign1 example in CBOR diagnostic notation' align="left"}
 
 The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}.
-The value of the "kid" parameter is an example value.
-Usually a hash of the public key is used to idientify the public key.
+The value of the key identifier "kid" parameter is an example value.
+Usually a hash of the public key is used to identify the public key. The choice of key identifier method is 
+vendor-specific.
 The public key and its hash are derived from the relevant certificate (Pledge, Registrar or MASA certificate).
+[TBD EDNOTE: how can MASA know which kid method the Registrar has used/supports? Does it matter?]
 
 In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
 
 # Design Considerations
 
-The design considerations for the CBOR encoding of vouchers are much the same as for {{RFC8366}}.
-
-One key difference is that the names of the leaves in the YANG does not have a material effect on the size of the resulting CBOR, as the SID translation process assigns integers to the names.
+The design considerations for the CBOR encoding of vouchers are much the same as for JSON vouchers in {{RFC8366}}.
+One key difference is that the names of the leaves in the YANG definition do not affect the size of the resulting CBOR, as the SID translation process assigns integers to the names.
 
 Any POST request to the Registrar with resource /vs or /es returns a 2.04 Changed response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.04) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.04) response in a separate CoAP message.
 
 # Raw Public Key Use Considerations {#rpk-considerations}
 
-This section explains changes that can be done to reduce how many bytes that are sent as part of the certificates.
-The use of a raw public key in the pinning process can significantly reduce the number of bytes and round trips, but it comes with a few significant operational limitations.
+This section explains techniques to reduce the number of bytes that are sent over the wire during the BRSKI bootstrap.
+The use of a raw public key (RPK) in the pinning process can significantly reduce the number of bytes and round trips, but it comes with a few significant operational limitations.
 
 ## The Registrar Trust Anchor
 
@@ -529,34 +534,35 @@ When the Pledge first connects to the Registrar, the connection to the Registrar
 The Registrar provides its public key in a TLSServerCertificate, and the Pledge uses that to validate that integrity of the (D)TLS connection, but it does not validate the identity of
 the provided certificate.
 
-As the TLSServer Certificate object is never verified directly by the pledge, sending it can be considered superfluous.
+As the TLSServerCertificate object is never verified directly by the pledge, sending it can be considered superfluous.
 Instead of using a (TLSServer)Certificate of type X509 (see section 4.4.2 of {{RFC8446}}),
 a RawPublicKey object is used.
 
-A Registrar operating in a mixed environment can determine whether to send a Certificate or a Raw Public key is determined by the pledge including the server\_certificate\_type of RawPublicKey.
+A Registrar operating in a mixed environment can determine whether to send a Certificate or a Raw Public key: this is determined by the pledge including the server\_certificate\_type of RawPublicKey.
 This is shown in section 5 of {{RFC7250}}.
 
-The Pledge continues to send a client\_certificate\_type of X509.
+The Pledge continues to send a client\_certificate\_type of X509, so that the Registrar can properly identify the pledge and distill the MASA URI information from its certificate.
 
-## The Voucher Request
+## The Pledge Voucher Request
 
-The Pledge puts the Registrar's public key into the proximity-registrar-pubk
-(PRSPKI) field of the voucher-request.
-(The proximity-registrar-pubk-sha256 can also be used if the 32-bytes of hash turned out to be smaller than a typical ECDSA key.)
+The Pledge puts the Registrar's public key into the proximity-registrar-pubk 
+field of the voucher-request.
+(The proximity-registrar-pubk-sha256 can also be used if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.)
 
 As the format of the pubk field is identical to the TLS Certificate RawPublicKey, no manipulation at all is needed to insert this into a voucher-request.
 
-## The Voucher Reply
+## The Voucher Response
 
-A returned voucher will have a pinned-domain-subk field with the identical key as was found in the proximity field above, as well as in the TLS connection.
-Validation of this is what takes the connection out of the provisional state (see {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.6.2).
+A returned voucher will have a pinned-domain-subk field with the identical key as was found in the proximity-registrar-pubk field above, as well as in the TLS connection.
+Validation of this key by the pledge is what takes the DTLS connection out of the provisional state (see {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.6.2).
 
 The voucher needs to be validated first.
 The Pledge needs to have a public key to validate the signature from the MASA on the voucher.
 
-The MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} section 2.3) , then a certificate chain may need to be included with the voucher in order that the pledge is able to validate the signature.
-In CMS signed artifacts, the CMS structure has an place for such certificates.
-In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used.
+In certain cases, the MASA's public key counterpart of the (private) signing key is already installed in the Pledge at manufacturing time.
+In other cases, if the MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} Section 2.3), then a certificate chain may need to be included with the voucher in order for the pledge to validate the signature.
+In CMS signed artifacts, the CMS structure has a place for such certificates.
+In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used for this.
 
 # Security Considerations
 
@@ -576,13 +582,12 @@ TBD.
 
 ## Resource Type Registry
 
-Additions to the sub-registry "CoAP Resource Type", within the "CoRE parameters" registry are specified below.
-These can be registered  either in the Expert Review range (0-255) or IETF Review range (256-9999).
+Additions to the sub-registry "Resource Type Link Target Attribute Values", within the "CoRE parameters" IANA registry are specified below.
 
-     ace.rt.rv needs registration with IANA
-     ace.rt.vs needs registration with IANA
-     ace.rt.es needs registration with IANA
-     ace.rt.ra needs registration with IANA
+     brski    needs registration with IANA
+     brski.rv needs registration with IANA
+     brski.vs needs registration with IANA
+     brski.es needs registration with IANA
 
 ## The IETF XML Registry
 
@@ -624,11 +629,11 @@ This document registers two YANG modules in the YANG Module Names registry {{RFC
 
 Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early Allocation.
 
-## Media-Type Registry
+## Media Types Registry
 
-This section registers the the 'application/voucher-cose+cbor' in the "Media Types" registry.
-These media types are used to indicate that the content is a CBOR voucher either signed with
-a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
+This section registers the 'application/voucher-cose+cbor' in the IANA "Media Types" registry.
+This media type is used to indicate that the content is a CBOR voucher or voucher request 
+signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
 
 ### application/voucher-cose+cbor
 
@@ -712,7 +717,7 @@ Michel Veillette did extensive work on pyang to extend it to support the SID all
 
 --- back
 
-#Library support for BRSKI {libsup}
+#Library support for BRSKI {{libsup}}
 
 For the implementation of BRSKI, the use of a software library to manipulate certificates and use crypto algorithms is often beneficial. Two C-based examples are OPENSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
 
@@ -776,7 +781,7 @@ from openssl's apps/verify.c
 
 ## wolfSSL
 
-To be added.
+To be added (TBD).
 
 
 #Constrained BRSKI-EST messages
