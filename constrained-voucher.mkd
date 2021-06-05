@@ -30,8 +30,8 @@ author:
 
 - ins: P. Kampanakis
   name: Panos Kampanakis
-  org: AWS
-  email: kpanos@amazon.com
+  org: Cisco Systems
+  email: pkampana@cisco.com
 
 - ins: E. Dijk
   name: Esko Dijk
