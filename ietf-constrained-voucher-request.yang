@@ -47,7 +47,7 @@ module ietf-constrained-voucher-request {
     In particular, it assumes that nonce-ful operation is
     always required, that expiration dates are rather weak, as no
     clocks can be assumed, and that the Registrar is identified
-    by either a pinned Raw Public Key of the Registrar, or by a 
+    by either a pinned Raw Public Key of the Registrar, or by a
     pinned X.509 certificate of the Registrar or domain CA.
 
     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
@@ -100,7 +100,7 @@ module ietf-constrained-voucher-request {
              The EdDSA algorithm as specified in
              draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
              Support for the DSA algorithm is not recommended.
-             Support for the RSA algorithm is a MAY, but due to 
+             Support for the RSA algorithm is a MAY, but due to
              size is discouraged.";
         }
 
@@ -108,7 +108,7 @@ module ietf-constrained-voucher-request {
           type binary;
           description
             "The proximity-registrar-pubk-sha256
-             is an alternative to both 
+             is an alternative to both
              proximity-registrar-pubk and pinned-domain-cert.
              In many cases the public key of the domain has already
              been transmitted during the key agreement protocol,
@@ -119,8 +119,8 @@ module ietf-constrained-voucher-request {
              public key, but is only a minor savings compared to
              a 256-bit ECDSA public-key.
              Algorithm agility is provided by extensions to this
-             specification which may define a new leaf for another hash 
-             type.";
+             specification which may define a new leaf for another
+             hash type.";
         }
 
         leaf proximity-registrar-cert {
@@ -133,8 +133,8 @@ module ietf-constrained-voucher-request {
 
              The first certificate in the Registrar TLS server
              certificate_list sequence  (see [RFC5246]) presented by
-             the Registrar to the Pledge. This field or one of its 
-             alternatives MUST be populated in a 
+             the Registrar to the Pledge. This field or one of its
+             alternatives MUST be populated in a
              Pledge's voucher request if the proximity assertion is
              populated.";
         }
