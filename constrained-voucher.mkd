@@ -731,40 +731,7 @@ A libary can be used to construct a (D)TLS connection. It is useful to realize t
 
 from openssl's apps/verify.c
 
-~~~~
-    X509 *x = NULL;
-    int i = 0, ret = 0;
-    X509_STORE_CTX *csc;
-    STACK_OF(X509) *chain = NULL;
-    int num_untrusted;
-
-    x = load_cert(file, "certificate file");
-    if (x == NULL)
-        goto end;
-
-    csc = X509_STORE_CTX_new();
-    if (csc == NULL) {
-        BIO_printf(bio_err, "error %s: X.509 store context allocation failed\n",
-                   (file == NULL) ? "stdin" : file);
-        goto end;
-    }
-
-    X509_STORE_set_flags(ctx, vflags);
-    if (!X509_STORE_CTX_init(csc, ctx, x, uchain)) {
-        X509_STORE_CTX_free(csc);
-        BIO_printf(bio_err,
-                   "error %s: X.509 store context initialization failed\n",
-                   (file == NULL) ? "stdin" : file);
-        goto end;
-    }
-    if (tchain != NULL)
-        X509_STORE_CTX_set0_trusted_stack(csc, tchain);
-    if (crls != NULL)
-        X509_STORE_CTX_set0_crls(csc, crls);
-
-    i = X509_verify_cert(csc);
-    X509_STORE_CTX_free(csc);
-~~~~
+INSERT_CODE_FROM_FILE examples/openssl-verify.c END
 
 
 ## mbedTLS
@@ -935,11 +902,11 @@ MASA about its proximity to the specific Registrar.
 
 The payload signed_request_voucher is shown as hexadecimal dump (with lf added):
 
-INSERT_FIG_FROM_FILE examples/pledge-to-regis.txt END
+INSERT_CODE_FROM_FILE examples/pledge-to-regis.txt END
 
 The representiation of signed_voucher_request in CBOR diagnostic format is:
 
-INSERT_FIG_FROM_FILE examples/pledge-to-regisdiag.txt END
+INSERT_CODE_FROM_FILE examples/pledge-to-regisdiag.txt END
 
 
 ## COSE signed voucher request from Registrar to MASA
@@ -961,11 +928,11 @@ request from the Pledge to JRC.
 
 The payload signed_masa_voucher_request is shown as hexadecimal dump (with lf added):
 
-INSERT_FIG_FROM_FILE examples/regis-to-MASA.txt END
+INSERT_CODE_FROM_FILE examples/regis-to-MASA.txt END
 
 The representiation of signed_masa_voucher_request in CBOR diagnostic format is:
 
-INSERT_FIG_FROM_FILE examples/regis-to-MASAdiag.txt END
+INSERT_CODE_FROM_FILE examples/regis-to-MASAdiag.txt END
 
 ## COSE signed voucher from MASA to Pledge via Registrar
 
