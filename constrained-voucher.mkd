@@ -126,7 +126,7 @@ This COSE-signed CBOR-encoded voucher can be transported using secured CoAP or H
 The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC, or DTLS (CoAPS). The HTTP connection
 (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
-This document specifies a constrained voucher-request artifact based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}}, and 
+This document specifies a constrained voucher-request artifact based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}}, and
 voucher(-request) transport over CoAP based on Section 3 of {{I-D.ietf-anima-bootstrapping-keyinfra}} and on {{I-D.ietf-ace-coap-est}}.
 
 The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
@@ -221,7 +221,7 @@ EST-coaps short path names. Similarly, {{est-uri}} provides the mapping from the
 | /enrollstatus | /es  |
 {: #est-uri title='BRSKI URI paths mapping to constrained BRSKI URI paths'}
 
-Note that /requestvoucher indicated above occurs between the Pledge and Registrar (in scope of the BRSKI-EST protocol), but it also occurs between Registrar and MASA. However,  
+Note that /requestvoucher indicated above occurs between the Pledge and Registrar (in scope of the BRSKI-EST protocol), but it also occurs between Registrar and MASA. However,
 as described in {{brski-est}}, this section and above table addresses only the BRSKI-EST protocol.
 
 Pledges that wish to discover the available BRSKI bootstrap options/formats, or reduce the size of the CoAP headers by eliminating the "/.well-known/brski" path, can do a discovery operation using {{RFC6690}} Section 4 by sending a discovery query to the Registrar.
@@ -248,7 +248,7 @@ In particular, a Pledge MAY use the longer and shorter URLs in combination.
 When responding to a discovery request for BRSKI resources, the server MAY in addition return
 the full resource paths and the content types which are supported at those end-points as shown in above example.
 This is useful when multiple content types are specified for a particular resource on the server.
-The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources. 
+The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources.
 (So, a query for rt=brski, without the wildcard character.)
 
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
@@ -263,9 +263,9 @@ The MASA needs to support all formats that the Pledge, produced by that manufact
 
 ## Extensions to BRSKI {#brski-extensions}
 
-A Pledge that only supports the BRSKI bootstrap method and already knows the IP address and port of a Registrar or Join Proxy to use SHOULD NOT use discovery. 
-In such case it is more efficient to just try its supported bootstrap method (e.g. /rv) via the well-known BRSKI resource on the known address and port. This avoids 
-the Pledge having to unnecessarily implement CoRE Link Format parsing. The method via which the Pledge learns the address/port of a Registrar or Join Proxy to use 
+A Pledge that only supports the BRSKI bootstrap method and already knows the IP address and port of a Registrar or Join Proxy to use SHOULD NOT use discovery.
+In such case it is more efficient to just try its supported bootstrap method (e.g. /rv) via the well-known BRSKI resource on the known address and port. This avoids
+the Pledge having to unnecessarily implement CoRE Link Format parsing. The method via which the Pledge learns the address/port of a Registrar or Join Proxy to use
 is out of scope of this document.
 
 A Registrar SHOULD host any discoverable BRSKI resources on the same (UDP) server port that the Pledge's initial DTLS connection is using.
@@ -274,7 +274,7 @@ This avoids the overhead of the Pledge having to reconnect using DTLS, in order 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
 A Pledge that already is DTLS-connected to either a Join Proxy or Registrar, and which only supports the EST-coaps enrollment method, SHOULD NOT use discovery for EST-coaps resources.
-This is because it is more efficient to just try its supported enrollment method (e.g. /sen) via the well-known EST resource on the current DTLS connection. 
+This is because it is more efficient to just try its supported enrollment method (e.g. /sen) via the well-known EST resource on the current DTLS connection.
 This avoids an additional round-trip of packets and avoids the Pledge having to unnecessarily implement CoRE Link Format parsing.
 
 A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS initial connection is using.
@@ -291,7 +291,7 @@ The Pledge can receive such information via the voucher (encoded in a vendor-spe
 
 A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic and code size:
 
-1. if the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words, 
+1. if the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words,
 it provisionally accepts this CA certificate as if it were the result of "CA certificates request" (/crts) to the Registrar.
 
 2. Using this CA certificate as trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID.
@@ -309,7 +309,7 @@ it provisionally accepts this CA certificate as if it were the result of "CA cer
 ### Registrar Extensions
 
 The Content-Format 50 MAY be supported and 60 MUST be supported by the Registrar for the /vs and /es resources.
-Content-Format TBD3 MUST be supported by the Registrar for the /rv resource. 
+Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 
 When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 ("application/pkix-cert") it SHOULD return only the
 single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request. The only exception case
@@ -320,8 +320,8 @@ that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=c
 # BRSKI-MASA Protocol {#brski-masa}
 
 {{I-D.ietf-anima-bootstrapping-keyinfra}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
-This document does not change that. The Registrar MAY use the new format "application/voucher-cose+cbor" in its voucher request to MASA, or the existing BRSKI 
-format "application/voucher-cms+json" defined by {{I-D.ietf-anima-bootstrapping-keyinfra}}. The MASA MUST support both formats. The Registrar indicates the voucher 
+This document does not change that. The Registrar MAY use the new format "application/voucher-cose+cbor" in its voucher request to MASA, or the existing BRSKI
+format "application/voucher-cms+json" defined by {{I-D.ietf-anima-bootstrapping-keyinfra}}. The MASA MUST support both formats. The Registrar indicates the voucher
 format it wants to receive from MASA using the HTTP Accept header.
 
 At the moment of writing the creation of coaps based MASAs is deemed unrealistic.
@@ -509,7 +509,7 @@ COSE_Sign1(
 
 The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}.
 The value of the key identifier "kid" parameter is an example value.
-Usually a hash of the public key is used to identify the public key. The choice of key identifier method is 
+Usually a hash of the public key is used to identify the public key. The choice of key identifier method is
 vendor-specific.
 The public key and its hash are derived from the relevant certificate (Pledge, Registrar or MASA certificate).
 [TBD EDNOTE: how can MASA know which kid method the Registrar has used/supports? Does it matter?]
@@ -545,7 +545,7 @@ The Pledge continues to send a client\_certificate\_type of X509, so that the Re
 
 ## The Pledge Voucher Request
 
-The Pledge puts the Registrar's public key into the proximity-registrar-pubk 
+The Pledge puts the Registrar's public key into the proximity-registrar-pubk
 field of the voucher-request.
 (The proximity-registrar-pubk-sha256 can also be used if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.)
 
@@ -632,7 +632,7 @@ Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early 
 ## Media Types Registry
 
 This section registers the 'application/voucher-cose+cbor' in the IANA "Media Types" registry.
-This media type is used to indicate that the content is a CBOR voucher or voucher request 
+This media type is used to indicate that the content is a CBOR voucher or voucher request
 signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
 
 ### application/voucher-cose+cbor
