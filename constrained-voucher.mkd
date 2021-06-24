@@ -191,7 +191,7 @@ The constrained BRSKI-EST protocol described in this section is between the Pled
 
 ## Discovery, URIs and Content Formats
 
-Saving header space is important and this is the reason that the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
+To keep the protocol messages small the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
 
 The EST-coaps server URIs differ from the EST URIs by replacing the scheme https by coaps and by specifying shorter resource path names. Below are some examples;
 the first two using a discovered short path name and the last one using the well-known URI of EST which requires no discovery.
