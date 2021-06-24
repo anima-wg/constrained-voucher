@@ -353,8 +353,8 @@ The recommendation made there is for the Registrar to include only certificates 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain.
 For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the voucher-request has been signed by "Registrar", its signing structure includes two additional CA certificates:
 
-~~~~
-INSERT_TEXT_FROM_FILE two-ca-chain.txt END
+~~~~ goat
+{::include two-ca-chain.txt}
 ~~~~
 {: #fig-twoca title='Two-Level CA PKI'}
 
@@ -401,8 +401,8 @@ When the Pledge is known by MASA to support PKIX format certificates, the "pinne
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain as specified in {{masa-pinning-policy}}.
 However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA SHOULD pin the RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
 
-~~~~
-INSERT_TEXT_FROM_FILE pinning-options.txt END
+~~~~ goat
+{::include pinning-options.txt}
 ~~~~
 {: #fig-pinning title='Raw Public Key pinning'}
 
