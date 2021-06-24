@@ -119,7 +119,7 @@ The use of Raw Public Keys instead of X.509 certificates for security operations
 
 Secure enrollment of new nodes into constrained networks with constrained nodes
 presents unique challenges. There are network bandwidth and code size issues to contend with.
-A solution for autonomous enrollment such as {{-BRSKI}} may be too large in terms of
+A solution for autonomous enrollment such as BRSKI {{-BRSKI}} may be too large in terms of
 code size or bandwidth required.
 
 Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained version of BRSKI {{RFC8995}} that makes use of the constrained CoAP-based version of EST, EST-coaps {{I-D.ietf-ace-coap-est}} rather than EST over HTTPS {{RFC7030}}.
@@ -127,8 +127,8 @@ Therefore, this document defines a constrained version of the voucher artifact {
 While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS,
 this document defines a new voucher serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
 This COSE-signed CBOR-encoded voucher can be transported using secured CoAP or HTTP.
-The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC, or DTLS (CoAPS). The HTTP connection
-(between Registrar and MASA) is to be protected using TLS (HTTPS).
+The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC or DTLS (CoAPS).
+The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
 This document specifies a constrained voucher-request artifact based on Section 3 of {{-BRSKI}}, and
 voucher(-request) transport over CoAP based on Section 3 of {{-BRSKI}} and on {{I-D.ietf-ace-coap-est}}.
@@ -318,7 +318,8 @@ Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 ("application/pkix-cert") it SHOULD return only the
 single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request. The only exception case
 is when the Registrar is configured to not support a request for a single CA certificate for operational or security reasons, e.g. because every device
-enrolled into the domain needs to use at least multiple CAs. In such exception case the Registrar returns the CoAP response 4.06 Not Acceptable to indicate
+enrolled into the domain needs to use multiple CAs.
+In such exception case the Registrar returns the CoAP response 4.06 Not Acceptable to indicate
 that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=certs-only" which supports multiple certificates is available.
 
 # BRSKI-MASA Protocol {#brski-masa}
@@ -346,7 +347,7 @@ Some consideration was made to specify CoAP support for consistency, but:
 
 # Pinning in Voucher Artifacts {#pinning}
 
-The voucher is a statement from the MASA to the Pledge indicating the  owner of the Pledge.
+The voucher is a statement by the MASA for use by the Pledge that provide the identity of the Pledge's owner.
 This section describes how the owner's identity is determined and how it is encoded within the voucher.
 
 ## Registrar Identity Selection and Encoding
@@ -368,7 +369,7 @@ The Registrar MUST place all all the certificates for the chain in an "x5bag" at
 
 ## MASA Pinning Policy {#masa-pinning-policy}
 
-The MASA, having assembled and verified the chain in the signing structure of the voucher request, will now need to select a certificate to pin in the voucher in case there are multiple available.
+The MASA, having assembled and verified the chain in the signing structure of the voucher request, will now need to select a certificate to pin.
 (For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.)
 The BRSKI policy for pinning by the MASA as described in Section 5.5.2 of {{-BRSKI}} leaves much flexibility to the manufacturer. The present
 document adds the following rules to the MASA pinning policy to reduce the network load:
@@ -398,7 +399,7 @@ If an RPK is pinned it MUST be the RPK of the Registrar.
 When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
 or "pinned-domain-pubk-sha256" field of a voucher.
 This is described in more detail in {{yang-voucher}}. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
-another method for certificate-less enrollment and the Registrar has to support this method also.
+another method for enrollment without certificates and the Registrar has to support this method also.
 It is possible that the Pledge will not enroll, but instead only a network join operation will occur, such as described in {{!I-D.ietf-6tisch-minimal-security}}.
 How the Pledge discovers this method and details of the enrollment method are out of scope of this document.
 
