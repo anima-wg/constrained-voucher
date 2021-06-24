@@ -358,8 +358,9 @@ For instance, for a domain with a two-level certification authority (see {{fig-t
 ~~~~
 {: #fig-twoca title='Two-Level CA PKI'}
 
-When the Registrar is using a COSE-signed constrained voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header, and according to {{I-D.ietf-cose-x509}},
-would carry all the certificates of the chain in an "x5bag" or "x5chain" attribute placed in the unprotected header.
+When the Registrar is using a COSE-signed constrained voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header.
+The Registrar MUST place all all the certificates for the chain in an "x5bag" attribute in the unprotected header {{I-D.ietf-cose-x509}}.
+
 
 ## MASA Pinning Policy {#masa-pinning-policy}
 
