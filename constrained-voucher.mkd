@@ -254,7 +254,7 @@ The server responds with only the root path for the BRSKI resource (rt=brski, re
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
 Note that Content-Format TBD3 ("application/voucher-cose+cbor") is defined in this document.
 
-The Content-Format 50 ("application/json") MAY be supported and 60 ("application/cbor") MUST be supported by the Registrar for the /vs and /es resources.
+The Content-Format 50 ("application/json") MAY be supported and Content-Format 60 ("application/cbor") MUST be supported by the Registrar for the /vs and /es resources.
 Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least TBD3 is supported.
 
