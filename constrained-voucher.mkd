@@ -364,7 +364,7 @@ For instance, for a domain with a two-level certification authority (see {{fig-t
 {: #fig-twoca title='Two-Level CA PKI'}
 
 When the Registrar is using a COSE-signed constrained voucher request towards MASA, instead of a regular CMS-signed voucher request, the COSE_Sign1 object contains a protected and an unprotected header.
-The Registrar MUST place all all the certificates for the chain in an "x5bag" attribute in the unprotected header {{I-D.ietf-cose-x509}}.
+The Registrar MUST place all the certificates for the chain in an "x5bag" attribute in the unprotected header {{I-D.ietf-cose-x509}}.
 
 
 ## MASA Pinning Policy {#masa-pinning-policy}
@@ -953,4 +953,3 @@ INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
 The representiation of signed_voucher in CBOR diagnostic format is:
 
 INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END
-
