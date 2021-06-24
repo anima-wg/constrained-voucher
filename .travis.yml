@@ -1,8 +1,13 @@
 dist: trusty
 sudo: false
-language: python
-python:
-  - "3.6"
+
+
+jobs:
+  include:
+    - language: python
+      python: 3.6
+    - language: go
+      go; 1.x
 
 before_install:
   - "pip install xml2rfc pyang"
