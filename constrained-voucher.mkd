@@ -778,13 +778,18 @@ The corresponding CoAP header fields are shown below.
      Option Delta = 0x0   (option nr = 11)
      Option Length = 0x2
      Option Value = "es"
+   Option  (Content-Format)
+     Option Delta = 0x1   (option nr = 12)
+     Option Length = 0x1
+     Option Value = 60    (application/cbor)
   Payload Marker = 0xFF
   Payload = <binary CBOR enrollstatus document>
 ~~~
 
 The Uri-Host and Uri-Port Options are omitted because they coincide with the transport protocol destination address and port respectively.
+TBD - Show the binary CBOR payload of this example.
 
-A 2.04 Changed response will then be:
+A 2.04 Changed response from the Registrar will then be:
 
 ~~~
    2.04 Changed
@@ -798,44 +803,32 @@ With CoAP fields:
    Code = 0x44 (2.04 Changed)
 ~~~
 
-TBD - remove this payload or modify example to be the request payload of the POST. //  The binary payload is:
-
-~~~
-     A46776657273696F6E6131665374617475730166526561736F6E7822
-     496E666F726D61746976652068756D616E207265616461626C65206D
-     6573736167656e726561736F6E2D636F6E74657874
-     764164646974696F6E616C20696E666F726D6174696F6E
-~~~
-
-The binary payload disassembles to the above CBOR diagnostic code.
-
 ##voucher_status
 
 A coaps voucher_status message can be:
 
 ~~~~
    POST coaps://[2001:db8::2:1]:61616/b/vs
-~~~~
-
-A 2.04 Changed response will then be:
-
-TBD modify this example to let Pledge POST status to Registrar - direction change. Change 2.05 to 2.04.
-
-~~~~
-    2.05 Content (Content-Format: application/cbor)
-    Payload =
+     Content-Format: 60 (application/cbor)
+     Payload =
 INSERT_TEXT_FROM_FILE examples/voucher-status.hex END
 ~~~~
 
-The payload above is represented in hexadecimal.
+The request payload above is binary CBOR but represented here in hexadecimal for readability. Below is the equivalent CBOR diagnostic format.
 
 ~~~~
 INSERT_TEXT_FROM_FILE examples/voucher-statusdiag.txt END
 ~~~~
 
+A 2.04 Changed response without payload will then be sent by the Registrar back to the Pledge.
+
+~~~~
+   2.04 Changed
+~~~~
+
 # COSE examples {#cosesign}
 
-These examples are generated on a pie 4 and a PC running BASH. Keys and Certificates have been generated with openssl with the following shell script:
+These examples are generated on a Pi 4 and a PC running BASH. Keys and Certificates have been generated with openssl with the following shell script:
 
 INSERT_FIG_FROM_FILE examples/brski-cert.sh END
 

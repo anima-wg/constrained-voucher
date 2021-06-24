@@ -1,3 +1,4 @@
-{"version": "1", "Status": 1,
-"Reason": "Informative human readable message",
-"reason-context": "Additional information"}
+{"version": 1, "status": false,
+"reason": "Informative human-readable error message",
+"reason-context": { 0: "Additional information" } }
+
