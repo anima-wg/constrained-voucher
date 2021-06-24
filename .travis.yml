@@ -7,7 +7,8 @@ python:
 before_install:
   - "pip install xml2rfc pyang"
   - "gem install kramdown-rfc2629"
-  - "export PATH=$HOME/.local/bin:$PATH."
+  - "go get github.com/blampe/goat"
+  - "export PATH=$HOME/.local/bin:$HOME/.go/bin:$PATH."
 
 install:
   - "./install-pyang-sid-work"
