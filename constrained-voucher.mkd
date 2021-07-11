@@ -357,6 +357,7 @@ This section describes how the owner's identity is determined and how it is enco
 ## Registrar Identity Selection and Encoding
 
 Section 5.5 of {{BRSKI}} describes BRSKI policies for selection of the owner identity. It indicates some of the flexibility that is possible for the Registrar.
+
 The recommendation made there is for the Registrar to include only certificates in the voucher request (CMS) signing structure that participate in the certificate chain that is to be pinned.
 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain.
@@ -563,6 +564,7 @@ As the format of the pubk field is identical to the TLS Certificate RawPublicKey
 ## The Voucher Response
 
 A returned voucher will have a pinned-domain-subk field with the identical key as was found in the proximity-registrar-pubk field above, as well as in the TLS connection.
+
 Validation of this key by the pledge is what takes the DTLS connection out of the provisional state (see {{BRSKI}} section 5.6.2).
 
 The voucher needs to be validated first.
