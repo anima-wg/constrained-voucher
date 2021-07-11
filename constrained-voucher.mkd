@@ -57,7 +57,7 @@ normative:
   RFC3688:
   RFC6020:
   I-D.ietf-cose-rfc8152bis-struct:
-  RFC8995: BRSKI
+  BRSKI: RFC8995
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
