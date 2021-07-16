@@ -502,7 +502,7 @@ An example of the supported COSE-sign1 object structure is shown in {{fig-cose}}
 ~~~~
 COSE_Sign1(
   [
-    h'A101382E',        # { "alg": EC256K1 }
+    h'A101382E',        # { "alg": ES256K }
     {
       "kid" : h'7890....1234'  # hash256(public key)
     },
