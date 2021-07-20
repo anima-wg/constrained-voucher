@@ -673,7 +673,7 @@ either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
     Media type                    Encoding   ID  References
     ----------------------------  --------- ---- ----------
-    application/voucher-cose+cbor CBOR    TBD3  [This RFC]
+    application/voucher-cose+cbor           TBD3 [This RFC]
 
 
 # Acknowledgements
