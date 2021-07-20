@@ -646,24 +646,36 @@ signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
     Subtype name:  voucher-cose+cbor
     Required parameters:  none
     Optional parameters:  none
-    Encoding considerations:  binary
+    Encoding considerations:  binary (CBOR)
     Security considerations:  Security Considerations of THIS RFC.
     Interoperability considerations:  The format is designed to be
       broadly interoperable.
     Published specification:  THIS RFC.
     Applications that use this media type:  ANIMA, 6tisch, and other
       zero-touch onboarding systems
+   Fragment identifier considerations:  The syntax and semantics of
+      fragment identifiers specified for application/voucher-cose+cbor are
+      as specified for application/cbor.  (At publication of this
+      document, there is no fragment identification syntax defined for
+      application/cbor.)
     Additional information:
       Magic number(s):  None
       File extension(s):  .vch
       Macintosh file type code(s):  none
     Person & email address to contact for further information:  IETF
-      ANIMA WG
-    Intended usage:  LIMITED
+      ANIMA WG [^ouch]
+    Intended usage:  LIMITED [^ouch2]
     Restrictions on usage:  NONE
     Author:  ANIMA WG
     Change controller:  IETF
     Provisional registration? (standards tree only):  NO
+
+[^ouch]: That will need to be fixed so there is a contact point beyond
+    the time the ANIMA WG exists.  Please see RFC 8710 for an example.
+
+[^ouch2]: Is this just for an experiment then?
+    ("Intended usage: One of COMMON, LIMITED USE, or OBSOLETE.")
+
 
 ## CoAP Content-Format Registry
 
@@ -673,8 +685,7 @@ either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
     Media type                    Encoding   ID  References
     ----------------------------  --------- ---- ----------
-    application/voucher-cose+cbor CBOR    TBD3  [This RFC]
-
+    application/voucher-cose+cbor -         TBD3  [This RFC]
 
 # Acknowledgements
 
