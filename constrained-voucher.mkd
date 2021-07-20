@@ -422,8 +422,7 @@ in {{I-D.ietf-netmod-yang-tree-diagrams}}.  This provides a high-level
 view of the contents of each artifact.
 
 Then the assigned SID values are presented. These have been assigned using
-the rules in {{I-D.ietf-core-sid}}, with an allocation that was made
-via the http://comi.space service.
+the rules in {{I-D.ietf-core-sid}}.
 
 ## Voucher Request artifact
 
@@ -682,7 +681,7 @@ either in the Expert Review range (0-255) or IETF Review range (256-9999).
 We are very grateful to Jim Schaad for explaining COSE and CMS choices.
 Also thanks to Jim Schaad for correcting earlier version of the COSE Sign1 objects.
 
-Michel Veillette did extensive work on pyang to extend it to support the SID allocation process, and this document was among its first uses.
+Michel Veillette did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
 
 
 # Changelog
