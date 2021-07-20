@@ -646,15 +646,14 @@ signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
     Type name:  application
     Subtype name:  voucher-cose+cbor
     Required parameters:  none
-    Optional parameters:  cose-type
-    Encoding considerations:  COSE_Sign1 CBOR vouchers are COSE objects
-                              signed with one signer.
-    Security considerations:  See Security Considerations, Section
+    Optional parameters:  none
+    Encoding considerations:  binary
+    Security considerations:  Security Considerations of THIS RFC.
     Interoperability considerations:  The format is designed to be
       broadly interoperable.
     Published specification:  THIS RFC.
     Applications that use this media type:  ANIMA, 6tisch, and other
-      zero-touch imprinting systems
+      zero-touch onboarding systems
     Additional information:
       Magic number(s):  None
       File extension(s):  .vch
@@ -673,9 +672,9 @@ Additions to the sub-registry "CoAP Content-Formats", within the "CoRE
 Parameters" registry are needed for two media types. These can be registered
 either in the Expert Review range (0-255) or IETF Review range (256-9999).
 
-    Media type                    mime type    Encoding   ID  References
-    ----------------------------  -----------  --------- ---- ----------
-    application/voucher-cose+cbor "COSE-Sign1"   CBOR    TBD3  [This RFC]
+    Media type                    Encoding   ID  References
+    ----------------------------  --------- ---- ----------
+    application/voucher-cose+cbor CBOR    TBD3  [This RFC]
 
 
 # Acknowledgements
