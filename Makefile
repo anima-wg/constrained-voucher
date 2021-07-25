@@ -15,6 +15,7 @@ EXAMPLES+=examples/voucher-statusdiag.txt
 EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.b64
 EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.diag
 PYANG=./pyang.sh
+PYANGPATH=--path=../../anima/bootstrap/yang --path ${HOME}/.local/share/yang/modules/ietf
 
 # git clone this from https://github.com/mbj4668/pyang.git
 # then, cd pyang/plugins;
@@ -35,10 +36,10 @@ ${CWTDATE2}: ietf-constrained-voucher-request.yang
 	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-constrained-voucher-request.yang > ${CWTDATE2}
 
 ietf-constrained-voucher-tree.txt: ${CWTDATE1}
-	${PYANG} --path=../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE1} > ietf-constrained-voucher-tree.txt
+	${PYANG} ${PYANGPATH} -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE1} > ietf-constrained-voucher-tree.txt
 
 ietf-constrained-voucher-request-tree.txt: ${CWTDATE2}
-	${PYANG} --path=../../anima/bootstrap/yang -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-constrained-voucher-request-tree.txt
+	${PYANG} ${PYANGPATH} -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-constrained-voucher-request-tree.txt
 
 %.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-constrained-voucher-tree.txt ietf-constrained-voucher-request-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2} ${EXAMPLES}
 	kramdown-rfc2629 -3 ${DRAFT}.mkd | perl insert-figures >${DRAFT}.xml
@@ -57,19 +58,19 @@ submit: ${DRAFT}.xml
 # Base SID value for voucher: 2450
 ${CWTSIDLIST1}: ${CWTDATE1} ${CWTSIDDATE1}
 	mkdir -p yang
-	${PYANG} --path=../../anima/bootstrap/yang --sid-list --sid-update-file=${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-constrained-voucher-sid.txt
+	${PYANG} ${PYANGPATH} --sid-list --sid-update-file=${CWTSIDDATE1} ${CWTDATE1} | ./truncate-sid-table >ietf-constrained-voucher-sid.txt
 
 boot-sid1:
-	${PYANG} --path=../../anima/bootstrap/yang --sid-list --generate-sid-file 2450:50 ${CWTDATE1}
+	${PYANG} ${PYANGPATH} --sid-list --generate-sid-file 2450:50 ${CWTDATE1}
 
 boot-sid2:
-	${PYANG} --path=../../anima/bootstrap/yang --sid-list --generate-sid-file 2500:50 ${CWTDATE2}
+	${PYANG} ${PYANGPATH} --sid-list --generate-sid-file 2500:50 ${CWTDATE2}
 
 
 # Base SID value for voucher request: 2500
 ${CWTSIDLIST2}: ${CWTDATE2}  ${CWTSIDDATE2}
 	mkdir -p yang
-	${PYANG} --path=../../anima/bootstrap/yang --sid-list --sid-update-file=${CWTSIDDATE2} ${CWTDATE2} | ./truncate-sid-table >ietf-constrained-voucher-request-sid.txt
+	${PYANG} ${PYANGPATH} --sid-list --sid-update-file=${CWTSIDDATE2} ${CWTDATE2} | ./truncate-sid-table >ietf-constrained-voucher-request-sid.txt
 
 
 version:
