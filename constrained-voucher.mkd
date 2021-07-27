@@ -10,6 +10,7 @@ area: Internet
 wg: anima Working Group
 kw: Internet-Draft
 cat: std
+consensus: true
 
 pi:    # can use array (if all yes) or hash here
   toc: yes
@@ -44,7 +45,7 @@ contributor:
 
 normative:
 #  RFC2119:
-  RFC7049:
+  RFC8949:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
   RFC7250:
@@ -58,10 +59,12 @@ normative:
   RFC6020:
   I-D.ietf-cose-rfc8152bis-struct:
   BRSKI: RFC8995
+  RFC9031: minimal-security
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
   I-D.ietf-cose-x509:
+### Unused?  XXX
   ieee802-1AR:
     target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
     title: "IEEE 802.1AR Secure Device Identifier"
@@ -70,7 +73,8 @@ normative:
     date: 2009
 
 informative:
-  I-D.ietf-netmod-yang-tree-diagrams:
+  RFC8340: yang-tree
+# was  I-D.ietf-netmod-yang-tree-diagrams:
 #  pledge:
 #    title: "Dictionary.com Unabridged"
 #    target: "http://dictionary.reference.com/browse/pledge"
@@ -124,8 +128,8 @@ code size or bandwidth required.
 
 Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained version of {{BRSKI}} that makes use of the constrained CoAP-based version of EST, EST-coaps {{I-D.ietf-ace-coap-est}} rather than EST over HTTPS {{RFC7030}}.
 
-While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS,
-this document defines a new voucher serialization to CBOR ({{RFC7049}}) with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
+While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}},
+this document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
 This COSE-signed CBOR-encoded voucher can be transported using secured CoAP or HTTP.
 The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC or DTLS (CoAPS).
 The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
@@ -400,7 +404,7 @@ When the Pledge is known by MASA to support RPK but not X.509 certificates, the 
 or "pinned-domain-pubk-sha256" field of a voucher.
 This is described in more detail in {{yang-voucher}}. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
 another method for enrollment without certificates and the Registrar has to support this method also.
-It is possible that the Pledge will not enroll, but instead only a network join operation will occur, such as described in {{!I-D.ietf-6tisch-minimal-security}}.
+It is possible that the Pledge will not enroll, but instead only a network join operation will occur, such as described in {{RFC9031}}.
 How the Pledge discovers this method and details of the enrollment method are out of scope of this document.
 
 When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate.
@@ -418,7 +422,7 @@ However, if the Pledge is known to also support RPK pinning and the MASA intends
 
 This section describes for both the voucher request and
 the voucher first the abstract (tree) definition as explained
-in {{I-D.ietf-netmod-yang-tree-diagrams}}.  This provides a high-level
+in {{-yang-tree}}.  This provides a high-level
 view of the contents of each artifact.
 
 Then the assigned SID values are presented. These have been assigned using
