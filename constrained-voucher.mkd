@@ -633,12 +633,14 @@ This document registers two YANG modules in the YANG Module Names registry {{RFC
     ------------ ------ --------------------------- ------------
     Entry-point | Size | Module name               | RFC Number
     ------------ ------ --------------------------- ------------
-    2450          50     ietf-constrained-voucher    [ThisRFC]
-    2500          50     ietf-constrained-voucher    [ThisRFC}
-                                     -request
+    2450          50     ietf-voucher-constrained    [ThisRFC]
+    2500          50     ietf-voucher-request        [ThisRFC}
+                                     -constrained
     ----------- ------  --------------------------- ------------
 
 Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early Allocation.
+
+IANA: please update the names in the Registry to match these revised names, if they have not already  been revised.
 
 ## Media Types Registry
 
