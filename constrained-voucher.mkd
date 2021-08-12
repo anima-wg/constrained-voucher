@@ -245,6 +245,7 @@ A Registrar that processes a voucher request with an x5bag attribute MUST ignore
 
 A situation where the pledge MAY use the x5bag is for communications of certificate chains to the MASA.
 This would arise in some vendor specific situations involving outsourcing of MASA functionality, or rekey of IDevID certification authority.
+
 ## Discovery, URIs and Content Formats
 
 To keep the protocol messages small the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
