@@ -231,6 +231,16 @@ This consideration does not apply to the Registrar because:
 As per {{Section 3.6.1 of RFC7030}}, the Registrar certificate MUST have the Extended Key Usage (EKU) id-kp-cmcRA.
 This certificate is also used as a TLS Server Certificate, so it must also have the EKU id-kp-serverAuth.
 
+## TLS Client Certificates: IDevID authentication
+
+As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the Registrar using  TLS Client Certificate for authentication.
+
+Subsequently the pledge will send a raw voucher request.
+As explained below in {{registrar-identity}}, the "x5bag" may be used in the parboiled voucher request to communicate identity between registrar and MASA.
+
+The Pledge MUST NOT use the x5bag attribute in this way with the Registrar.
+A Registrar that processes a voucher request with an x5bag attribute MUST ignore it, and MUST use only the TLS Client Certificate extension for authentication.
+
 ## Discovery, URIs and Content Formats
 
 To keep the protocol messages small the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
@@ -420,7 +430,7 @@ In summary for typical Registrar use, where a single Registrar certificate is us
 The voucher is a statement by the MASA for use by the Pledge that provide the identity of the Pledge's owner.
 This section describes how the owner's identity is determined and how it is encoded within the voucher.
 
-## Registrar Identity Selection and Encoding
+## Registrar Identity Selection and Encoding {#registrar-identity}
 
 {{Section 5.5 of RFC8995}} describes BRSKI policies for selection of the owner identity. It indicates some of the flexibility that is possible for the Registrar.
 
