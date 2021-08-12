@@ -203,7 +203,7 @@ The constrained BRSKI-EST protocol described in this section is between the Pled
 ## Registrar and the Server Name Indicator (SNI)
 
 A DTLS connection is established between the pledge and the Registrar.
-As described in {{section 5 of RFC8995}} the pledge establishes a TLS connection to the Registrar.
+As described in {{section 5.1 of RFC8995}} the pledge establishes a TLS connection to the Registrar.
 This occurs via a variety of Join Proxy mechanisms described in {{joinproxy}}.
 Regardless of the mechanism, the DTLS connection should operate identically.
 
