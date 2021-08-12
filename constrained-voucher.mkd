@@ -365,7 +365,13 @@ that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=c
 
 {{BRSKI}} section 5.4 describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
 This document does not change that. The Registrar MAY use the new format "application/voucher-cose+cbor" in its voucher request to MASA, or the existing BRSKI
-format "application/voucher-cms+json" defined by {{BRSKI}}. The MASA MUST support both formats. The Registrar indicates the voucher
+format "application/voucher-cms+json" defined by {{BRSKI}}.
+
+The MASA only needs to support formats for which there are Pledges that use that format.
+
+The Registrar MUST use the same format of parboiled voucher-request as the Pledge's raw voucher-request.
+
+The Registrar indicates the voucher
 format it wants to receive from MASA using the HTTP Accept header.
 
 At the moment of writing the creation of coaps based MASAs is deemed unrealistic.
