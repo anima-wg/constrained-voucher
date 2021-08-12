@@ -200,6 +200,32 @@ The extensions are targeting low-resource networks with small packets.
 
 The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
 
+## Registrar and the Server Name Indicator (SNI)
+
+A DTLS connection is established between the pledge and the Registrar.
+As described in {{section 5 of RFC8995}} the pledge establishes a TLS connection to the Registrar.
+This occurs via a variety of Join Proxy mechanisms described in {{joinproxy}}.
+Regardless of the mechanism, the DTLS connection should operate identically.
+
+As the Registrar is discovered by IP address, and connected via the Join proxy, the name of the Registrar is not known to the Pledge.
+The Pledge will not know what the hostname for the Registrar is, so the pledge can not do RFC6125 DNS-ID validation on the Registrar's certificate.
+That is the purpose of the RFC8366 voucher.
+
+As the Pledge does not know the name of the Registrar, the Pledge cannot put any reasonable value into the {{RFC6066}} Server Name Indicator (SNI).
+The pledge SHOULD omit the SNI extension as per {{section 9.2 of RFC8446}}.
+
+In some cases, particularly when debugging and doing interoperability testing, a Pledge may be  given the hostname of a particular Registrar to connect to.
+Such a bypass of the discovery process may result in the Pledge taking a different path to DTLS connection, and may result in the SNI being inserted by a library.
+The Registrar MUST ignore any SNI seen.
+
+A primary motivation for making the SNI ubiquitous in the public web is because it allows for multi-tenant hosting of HTTPS sites on a single (scarce) IPv4 address.
+This consideration does not apply to the Registrar because:
+
+* it uses DTLS and CoAP, not HTTPS
+
+* it uses IPv6, often {{RFC4193}} Unique Local Address, which are plentiful
+
+* the port number number is discovered, so multiple tenants can be accomodate via unique port numbers.
 
 ## Discovery, URIs and Content Formats
 
@@ -272,6 +298,8 @@ If the "ct" attribute is not indicated for the /rv resource in the link format d
 
 The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
+
+## Join Proxy options {#joinproxy}
 
 ## Extensions to BRSKI {#brski-extensions}
 
