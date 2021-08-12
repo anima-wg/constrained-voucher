@@ -389,6 +389,30 @@ Some consideration was made to specify CoAP support for consistency, but:
 
 * similarly, a manufacturer is likely to offer both constrained and non-constrained devices, so there may in practice be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
 
+## MASA and the Server Name Indicator (SNI)
+
+A TLS/HTTPS connection is established between the Registrar and MASA.
+
+{{Section 5.4 of RFC8995}} explains this process, and there are no externally visible changes.
+A MASA that supports the unconstrained voucher formats should be able to support constrained vouchers requests equally well.
+
+There is no requirement that a single MASA be used for both constrained and unconstrained voucher requests: the choice of MASA is determined by the id-mod-MASAURLExnn2016 extension contained in the IDevID.
+
+The Registrar MUST do {{RFC6125}} DNS-ID checks on the contents of the certificate provided by the MASA.
+
+In constrast to the Pledge/Registrar situation, the Registrar always knows the name of the MASA, and MUST always include an {{RFC6066}} Server Name Indicator.
+The SNI is optional in TLS1.2, but common.
+The SNI it considered mandatory with TLS1.3, so this requirement is not unusual.
+
+The presence of the SNI is need by the MASA in order for the MASA to host multiple tenants (for different customers).
+
+The Registrar SHOULD use a TLS Client Certificate to authenticate to the MASA.
+If the certificate that the Registrar uses is marked as a cmcRA certificate, via Extended Key Usage, then it MUST also have the id-kp-clientAuth EKU attribute set.
+
+### Registrar Certificate Requiurement
+
+In summary for typical Registrar use, where a single Registrar certificate is used, then the certificate MUST have EKU of: id-kp-cmcRA, id-kp-serverAuth, id-kp-clientAuth.
+
 <!-- ******************************************************************** -->
 
 # Pinning in Voucher Artifacts {#pinning}
