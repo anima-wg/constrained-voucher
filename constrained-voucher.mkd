@@ -491,7 +491,7 @@ How the Pledge discovers this method and details of the enrollment method are ou
 
 When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate.
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain as specified in {{masa-pinning-policy}}.
-However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA SHOULD pin the RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
+However, if the Pledge is known to also support RPK pinning and the MASA intends to pin the Registrar's identity (not a CA), then MASA MUST pin the RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
 
 ~~~~
 {::include pinning-options.txt}
