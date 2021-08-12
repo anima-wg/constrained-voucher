@@ -227,6 +227,9 @@ This consideration does not apply to the Registrar because:
 
 * the port number number is discovered, so multiple tenants can be accomodate via unique port numbers.
 
+As per {{RFC7030 section 3.6.1}}, the Registrar certificate MUST have the Extended Key Usage (EKU) id-kp-cmcRA.
+This certificate is also used as a TLS Server Certificate, so it must also have the EKU id-kp-serverAuth.
+
 ## Discovery, URIs and Content Formats
 
 To keep the protocol messages small the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
