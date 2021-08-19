@@ -238,9 +238,11 @@ As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the
 Subsequently the pledge will send a raw voucher request.
 As explained below in {{registrar-identity}}, the "x5bag" may be used in the parboiled voucher request to communicate identity between registrar and MASA.
 
-The Pledge MUST NOT use the x5bag attribute in this way with the Registrar.
+The Pledge SHOULD NOT use the x5bag attribute in this way with the Registrar.
 A Registrar that processes a voucher request with an x5bag attribute MUST ignore it, and MUST use only the TLS Client Certificate extension for authentication.
 
+A situation where the pledge MAY use the x5bag is for communications of certificate chains to the MASA. 
+This would arise in some vendor specific situations involving outsourcing of MASA functionality, or rekey of IDevID certification authority.
 ## Discovery, URIs and Content Formats
 
 To keep the protocol messages small the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
