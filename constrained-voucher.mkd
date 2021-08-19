@@ -318,7 +318,7 @@ The Pledge and MASA need to support one or more formats (at least TBD3) for the 
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
 
 ## Join Proxy options {#joinproxy}
-
+TBD; reference other documents.
 ## Extensions to BRSKI {#brski-extensions}
 
 A Pledge that only supports the BRSKI bootstrap method and already knows the IP address and port of a Registrar or Join Proxy to use SHOULD NOT use discovery.
