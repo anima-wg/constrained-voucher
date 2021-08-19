@@ -152,6 +152,10 @@ artifact, domain, imprint, Join Registrar/Coordinator (JRC), Manufacturer Author
 The following terms from {{BRSKI}} are used identically as in that document:
 Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, nonceless, PKIX.
 
+The term "raw voucher request" is introduced to refer to the voucher request between the pledge and the Registrar.
+
+The term "parboiled voucher request" is introduced to refer to the voucher request between the Registrar and the MASA.
+
 # Requirements Language {#reqlang}
 
 {::boilerplate bcp14}
