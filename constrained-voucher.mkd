@@ -361,6 +361,7 @@ This section describes how the owner's identity is determined and how it is enco
 ## Registrar Identity Selection and Encoding
 
 Section 5.5 of {{BRSKI}} describes BRSKI policies for selection of the owner identity. It indicates some of the flexibility that is possible for the Registrar.
+
 The recommendation made there is for the Registrar to include only certificates in the voucher request (CMS) signing structure that participate in the certificate chain that is to be pinned.
 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain.
@@ -444,17 +445,17 @@ prior-signed-voucher-request is only used between the Registrar and the MASA.
 proximity-registrar-pubk or proximity-registrar-pubk-sha256 optionally replaces proximity-registrar-cert
 for the most constrained cases where RPK is used by the Pledge.
 
-INSERT_FIG_FROM_FILE ietf-constrained-voucher-request-tree.txt END
+INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-tree.txt END
 
 ### SID values
 
-INSERT_FIG_FROM_FILE ietf-constrained-voucher-request-sid.txt END
+INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-sid.txt END
 
 ### YANG Module {#yang-voucher-request}
 
 In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attributes. Two attributes of the voucher are "refined" to be optional.
 
-INSERT_FIG_FROM_FILE ietf-constrained-voucher-request@DATE.yang END
+INSERT_FIG_FROM_FILE ietf-voucher-request-constrained@DATE.yang END
 
 ### Example voucher request artifact {#example2}
 
@@ -474,11 +475,11 @@ consider to be its owner.
 The following diagram is largely a duplicate of the contents of {{RFC8366}},
 with only the addition of the fields pinned-domain-pubk and pinned-domain-pubk-sha256.
 
-INSERT_FIG_FROM_FILE ietf-constrained-voucher-tree.txt END
+INSERT_FIG_FROM_FILE ietf-voucher-constrained-tree.txt END
 
 ### SID values
 
-INSERT_FIG_FROM_FILE ietf-constrained-voucher-sid.txt END
+INSERT_FIG_FROM_FILE ietf-voucher-constrained-sid.txt END
 
 
 ### YANG Module {#yang-voucher}
@@ -567,6 +568,7 @@ As the format of the pubk field is identical to the TLS Certificate RawPublicKey
 ## The Voucher Response
 
 A returned voucher will have a pinned-domain-subk field with the identical key as was found in the proximity-registrar-pubk field above, as well as in the TLS connection.
+
 Validation of this key by the pledge is what takes the DTLS connection out of the provisional state (see {{BRSKI}} section 5.6.2).
 
 The voucher needs to be validated first.
@@ -635,12 +637,14 @@ This document registers two YANG modules in the YANG Module Names registry {{RFC
     ------------ ------ --------------------------- ------------
     Entry-point | Size | Module name               | RFC Number
     ------------ ------ --------------------------- ------------
-    2450          50     ietf-constrained-voucher    [ThisRFC]
-    2500          50     ietf-constrained-voucher    [ThisRFC}
-                                     -request
+    2450          50     ietf-voucher-constrained    [ThisRFC]
+    2500          50     ietf-voucher-request        [ThisRFC}
+                                     -constrained
     ----------- ------  --------------------------- ------------
 
 Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early Allocation.
+
+IANA: please update the names in the Registry to match these revised names, if they have not already  been revised.
 
 ## Media Types Registry
 
