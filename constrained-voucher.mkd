@@ -208,6 +208,8 @@ As described in {{Section 5.1 of RFC8995}} the pledge establishes a TLS connecti
 This occurs via a variety of Join Proxy mechanisms described in {{joinproxy}}.
 Regardless of the mechanism, the DTLS connection should operate identically.
 
+This issue affects {{RFC8995}} as well, and is reported in errata: https://www.rfc-editor.org/errata/eid6648
+
 As the Registrar is discovered by IP address, and connected via the Join proxy, the name of the Registrar is not known to the Pledge.
 The Pledge will not know what the hostname for the Registrar is, so the pledge can not do RFC6125 DNS-ID validation on the Registrar's certificate.
 That is the purpose of the RFC8366 voucher.
