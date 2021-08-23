@@ -153,9 +153,9 @@ artifact, domain, imprint, Join Registrar/Coordinator (JRC), Manufacturer Author
 The following terms from {{RFC8995}} are used identically as in that document:
 Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, nonceless, PKIX.
 
-The term "raw voucher request" is introduced to refer to the voucher request between the pledge and the Registrar.
+The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the voucher request between the pledge and the Registrar.
 
-The term "parboiled voucher request" is introduced to refer to the voucher request between the Registrar and the MASA.
+The term Registrar Voucher Request, or acronym RVR, is introduced to refer to the voucher request between the Registrar and the MASA.
 
 # Requirements Language {#reqlang}
 
