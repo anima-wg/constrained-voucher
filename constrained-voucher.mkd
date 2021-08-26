@@ -373,7 +373,7 @@ Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 ("application/pkix-cert") it SHOULD return only the
 single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request.
 
-The only exception case is when the Registrar is configured to not support a request for a single CA certificate for operational or security reasons, e.g. because every device enrolled into the domain needs to use multiple CAs.
+If the pledge accepts only TBD287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
 
 In such exception case the Registrar returns the CoAP response 4.06 Not Acceptable to indicate
 that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=certs-only" which supports multiple certificates is available.
