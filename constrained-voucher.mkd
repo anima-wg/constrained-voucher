@@ -366,7 +366,7 @@ it provisionally accepts this CA certificate as if it were the result of "CA cer
 
 ### Registrar Extensions
 
-The Content-Format 50 (application/json) MAY be supported and 60 (application/cbor) MUST be supported by the Registrar for the /vs and /es resources.
+The Content-Format 50 (application/json) MUST be supported and 60 (application/cbor) MUST be supported by the Registrar for the /vs and /es resources.
 
 Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 
