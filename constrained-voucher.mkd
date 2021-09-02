@@ -671,9 +671,6 @@ signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
     Change controller:  IETF
     Provisional registration? (standards tree only):  NO
 
-[^ouch]: That will need to be fixed so there is a contact point beyond
-    the time the ANIMA WG exists.  Please see RFC 8710 for an example.
-
 [^ouch2]: Is this just for an experiment then?
     ("Intended usage: One of COMMON, LIMITED USE, or OBSOLETE.")
 
