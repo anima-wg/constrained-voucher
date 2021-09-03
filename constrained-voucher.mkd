@@ -320,11 +320,12 @@ The MASA needs to support all formats that the Pledge, produced by that manufact
 
 ## Join Proxy options {#joinproxy}
 TBD; reference other documents.
+
 ## Extensions to BRSKI {#brski-extensions}
 
 The Pledge discovers an IP address and port number that connects to the Registrar (possibly via a Join Proxy), and it establishes a DTLS connection.
 
-No further discovery of hosts or port numbers is required, but a pledge that can do more than one kind of enrollment (future work offers protocols other than {{EST-coaps}}), then a pledge may need to use CoAP Discovery to determine what other protocols are available.
+No further discovery of hosts or port numbers is required, but a pledge that can do more than one kind of enrollment (future work offers protocols other than {{I-D.ietf-ace-coap-est}}), then a pledge may need to use CoAP Discovery to determine what other protocols are available.
 
 However, a Pledge that only supports the EST-coaps enrollment method SHOULD NOT use discovery for BRSKI resources, since it is more efficient to just try the supported enrollment method via the well-known BRSKI/EST-coaps resources, and it avoids the Pledge having to do complex CoRE Link Format parsing.
 
@@ -335,17 +336,14 @@ This avoids the Pledge having to reconnect using DTLS, in order to access these 
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
+### Pledge Extensions {#brski-est-extensions-pledge}
+
+This section defines extensions to the BRSKI Pledge, which are applicable during the BRSKI bootstrap procedure.
 A Pledge that already is DTLS-connected to either a Join Proxy or Registrar, and which only supports the EST-coaps enrollment method, SHOULD NOT use discovery for EST-coaps resources.
 This is because it is more efficient to just try its supported enrollment method (e.g. /sen) via the well-known EST resource on the current DTLS connection.
 This avoids an additional round-trip of packets and avoids the Pledge having to unnecessarily implement CoRE Link Format parsing.
 
-A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS initial connection is using.
-This avoids the Pledge having to reconnect using DTLS, in order to proceed with EST enrollment after the BRSKI bootstrap.
-[TBD EDNOTE: a Registrar that does host EST resources on another port won't be able to onboard Pledges that skip the discovery, so not interoperable. Should we fix this?]
-
-### Pledge Extensions {#brski-extensions-pledge}
-
-A constrained Pledge SHOULD NOT support the optional EST "CSR attributes request" (/att) to minimize network traffic and reduce code size.
+A constrained Pledge SHOULD NOT perform the optional EST "CSR attributes request" (/att) to minimize network traffic and reduce code size.
 
 When creating the CSR, the Pledge selects which attributes to include. One or more Subject Distinguished Name fields MUST be included.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
@@ -362,13 +360,43 @@ it provisionally accepts this CA certificate as if it were the result of "CA cer
 
 4. If the trust anchor CA was NOT used to sign its LDevID, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these differ from the (temporary) pinned domain CA.
 
-5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
+5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one. 
+A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}. 
 
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
-<!-- ******************************************************************** -->
 
-### Registrar Extensions
+### EST-client Extensions {#brski-est-extensions-estclient}
+
+This section defines extensions to EST-coaps clients, used after the BRSKI bootstrap procedure is completed.
+(Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain.)
+A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}. 
+
+In this case, it can only store one trust anchor of the domain. Although this is not an issue in case the domain trust anchor remains stable, special consideration is 
+needed for cases where the domain trust anchor can change over time. 
+The mechanism described in {{RFC4210, Section 4.4}} allows for a new CA to sign the old CA, so even during rollover of trust anchors, it is possible to have only a single trust anchor.
+Such a change may happen during EST re-enrollment: typically, a change of domain CA requires all devices 
+operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as imminent expiry of its LDevID. 
+How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification. 
+
+For re-enrollment, the constrained EST-coaps client MUST support the following EST-coaps procedure, where optional re-enrollment to a new domain is under control of the Registrar:
+
+1. The client connects with DTLS to the Registrar, and authenticates with its present domain certificate (LDevID) as usual. The Registrar authenticates itself with its domain certificate that 
+is trusted by the client, i.e. it chains to the single trust anchor that the client has stored. This is the "old" trust anchor, the one that will be eventually replaced in case the Registrar 
+decides to re-enroll the client into a new domain. 
+
+2. The client performs the simple re-enrollment request (/sren) and upon success it obtains a new LDevID.
+
+3. The client verifies the new LDevID against its (single) existing domain trust anchor. If it chains successfully, this means the trust anchor did not change and the client MAY skip retrieving the current CA certificate using the "CA certificates request" (/crts). If it does not chain successfully, this means the trust anchor was changed/updated and the client then MUST retrieve the new domain trust anchor using the "CA certificates request" (/crts).
+
+4. If the client retrieved a new trust anchor in step 3, then it MUST verify that the new trust anchor chains with the new LDevID it obtained in step 2. If it chains successfully, the client stores both, accepts the new LDevID and stops using it prior LDevID. If it does not chain successfully, the client MUST NOT update its LDevID, it MUST NOT update its (single) domain trust anchor, and the client MUST abort the enrollment process and report the error to the Registrar using enrollment status telemetry (/es).
+
+
+### Registrar Extensions {#brski-est-extensions-registrar}
+
+A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS initial connection is using.
+This avoids the Pledge having to reconnect using DTLS, in order to proceed with EST enrollment after the BRSKI bootstrap.
+[TBD EDNOTE: a Registrar that does host EST resources on another port won't be able to onboard Pledges that skip the discovery, so not interoperable. Should we fix this?]
 
 The Content-Format 50 (application/json) MUST be supported and 60 (application/cbor) MUST be supported by the Registrar for the /vs and /es resources.
 
@@ -377,10 +405,9 @@ Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 ("application/pkix-cert") it SHOULD return only the
 single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request.
 
-If the pledge accepts only TBD287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
+If the Pledge included in its request an Accept Option for only the TBD287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 Not Acceptable error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
 
-In such exception case the Registrar returns the CoAP response 4.06 Not Acceptable to indicate
-that only the default Content-Format of 281 "application/pkcs7-mime;smime-type=certs-only" which supports multiple certificates is available.
+If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for TBD287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
 
 # BRSKI-MASA Protocol {#brski-masa}
 
@@ -474,7 +501,7 @@ The present document adds the following rules to the MASA pinning policy to redu
 The rationale for 1. is that in case of a voucher with nonce, the voucher is valid only in scope of the present DTLS connection between Pledge and Registrar anyway, so it would have no
 benefit to pin a higher-level CA. By pinning the most specific CA the constrained Pledge can validate its DTLS connection using less crypto operations. The
 rationale for pinning a CA instead of the Registrar's End-Entity certificate directly is the following benefit on constrained networks: the pinned certificate in the voucher
-can in common cases be re-used as a Domain CA trust anchor during the EST enrollment and during the operational phase that follows after EST enrollment, as explained in {{brski-extensions-pledge}}.
+can in common cases be re-used as a Domain CA trust anchor during the EST enrollment and during the operational phase that follows after EST enrollment, as explained in {{brski-est-extensions-pledge}}.
 
 The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of {{RFC8995}}).
 
