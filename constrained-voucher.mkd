@@ -59,6 +59,7 @@ normative:
   RFC4193:
   RFC8366:
   RFC3688:
+  RFC7252:
   RFC8995:
   I-D.ietf-cose-rfc8152bis-struct:
   RFC9031: minimal-security
@@ -409,6 +410,14 @@ single CA certificate that is the envisioned or actual authority for the current
 If the Pledge included in its request an Accept Option for only the TBD287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 Not Acceptable error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
 
 If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for TBD287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
+
+### CoAP responses {#brski-est-responses}
+
+{{RFC8995, Section 5.6}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
+
+The 403,404,406 and 415 response codes map directly to CoAP codes 4.03, 4.04, 4.06 and 4.15.
+
+The 202 Retry process needs to map to a CoAP Separate Response as detailed in {{RFC7252, Section 5.2.2}}.
 
 # BRSKI-MASA Protocol {#brski-masa}
 
