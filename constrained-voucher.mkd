@@ -1,6 +1,6 @@
 ---
-title: Constrained Voucher Artifacts for Bootstrapping Protocols
-abbrev: Constrained Voucher
+title: Constrained Bootstrapping of Remote Secure Key Infrastructure
+abbrev: Constrained BRSKI
 docname: draft-ietf-anima-constrained-voucher-13
 
 stand_alone: true
