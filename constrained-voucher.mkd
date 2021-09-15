@@ -360,8 +360,8 @@ it provisionally accepts this CA certificate as if it were the result of "CA cer
 
 4. If the trust anchor CA was NOT used to sign its LDevID, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these differ from the (temporary) pinned domain CA.
 
-5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one. 
-A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}. 
+5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
+A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}.
 
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
@@ -370,20 +370,20 @@ A constrained Pledge MAY support only this format in a /crts response, per {{Sec
 
 This section defines extensions to EST-coaps clients, used after the BRSKI bootstrap procedure is completed.
 (Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain.)
-A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}. 
+A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}.
 
-In this case, it can only store one trust anchor of the domain. Although this is not an issue in case the domain trust anchor remains stable, special consideration is 
-needed for cases where the domain trust anchor can change over time. 
+In this case, it can only store one trust anchor of the domain. Although this is not an issue in case the domain trust anchor remains stable, special consideration is
+needed for cases where the domain trust anchor can change over time.
 The mechanism described in {{RFC4210, Section 4.4}} allows for a new CA to sign the old CA, so even during rollover of trust anchors, it is possible to have only a single trust anchor.
-Such a change may happen during EST re-enrollment: typically, a change of domain CA requires all devices 
-operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as imminent expiry of its LDevID. 
-How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification. 
+Such a change may happen during EST re-enrollment: typically, a change of domain CA requires all devices
+operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as imminent expiry of its LDevID.
+How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification.
 
 For re-enrollment, the constrained EST-coaps client MUST support the following EST-coaps procedure, where optional re-enrollment to a new domain is under control of the Registrar:
 
-1. The client connects with DTLS to the Registrar, and authenticates with its present domain certificate (LDevID) as usual. The Registrar authenticates itself with its domain certificate that 
-is trusted by the client, i.e. it chains to the single trust anchor that the client has stored. This is the "old" trust anchor, the one that will be eventually replaced in case the Registrar 
-decides to re-enroll the client into a new domain. 
+1. The client connects with DTLS to the Registrar, and authenticates with its present domain certificate (LDevID) as usual. The Registrar authenticates itself with its domain certificate that
+is trusted by the client, i.e. it chains to the single trust anchor that the client has stored. This is the "old" trust anchor, the one that will be eventually replaced in case the Registrar
+decides to re-enroll the client into a new domain.
 
 2. The client performs the simple re-enrollment request (/sren) and upon success it obtains a new LDevID.
 
