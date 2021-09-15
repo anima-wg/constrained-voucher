@@ -48,6 +48,7 @@ normative:
   RFC8949:
   I-D.ietf-core-yang-cbor:
   I-D.ietf-core-sid:
+  RFC4210:
   RFC7250:
   RFC8446:
   RFC6020:
