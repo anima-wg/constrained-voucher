@@ -11,6 +11,7 @@ wg: anima Working Group
 kw: Internet-Draft
 cat: std
 consensus: true
+updates: 8366, 8995
 
 pi:    # can use array (if all yes) or hash here
   toc: yes
