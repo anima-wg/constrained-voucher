@@ -77,6 +77,7 @@ normative:
 
 informative:
   RFC8340: yang-tree
+  I-D.kuehlewind-update-tag:
 # was  I-D.ietf-netmod-yang-tree-diagrams:
 #  pledge:
 #    title: "Dictionary.com Unabridged"
@@ -195,6 +196,15 @@ This is not a hardship as the pledges are constructed by a manufacturer who also
 The MASA therefore knows if the pledge supports PKIX operations, PKIX format certificates, or if the pledge is limited to Raw Public Keys (RPK).
 Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar identity.
 This is described in more detail in {{yang-voucher}}, {{pinning}} and {{pinned-with-rpk}} (for RPK specifically).
+
+# Updates to RFC8366 and RFC8995
+
+This section details the ways in which this document Updates.
+The terminology for Updates is taken from {{I-D.kuehlewind-update-tag}}.
+
+This document Updates {{RFC8366}}. It Extends {{RFC8366}} by creating a new serialization format.
+
+This document Updates {{RFC8995}}. It Amends {{RFC8995}} by clarifying how pinning is done, and ???.
 
 # BRSKI-EST Protocol {#brski-est}
 
