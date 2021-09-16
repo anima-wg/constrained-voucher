@@ -415,7 +415,7 @@ If the current authenticated client is an EST-coaps client that was already enro
 
 {{RFC8995, Section 5.6}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
 
-The 403,404,406 and 415 response codes map directly to CoAP codes 4.03, 4.04, 4.06 and 4.15.
+The 401,403,404,406 and 415 response codes map directly to CoAP codes 4.01,4.03, 4.04, 4.06 and 4.15.
 
 The 202 Retry process needs to map to a CoAP Separate Response as detailed in {{RFC7252, Section 5.2.2}}.
 
