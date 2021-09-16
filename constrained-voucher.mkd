@@ -646,36 +646,52 @@ INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
 ## Signing voucher and voucher-request artifacts with COSE
 
-The COSE-Sign1 structure is discussed in section 4.2 of {{I-D.ietf-cose-rfc8152bis-struct}}.
+The COSE_Sign1 structure is discussed in {{Section 4.2 of I-D.ietf-cose-rfc8152bis-struct}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
 It is used when only one signature is used on the body.
 Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is REQUIRED.
 Support for EdDSA is encouraged. [TBD EDNOTE: Expand and add a reference why. ]
 
-An example of the supported COSE-sign1 object structure is shown in {{fig-cose}}.
+An example of the supported COSE_Sign1 object structure is shown in {{fig-cose}}.
 
 ~~~~
 COSE_Sign1(
   [
     h'A101382E',        # { "alg": ES256K }
     {
-      "kid" : h'7890....1234'  # hash256(public key)
+      4 : h'7890A03F1234'  # "kid" binary key identifier
     },
-    h'1234....5678', #voucher-request binary content
-    h'4567....1234', #voucher-request binary public signature
+    h'1234....5678', #voucher-request binary content (CBOR)
+    h'4567....1234'  #voucher-request binary public signature
   ]
 )
 ~~~~
-{: #fig-cose title='cose-sign1 example in CBOR diagnostic notation' align="left"}
+{: #fig-cose title='COSE_Sign1 example in CBOR diagnostic notation' align="left"}
 
-The {{COSE-registry}} specifies the integers that replace the strings and the mnemonics in {{fig-cose}}.
-The value of the key identifier "kid" parameter is an example value.
-Usually a hash of the public key is used to identify the public key. The choice of key identifier method is
-vendor-specific.
-The public key and its hash are derived from the relevant certificate (Pledge, Registrar or MASA certificate).
-[TBD EDNOTE: how can MASA know which kid method the Registrar has used/supports? Does it matter?]
+The {{COSE-registry}} specifies the integers/encoding for the "alg" and "kid" fields in {{fig-cose}}. The "alg" 
+field restricts the key usage for verification of this COSE object to a particular cryptographic algorithm.
 
-In {{cosesign}} a binary cose-sign1 object is shown based on the voucher-request example of {{example2}}.
+The "kid" field is optionally present: it is an unprotected field that identifies the public key of the key pair that was used to sign this 
+message. The value of the key identifier "kid" parameter is an example value.
+Usually a hash of the public key is used to identify the public key, but a device serial number may also be used. The choice of key identifier method is
+vendor-specific. If "kid" is not present, then a verifying party needs to use other context information to 
+retrieve the right public key to verify the COSE_Sign1 object against. For example, this context information 
+may be a unique serial number encoded in the binary content (CBOR) field.
+
+A Registrar MAY use a "kid" parameter in its RVR to identify its signing key as used to sign the RVR. 
+The method of generating this "kid" is vendor-specific and SHOULD be configurable in the Registrar to 
+support commonly used methods. A Registrar SHOULD have a configuration option to set the "kid" to a particular 
+binary value. By default, a Registrar SHOULD NOT include a "kid" parameter in its RVR since the signing key 
+is already identified by the included signing certificates in the COSE "x5bag" structure.
+
+A Pledge normally SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified 
+by the Pledge's unique serial number that is included in the PVR. Still, where needed the Pledge MAY use 
+a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur 
+for example if a Pledge has multiple IDevID identities.
+A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA. 
+In other words, there is no need for the Registrar to verify the contents of this field. 
+
+In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request example of {{example2}}.
 
 # Design Considerations
 
