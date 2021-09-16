@@ -433,6 +433,14 @@ If the Pledge included in its request an Accept Option for only the TBD287 ("app
 
 If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for TBD287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
 
+### CoAP responses {#brski-est-responses}
+
+{{RFC8995, Section 5.6}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
+
+The 401,403,404,406 and 415 response codes map directly to CoAP codes 4.01,4.03, 4.04, 4.06 and 4.15.
+
+The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{I-D.ace-coap-est, Section 5.7}} process for Delayed Responses.
+
 # BRSKI-MASA Protocol {#brski-masa}
 
 {{Section 5.4 of RFC8995}} describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
