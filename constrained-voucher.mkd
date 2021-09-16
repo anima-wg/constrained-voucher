@@ -437,9 +437,9 @@ If the current authenticated client is an EST-coaps client that was already enro
 
 {{RFC8995, Section 5.6}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
 
-The 401,403,404,406 and 415 response codes map directly to CoAP codes 4.01,4.03, 4.04, 4.06 and 4.15.
+The 401, 403, 404, 406 and 415 response codes map directly to CoAP codes 4.01, 4.03, 4.04, 4.06 and 4.15.
 
-The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{I-D.ace-coap-est, Section 5.7}} process for Delayed Responses.
+The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{Section 5.7 of I-D.ietf-ace-coap-est}} process for Delayed Responses.
 
 # BRSKI-MASA Protocol {#brski-masa}
 
