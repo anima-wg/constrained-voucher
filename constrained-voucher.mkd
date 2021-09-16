@@ -347,6 +347,8 @@ TBD; reference other documents.
 
 ## Extensions to BRSKI {#brski-extensions}
 
+### Discovery {#brski-extensions-discovery}
+
 The Pledge discovers an IP address and port number that connects to the Registrar (possibly via a Join Proxy), and it establishes a DTLS connection.
 
 No further discovery of hosts or port numbers is required, but a pledge that can do more than one kind of enrollment (future work offers protocols other than {{I-D.ietf-ace-coap-est}}), then a pledge may need to use CoAP Discovery to determine what other protocols are available.
@@ -357,6 +359,15 @@ In order to support this, the Registrar MUST support all of the EST resources at
 
 A Registrar SHOULD host any discoverable BRSKI resources on the same (UDP) server port that the Pledge's DTLS connection is using.
 This avoids the Pledge having to reconnect using DTLS, in order to access these resources.
+
+### CoAP responses {#brski-coap-responses}
+
+{{RFC8995, Section 5}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
+
+The 401, 403, 404, 406 and 415 response codes map directly to CoAP codes 4.01, 4.03, 4.04, 4.06 and 4.15.
+
+The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{Section 5.7 of I-D.ietf-ace-coap-est}} process for Delayed Responses.
+
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
@@ -432,14 +443,6 @@ single CA certificate that is the envisioned or actual authority for the current
 If the Pledge included in its request an Accept Option for only the TBD287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 Not Acceptable error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
 
 If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for TBD287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
-
-### CoAP responses {#brski-est-responses}
-
-{{RFC8995, Section 5.6}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
-
-The 401, 403, 404, 406 and 415 response codes map directly to CoAP codes 4.01, 4.03, 4.04, 4.06 and 4.15.
-
-The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{Section 5.7 of I-D.ietf-ace-coap-est}} process for Delayed Responses.
 
 # BRSKI-MASA Protocol {#brski-masa}
 
