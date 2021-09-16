@@ -818,6 +818,7 @@ Also thanks to Jim Schaad for correcting earlier version of the COSE Sign1 objec
 
 Michel Veillette did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
 
+Daniel Franke and Henk Birkholtz provided review feedback.
 
 # Changelog
 
