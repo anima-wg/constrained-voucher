@@ -66,7 +66,6 @@ normative:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
   I-D.ietf-cose-x509:
-### Unused?  XXX
   ieee802-1AR:
     target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
     title: "IEEE 802.1AR Secure Device Identifier"
@@ -75,28 +74,8 @@ normative:
     date: 2009
 
 informative:
+  RFC7228:
   RFC8340: yang-tree
-# was  I-D.ietf-netmod-yang-tree-diagrams:
-#  pledge:
-#    title: "Dictionary.com Unabridged"
-#    target: "http://dictionary.reference.com/browse/pledge"
-#    author:
-#      -
-#        name: Dictionary.com
-#    date: 2015
-
-#  duckling:
-#    title: "The resurrecting duckling: security issues for ad-hoc wireless networks"
-#    target: "https://www.cl.cam.ac.uk/~fms27/papers/1999-StajanoAnd-duckling.pdf"
-#    author:
-#      -
-#        ins: F. Stajano
-#        name: Frank Stajano
-#      -
-#        ins: R. Anderson
-#        name: Ross Anderson
-#    date: 1999
-
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
@@ -123,16 +102,23 @@ The use of Raw Public Keys instead of X.509 certificates for security operations
 
 # Introduction
 
-Secure enrollment of new nodes into constrained networks with constrained nodes
-presents unique challenges. There are network bandwidth and code size issues to contend with.
-A solution for autonomous enrollment such as BRSKI {{RFC8995}} may be too large in terms of
-code size or bandwidth required.
+Secure enrollment of new nodes into constrained networks with constrained nodes presents unique challenges.
+As explained in {{RFC7228}}, the networks are challenged and the nodes are constrained by energy, memory space, and code size.
 
-Therefore, this document defines a constrained version of the voucher artifact {{RFC8366}}, along with a constrained version of {{RFC8995}} that makes use of the constrained CoAP-based version of EST, EST-coaps {{I-D.ietf-ace-coap-est}} rather than EST over HTTPS {{RFC7030}}.
+The Bootstrapping Remote Secure Key Infrastructure (BRSKI) protocol described in {{RFC8995}}
+provides a solution for secure zero-touch (automated) bootstrap of new (unconfigured) devices.
+In it, new devices, such as IoT devices, are called "pledges", and equipped with a factory-installed Initial Device Identifier (IDevID) (see {{ieee802-1AR}}), they are enrolled into a network.
 
-While the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}},
-this document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
-This COSE-signed CBOR-encoded voucher can be transported using secured CoAP or HTTP.
+The BRSKI solution described in {{RFC8995}} was designed to be modular, and this document describes a version scaled to the constraints of IoT deployments.
+
+Therefore, this document defines a constrained version of the voucher artifact (described in {{RFC8366}}), along with a constrained version of BRSKI.
+This constrained-BRSKI protocol makes use of the constrained CoAP-based version of EST (EST-coaps from {{I-D.ietf-ace-coap-est}}) rather than the EST over HTTPS {{RFC7030}}.
+
+In BRSKI, the the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
+This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
+
+This COSE-signed CBOR-encoded voucher is transported using secured CoAP and HTTPS.
+
 The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC or DTLS (CoAPS).
 The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
