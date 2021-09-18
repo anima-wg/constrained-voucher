@@ -376,6 +376,21 @@ Specifically, the Simple (Re-)Enrollment (/sen and /sren), CSR Attributes Reques
 
 Support for the server generated key generation (skg, skc), remains optional.
 
+Collecting both {{RFC8995}} and {{RFC7030}}, {{I-D.ietf-ace-coap-est}} and this document result in the following shorter forms:
+
+            +------------------+------------------------------+
+            | EST + BRSKI      | Constrained-BRSKI            |
+            +------------------+------------------------------+
+            | /requestvoucher  | /rv                          |
+            | /voucher_status  | /vs                          |
+            | /cacerts         | /crts                        |
+            | /csrattrs        | /att                         |
+            | /simpleenroll    | /sen                         |
+            | /enrollstatus    | /es                          |
+            | /simplereenroll  | /sren                        |
+            +------------------+------------------------------+
+
+
 ### Pledge Extensions {#brski-est-extensions-pledge}
 
 This section defines extensions to the BRSKI Pledge, which are applicable during the BRSKI bootstrap procedure.
