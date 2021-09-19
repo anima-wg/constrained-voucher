@@ -371,6 +371,11 @@ The 202 Retry process which occurs in the voucher request, is to be handled in t
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
+This document extends {{I-D.ietf-ace-coap-est}}, and it inherits the methods described in that document.
+Specifically, the Simple (Re-)Enrollment (/sen and /sren), CSR Attributes Request (/att), Certification Authority certificate retrieval (/crts).
+
+Support for the server generated key generation (skg, skc), remains optional.
+
 ### Pledge Extensions {#brski-est-extensions-pledge}
 
 This section defines extensions to the BRSKI Pledge, which are applicable during the BRSKI bootstrap procedure.
