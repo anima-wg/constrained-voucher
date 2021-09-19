@@ -313,13 +313,27 @@ For example, if the Registrar supports a short BRSKI URL (/b) and supports the v
 The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" end points for the short names as defined in {{est-uri}}.
 
 Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the corresponding "/.well-known/brski/\<short-name\>" URLs, and MUST NOT distinguish between them.
-In particular, a Pledge MAY use the longer and shorter URLs in combination.
+In particular, a Pledge MAY use the longer and shorter URLs in any combination.
 
 When responding to a discovery request for BRSKI resources, the server MAY in addition return
 the full resource paths and the content types which are supported at those end-points as shown in above example.
 This is useful when multiple content types are specified for a particular resource on the server.
 The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources.
 (So, a query for rt=brski, without the wildcard character.)
+
+Without the shorter paths, a full URL is used, such as:
+
+~~~~
+   REQ: GET /.well-known/brski/requestvoucher
+~~~~
+
+while with discovery of shorter URLs, a request such as:
+
+~~~~
+   REQ: GET /b/rv
+~~~~
+
+is possible.
 
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
 Note that Content-Format TBD3 ("application/voucher-cose+cbor") is defined in this document.
