@@ -1,6 +1,6 @@
 ---
-title: Constrained Voucher Artifacts for Bootstrapping Protocols
-abbrev: Constrained Voucher
+title: Constrained Bootstrapping Remote Secure Key Infrastructure (BRSKI)
+abbrev: Constrained BRSKI
 docname: draft-ietf-anima-constrained-voucher-13
 
 stand_alone: true
@@ -11,6 +11,7 @@ wg: anima Working Group
 kw: Internet-Draft
 cat: std
 consensus: true
+updates: 8366, 8995
 
 pi:    # can use array (if all yes) or hash here
   toc: yes
@@ -59,6 +60,7 @@ normative:
   RFC4193:
   RFC8366:
   RFC3688:
+  RFC8610:
   RFC8995:
   I-D.ietf-cose-rfc8152bis-struct:
   RFC9031: minimal-security
@@ -76,6 +78,7 @@ normative:
 informative:
   RFC7228:
   RFC8340: yang-tree
+  I-D.kuehlewind-update-tag:
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
@@ -180,6 +183,15 @@ This is not a hardship as the pledges are constructed by a manufacturer who also
 The MASA therefore knows if the pledge supports PKIX operations, PKIX format certificates, or if the pledge is limited to Raw Public Keys (RPK).
 Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar identity.
 This is described in more detail in {{yang-voucher}}, {{pinning}} and {{pinned-with-rpk}} (for RPK specifically).
+
+# Updates to RFC8366 and RFC8995
+
+This section details the ways in which this document Updates.
+The terminology for Updates is taken from {{I-D.kuehlewind-update-tag}}.
+
+This document Updates {{RFC8366}}. It Extends {{RFC8366}} by creating a new serialization format.
+
+This document Updates {{RFC8995}}. It Amends {{RFC8995}} by clarifying how pinning is done, and ???.
 
 # BRSKI-EST Protocol {#brski-est}
 
@@ -298,17 +310,30 @@ The server responds with only the root path for the BRSKI resource (rt=brski, re
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
 Note that Content-Format TBD3 ("application/voucher-cose+cbor") is defined in this document.
 
-The Content-Format 50 ("application/json") MAY be supported and Content-Format 60 ("application/cbor") MUST be supported by the Registrar for the /vs and /es resources.
 Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least TBD3 is supported.
 
 The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
 
+### RFC8995 Telemetry Returns
+
+{{RFC8995}} defines two telemetry returns from the Pledge which are sent to the Registrar.
+These are the BRSKI Status Telemetry {{RFC8995, Section 5.7}} and the Enrollment Status Telemetry {{RFC8995, Section 5.9.4}}.
+These are two POST operations made the by Pledge at two key steps in the process.
+
+{{RFC8995}} defines the content of these POST operations in CDDL, which are serialized as JSON.
+This document extends the list of acceptable formats to CBOR as well as JSON, using the rules from {{RFC8610}}.
+
+The existing JSON format is described as CoAP Content-Format 50 ("application/json"), and it MAY be supported.
+The new CBOR format is described using CoAP Content-Format 60 ("application/cbor") MUST be supported by the Registrar for both the /vs and /es resources.
+
 ## Join Proxy options {#joinproxy}
 TBD; reference other documents.
 
 ## Extensions to BRSKI {#brski-extensions}
+
+### Discovery {#brski-extensions-discovery}
 
 The Pledge discovers an IP address and port number that connects to the Registrar (possibly via a Join Proxy), and it establishes a DTLS connection.
 
@@ -320,6 +345,15 @@ In order to support this, the Registrar MUST support all of the EST resources at
 
 A Registrar SHOULD host any discoverable BRSKI resources on the same (UDP) server port that the Pledge's DTLS connection is using.
 This avoids the Pledge having to reconnect using DTLS, in order to access these resources.
+
+### CoAP responses {#brski-coap-responses}
+
+{{RFC8995, Section 5}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
+
+The 401, 403, 404, 406 and 415 response codes map directly to CoAP codes 4.01, 4.03, 4.04, 4.06 and 4.15.
+
+The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{Section 5.7 of I-D.ietf-ace-coap-est}} process for Delayed Responses.
+
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
