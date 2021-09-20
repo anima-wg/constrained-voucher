@@ -657,7 +657,7 @@ An example of the supported COSE_Sign1 object structure is shown in {{fig-cose}}
 ~~~~
 COSE_Sign1(
   [
-    h'A101382E',        # { "alg": ES256K }
+    h'A101382E',        # protected header encoding: {1: -47} , which means { "alg": ES256K }
     {
       4 : h'7890A03F1234'       # 4 is the "kid" binary key identifier
     },
