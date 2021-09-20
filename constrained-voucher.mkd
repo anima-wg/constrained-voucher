@@ -680,8 +680,10 @@ may be a unique serial number encoded in the binary content (CBOR) field.
 
 A Registrar MAY use a "kid" parameter in its RVR to identify its signing key as used to sign the RVR. 
 The method of generating this "kid" is vendor-specific and SHOULD be configurable in the Registrar to 
-support commonly used methods. A Registrar SHOULD have a configuration option to set the "kid" to a particular 
-binary value. By default, a Registrar SHOULD NOT include a "kid" parameter in its RVR since the signing key 
+support commonly used methods. 
+In order to support future business cases and supply chain integrations, a Registrar MUST be configurable, on a per-manufacturer basis, to be able to configure the "kid" to a particular value. 
+Both binary and string values are to be supported, each being inserted using a CBOR bstr or tstr.
+By default, a Registrar does not include a "kid" parameter in its RVR since the signing key 
 is already identified by the included signing certificates in the COSE "x5bag" structure.
 
 A Pledge normally SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified 
