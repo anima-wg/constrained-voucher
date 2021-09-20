@@ -691,7 +691,7 @@ by the Pledge's unique serial number that is included in the PVR. Still, where n
 a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur 
 for example if a Pledge has multiple IDevID identities.
 A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA. 
-In other words, there is no need for the Registrar to verify the contents of this field. 
+In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
 
 In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request example of {{example2}}.
 
