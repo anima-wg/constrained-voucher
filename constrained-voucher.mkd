@@ -659,7 +659,7 @@ COSE_Sign1(
   [
     h'A101382E',        # { "alg": ES256K }
     {
-      4 : h'7890A03F1234'  # "kid" binary key identifier
+      4 : h'7890A03F1234'       # 4 is the "kid" binary key identifier
     },
     h'1234....5678', #voucher-request binary content (CBOR)
     h'4567....1234'  #voucher-request binary public signature
