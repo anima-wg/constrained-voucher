@@ -635,8 +635,19 @@ INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 The COSE_Sign1 structure is discussed in {{Section 4.2 of I-D.ietf-cose-rfc8152bis-struct}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
 It is used when only one signature is used on the body.
-Support for ECDSA with sha256 (secp256k1 and prime256v1 curves) is REQUIRED.
-Support for EdDSA is encouraged. [TBD EDNOTE: Expand and add a reference why. ]
+
+Support for ECDSA with SHA2-256 using curve secp256r1 (aka prime256k1) is RECOMMENDED.
+Most current low power hardware has support for acceleration of this algorithm.
+Future hardware designs could omit this in favour of a newer algorithms.
+This is the ES256 keytype from Table 1 of {{I-D.ietf-cose-rfc8152-algs}}.
+Support for curve secp256k1 is OPTIONAL.
+
+Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware support is available.
+
+A transition towards EdDSA is occuring in the industry.
+Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any eliptic curve algorithm.
+
+In general, the Pledge is expected to support only a single algorithm, while the Registrar, usually not constrained, is expected to support a wide variety of algorithms: both legacy ones and up-and-coming ones via regular software updates.
 
 An example of the supported COSE_Sign1 object structure is shown in {{fig-cose}}.
 
