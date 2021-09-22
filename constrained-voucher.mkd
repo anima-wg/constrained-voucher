@@ -654,29 +654,29 @@ COSE_Sign1(
 ~~~~
 {: #fig-cose title='COSE_Sign1 example in CBOR diagnostic notation' align="left"}
 
-The {{COSE-registry}} specifies the integers/encoding for the "alg" and "kid" fields in {{fig-cose}}. The "alg" 
+The {{COSE-registry}} specifies the integers/encoding for the "alg" and "kid" fields in {{fig-cose}}. The "alg"
 field restricts the key usage for verification of this COSE object to a particular cryptographic algorithm.
 
-The "kid" field is optionally present: it is an unprotected field that identifies the public key of the key pair that was used to sign this 
+The "kid" field is optionally present: it is an unprotected field that identifies the public key of the key pair that was used to sign this
 message. The value of the key identifier "kid" parameter is an example value.
 Usually a hash of the public key is used to identify the public key, but a device serial number may also be used. The choice of key identifier method is
-vendor-specific. If "kid" is not present, then a verifying party needs to use other context information to 
-retrieve the right public key to verify the COSE_Sign1 object against. For example, this context information 
+vendor-specific. If "kid" is not present, then a verifying party needs to use other context information to
+retrieve the right public key to verify the COSE_Sign1 object against. For example, this context information
 may be a unique serial number encoded in the binary content (CBOR) field.
 
-A Registrar MAY use a "kid" parameter in its RVR to identify its signing key as used to sign the RVR. 
-The method of generating this "kid" is vendor-specific and SHOULD be configurable in the Registrar to 
-support commonly used methods. 
-In order to support future business cases and supply chain integrations, a Registrar MUST be configurable, on a per-manufacturer basis, to be able to configure the "kid" to a particular value. 
+A Registrar MAY use a "kid" parameter in its RVR to identify its signing key as used to sign the RVR.
+The method of generating this "kid" is vendor-specific and SHOULD be configurable in the Registrar to
+support commonly used methods.
+In order to support future business cases and supply chain integrations, a Registrar MUST be configurable, on a per-manufacturer basis, to be able to configure the "kid" to a particular value.
 Both binary and string values are to be supported, each being inserted using a CBOR bstr or tstr.
-By default, a Registrar does not include a "kid" parameter in its RVR since the signing key 
+By default, a Registrar does not include a "kid" parameter in its RVR since the signing key
 is already identified by the included signing certificates in the COSE "x5bag" structure.
 
-A Pledge normally SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified 
-by the Pledge's unique serial number that is included in the PVR. Still, where needed the Pledge MAY use 
-a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur 
+A Pledge normally SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified
+by the Pledge's unique serial number that is included in the PVR. Still, where needed the Pledge MAY use
+a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur
 for example if a Pledge has multiple IDevID identities.
-A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA. 
+A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA.
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
 
 In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request example of {{example2}}.
