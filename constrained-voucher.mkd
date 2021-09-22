@@ -160,7 +160,7 @@ The two main parts of the BRSKI protocol are named separately in this document: 
 protocol between the Registrar and the MASA.
 
 Time-based vouchers are supported in this definition, but given that constrained devices are extremely unlikely to have accurate time, their use will be uncommon.
-Most Pledges using these constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection rather than expiry times.
+Most Pledges using constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection rather than expiry times.
 
 {{RFC8366}} defines the voucher artifact, while the Voucher Request artifact was defined in {{RFC8995}}.
 This document defines both a constrained voucher and a constrained voucher-request.
