@@ -324,7 +324,7 @@ The server responds with only the root path for the BRSKI resource (rt=brski, re
 Without the shorter paths, a full URL is used, such as:
 
 ~~~~
-   REQ: GET /.well-known/brski/requestvoucher
+   REQ: GET /.well-known/brski/rv
 ~~~~
 
 while with discovery of shorter URLs, a request such as:
