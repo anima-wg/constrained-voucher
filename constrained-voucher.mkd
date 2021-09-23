@@ -161,7 +161,7 @@ Like in {{RFC8955}}, proximity shown by making TLS connections between the Pledg
 The TLS connection is used to make a Voucher Request.
 This request is verified by the an agent of the Pledge's manufacturer, which then issues a voucher.
 The voucher provides an authorization statement from the manufacturer indicating that the Registrar is the intended owner of the device.
-The voucher refers to the Registrar through pinning of the Registrar's key.
+The voucher refers to the Registrar through pinning of the Registrar's identity.
 
 This document does not make any extensions to the semantic meaning of vouchers, only the encoding has been changed to optimize for constrained devices and networks.
 The two main parts of the BRSKI protocol are named separately in this document: BRSKI-EST for the protocol between Pledge and Registrar, and BRSKI-MASA for the
