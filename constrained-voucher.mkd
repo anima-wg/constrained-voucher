@@ -643,6 +643,7 @@ This is the ES256 keytype from Table 1 of {{I-D.ietf-cose-rfc8152-algs}}.
 Support for curve secp256k1 is OPTIONAL.
 
 Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware support is available.
+This is keytype EDDSA (-8) from Table 2 of {{I-D.ietf-cose-rfc8152-algs}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
 
 A transition towards EdDSA is occuring in the industry.
 Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any eliptic curve algorithm.
