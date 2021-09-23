@@ -372,6 +372,28 @@ The 202 Retry process which occurs in the voucher request, is to be handled in t
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
+This document extends {{I-D.ietf-ace-coap-est}}, and it inherits the functions described in that document: 
+specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certification Authority certificates request (/crts).
+Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST server.
+
+Collecting both {{RFC8995}} and {{RFC7030}}, {{I-D.ietf-ace-coap-est}} and this document results in the following shorter forms of URI paths 
+for the commonly used resources:
+
+<!-- Table order is currently the order in which typically the resources are used by Pledge. Change if we want to --> 
+       +------------------+-------------------+----------------+
+       | EST + BRSKI      | Constrained-BRSKI | Well-known URI +
+       |                  |                   |   namespace    +
+       +------------------+-------------------+----------------+
+       | /requestvoucher  | /rv               | brski          +
+       | /voucher_status  | /vs               | brski          +
+       | /csrattrs        | /att              | est            +
+       | /simpleenroll    | /sen              | est            +
+       | /cacerts         | /crts             | est            +
+       | /enrollstatus    | /es               | brski          +
+       | /simplereenroll  | /sren             | est            +
+       +------------------+-------------------+----------------+
+
+
 ### Pledge Extensions {#brski-est-extensions-pledge}
 
 This section defines extensions to the BRSKI Pledge, which are applicable during the BRSKI bootstrap procedure.
