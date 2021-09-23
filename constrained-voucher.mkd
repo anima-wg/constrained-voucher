@@ -307,7 +307,7 @@ For example, if the Registrar supports a short BRSKI URL (/b) and supports the v
 The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" end points for the short names as defined in {{est-uri}}.
 
 Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the corresponding "/.well-known/brski/\<short-name\>" URLs, and MUST NOT distinguish between them.
-In particular, a Pledge MAY use the longer and shorter URLs in combination.
+In particular, a Pledge MAY use the longer and shorter URLs in any combination.
 
 When responding to a discovery request for BRSKI resources, the server MAY in addition return
 the full resource paths and the content types which are supported at those end-points as shown in above example.
@@ -315,11 +315,29 @@ This is useful when multiple content types are specified for a particular resour
 The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources.
 (So, a query for rt=brski, without the wildcard character.)
 
+Without discovery, a longer well-known URL can only be used, such as:
+
+~~~~
+   REQ: GET /.well-known/brski/rv
+~~~~
+
+while with discovery of shorter URLs, a request such as:
+
+~~~~
+   REQ: GET /b/rv
+~~~~
+
+is possible.
+
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
 Note that Content-Format TBD3 ("application/voucher-cose+cbor") is defined in this document.
 
 Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least TBD3 is supported.
+
+Note that this specification allows for voucher-cose+cbor format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats TBD over CoAP.
+The burden for this flexibility is places upon the Registrar.
+The pledge is expected to support a single format only.
 
 The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
