@@ -361,7 +361,8 @@ In order to support this, the Registrar MUST support all of the EST resources at
 as well as any server-specific shorter form that might also be supported.
 
 However, when discovery is being done by the Pledge, it is possible for the Registrar to return references to resources which are on different port numbers.
-The Registrar MUST NOT do this because a Pledge that is connected via a Join Proxy can only access a single UDP port.
+The Registrar SHOULD NOT use different ports numbers by default, because a Pledge that is connected via a Join Proxy can only access a single UDP port.
+A Registrar configured to never use Join Proxies MAY be configured to use multiple port numbers.
 Therefore a Registrar MUST host all discoverable BRSKI resources on the same (UDP) server port that the Pledge's DTLS connection is using.
 In addition to avoiding the problem of being unable to connect to other ports, using the same UDP server port allows the Pledge to continue to use the same DTLS connection 
 which is more efficient.
