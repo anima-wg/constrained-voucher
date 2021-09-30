@@ -466,6 +466,9 @@ new (NewWithNew) domain CA certificate that the EST server provides in the /crts
 
 In this manner, even during rollover of trust anchors, it is possible to have only a single trust anchor provided in a /crts response.
 
+During the period of the certificate renewal, it is not possible to create new communication channels between devices with NewCA certificates devices with OldCA certificates.
+One option is that devices should avoid restarting existing DTLS or OSCORE connections during this interval that new certificates are being deployed.
+The recommended period for certificate renewal is 24 hours.
 For re-enrollment, the constrained EST-coaps client MUST support the following EST-coaps procedure, where optional re-enrollment to a new domain is under control of the Registrar:
 
 1. The client connects with DTLS to the Registrar, and authenticates with its present domain certificate (LDevID) as usual. The Registrar authenticates itself with its domain certificate that
