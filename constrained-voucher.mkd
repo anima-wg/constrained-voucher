@@ -370,14 +370,14 @@ A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use disco
 It is more efficient to just try the supported enrollment method via the well-known BRSKI/EST-coaps resources.
 This also avoids the Pledge doing any CoRE Link Format parsing, which is specified in {{I-D.ietf-ace-coap-est, Section 4.1}}.
 
-In order to support this, the Registrar MUST support all of the EST resources at their default ".well-known" locations (on the port number discovered) 
+In order to support this, the Registrar MUST support all of the EST resources at their default ".well-known" locations (on the port number discovered)
 as well as any server-specific shorter form that might also be supported.
 
 However, when discovery is being done by the Pledge, it is possible for the Registrar to return references to resources which are on different port numbers.
 The Registrar SHOULD NOT use different ports numbers by default, because a Pledge that is connected via a Join Proxy can only access a single UDP port.
 A Registrar configured to never use Join Proxies MAY be configured to use multiple port numbers.
 Therefore a Registrar MUST host all discoverable BRSKI resources on the same (UDP) server port that the Pledge's DTLS connection is using.
-In addition to avoiding the problem of being unable to connect to other ports, using the same UDP server port allows the Pledge to continue to use the same DTLS connection 
+In addition to avoiding the problem of being unable to connect to other ports, using the same UDP server port allows the Pledge to continue to use the same DTLS connection
 which is more efficient.
 
 ### CoAP responses {#brski-coap-responses}
@@ -391,14 +391,14 @@ The 202 Retry process which occurs in the voucher request, is to be handled in t
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
-This document extends {{I-D.ietf-ace-coap-est}}, and it inherits the functions described in that document: 
+This document extends {{I-D.ietf-ace-coap-est}}, and it inherits the functions described in that document:
 specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certification Authority certificates request (/crts).
 Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST server.
 
-Collecting both {{RFC8995}} and {{RFC7030}}, {{I-D.ietf-ace-coap-est}} and this document results in the following shorter forms of URI paths 
+Collecting both {{RFC8995}} and {{RFC7030}}, {{I-D.ietf-ace-coap-est}} and this document results in the following shorter forms of URI paths
 for the commonly used resources:
 
-<!-- Table order is currently the order in which typically the resources are used by Pledge. Change if we want to --> 
+<!-- Table order is currently the order in which typically the resources are used by Pledge. Change if we want to -->
        +------------------+-------------------+----------------+
        | EST + BRSKI      | Constrained-BRSKI | Well-known URI +
        |                  |                   |   namespace    +
