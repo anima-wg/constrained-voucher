@@ -518,7 +518,7 @@ Some consideration was made to specify CoAP support for consistency, but:
 
 ## Registrar Voucher Request {#brski-masa-rvr}
 
-If the PVR contains a proximity assertion, the Registrar MUST propagate this assertion into the RVR by including the "proximity" field with the value "assertion".
+If the PVR contains a proximity assertion, the Registrar MUST propagate this assertion into the RVR by including the "assertion" field with the value "proximity".
 This conforms to the example in {{Section 3.3 of RFC8995}} of carrying the assertion forward.
 
 ## MASA and the Server Name Indicator (SNI)
