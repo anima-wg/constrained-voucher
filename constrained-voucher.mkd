@@ -63,6 +63,7 @@ normative:
   RFC8610:
   RFC8995:
   I-D.ietf-cose-rfc8152bis-struct:
+  I-D.ietf-cose-rfc8152bis-algs:
   RFC9031: minimal-security
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
@@ -156,7 +157,7 @@ The term Registrar Voucher Request, or acronym RVR, is introduced to refer to th
 {{RFC8366}} provides for vouchers that assert proximity, that authenticate the Registrar and that can offer varying levels of anti-replay protection.
 
 The proximity proof provided for in {{RFC8366}}, is an assertion that the Pledge and the Registrar are believed to be in close together, from a network topology point of view.
-Like in {{RFC8955}}, proximity shown by making TLS connections between the Pledge and Registrar using IPv6 Link-Local addresses.
+Like in {{RFC8995}}, proximity shown by making TLS connections between the Pledge and Registrar using IPv6 Link-Local addresses.
 
 The TLS connection is used to make a Voucher Request.
 This request is verified by the an agent of the Pledge's manufacturer, which then issues a voucher.
@@ -694,11 +695,11 @@ It is used when only one signature is used on the body.
 Support for ECDSA with SHA2-256 using curve secp256r1 (aka prime256k1) is RECOMMENDED.
 Most current low power hardware has support for acceleration of this algorithm.
 Future hardware designs could omit this in favour of a newer algorithms.
-This is the ES256 keytype from Table 1 of {{I-D.ietf-cose-rfc8152-algs}}.
+This is the ES256 keytype from Table 1 of {{I-D.ietf-cose-rfc8152bis-algs}}.
 Support for curve secp256k1 is OPTIONAL.
 
 Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware support is available.
-This is keytype EDDSA (-8) from Table 2 of {{I-D.ietf-cose-rfc8152-algs}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
+This is keytype EDDSA (-8) from Table 2 of {{I-D.ietf-cose-rfc8152bis-algs}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
 
 A transition towards EdDSA is occuring in the industry.
 Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any eliptic curve algorithm.
