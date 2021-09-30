@@ -487,6 +487,9 @@ If the Pledge included in its request an Accept Option for only the TBD287 ("app
 If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for TBD287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
 
 # BRSKI-MASA Protocol {#brski-masa}
+This section describes extensions to and clarifications of the BRSKI-MASA protocol between Registrar and MASA.
+
+## Protocol and Formats {#brski-masa-protocol-format}
 
 {{Section 5.4 of RFC8995}} describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
 This document does not change that. The Registrar MAY use the new format "application/voucher-cose+cbor" in its voucher request to MASA, or the existing BRSKI
@@ -512,6 +515,11 @@ Some consideration was made to specify CoAP support for consistency, but:
 * a Registrar is likely to provide onboarding services to both constrained and non-constrained devices.  Such a Registrar would need to speak HTTPS anyway.
 
 * similarly, a manufacturer is likely to offer both constrained and non-constrained devices, so there may in practice be no situation in which the MASA could be CoAP-only.  Additionally, as the MASA is intended to be a function that can easily be oursourced to a third-party service provider, reducing the complexity would also seem to reduce the cost of that function.
+
+## Registrar Voucher Request {#brski-masa-rvr}
+
+If the PVR contains a proximity assertion, the Registrar MUST propagate this assertion into the RVR by including the "proximity" field with the value "assertion".
+This conforms to the example in {{Section 3.3 of RFC8995}} of carrying the assertion forward.
 
 ## MASA and the Server Name Indicator (SNI)
 
