@@ -559,7 +559,8 @@ This section describes how the owner's identity is determined and how it is enco
 The recommendation made there is for the Registrar to include only certificates in the voucher request (CMS) signing structure that participate in the certificate chain that is to be pinned.
 
 The MASA is expected to evaluate the certificates included by the Registrar in its voucher request, forming them into a chain with the Registrar's (signing) identity on one end. Then, it pins a certificate selected from the chain.
-For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the voucher-request has been signed by "Registrar", its signing structure includes two additional CA certificates:
+For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the voucher-request has been signed by "Registrar", its signing structure includes two additional CA certificates.
+The arrows in the figure indicate the issuer of a certificate, i.e. (1) issued (2) and (2) issued (3).
 
 ~~~~
 {::include two-ca-chain.txt}
