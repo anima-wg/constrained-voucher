@@ -618,7 +618,31 @@ However, if the Pledge is known to also support RPK pinning and the MASA intends
 ~~~~
 {: #fig-pinning title='Raw Public Key pinning'}
 
-<!-- ******************************************************************** -->
+## Considerations for use of IDevID-Issuer {#registrar-idevid-issuer}
+
+{{RFC8366}} and {{RFC8995}} defines the idevid-issuer attribute for voucher and voucher-request (respectively), but they do not explain that much about when to use it.
+
+The use of idevid-issuer is provided so that the serial-number to which the issued voucher pertains can be relative to the entity that issued the devices' IDevID.
+In most cases there is a one to one relationship between the trust anchor that signs vouchers (and is trusted by the pledge), and the Certification Authority that signs the IDevID.
+In that case, the serial-number in the voucher must refer to the same device as the serial-number that is in IDevID certificate.
+
+However, there situations where the one to one relationship may be broken.
+This occurs whenever a manufacturer has a common MASA, but different produces (on different assembly lines) are produced with identical serial numbers.
+A system of serial numbers which is just a simple counter is a good example of this.
+A system of serial numbers where there is some prefix relating the product type does not fit into this, even if the lower digits are a counter.
+
+It is not possible for the Pledge or the Registrar to know which situation applies.
+The question to be answered is whether or not to include the idevid-issuer in the PVR and the RVR.
+A second question arose as to what the format of the idevid-issuer contents are.
+
+Analysis of the situation shows that the pledge never needs to include the idevid-issuer in it's PVR, because the pledge's IDevID certificate is available the Registrar, and the Authority Key Identifier is contained within that.
+The pledge therefore has no need to repeat this.
+
+For the RVR, the Registrar has to examine the pledge's IDevID certificate to discover the serial number for the Registrar's Voucher Request (RVR).
+This is clear in {{Section 5.5 of RFC8995}}.
+That section also clarifies that the idevid-issuer is to be included in the RVR.
+
+!-- ******************************************************************** -->
 
 # Artifacts
 
