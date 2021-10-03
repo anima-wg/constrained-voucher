@@ -80,6 +80,7 @@ normative:
 informative:
   RFC7228:
   RFC4443:
+  RFC6066:
   RFC8340: yang-tree
   I-D.kuehlewind-update-tag:
   COSE-registry:
@@ -499,6 +500,7 @@ It is RECOMMENDED that a PMTU of 1024 bytes be assumed for the DTLS handshake.
 It is unlikely that any Packet Too Big indications {{RFC4443}} will be relayed by the Join Proxy.
 
 During the operation of the constrained BRSKI-EST protocol, the CoAP Blockwise transfer mechanism will be used when message sizes exceed the PMTU.
+A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragment length extension ("max_fragment_length") defined in Section 4 of {{RFC6066}} with the maximum fragment length set to a value of either 2^9 or 2^10.
 
 # BRSKI-MASA Protocol {#brski-masa}
 This section describes extensions to and clarifications of the BRSKI-MASA protocol between Registrar and MASA.
