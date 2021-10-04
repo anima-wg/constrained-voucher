@@ -47,12 +47,12 @@ contributor:
 normative:
 #  RFC2119:
   RFC8949:
-  I-D.ietf-core-yang-cbor:
-  I-D.ietf-core-sid:
+  RFC7049:
   RFC4210:
   RFC7250:
   RFC8446:
   RFC6020:
+  RFC6021:
   RFC6066:
   RFC6125:
   RFC7950:
@@ -89,6 +89,8 @@ informative:
   I-D.richardson-anima-masa-considerations:
   RFC6690:
   RFC7030:
+  I-D.ietf-core-sid:
+  I-D.ietf-core-yang-cbor:
 
 --- abstract
 
@@ -129,8 +131,7 @@ The HTTP connection (between Registrar and MASA) is to be protected using TLS (H
 This document specifies a constrained voucher-request artifact based on {{Section 3 of RFC8995}}, and
 voucher(-request) transport over CoAP based on {{Section 3 of RFC8995}} and on {{I-D.ietf-ace-coap-est}}.
 
-The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
-As the tooling to convert YANG documents into a list of SID keys is still in its infancy, the table of SID values presented here MUST be considered normative rather than the output of the pyang tool.
+ The table of VK values presented here MUST be considered normative rather than the output of the pyang tool.
 
 There is additional work when the voucher is integrated into the key-exchange, described in {{!I-D.selander-ace-ake-authz}}.
 This work is not in scope for this document.
@@ -627,8 +628,7 @@ the voucher first the abstract (tree) definition as explained
 in {{-yang-tree}}.  This provides a high-level
 view of the contents of each artifact.
 
-Then the assigned SID values are presented. These have been assigned using
-the rules in {{I-D.ietf-core-sid}}.
+The yang voucher and voucher-request are encoded following the cbor rules defined {{RFC7049}}. An JSON array is encoded as a a CBOR array, and a JSON item is encoded as a CBOR map. In addition the cbor json identifiers that serve as map keys are converted to numbers, called Voucher Keys (VK) as also proposed in {{I-D.ietf-core-sid}}.
 
 ## Voucher Request artifact
 
@@ -644,13 +644,19 @@ for the most constrained cases where RPK is used by the Pledge.
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-tree.txt END
 
-### SID values
+Table 1 mapping from yang type to CBOR type for voucher request.
+
+The CBOR text string of the dates MUST conform to the specification of section 3 in {{RFC6021}}.
+
+### VK values
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-sid.txt END
 
+Table 2 mapping from yang identifier to Voucher Key (VK) for voucher-request
+
 ### YANG Module {#yang-voucher-request}
 
-In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attributes. Two attributes of the voucher are "refined" to be optional.
+In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of VK values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attributes. Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained@DATE.yang END
 
@@ -674,14 +680,19 @@ with only the addition of the fields pinned-domain-pubk and pinned-domain-pubk-s
 
 INSERT_FIG_FROM_FILE ietf-voucher-constrained-tree.txt END
 
-### SID values
+Table 3 mapping from yang type to CBOR type for voucher.
+
+The CBOR text string of the dates MUST conform to the specification of section 3 in {{RFC6021}}.
+
+### VK values
 
 INSERT_FIG_FROM_FILE ietf-voucher-constrained-sid.txt END
 
+Table 4 mapping fron yang identifier to Voucher Key (VK) for voucher
 
 ### YANG Module {#yang-voucher}
 
-In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attributes.
+In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of VK values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attributes.
 Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-constrained-voucher@DATE.yang END
@@ -760,7 +771,7 @@ In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request
 # Design Considerations
 
 The design considerations for the CBOR encoding of vouchers are much the same as for JSON vouchers in {{RFC8366}}.
-One key difference is that the names of the leaves in the YANG definition do not affect the size of the resulting CBOR, as the SID translation process assigns integers to the names.
+One key difference is that the names of the leaves in the YANG definition do not affect the size of the resulting CBOR, as the VK translation process assigns integers to the names.
 
 Any POST request to the Registrar with resource /vs or /es returns a 2.04 Changed response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.04) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.04) response in a separate CoAP message.
 
@@ -860,19 +871,6 @@ This document registers two YANG modules in the YANG Module Names registry {{RFC
       prefix:       vch
       reference:    RFC XXXX
 
-## The RFC SID range assignment sub-registry
-
-    ------------ ------ --------------------------- ------------
-    Entry-point | Size | Module name               | RFC Number
-    ------------ ------ --------------------------- ------------
-    2450          50     ietf-voucher-constrained    [ThisRFC]
-    2500          50     ietf-voucher-request        [ThisRFC}
-                                     -constrained
-    ----------- ------  --------------------------- ------------
-
-Warning: These SID values are defined in {{I-D.ietf-core-sid}}, not as an Early Allocation.
-
-IANA: please update the names in the Registry to match these revised names, if they have not already  been revised.
 
 ## Media Types Registry
 
@@ -930,11 +928,13 @@ either in the Expert Review range (0-255) or IETF Review range (256-9999).
 We are very grateful to Jim Schaad for explaining COSE and CMS choices.
 Also thanks to Jim Schaad for correcting earlier version of the COSE Sign1 objects.
 
-Michel Veillette did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
+Michel Veillette did extensive work on _pyang_ to extend it to support the SID allocation process proposed in {{I-D.ietf-core-sid}}. Many of his results have been taken over in this document.
 
 
 # Changelog
 
+-14
+    SID allocation process is not necessary. Switch to VK assignment.
 -10
     Design considerations extended
     Examples made consistent

@@ -1,15 +1,16 @@
-module: ietf-constrained-voucher
+﻿module: ietf-constrained-voucher
 
   grouping voucher-constrained-grouping
     +-- voucher
-       +-- created-on?                      yang:date-and-time
-       +-- expires-on?                      yang:date-and-time
-       +-- assertion                        enumeration
-       +-- serial-number                    string
-       +-- idevid-issuer?                   binary
-       +-- pinned-domain-cert?              binary
-       +-- domain-cert-revocation-checks?   boolean
-       +-- nonce?                           binary
-       +-- last-renewal-date?               yang:date-and-time
-       +-- pinned-domain-pubk?              binary
-       +-- pinned-domain-pubk-sha256?       binary
+       +-- created-on?                      CBOR text string
+       +-- expires-on?                      CBOR text string
+       +-- assertion                        CBOR unsigned integer
+       +-- serial-number                    CBOR text string
+       +-- idevid-issuer?                   CBOR byte string
+       +-- pinned-domain-cert?              CBOR byte string
+       +-- domain-cert-revocation-checks?   CBOR simple value
+       +-- nonce?                           CBOR byte string
+       +-- last-renewal-date?               CBOR text string
+       +-- pinned-domain-pubk?              CBOR byte string
+       +-- pinned-domain-pubk-sha256?       CBOR byte string
+

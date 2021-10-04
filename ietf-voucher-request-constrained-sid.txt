@@ -1,34 +1,34 @@
            
-      SID Assigned to
+       VK Assigned to
 --------- -------------------------------------------------- 
      2519 data /ietf-constrained-voucher-request:voucher
-     2520 data .../assertion
-     2521 data .../created-on
-     2522 data .../domain-cert-revocation-checks
-     2523 data .../expires-on
-     2524 data .../idevid-issuer
-     2525 data .../last-renewal-date
-     2526 data /ietf-constrained-voucher-request:voucher/nonce
-     2527 data .../pinned-domain-cert
-     2528 data .../prior-signed-voucher-request
-     2529 data .../proximity-registrar-cert
-     2530 data .../proximity-registrar-pubk
-     2531 data .../proximity-registrar-pubk-sha256
-     2532 data .../serial-number
-     2501 data /ietf-voucher-request-constrained:voucher
-     2502 data .../assertion
-     2503 data .../created-on
-     2504 data .../domain-cert-revocation-checks
-     2505 data .../expires-on
-     2506 data .../idevid-issuer
-     2507 data .../last-renewal-date
-     2508 data /ietf-voucher-request-constrained:voucher/nonce
-     2509 data .../pinned-domain-cert
-     2510 data .../prior-signed-voucher-request
-     2511 data .../proximity-registrar-cert
-     2513 data .../proximity-registrar-pubk
-     2512 data .../proximity-registrar-pubk-sha256
-     2514 data .../serial-number
+        1 data .../assertion
+        2 data .../created-on
+        3 data .../domain-cert-revocation-checks
+        4 data .../expires-on
+        5 data .../idevid-issuer
+        6 data .../last-renewal-date
+        7 data /ietf-constrained-voucher-request:voucher/nonce
+        8 data .../pinned-domain-cert
+        9 data .../prior-signed-voucher-request
+       10 data .../proximity-registrar-cert
+       11 data .../proximity-registrar-pubk
+       12 data .../proximity-registrar-pubk-sha256
+       13 data .../serial-number
+       14 data /ietf-voucher-request-constrained:voucher
+       15 data .../assertion
+       16 data .../created-on
+       17 data .../domain-cert-revocation-checks
+       18 data .../expires-on
+       19 data .../idevid-issuer
+       20 data .../last-renewal-date
+       21 data /ietf-voucher-request-constrained:voucher/nonce
+       22 data .../pinned-domain-cert
+       23 data .../prior-signed-voucher-request
+       24 data .../proximity-registrar-cert
+       25 data .../proximity-registrar-pubk
+       26 data .../proximity-registrar-pubk-sha256
+       27 data .../serial-number
            
- WARNING, obsolete definitions
            
+
