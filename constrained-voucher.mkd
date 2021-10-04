@@ -557,7 +557,7 @@ The presence of the SNI is need by the MASA in order for the MASA to host multip
 The Registrar SHOULD use a TLS Client Certificate to authenticate to the MASA.
 If the certificate that the Registrar uses is marked as a cmcRA certificate, via Extended Key Usage, then it MUST also have the id-kp-clientAuth EKU attribute set.
 
-### Registrar Certificate Requiurement
+### Registrar Certificate Requirement {#registrar-certificate}
 
 In summary for typical Registrar use, where a single Registrar certificate is used, then the certificate MUST have EKU of: id-kp-cmcRA, id-kp-serverAuth, id-kp-clientAuth.
 
@@ -837,6 +837,16 @@ TBD.
 ## Test Domain Certificate Validity when Signing
 
 TBD.
+
+## Registrar Certificate may be self-signed
+
+The provisional (D)TLS connection formed by the Pledge with the Registrar does not authenticate the Registrar's identity.
+This Registrar's identity is validated by the {{RFC8366}} voucher that is issued by the MASA, signed with an anchor that was built-in to the Pledge.
+
+The Registrar may therefore use any certificate, including a self-signed one.
+The only restrictions on the certificate is that it MUST have EKU bits set as detailed in {{registrar-certificate}}.
+
+A Registrar that uses a Raw Public Key (RPK) has no certificate structure, and therefore has no EKU bits that can be set.
 
 # IANA Considerations
 
