@@ -627,7 +627,7 @@ In most cases there is a one to one relationship between the trust anchor that s
 In that case, the serial-number in the voucher must refer to the same device as the serial-number that is in IDevID certificate.
 
 However, there situations where the one to one relationship may be broken.
-This occurs whenever a manufacturer has a common MASA, but different produces (on different assembly lines) are produced with identical serial numbers.
+This occurs whenever a manufacturer has a common MASA, but different producers (on different assembly lines) are produced with identical serial numbers.
 A system of serial numbers which is just a simple counter is a good example of this.
 A system of serial numbers where there is some prefix relating the product type does not fit into this, even if the lower digits are a counter.
 
