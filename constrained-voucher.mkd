@@ -844,6 +844,7 @@ This would apply only to the case where a Manufacturer Authorized Signing Author
 
 For example, imagine the same manufacturer makes light bulbs as well as gas centrofuges,
 and that said manufacturer does not uniquely allocate serial numbers.
+This attack only works for nonceless vouchers.
 The attacker has obtained a light bulb which happens to have the same serial-number as a gas centrofuge which it wishes to obtain access.
 The attacker performs a normal BRSKI onboarding for the light bulb, but then uses the resulting voucher to onboard the gas centrofuge.
 The attack requires that the gas centrofuge be returned to a state where it is willing to perform a new onboarding operation.
