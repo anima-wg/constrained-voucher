@@ -348,6 +348,8 @@ The pledge is expected to support a single format only.
 The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
 
+{{discovery-considerations}} details how the Pledge discovers the Registrar and Join Proxy in different deployment scenarios.
+
 ### RFC8995 Telemetry Returns
 
 {{RFC8995}} defines two telemetry returns from the Pledge which are sent to the Registrar.
