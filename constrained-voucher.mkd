@@ -803,11 +803,23 @@ The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of t
 
 ## Generic networks using GRASP
 
+{{RFC8995}} defines a mechanism for the Pledge to discover a Join Proxy by listening for {{RFC8990}} GRASP messages.
+This mechanism can be used on any network which does not have another more specific mechanism.
+This mechanism supports a mesh mechanism, but can also be used over unencrypted WIFI.
+
 ## Generic networks using mDNS
+
+{{RFC8995}} also defines a non-normative mechanism for the Pledge to discover a Join Proxy by doing mDNS queries.
+This mechanism can be used on any network which does not have another more specific mechanism.
+This mechanism does not support a mesh mechanism.  It can be used over unencrypted WIFI.
 
 ## Thread networks using MLE
 
+TBD.
+
 ## Non-mesh networks using CoAP Discovery
+
+On unencrypted constrained networks such as 802.15.4, CoAP discover may be done using the mechanism detailed in {{I-D.ietf-ace-est}}.
 
 
 # Design Considerations
