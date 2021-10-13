@@ -80,7 +80,6 @@ normative:
 informative:
   RFC7228:
   RFC4443:
-  RFC6066:
   RFC8340: yang-tree
   I-D.kuehlewind-update-tag:
   COSE-registry:
@@ -455,17 +454,17 @@ A constrained EST-coaps client MAY support only the Content-Format TBD287 ("appl
 
 In this case, it can only store one trust anchor of the domain. Although this is not an issue in case the domain trust anchor remains stable, special consideration is
 needed for cases where the domain trust anchor can change over time. Such a change may happen due to relocation of the client device to a new domain, or due to key update of
-the trust anchor as described in {{RFC4210, Section 4.4}}.  
+the trust anchor as described in {{RFC4210, Section 4.4}}.
 
 The trust anchor change may happen during EST re-enrollment: typically, a change of domain CA requires all devices
 operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as imminent expiry of its LDevID.
 How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification.
 
 The mechanism described in {{RFC4210, Section 4.4}} for Root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. The OldWithOld certificate is already
-stored in the EST client's trust store. The NewWithNew certificate will be distributed as the single certificate in a /crts response, during EST re-enrollment. 
-Since the EST client can only accept a single certificate in a /crts response it implies that the EST client 
-cannot obtain the certificates OldWithNew and NewWithOld in this way, to perform the complete verification of the new domain CA. Instead, the client only verifies the EST server (Registrar) using its 
-old domain CA certificate in its trust store as detailed below, and based on this trust in the active and valid DTLS connection it automatically trusts the 
+stored in the EST client's trust store. The NewWithNew certificate will be distributed as the single certificate in a /crts response, during EST re-enrollment.
+Since the EST client can only accept a single certificate in a /crts response it implies that the EST client
+cannot obtain the certificates OldWithNew and NewWithOld in this way, to perform the complete verification of the new domain CA. Instead, the client only verifies the EST server (Registrar) using its
+old domain CA certificate in its trust store as detailed below, and based on this trust in the active and valid DTLS connection it automatically trusts the
 new (NewWithNew) domain CA certificate that the EST server provides in the /crts response.
 
 In this manner, even during rollover of trust anchors, it is possible to have only a single trust anchor provided in a /crts response.
@@ -570,7 +569,7 @@ The presence of the SNI is need by the MASA in order for the MASA to host multip
 The Registrar SHOULD use a TLS Client Certificate to authenticate to the MASA.
 If the certificate that the Registrar uses is marked as a cmcRA certificate, via Extended Key Usage, then it MUST also have the id-kp-clientAuth EKU attribute set.
 
-### Registrar Certificate Requirement {#registrar-certificate}
+### Registrar Certificate Requirement {#registrar-certificate-requirement}
 
 In summary for typical Registrar use, where a single Registrar certificate is used, then the certificate MUST have EKU of: id-kp-cmcRA, id-kp-serverAuth, id-kp-clientAuth.
 
@@ -857,7 +856,7 @@ The provisional (D)TLS connection formed by the Pledge with the Registrar does n
 This Registrar's identity is validated by the {{RFC8366}} voucher that is issued by the MASA, signed with an anchor that was built-in to the Pledge.
 
 The Registrar may therefore use any certificate, including a self-signed one.
-The only restrictions on the certificate is that it MUST have EKU bits set as detailed in {{registrar-certificate}}.
+The only restrictions on the certificate is that it MUST have EKU bits set as detailed in {{registrar-certificate-requirement}}.
 
 A Registrar that uses a Raw Public Key (RPK) has no certificate structure, and therefore has no EKU bits that can be set.
 
