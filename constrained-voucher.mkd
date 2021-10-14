@@ -339,7 +339,7 @@ Note that Content-Format TBD3 ("application/voucher-cose+cbor") is defined in th
 Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least TBD3 is supported.
 
-Note that this specification allows for voucher-cose+cbor format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats TBD over CoAP.
+Note that this specification allows for voucher-cose+cbor format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
 The burden for this flexibility is places upon the Registrar.
 The pledge is expected to support a single format only.
 
