@@ -796,7 +796,7 @@ This section details how discovery is done in a specific deployment scenarios.
 
 ## 6TSCH Deployments
 
-In 6TISCH networks, the CoJP mechanism is described in {{RFC9031}}.
+In 6TISCH networks, the Constrained Join Proxy (CoJP) mechanism is described in {{RFC9031}}.
 Such networks are expected to use a {{-EDHOC}} to do key management.
 This is the subject of future work.
 The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of the Join Proxy.
