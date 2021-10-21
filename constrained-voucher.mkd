@@ -806,7 +806,7 @@ The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of t
 
 {{RFC8995}} defines a mechanism for the Pledge to discover a Join Proxy by listening for {{RFC8990}} GRASP messages.
 This mechanism can be used on any network which does not have another more specific mechanism.
-This mechanism supports a mesh networks, but can also be used over unencrypted WIFI.
+This mechanism supports mesh networks, and can also be used over unencrypted WIFI.
 
 ## Generic networks using mDNS
 
