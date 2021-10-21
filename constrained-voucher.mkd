@@ -843,7 +843,7 @@ In the absense of correct use of idevid-issuer by the Registrar as detailed in {
 This would apply only to the case where a Manufacturer Authorized Signing Authority (MASA) is trusted by different products from the same manufacturer, and the manufacturer has duplicated serial numbers as a result of a merge, acquisition or mis-management.
 
 For example, imagine the same manufacturer makes light bulbs as well as gas centrofuges,
-and that said manufacturer does not uniquely allocate serial numbers.
+and that said manufacturer does not uniquely allocate product serial numbers.
 This attack only works for nonceless vouchers.
 The attacker has obtained a light bulb which happens to have the same serial-number as a gas centrofuge which it wishes to obtain access.
 The attacker performs a normal BRSKI onboarding for the light bulb, but then uses the resulting voucher to onboard the gas centrofuge.
