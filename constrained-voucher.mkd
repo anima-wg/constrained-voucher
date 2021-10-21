@@ -820,7 +820,7 @@ TBD.
 
 ## Non-mesh networks using CoAP Discovery
 
-On unencrypted constrained networks such as 802.15.4, CoAP discover may be done using the mechanism detailed in {{I-D.ietf-ace-coap-est}}.
+On unencrypted constrained networks such as 802.15.4, CoAP discover may be done using the mechanism detailed in {{I-D.ietf-ace-coap-est}} section 5.1.
 
 
 # Design Considerations
