@@ -658,7 +658,35 @@ However, if the Pledge is known to also support RPK pinning and the MASA intends
 ~~~~
 {: #fig-pinning title='Raw Public Key pinning'}
 
-<!-- ******************************************************************** -->
+## Considerations for use of IDevID-Issuer {#registrar-idevid-issuer}
+
+{{RFC8366}} and {{RFC8995}} defines the idevid-issuer attribute for voucher and voucher-request (respectively), but they do not explain that much about when to use it.
+
+The use of idevid-issuer is provided so that the serial-number to which the issued voucher pertains can be relative to the entity that issued the devices' IDevID.
+In most cases there is a one to one relationship between the trust anchor that signs vouchers (and is trusted by the pledge), and the Certification Authority that signs the IDevID.
+In that case, the serial-number in the voucher must refer to the same device as the serial-number that is in IDevID certificate.
+
+However, there situations where the one to one relationship may be broken.
+This occurs whenever a manufacturer has a common MASA, but different producers (on different assembly lines) are produced with identical serial numbers.
+A system of serial numbers which is just a simple counter is a good example of this.
+A system of serial numbers where there is some prefix relating the product type does not fit into this, even if the lower digits are a counter.
+
+It is not possible for the Pledge or the Registrar to know which situation applies.
+The question to be answered is whether or not to include the idevid-issuer in the PVR and the RVR.
+A second question arose as to what the format of the idevid-issuer contents are.
+
+Analysis of the situation shows that the pledge never needs to include the idevid-issuer in it's PVR, because the pledge's IDevID certificate is available the Registrar, and the Authority Key Identifier is contained within that.
+The pledge therefore has no need to repeat this.
+
+For the RVR, the Registrar has to examine the pledge's IDevID certificate to discover the serial number for the Registrar's Voucher Request (RVR).
+This is clear in {{Section 5.5 of RFC8995}}.
+That section also clarifies that the idevid-issuer is to be included in the RVR.
+
+There has been some confusion as to how much of the Authorized Key Identifier is to be included.
+The explanation in the YANG module of {{RFC8366}} is a bit vague as there are two different OCTET STRINGS present in {{RFC5280}}.
+This document specified that the entire object is to be included: the AuthorityKeyIdentifier, SEQUENCE, Choice as well as the OCTET STRING that is the keyIdentifier.
+
+!-- ******************************************************************** -->
 
 # Artifacts
 
@@ -880,6 +908,21 @@ In CMS signed artifacts, the CMS structure has a place for such certificates.
 In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used for this.
 
 # Security Considerations
+
+## Duplicate serial-numbers
+
+In the absense of correct use of idevid-issuer by the Registrar as detailed in {{registrar-idevid-issuer}}, it would be possible for a malicious Registrar to an unauthorized voucher for a device.
+This would apply only to the case where a Manufacturer Authorized Signing Authority (MASA) is trusted by different products from the same manufacturer, and the manufacturer has duplicated serial numbers as a result of a merge, acquisition or mis-management.
+
+For example, imagine the same manufacturer makes light bulbs as well as gas centrofuges,
+and that said manufacturer does not uniquely allocate product serial numbers.
+This attack only works for nonceless vouchers.
+The attacker has obtained a light bulb which happens to have the same serial-number as a gas centrofuge which it wishes to obtain access.
+The attacker performs a normal BRSKI onboarding for the light bulb, but then uses the resulting voucher to onboard the gas centrofuge.
+The attack requires that the gas centrofuge be returned to a state where it is willing to perform a new onboarding operation.
+
+This attack is prevented by the mechanism of having the Registrar include the idevid-issuer in the RVR, and the MASA including it in the resulting voucher.
+The idevid-issuer is not included by default: a MASA needs to be aware if there are parts of the organization which duplicates serial numbers, and if so, include it.
 
 ## Clock Sensitivity
 
