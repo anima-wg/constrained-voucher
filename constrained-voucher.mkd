@@ -65,6 +65,7 @@ normative:
   I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-cose-rfc8152bis-algs:
   RFC9031: minimal-security
+  RFC9032:
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
   I-D.ietf-ace-coap-est:
@@ -90,7 +91,9 @@ informative:
     date: 2017
   I-D.richardson-anima-masa-considerations:
   I-D.ietf-anima-constrained-join-proxy:
+  I-D.ietf-lake-edhoc: EDHOC
   RFC6690:
+  RFC8990:
   RFC7030:
 
 --- abstract
@@ -126,7 +129,7 @@ This document defines a new voucher serialization to CBOR {{RFC8949}} with a sig
 
 This COSE-signed CBOR-encoded voucher is transported using secured CoAP and HTTPS.
 
-The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC or DTLS (CoAPS).
+The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC {{-EDHOC}} or DTLS (CoAPS).
 The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
 This document specifies a constrained voucher-request artifact based on {{Section 3 of RFC8995}}, and
@@ -257,7 +260,7 @@ A Registrar that processes a PVR with an x5bag attribute MUST ignore it, and MUS
 A situation where the pledge MAY use the x5bag is for communications of certificate chains to the MASA.
 This would arise in some vendor specific situations involving outsourcing of MASA functionality, or rekey of IDevID certification authority.
 
-## Discovery, URIs and Content Formats
+## Discovery, URIs and Content Formats {#discovery}
 
 To keep the protocol messages small the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
 
@@ -345,6 +348,8 @@ The pledge is expected to support a single format only.
 
 The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
+
+{{discovery-considerations}} details how the Pledge discovers the Registrar and Join Proxy in different deployment scenarios.
 
 ### RFC8995 Telemetry Returns
 
@@ -791,6 +796,38 @@ A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as 
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
 
 In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request example of {{example2}}.
+
+# Deployment specific Discovery Considerations {#discovery-considerations}
+
+This section details how discovery is done in a specific deployment scenarios.
+
+## 6TSCH Deployments
+
+In 6TISCH networks, the Constrained Join Proxy (CoJP) mechanism is described in {{RFC9031}}.
+Such networks are expected to use a {{-EDHOC}} to do key management.
+This is the subject of future work.
+The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of the Join Proxy.
+
+## Generic networks using GRASP
+
+{{RFC8995}} defines a mechanism for the Pledge to discover a Join Proxy by listening for {{RFC8990}} GRASP messages.
+This mechanism can be used on any network which does not have another more specific mechanism.
+This mechanism supports mesh networks, and can also be used over unencrypted WIFI.
+
+## Generic networks using mDNS
+
+{{RFC8995}} also defines a non-normative mechanism for the Pledge to discover a Join Proxy by doing mDNS queries.
+This mechanism can be used on any network which does not have another recommended mechanism.
+This mechanism does not easily support mesh networks.  It can be used over unencrypted WIFI.
+
+## Thread networks using Mesh Link Establishment (MLE)
+
+TBD.
+
+## Non-mesh networks using CoAP Discovery
+
+On unencrypted constrained networks such as 802.15.4, CoAP discover may be done using the mechanism detailed in {{I-D.ietf-ace-coap-est}} section 5.1.
+
 
 # Design Considerations
 
