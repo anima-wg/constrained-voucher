@@ -448,7 +448,7 @@ A constrained Pledge MAY support only this format in a /crts response, per {{Sec
 Note that even though the Pledge may avoid the initial /crts request, it SHOULD support retrieval of the trust anchor CA periodically.
 A pledge that has an idea of the current time (internally, or via NTP), the pledge SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA when the CA has 50% lifetime left.
 A pledge that has no idea of the current time will have no idea if the trust anchor CA has expired.
-Such a device SHOULD for a poll periodically for a new trust anchor at an interval of approximately 1 month.
+Such a device SHOULD poll periodically for a new trust anchor at an interval of approximately 1 month.
 The Pledge SHOULD use GET-with-ETag, and servers SHOULD support it.
 
 
