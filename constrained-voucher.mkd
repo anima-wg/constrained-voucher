@@ -446,7 +446,7 @@ A constrained Pledge MAY support only this format in a /crts response, per {{Sec
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
 Note that even though the Pledge may avoid the initial /crts request, it SHOULD support retrieval of the trust anchor CA periodically.
-A pledge that has an idea of the current time (internally, or via NTP), the pledge SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA when the CA has 50% lifetime left.
+A pledge that has an idea of the current time (internally, or via NTP), the pledge SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA when the CA has 50% of it's validity time (notAfter - notBefore) left.
 A pledge that has no idea of the current time will have no idea if the trust anchor CA has expired.
 Such a device SHOULD poll periodically for a new trust anchor at an interval of approximately 1 month.
 The Pledge SHOULD use GET-with-ETag, and servers SHOULD support it.
