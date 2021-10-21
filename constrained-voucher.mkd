@@ -811,7 +811,7 @@ This mechanism supports mesh networks, and can also be used over unencrypted WIF
 ## Generic networks using mDNS
 
 {{RFC8995}} also defines a non-normative mechanism for the Pledge to discover a Join Proxy by doing mDNS queries.
-This mechanism can be used on any network which does not have another more specific mechanism.
+This mechanism can be used on any network which does not have another recommended mechanism.
 This mechanism does support mesh networks.  It can be used over unencrypted WIFI.
 
 ## Thread networks using Mesh Link Establishment (MLE)
