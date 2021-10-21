@@ -642,9 +642,9 @@ For the RVR, the Registrar has to examine the pledge's IDevID certificate to dis
 This is clear in {{Section 5.5 of RFC8995}}.
 That section also clarifies that the idevid-issuer is to be included in the RVR.
 
-The question as to how much of the Authorized Key Identifier is to be include.
+There has been some confusion as to how much of the Authorized Key Identifier is to be included.
 The explanation in the YANG module of {{RFC8366}} is a bit vague as there are two different OCTET STRINGS present in {{RFC5280}}.
-The conclusion is that the entire object is to be included: the AuthorityKeyIdentifyer, SEQUENCE, Choice as well as the OCTET STRING that is the KeyIDentifier.
+This document specified that the entire object is to be included: the AuthorityKeyIdentifier, SEQUENCE, Choice as well as the OCTET STRING that is the keyIdentifier.
 
 !-- ******************************************************************** -->
 
