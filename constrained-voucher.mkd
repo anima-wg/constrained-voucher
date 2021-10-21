@@ -814,7 +814,7 @@ This mechanism supports a mesh networks, but can also be used over unencrypted W
 This mechanism can be used on any network which does not have another more specific mechanism.
 This mechanism does support a mesh networks.  It can be used over unencrypted WIFI.
 
-## Thread networks using MLE
+## Thread networks using Mesh Link Establishment (MLE)
 
 TBD.
 
