@@ -938,8 +938,9 @@ This has been done as it simplifies the MASA deployment for the manufacturer bec
 
 The use of UDP protocols across the open Internet is sometimes fraught with security challenges.
 Denial of service attacks against UDP based protocols is trivial as there is no three-way handshake as done for TCP.
-The three-way handshake has a
-DTLS contains an option
+The three-way handshake of TCP guarantees that the node sending the connection request is reachable using the origin IP address.
+While DTLS contains an option to do a stateless challenge -- a process actually stronger than that done by TCP, it is not yet common for this mechanism to be available in hardware at multigigabit speeds.
+It is for this reason that this protocols sticks to using HTTPS for the Registrar->MASA connection.
 
 
 
