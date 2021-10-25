@@ -46,28 +46,29 @@ contributor:
 
 normative:
 #  RFC2119:
-  RFC8949:
-  I-D.ietf-core-yang-cbor:
-  I-D.ietf-core-sid:
+  RFC3688:
+  RFC4193:
   RFC4210:
-  RFC7250:
-  RFC8446:
+  RFC5280:
+  RFC5652:
   RFC6020:
   RFC6066:
   RFC6125:
+  RFC7250:
   RFC7950:
-  RFC5652:
-  RFC4193:
   RFC8366:
-  RFC3688:
+  RFC8446:
   RFC8610:
+  RFC8949:
   RFC8995:
-  I-D.ietf-cose-rfc8152bis-struct:
-  I-D.ietf-cose-rfc8152bis-algs:
   RFC9031: minimal-security
   RFC9032:
 #  I-D.ietf-core-object-security:
 #  I-D.ietf-ace-cbor-web-token:
+  I-D.ietf-core-yang-cbor:
+  I-D.ietf-core-sid:
+  I-D.ietf-cose-rfc8152bis-struct:
+  I-D.ietf-cose-rfc8152bis-algs:
   I-D.ietf-ace-coap-est:
   I-D.ietf-cose-x509:
   I-D.ietf-tls-dtls13:
@@ -682,9 +683,9 @@ For the RVR, the Registrar has to examine the pledge's IDevID certificate to dis
 This is clear in {{Section 5.5 of RFC8995}}.
 That section also clarifies that the idevid-issuer is to be included in the RVR.
 
-There has been some confusion as to how much of the Authorized Key Identifier is to be included.
-The explanation in the YANG module of {{RFC8366}} is a bit vague as there are two different OCTET STRINGS present in {{RFC5280}}.
-This document specified that the entire object is to be included: the AuthorityKeyIdentifier, SEQUENCE, Choice as well as the OCTET STRING that is the keyIdentifier.
+There has been some confusion as to how much of the Authority Key Identifier is to be included.
+The explanation in the YANG module of {{RFC8366}} is a bit vague as there are two different OCTET STRINGS present in respectively  {{Section 4.1 of RFC5280}} and {{Section 4.2.1.1 of RFC5280}} for this extension.
+The correct interpretation is that {{RFC8366}} specifies that the entire object i.e. the extnValue OCTET STRING is to be included: comprising the AuthorityKeyIdentifier, SEQUENCE, Choice as well as the OCTET STRING that is the keyIdentifier.
 
 !-- ******************************************************************** -->
 
