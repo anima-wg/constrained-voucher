@@ -439,22 +439,18 @@ A constrained Pledge MAY use the following optimized EST-coaps procedure to mini
 1. if the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words,
 it provisionally accepts this CA certificate as if it were the result of "CA certificates request" (/crts) to the Registrar.
 
-2. Using this CA certificate as trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID.
+2. Using this CA certificate as trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID certificate.
 
-3. If the Pledge validates that the trust anchor CA was used to sign its LDevID, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor CA for the Registrar's domain and accepts the associated LDevID.
+3. If the Pledge validates that the trust anchor CA was used to sign its LDevID certificate, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor CA for the Registrar's domain and accepts the associated LDevID certificate.
 
-4. If the trust anchor CA was NOT used to sign its LDevID, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these differ from the (temporary) pinned domain CA.
+4. If the trust anchor CA was NOT used to sign its LDevID certificate, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these differ from the (temporary) pinned domain CA.
 
 5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
 A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}.
 
-7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
+7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID certificate, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
-Note that even though the Pledge may avoid the initial /crts request, it SHOULD support retrieval of the trust anchor CA periodically.
-A pledge that has an idea of the current time (internally, or via NTP) SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA when the CA has 50% of it's validity time (notAfter - notBefore) left.
-A pledge that has no idea of the current time will have no idea if the trust anchor CA has expired.
-Such a device SHOULD poll periodically for a new trust anchor at an interval of approximately 1 month.
-The Pledge SHOULD use GET-with-ETag, and servers SHOULD support it.
+Note that even though the Pledge may avoid performing any /crts request using the above EST-coaps procedure during bootstrap, it SHOULD support retrieval of the trust anchor CA periodically as detailed in the next section.
 
 
 ### EST-client Extensions {#brski-est-extensions-estclient}
@@ -462,13 +458,20 @@ The Pledge SHOULD use GET-with-ETag, and servers SHOULD support it.
 This section defines extensions to EST-coaps clients, used after the BRSKI bootstrap procedure is completed.
 (Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain.)
 A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}.
+In this case, it can only store one trust anchor of the domain. 
 
-In this case, it can only store one trust anchor of the domain. Although this is not an issue in case the domain trust anchor remains stable, special consideration is
+An EST-coaps client that has an idea of the current time (internally, or via NTP) SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA using the /crts request when the CA has 50% of it's validity time (notAfter - notBefore) left.
+A client that has no idea of the current time will have no idea if the trust anchor CA has expired.
+Such client SHOULD poll periodically for a new trust anchor using the /crts request at an interval of approximately 1 month.
+An EST-coaps server SHOULD include the CoAP ETag Option in every response to a /crts request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid. 
+The EST-coaps client SHOULD store the ETag resulting from a /crts response in memory and SHOULD use this value in an ETag Option in its next GET /crts request.
+
+The above-mentioned limitation that an EST-coaps client may support only one trust anchor CA is not an issue in case the domain trust anchor remains stable. However, special consideration is
 needed for cases where the domain trust anchor can change over time. Such a change may happen due to relocation of the client device to a new domain, or due to key update of
 the trust anchor as described in {{RFC4210, Section 4.4}}.
 
-The trust anchor change may happen during EST re-enrollment: typically, a change of domain CA requires all devices
-operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as imminent expiry of its LDevID.
+From the client's viewpoint, a trust anchor change typically happens during EST re-enrollment: a change of domain CA requires all devices 
+operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as an instruction to re-enroll sent by a domain entity, or an imminent expiry of its LDevID certificate. 
 How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification.
 
 The mechanism described in {{RFC4210, Section 4.4}} for Root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. The OldWithOld certificate is already
@@ -485,7 +488,7 @@ One option is that devices should avoid restarting existing DTLS or OSCORE conne
 The recommended period for certificate renewal is 24 hours.
 For re-enrollment, the constrained EST-coaps client MUST support the following EST-coaps procedure, where optional re-enrollment to a new domain is under control of the Registrar:
 
-1. The client connects with DTLS to the Registrar, and authenticates with its present domain certificate (LDevID) as usual. The Registrar authenticates itself with its domain certificate that
+1. The client connects with DTLS to the Registrar, and authenticates with its present domain certificate (LDevID certificate) as usual. The Registrar authenticates itself with its domain certificate that
 is trusted by the client, i.e. it chains to the single trust anchor that the client has stored. This is the "old" trust anchor, the one that will be eventually replaced in case the Registrar
 decides to re-enroll the client into a new domain.
 
@@ -493,8 +496,9 @@ decides to re-enroll the client into a new domain.
 
 3. The client verifies the new LDevID against its (single) existing domain trust anchor. If it chains successfully, this means the trust anchor did not change and the client MAY skip retrieving the current CA certificate using the "CA certificates request" (/crts). If it does not chain successfully, this means the trust anchor was changed/updated and the client then MUST retrieve the new domain trust anchor using the "CA certificates request" (/crts).
 
-4. If the client retrieved a new trust anchor in step 3, then it MUST verify that the new trust anchor chains with the new LDevID it obtained in step 2. If it chains successfully, the client stores both, accepts the new LDevID and stops using it prior LDevID. If it does not chain successfully, the client MUST NOT update its LDevID, it MUST NOT update its (single) domain trust anchor, and the client MUST abort the enrollment process and report the error to the Registrar using enrollment status telemetry (/es).
+4. If the client retrieved a new trust anchor in step 3, then it MUST verify that the new trust anchor chains with the new LDevID certificate it obtained in step 2. If it chains successfully, the client stores both, accepts the new LDevID certificate and stops using it prior LDevID certificate. If it does not chain successfully, the client MUST NOT update its LDevID certificate, it MUST NOT update its (single) domain trust anchor, and the client MUST abort the enrollment process and report the error to the Registrar using enrollment status telemetry (/es).
 
+Note that even though the EST-coaps client may skip the /crts request in step 3, it SHOULD support retrieval of the trust anchor CA periodically as detailed earlier in this section.
 
 ### Registrar Extensions {#brski-est-extensions-registrar}
 
