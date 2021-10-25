@@ -527,6 +527,7 @@ During the operation of the constrained BRSKI-EST protocol, the CoAP Blockwise t
 A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragment length extension ("max_fragment_length") defined in Section 4 of {{RFC6066}} with the maximum fragment length set to a value of either 2^9 or 2^10.
 
 # BRSKI-MASA Protocol {#brski-masa}
+
 This section describes extensions to and clarifications of the BRSKI-MASA protocol between Registrar and MASA.
 
 ## Protocol and Formats {#brski-masa-protocol-format}
@@ -925,17 +926,23 @@ The attack requires that the gas centrofuge be returned to a state where it is w
 This attack is prevented by the mechanism of having the Registrar include the idevid-issuer in the RVR, and the MASA including it in the resulting voucher.
 The idevid-issuer is not included by default: a MASA needs to be aware if there are parts of the organization which duplicates serial numbers, and if so, include it.
 
-## Clock Sensitivity
+## IDevID security in Pledge
 
 TBD.
 
-## Protect Voucher PKI in HSM
+## Security of CoAP and UDP protocols
 
-TBD.
+{{brski-masa-protocol-format}} explains that no CoAPS version of the BRSKI-MASA protocol is  proposed.
+The connection from the Registrar to the MASA continues to be HTTPS as in {{RFC8995}}.
+This has been done as it simplifies the MASA deployment for the manufacturer because no new protocol needs to be enabled.
 
-## Test Domain Certificate Validity when Signing
+The use of UDP protocols across the open Internet is sometimes fraught with security challenges.
+Denial of service attacks against UDP based protocols is trivial as there is no three-way handshake as done for TCP.
+The three-way handshake has a
+DTLS contains an option
 
-TBD.
+
+
 
 ## Registrar Certificate may be self-signed
 
