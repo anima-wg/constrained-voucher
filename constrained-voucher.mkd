@@ -704,7 +704,7 @@ view of the contents of each artifact.
 Then the assigned SID values are presented. These have been assigned using
 the rules in {{I-D.ietf-core-sid}}.
 
-## Voucher Request artifact
+## Voucher Request artifact {#voucher-request-artifact}
 
 ### Tree Diagram
 
@@ -960,8 +960,16 @@ The only restrictions on the certificate is that it MUST have EKU bits set as de
 A Registrar that uses a Raw Public Key (RPK) has no certificate structure, and therefore has no EKU bits that can be set.
 
 
-## Use of RPK alternatives
+## Use of RPK alternatives to proximity-registrar-cert
 
+In {{voucher-request-artifact}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256. 
+The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields 
+by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate. 
+The MASA will not be able to detect such act by the Registrar. But since any 'other' certificate the Registrar could insert in this way still encodes its identity the additional risk 
+of using the RPK alternatives is neglible.
+
+When a Registrar sees a PVR that uses one of proximity-registrar-pubk or proximity-registrar-pubk-sha256 fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
+Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}. 
 
 # IANA Considerations
 
