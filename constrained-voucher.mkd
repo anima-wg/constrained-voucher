@@ -259,7 +259,7 @@ The Pledge SHOULD NOT use the x5bag attribute in this way in the PVR.
 A Registrar that processes a PVR with an x5bag attribute MUST ignore it, and MUST use only the TLS Client Certificate extension for authentication of the Pledge.
 
 A situation where the pledge MAY use the x5bag is for communications of certificate chains to the MASA.
-This would arise in some vendor specific situations involving outsourcing of MASA functionality, or rekey of IDevID certification authority.
+This would arise in some vendor-specific situations involving outsourcing of MASA functionality, or rekey of IDevID certification authority.
 
 ## Discovery, URIs and Content Formats {#discovery}
 
@@ -831,7 +831,7 @@ In other words, there is no need for the Registrar to verify the contents of thi
 
 In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request example of {{example2}}.
 
-# Deployment specific Discovery Considerations {#discovery-considerations}
+# Deployment-specific Discovery Considerations {#discovery-considerations}
 
 This section details how discovery is done in a specific deployment scenarios.
 
@@ -958,6 +958,10 @@ The Registrar may therefore use any certificate, including a self-signed one.
 The only restrictions on the certificate is that it MUST have EKU bits set as detailed in {{registrar-certificate-requirement}}.
 
 A Registrar that uses a Raw Public Key (RPK) has no certificate structure, and therefore has no EKU bits that can be set.
+
+
+## Use of RPK alternatives
+
 
 # IANA Considerations
 
