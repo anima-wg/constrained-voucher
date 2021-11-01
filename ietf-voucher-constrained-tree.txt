@@ -1,4 +1,4 @@
-module: ietf-constrained-voucher
+module: ietf-voucher-constrained
 
   grouping voucher-constrained-grouping
     +-- voucher

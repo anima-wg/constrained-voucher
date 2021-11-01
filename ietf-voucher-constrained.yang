@@ -1,8 +1,8 @@
-module ietf-constrained-voucher {
+module ietf-voucher-constrained {
   yang-version 1.1;
 
   namespace
-    "urn:ietf:params:xml:ns:yang:ietf-constrained-voucher";
+    "urn:ietf:params:xml:ns:yang:ietf-voucher-constrained";
   prefix "constrained";
 
   import ietf-restconf {
