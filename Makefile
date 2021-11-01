@@ -35,10 +35,10 @@ ${CWTDATE2}: ietf-voucher-request-constrained.yang
 	mkdir -p yang
 	sed -e"s/YYYY-MM-DD/${YANGDATE}/" ietf-voucher-request-constrained.yang > ${CWTDATE2}
 
-ietf-constrained-voucher-tree.txt: ${CWTDATE1}
+ietf-voucher-constrained-tree.txt: ${CWTDATE1}
 	${PYANG} ${PYANGPATH} -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE1} > ietf-voucher-constrained-tree.txt
 
-ietf-constrained-voucher-request-tree.txt: ${CWTDATE2}
+ietf-voucher-request-constrained-tree.txt: ${CWTDATE2}
 	${PYANG} ${PYANGPATH} -f tree --tree-print-groupings --tree-line-length=70 ${CWTDATE2} > ietf-voucher-request-constrained-tree.txt
 
 %.xml: %.mkd ${CWTDATE1} ${CWTDATE2} ietf-voucher-constrained-tree.txt ietf-voucher-request-constrained-tree.txt ${CWTSIDLIST1} ${CWTSIDLIST2} ${EXAMPLES}
