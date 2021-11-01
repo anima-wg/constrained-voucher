@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (BRSKI)
 abbrev: Constrained BRSKI
-docname: draft-ietf-anima-constrained-voucher-14
+docname: draft-ietf-anima-constrained-voucher-15
 
 stand_alone: true
 
