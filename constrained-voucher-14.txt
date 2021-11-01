@@ -137,24 +137,23 @@ Internet-Draft              Constrained BRSKI               October 2021
      12.3.  The Voucher Response . . . . . . . . . . . . . . . . . .  40
    13. Security Considerations . . . . . . . . . . . . . . . . . . .  41
      13.1.  Duplicate serial-numbers . . . . . . . . . . . . . . . .  41
-     13.2.  Clock Sensitivity  . . . . . . . . . . . . . . . . . . .  42
-     13.3.  Protect Voucher PKI in HSM . . . . . . . . . . . . . . .  42
-     13.4.  Test Domain Certificate Validity when Signing  . . . . .  42
-     13.5.  Registrar Certificate may be self-signed . . . . . . . .  42
+     13.2.  IDevID security in Pledge  . . . . . . . . . . . . . . .  42
+     13.3.  Security of CoAP and UDP protocols . . . . . . . . . . .  42
+     13.4.  Registrar Certificate may be self-signed . . . . . . . .  42
    14. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  42
      14.1.  Resource Type Registry . . . . . . . . . . . . . . . . .  42
-     14.2.  The IETF XML Registry  . . . . . . . . . . . . . . . . .  42
+     14.2.  The IETF XML Registry  . . . . . . . . . . . . . . . . .  43
      14.3.  The YANG Module Names Registry . . . . . . . . . . . . .  43
      14.4.  The RFC SID range assignment sub-registry  . . . . . . .  43
-     14.5.  Media Types Registry . . . . . . . . . . . . . . . . . .  43
+     14.5.  Media Types Registry . . . . . . . . . . . . . . . . . .  44
        14.5.1.  application/voucher-cose+cbor  . . . . . . . . . . .  44
      14.6.  CoAP Content-Format Registry . . . . . . . . . . . . . .  44
-   15. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  44
+   15. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  45
    16. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .  45
    17. References  . . . . . . . . . . . . . . . . . . . . . . . . .  45
      17.1.  Normative References . . . . . . . . . . . . . . . . . .  45
      17.2.  Informative References . . . . . . . . . . . . . . . . .  49
-   Appendix A.  Library support for BRSKI  . . . . . . . . . . . . .  50
+   Appendix A.  Library support for BRSKI  . . . . . . . . . . . . .  51
      A.1.  OpensSSL  . . . . . . . . . . . . . . . . . . . . . . . .  51
      A.2.  mbedTLS . . . . . . . . . . . . . . . . . . . . . . . . .  52
      A.3.  wolfSSL . . . . . . . . . . . . . . . . . . . . . . . . .  53
@@ -162,6 +161,7 @@ Internet-Draft              Constrained BRSKI               October 2021
      B.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  53
      B.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  54
    Appendix C.  COSE examples  . . . . . . . . . . . . . . . . . . .  54
+     C.1.  Pledge, Registrar and MASA keys . . . . . . . . . . . . .  58
 
 
 
@@ -170,7 +170,6 @@ Richardson, et al.        Expires 28 April 2022                 [Page 3]
 Internet-Draft              Constrained BRSKI               October 2021
 
 
-     C.1.  Pledge, Registrar and MASA keys . . . . . . . . . . . . .  58
        C.1.1.  Pledge private key  . . . . . . . . . . . . . . . . .  58
        C.1.2.  Registrar private key . . . . . . . . . . . . . . . .  58
        C.1.3.  MASA private key  . . . . . . . . . . . . . . . . . .  59
@@ -215,6 +214,7 @@ Internet-Draft              Constrained BRSKI               October 2021
 
    This COSE-signed CBOR-encoded voucher is transported using secured
    CoAP and HTTPS.
+
 
 
 
@@ -2298,19 +2298,30 @@ Richardson, et al.        Expires 28 April 2022                [Page 41]
 Internet-Draft              Constrained BRSKI               October 2021
 
 
-13.2.  Clock Sensitivity
+13.2.  IDevID security in Pledge
 
    TBD.
 
-13.3.  Protect Voucher PKI in HSM
+13.3.  Security of CoAP and UDP protocols
 
-   TBD.
+   Section 7.1 explains that no CoAPS version of the BRSKI-MASA protocol
+   is proposed.  The connection from the Registrar to the MASA continues
+   to be HTTPS as in [RFC8995].  This has been done as it simplifies the
+   MASA deployment for the manufacturer because no new protocol needs to
+   be enabled.
 
-13.4.  Test Domain Certificate Validity when Signing
+   The use of UDP protocols across the open Internet is sometimes
+   fraught with security challenges.  Denial of service attacks against
+   UDP based protocols is trivial as there is no three-way handshake as
+   done for TCP.  The three-way handshake of TCP guarantees that the
+   node sending the connection request is reachable using the origin IP
+   address.  While DTLS contains an option to do a stateless challenge
+   -- a process actually stronger than that done by TCP, it is not yet
+   common for this mechanism to be available in hardware at multigigabit
+   speeds.  It is for this reason that this protocols sticks to using
+   HTTPS for the Registrar->MASA connection.
 
-   TBD.
-
-13.5.  Registrar Certificate may be self-signed
+13.4.  Registrar Certificate may be self-signed
 
    The provisional (D)TLS connection formed by the Pledge with the
    Registrar does not authenticate the Registrar's identity.  This
@@ -2333,6 +2344,16 @@ Internet-Draft              Constrained BRSKI               October 2021
    Values", within the "CoRE parameters" IANA registry are specified
    below.
 
+
+
+
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 42]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
     brski    needs registration with IANA
     brski.rv needs registration with IANA
     brski.vs needs registration with IANA
@@ -2343,16 +2364,6 @@ Internet-Draft              Constrained BRSKI               October 2021
    This document registers two URIs in the IETF XML registry [RFC3688].
    Following the format in [RFC3688], the following registration is
    requested:
-
-
-
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 42]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
 
      URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
      Registrant Contact: The ANIMA WG of the IETF.
@@ -2392,6 +2403,13 @@ Internet-Draft              Constrained BRSKI               October 2021
    Warning: These SID values are defined in [I-D.ietf-core-sid], not as
    an Early Allocation.
 
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 43]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
    IANA: please update the names in the Registry to match these revised
    names, if they have not already been revised.
 
@@ -2401,14 +2419,6 @@ Internet-Draft              Constrained BRSKI               October 2021
    IANA "Media Types" registry.  This media type is used to indicate
    that the content is a CBOR voucher or voucher request signed with a
    COSE_Sign1 structure [I-D.ietf-cose-rfc8152bis-struct].
-
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 43]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
 
 14.5.1.  application/voucher-cose+cbor
 
@@ -2447,6 +2457,15 @@ Provisional registration? (standards tree only):  NO
    be registered either in the Expert Review range (0-255) or IETF
    Review range (256-9999).
 
+
+
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 44]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
    Media type                    Encoding   ID  References
    ----------------------------  --------- ---- ----------
    application/voucher-cose+cbor -         TBD3  [This RFC]
@@ -2456,15 +2475,6 @@ Provisional registration? (standards tree only):  NO
    We are very grateful to Jim Schaad for explaining COSE and CMS
    choices.  Also thanks to Jim Schaad for correcting earlier version of
    the COSE Sign1 objects.
-
-
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 44]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
 
    Michel Veillette did extensive work on _pyang_ to extend it to
    support the SID allocation process, and this document was among its
@@ -2503,16 +2513,6 @@ Internet-Draft              Constrained BRSKI               October 2021
 
 17.1.  Normative References
 
-   [I-D.ietf-ace-coap-est]
-              Stok, P. V. D., Kampanakis, P., Richardson, M. C., and S.
-              Raza, "EST over secure CoAP (EST-coaps)", Work in
-              Progress, Internet-Draft, draft-ietf-ace-coap-est-18, 6
-              January 2020, <https://www.ietf.org/archive/id/draft-ietf-
-              ace-coap-est-18.txt>.
-
-
-
-
 
 
 
@@ -2521,6 +2521,13 @@ Richardson, et al.        Expires 28 April 2022                [Page 45]
 
 Internet-Draft              Constrained BRSKI               October 2021
 
+
+   [I-D.ietf-ace-coap-est]
+              Stok, P. V. D., Kampanakis, P., Richardson, M. C., and S.
+              Raza, "EST over secure CoAP (EST-coaps)", Work in
+              Progress, Internet-Draft, draft-ietf-ace-coap-est-18, 6
+              January 2020, <https://www.ietf.org/archive/id/draft-ietf-
+              ace-coap-est-18.txt>.
 
    [I-D.ietf-core-sid]
               Veillette, M., Pelov, A., Petrov, I., and C. Bormann,
@@ -2558,6 +2565,19 @@ Internet-Draft              Constrained BRSKI               October 2021
               <https://www.ietf.org/archive/id/draft-ietf-cose-
               x509-08.txt>.
 
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 46]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
    [I-D.ietf-tls-dtls13]
               Rescorla, E., Tschofenig, H., and N. Modadugu, "The
               Datagram Transport Layer Security (DTLS) Protocol Version
@@ -2570,14 +2590,6 @@ Internet-Draft              Constrained BRSKI               October 2021
               Selander, G., Mattsson, J. P., Vučinić, M., Richardson,
               M., and A. Schellenbaum, "Lightweight Authorization for
               Authenticated Key Exchange.", Work in Progress, Internet-
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 46]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
-
               Draft, draft-selander-ace-ake-authz-04, 22 October 2021,
               <https://www.ietf.org/archive/id/draft-selander-ace-ake-
               authz-04.txt>.
@@ -2612,6 +2624,16 @@ Internet-Draft              Constrained BRSKI               October 2021
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/info/rfc5280>.
 
+
+
+
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 47]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
    [RFC5652]  Housley, R., "Cryptographic Message Syntax (CMS)", STD 70,
               RFC 5652, DOI 10.17487/RFC5652, September 2009,
               <https://www.rfc-editor.org/info/rfc5652>.
@@ -2625,14 +2647,6 @@ Internet-Draft              Constrained BRSKI               October 2021
               Extensions: Extension Definitions", RFC 6066,
               DOI 10.17487/RFC6066, January 2011,
               <https://www.rfc-editor.org/info/rfc6066>.
-
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 47]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
@@ -2664,6 +2678,18 @@ Internet-Draft              Constrained BRSKI               October 2021
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
 
+
+
+
+
+
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 48]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
               Express Concise Binary Object Representation (CBOR) and
@@ -2679,16 +2705,6 @@ Internet-Draft              Constrained BRSKI               October 2021
               and K. Watsen, "Bootstrapping Remote Secure Key
               Infrastructure (BRSKI)", RFC 8995, DOI 10.17487/RFC8995,
               May 2021, <https://www.rfc-editor.org/info/rfc8995>.
-
-
-
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 48]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
 
    [RFC9031]  Vučinić, M., Ed., Simon, J., Pister, K., and M.
               Richardson, "Constrained Join Protocol (CoJP) for 6TiSCH",
@@ -2722,6 +2738,14 @@ Internet-Draft              Constrained BRSKI               October 2021
               October 2021, <https://www.ietf.org/archive/id/draft-ietf-
               lake-edhoc-12.txt>.
 
+
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 49]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
    [I-D.kuehlewind-update-tag]
               Kuehlewind, M. and S. Krishnan, "Definition of new tags
               for relations between RFCs", Work in Progress, Internet-
@@ -2736,15 +2760,6 @@ Internet-Draft              Constrained BRSKI               October 2021
               considerations-05, 12 March 2021,
               <https://www.ietf.org/archive/id/draft-richardson-anima-
               masa-considerations-05.txt>.
-
-
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 49]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
 
    [RFC4443]  Conta, A., Deering, S., and M. Gupta, Ed., "Internet
               Control Message Protocol (ICMPv6) for the Internet
@@ -2775,6 +2790,18 @@ Internet-Draft              Constrained BRSKI               October 2021
               DOI 10.17487/RFC8990, May 2021,
               <https://www.rfc-editor.org/info/rfc8990>.
 
+
+
+
+
+
+
+
+Richardson, et al.        Expires 28 April 2022                [Page 50]
+
+Internet-Draft              Constrained BRSKI               October 2021
+
+
 Appendix A.  Library support for BRSKI
 
    For the implementation of BRSKI, the use of a software library to
@@ -2794,14 +2821,6 @@ Appendix A.  Library support for BRSKI
    certificate chain.  In some libraries, chains are constructed and
    verified on the basis of a set of certificates, the trust anchor
    (usually self signed root CA), and the target certificate.  In other
-
-
-
-Richardson, et al.        Expires 28 April 2022                [Page 50]
-
-Internet-Draft              Constrained BRSKI               October 2021
-
-
    libraries, the chain must be constructed beforehand and obey order
    criteria.  Verification always includes the checking of the
    signatures.  Less frequent is the checking the validity of the dates
@@ -2824,25 +2843,6 @@ Internet-Draft              Constrained BRSKI               October 2021
 A.1.  OpensSSL
 
    from openssl's apps/verify.c
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
