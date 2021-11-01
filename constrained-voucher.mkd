@@ -459,20 +459,20 @@ Note that even though the Pledge may avoid performing any /crts request using th
 This section defines extensions to EST-coaps clients, used after the BRSKI bootstrap procedure is completed.
 (Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain.)
 A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}.
-In this case, it can only store one trust anchor of the domain. 
+In this case, it can only store one trust anchor of the domain.
 
 An EST-coaps client that has an idea of the current time (internally, or via NTP) SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA using the /crts request when the CA has 50% of it's validity time (notAfter - notBefore) left.
 A client that has no idea of the current time will have no idea if the trust anchor CA has expired.
 Such client SHOULD poll periodically for a new trust anchor using the /crts request at an interval of approximately 1 month.
-An EST-coaps server SHOULD include the CoAP ETag Option in every response to a /crts request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid. 
+An EST-coaps server SHOULD include the CoAP ETag Option in every response to a /crts request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
 The EST-coaps client SHOULD store the ETag resulting from a /crts response in memory and SHOULD use this value in an ETag Option in its next GET /crts request.
 
 The above-mentioned limitation that an EST-coaps client may support only one trust anchor CA is not an issue in case the domain trust anchor remains stable. However, special consideration is
 needed for cases where the domain trust anchor can change over time. Such a change may happen due to relocation of the client device to a new domain, or due to key update of
 the trust anchor as described in {{RFC4210, Section 4.4}}.
 
-From the client's viewpoint, a trust anchor change typically happens during EST re-enrollment: a change of domain CA requires all devices 
-operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as an instruction to re-enroll sent by a domain entity, or an imminent expiry of its LDevID certificate. 
+From the client's viewpoint, a trust anchor change typically happens during EST re-enrollment: a change of domain CA requires all devices
+operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as an instruction to re-enroll sent by a domain entity, or an imminent expiry of its LDevID certificate.
 How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification.
 
 The mechanism described in {{RFC4210, Section 4.4}} for Root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. The OldWithOld certificate is already
