@@ -124,6 +124,7 @@ The BRSKI solution described in {{RFC8995}} was designed to be modular, and this
 
 Therefore, this document defines a constrained version of the voucher artifact (described in {{RFC8366}}), along with a constrained version of BRSKI.
 This constrained-BRSKI protocol makes use of the constrained CoAP-based version of EST (EST-coaps from {{I-D.ietf-ace-coap-est}}) rather than the EST over HTTPS {{RFC7030}}.
+Constrained-BRSKI is itself scalable to multiple levels of Pledge "constrained-ness" through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this. 
 
 In BRSKI, the the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
 This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
@@ -1343,3 +1344,56 @@ INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
 The representiation of signed_voucher in CBOR diagnostic format is:
 
 INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END
+
+
+# Pledge Device Class Profiles {#appendix-pledge-profiles}
+
+This specification allows implementers to select between various functional options for the Pledge, 
+yielding different code size footprints and different requirements on Pledge hardware.
+Thus for each product an optimal trade-off between functionality, development/maintenance cost and hardware cost can be made.
+
+This appendix illustrates different selection outcomes by means of defining different example "profiles" of constrained Pledges. In the following
+subsections, these profiles are defined and a comparison is provided.
+
+## Minimal Pledge
+The Minimal Pledge profile (Min) aims to reduce code size and hardware cost to a minimum. This comes with some severe functional restrictions, in particular:
+
+* No support for EST re-enrollment: whenever this would be needed, a factory reset followed by a new bootstrap process is required.
+* No support for change of Registrar: for this case, a factory reset followed by a new bootstrap process is required.
+
+## Typical Pledge
+The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI feature set including EST re-enrollment support and Registrar changes.
+
+## Full-featured Pledge
+The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple bootstrap methods, hardware real-time clock, BRSKI/EST resource discovery, and 
+CSR Attributes request/response. It also supports most of the optional features defined in this specification.
+
+## Comparison chart of Pledge Classes
+The below table specifies the functions implemented in the three example Pledge classes Min, Typ and Full.
+
+|Function \|====================\| Profiles -> |Min|Typ|Full 
+|-|:-:|:-:|:-:
+|**General** |===|===|====
+|Support Constrained BRSKI bootstrap| Y | Y | Y
+|Support other bootstrap method(s)| - | - | Y
+|Real-time clock and cert time checks| - | - | Y
+|**Constrained BRSKI** |===|===|====
+|Discovery for rt=brski* | - | - | Y
+|Support pinned Registrar public key (RPK) | Y | - | Y
+|Support pinned Registrar certificate | - | Y | Y
+|Support pinned Domain CA | - | Y | Y
+|**Constrained EST**|===|===|====
+|Discovery for rt=ace.est* | - | - | Y
+|GET /att and response parsing | - | - | Y
+|GET /crts format 281 (multiple CA certs) | - | - | Y
+|GET /crts only format TBD287 (one CA cert only) | Y | Y | -
+|ETag handling support for GET /crts | - | Y | Y
+|Re-enrollment supported | - (1) | Y | Y
+|6.6.1 optimized procedure | Y | Y | -
+|Pro-active cert re-enrollment at own initiative | N/A | - | Y
+|Periodic trust anchor retrieval GET /crts | - (1) | Y | Y
+|Supports change of Registrar identity | - (1) | Y | Y
+
+Notes: (1) is possible only by doing a factory-reset followed by a new bootstrap procedure.
+
+
