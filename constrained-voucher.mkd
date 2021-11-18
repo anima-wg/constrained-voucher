@@ -124,6 +124,7 @@ The BRSKI solution described in {{RFC8995}} was designed to be modular, and this
 
 Therefore, this document defines a constrained version of the voucher artifact (described in {{RFC8366}}), along with a constrained version of BRSKI.
 This constrained-BRSKI protocol makes use of the constrained CoAP-based version of EST (EST-coaps from {{I-D.ietf-ace-coap-est}}) rather than the EST over HTTPS {{RFC7030}}.
+Constrained-BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this. 
 
 In BRSKI, the the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
 This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
@@ -704,7 +705,7 @@ view of the contents of each artifact.
 Then the assigned SID values are presented. These have been assigned using
 the rules in {{I-D.ietf-core-sid}}.
 
-## Voucher Request artifact
+## Voucher Request artifact {#voucher-request-artifact}
 
 ### Tree Diagram
 
@@ -960,9 +961,16 @@ The only restrictions on the certificate is that it MUST have EKU bits set as de
 A Registrar that uses a Raw Public Key (RPK) has no certificate structure, and therefore has no EKU bits that can be set.
 
 
-## Use of RPK alternatives
+## Use of RPK alternatives to proximity-registrar-cert
 
-TBD.
+In {{voucher-request-artifact}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256. 
+The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields 
+by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate. 
+The MASA will not be able to detect such act by the Registrar. But since any 'other' certificate the Registrar could insert in this way still encodes its identity the additional risk 
+of using the RPK alternatives is neglible.
+
+When a Registrar sees a PVR that uses one of proximity-registrar-pubk or proximity-registrar-pubk-sha256 fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
+Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}. 
 
 ## MASA support of CoAPS {#security-masa-coaps}
 
@@ -974,7 +982,6 @@ The following security considerations have led to this choice of scope:
 * in many enterprise networks, outgoing UDP connections are often treated as suspicious, which could effectively block CoAP connections for some firewall configurations.
 
 * reducing the complexity of MASA (i.e. less protocols supported) would also reduce its potential attack surface, which is relevant since the MASA is 24/7 exposed on the Internet and accepting (untrusted) incoming connections.
-
 
 # IANA Considerations
 
@@ -1348,3 +1355,58 @@ INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
 The representiation of signed_voucher in CBOR diagnostic format is:
 
 INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END
+
+
+# Pledge Device Class Profiles {#appendix-pledge-profiles}
+
+This specification allows implementers to select between various functional options for the Pledge, 
+yielding different code size footprints and different requirements on Pledge hardware.
+Thus for each product an optimal trade-off between functionality, development/maintenance cost and hardware cost can be made.
+
+This appendix illustrates different selection outcomes by means of defining different example "profiles" of constrained Pledges. In the following
+subsections, these profiles are defined and a comparison is provided.
+
+## Minimal Pledge
+The Minimal Pledge profile (Min) aims to reduce code size and hardware cost to a minimum. This comes with some severe functional restrictions, in particular:
+
+* No support for EST re-enrollment: whenever this would be needed, a factory reset followed by a new bootstrap process is required.
+* No support for change of Registrar: for this case, a factory reset followed by a new bootstrap process is required.
+
+This profile would be appropriate for single-use devices which must be replaced rather than re-deployed. 
+That might  include medical devices, but also sensors used during construction, such as concrete temperature  sensors.
+## Typical Pledge
+The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI feature set including EST re-enrollment support and Registrar changes.
+
+## Full-featured Pledge
+The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple bootstrap methods, hardware real-time clock, BRSKI/EST resource discovery, and 
+CSR Attributes request/response. It also supports most of the optional features defined in this specification.
+
+## Comparison chart of Pledge Classes
+The below table specifies the functions implemented in the three example Pledge classes Min, Typ and Full.
+
+|Function \|====================\| Profiles -> |Min|Typ|Full 
+|-|:-:|:-:|:-:
+|**General** |===|===|====
+|Support Constrained BRSKI bootstrap| Y | Y | Y
+|Support other bootstrap method(s)| - | - | Y
+|Real-time clock and cert time checks| - | - | Y
+|**Constrained BRSKI** |===|===|====
+|Discovery for rt=brski* | - | - | Y
+|Support pinned Registrar public key (RPK) | Y | - | Y
+|Support pinned Registrar certificate | - | Y | Y
+|Support pinned Domain CA | - | Y | Y
+|**Constrained EST**|===|===|====
+|Discovery for rt=ace.est* | - | - | Y
+|GET /att and response parsing | - | - | Y
+|GET /crts format 281 (multiple CA certs) | - | - | Y
+|GET /crts only format TBD287 (one CA cert only) | Y | Y | -
+|ETag handling support for GET /crts | - | Y | Y
+|Re-enrollment supported | - (1) | Y | Y
+|6.6.1 optimized procedure | Y | Y | -
+|Pro-active cert re-enrollment at own initiative | N/A | - | Y
+|Periodic trust anchor retrieval GET /crts | - (1) | Y | Y
+|Supports change of Registrar identity | - (1) | Y | Y
+
+Notes: (1) is possible only by doing a factory-reset followed by a new bootstrap procedure.
+
+
