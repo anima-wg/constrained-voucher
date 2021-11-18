@@ -124,7 +124,7 @@ The BRSKI solution described in {{RFC8995}} was designed to be modular, and this
 
 Therefore, this document defines a constrained version of the voucher artifact (described in {{RFC8366}}), along with a constrained version of BRSKI.
 This constrained-BRSKI protocol makes use of the constrained CoAP-based version of EST (EST-coaps from {{I-D.ietf-ace-coap-est}}) rather than the EST over HTTPS {{RFC7030}}.
-Constrained-BRSKI is itself scalable to multiple levels of Pledge "constrained-ness" through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this. 
+Constrained-BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this. 
 
 In BRSKI, the the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
 This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
