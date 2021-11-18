@@ -80,22 +80,30 @@ normative:
     date: 2009
 
 informative:
-  RFC7228:
   RFC4443:
+  RFC6282:
+  RFC6690:
+  RFC7030:
+  RFC7228:
   RFC8340: yang-tree
+  RFC8990:
+  I-D.ietf-6lo-mesh-link-establishment:
   I-D.kuehlewind-update-tag:
+  I-D.richardson-anima-masa-considerations:
+  I-D.ietf-anima-constrained-join-proxy:
+  I-D.ietf-lake-edhoc: EDHOC
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
     author:
       ins: "IANA"
     date: 2017
-  I-D.richardson-anima-masa-considerations:
-  I-D.ietf-anima-constrained-join-proxy:
-  I-D.ietf-lake-edhoc: EDHOC
-  RFC6690:
-  RFC8990:
-  RFC7030:
+  Thread:
+    title: "Thread support page, White Papers"
+    target: "https://www.threadgroup.org/support#Whitepapers"
+    author: 
+      ins: "Thread Group, Inc."
+    date: "accessed 2021-10-31"
 
 --- abstract
 
@@ -834,7 +842,7 @@ In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request
 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
 
-This section details how discovery is done in a specific deployment scenarios.
+This section details how discovery is done in specific deployment scenarios.
 
 ## 6TSCH Deployments
 
@@ -857,7 +865,14 @@ This mechanism does not easily support mesh networks.  It can be used over unenc
 
 ## Thread networks using Mesh Link Establishment (MLE)
 
-TBD.
+Thread {{Thread}} is a wireless mesh network protocol based on 6LoWPAN {{RFC6282}} and other IETF protocols. In Thread, a new device 
+discovers potential Thread networks and Thread routers to join by using the Mesh Link Establishment (MLE) {{I-D.ietf-6lo-mesh-link-establishment}} protocol. 
+MLE uses the UDP port number 19788. The new device sends discovery requests on different IEEE 802.15.4 radio channels, to which routers (if any present) respond with a discovery response containing information about 
+their respective network. Once a suitable router is selected the new device initiates a DTLS transport-layer secured connection to the network's commissioning application, over a link-local single radio hop to the selected 
+Thread router. This link is not yet secured at the radio level: link-layer security will be set up once the new device is approved by the commissioning application to join the Thread network, and it gets provisioned with 
+network access credentials. 
+
+The Thread router acts here as a Join Proxy. The MLE discovery response message contains UDP port information to signal the new device which port to use for its DTLS connection.
 
 ## Non-mesh networks using CoAP Discovery
 
