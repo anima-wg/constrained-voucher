@@ -1361,6 +1361,8 @@ The Minimal Pledge profile (Min) aims to reduce code size and hardware cost to a
 * No support for EST re-enrollment: whenever this would be needed, a factory reset followed by a new bootstrap process is required.
 * No support for change of Registrar: for this case, a factory reset followed by a new bootstrap process is required.
 
+This profile would be appropriate for single-use devices which must be replaced rather than re-deployed. 
+That might  include medical devices, but also sensors used during construction, such as concrete temperature  sensors.
 ## Typical Pledge
 The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI feature set including EST re-enrollment support and Registrar changes.
 
