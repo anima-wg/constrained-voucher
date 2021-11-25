@@ -513,8 +513,7 @@ Note that even though the EST-coaps client may skip the /crts request in step 3,
 ### Registrar Extensions {#brski-est-extensions-registrar}
 
 A Registrar SHOULD host any discoverable EST-coaps resources on the same (UDP) server port that the Pledge's DTLS initial connection is using.
-This avoids the Pledge having to reconnect using DTLS, in order to proceed with EST enrollment after the BRSKI bootstrap.
-[TBD EDNOTE: a Registrar that does host EST resources on another port won't be able to onboard Pledges that skip the discovery, so not interoperable. Should we fix this?]
+This avoids the overhead of the Pledge reconnecting using DTLS, when it performs EST enrollment after the BRSKI voucher request.
 
 The Content-Format 50 (application/json) MUST be supported and 60 (application/cbor) MUST be supported by the Registrar for the /vs and /es resources.
 
