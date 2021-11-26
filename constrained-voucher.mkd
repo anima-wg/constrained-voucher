@@ -103,19 +103,22 @@ informative:
     target: "https://www.threadgroup.org/support#Whitepapers"
     author: 
       ins: "Thread Group, Inc."
-    date: "accessed 2021-10-31"
+    date: "accessed 2021-11-26"
 
 --- abstract
 
-This document defines a protocol to securely assign a Pledge to an
-owner and to enroll it into the owner's network.
-The protocol uses an artifact that is signed by the Pledge's manufacturer.
-This artifact is known as a "voucher".
-
-This document builds upon the work in [RFC8366] and [BRSKI], but defines an encoding of
-the voucher in CBOR rather than JSON, and enables the Pledge to perform its transactions using CoAP rather than HTTPS.
-
-The use of Raw Public Keys instead of X.509 certificates for security operations is also explained.
+This document defines the Constrained Bootstrapping Remote Secure Key Infrastructure (Constrained BRSKI) protocol, 
+which provides a solution for secure zero-touch bootstrapping of resource-constrained (IoT) devices into the network 
+of a domain owner. This protocol is designed for constrained networks, which may have limited data throughput or may 
+experience frequent packet loss. Constrained BRSKI is a variant of the BRSKI protocol, which uses an artifact signed by the 
+device manufacturer called the "voucher" which enables a new device and the owner's network to mutually authenticate. 
+While the BRSKI voucher is typically encoded in JSON, Constrained BRSKI defines a compact CBOR-encoded voucher. 
+The BRSKI voucher is extended with new fields that allow for smaller voucher sizes. 
+And where BRSKI uses HTTPS transactions, Constrained BRSKI uses CoAPS instead.
+Also, the Enrollment over Secure Transport (EST) protocol as used in BRSKI is replaced here by EST-over-CoAPS. 
+Usage considerations for Constrained BRSKI are documented for various aspects: discovery of networks, security (including 
+Raw Public Key usage), deployment on constrained networks, MASA/Registrar policies, and voucher format design.
+This document extends and updates BRSKI {{RFC8995}}, the voucher format {{RFC8366}} and EST-over-CoAPs {{I-D.ietf-ace-coap-est}}.
 
 --- middle
 
