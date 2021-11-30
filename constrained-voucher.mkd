@@ -114,8 +114,8 @@ experience frequent packet loss. Constrained BRSKI is a variant of the BRSKI pro
 device manufacturer called the "voucher" which enables a new device and the owner's network to mutually authenticate. 
 While the BRSKI voucher is typically encoded in JSON, Constrained BRSKI defines a compact CBOR-encoded voucher. 
 The BRSKI voucher is extended with new fields that allow for smaller voucher sizes. 
-And where BRSKI uses HTTPS transactions, Constrained BRSKI uses CoAPS instead.
-Also, the Enrollment over Secure Transport (EST) protocol as used in BRSKI is replaced here by EST-over-CoAPS. 
+The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS; 
+additionally HTTPS used by BRSKI is replaced with CoAPS. 
 Usage considerations for Constrained BRSKI are documented for various aspects: discovery of networks, security (including 
 Raw Public Key usage), deployment on constrained networks, MASA/Registrar policies, and voucher format design.
 This document extends and updates BRSKI {{RFC8995}}, the voucher format {{RFC8366}} and EST-over-CoAPs {{I-D.ietf-ace-coap-est}}.
