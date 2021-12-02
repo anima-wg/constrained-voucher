@@ -939,7 +939,7 @@ However, this document does not mandate that this be the only way.
 There are devices that have multiple form factors, such as having either 802.15.4 radios or 802.11 (wifi) radios.
 Such a device may wish to have code only for the constrained voucher format (COSE), and use it on the 802.11 radio.
 This is supported by this document.
-In such a case, the normal {{RFC8995}} end points are used, with the constrained MIME types described in this document.
+In such a case, the normal {{RFC8995}} resources are used, with the constrained MIME types described in this document.
 
 Other combinations are possible, but they are not enumerated here.
 New work such as {{I-D.ietf-anima-jws-voucher}} provide for new formats that may be useable over a number of different transports.
