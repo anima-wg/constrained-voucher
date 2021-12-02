@@ -92,6 +92,7 @@ informative:
   I-D.richardson-anima-masa-considerations:
   I-D.ietf-anima-constrained-join-proxy:
   I-D.ietf-lake-edhoc: EDHOC
+  I-D.ietf-anima-jws-voucher:
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
@@ -927,6 +928,29 @@ In other cases, if the MASA signing key is based upon a PKI (see {{I-D.richardso
 In CMS signed artifacts, the CMS structure has a place for such certificates.
 
 In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used for this.
+
+# Use of constrained-vouchers with HTTPS
+
+This specification contains two extensions to {{RFC8995}}: a constrained voucher format (COSE), and a constrained transfer protocol (CoAP).
+
+On constrained networks with constrained devices, it make senses to use them together.
+However, this document does not mandate that this be the only way.
+
+There are devices that have multiple form factors, such as having either 802.15.4 radios or 802.11 (wifi) radios.
+Such a device may wish to have code only for the constrained voucher format (COSE), and use it on the 802.11 radio.
+This is supported by this document.
+In the case that HTTPS is used, the normal {{RFC8995}} resources are used, with the constrained MIME types described in this document.
+
+Other combinations are possible, but they are not enumerated here.
+New work such as {{I-D.ietf-anima-jws-voucher}} provide for new formats that may be useable over a number of different transports.
+In general, sending larger payloads over constrained networks makes less sense,
+while sending smaller payloads over unconstrained networks is perfectly acceptable.
+
+The pledge will in most cases support a single voucher format, which it uses without negotiation.
+The registrar, being unconstrained, is expected to support all voucher formats.
+There will be cases where a registrar does not support a new format that a new pledge device uses, and this is an unfortunate situation that will result in lack of interoperation.
+
+The responsability for supporting new formats is on the Registrar.
 
 # Security Considerations {#security}
 
