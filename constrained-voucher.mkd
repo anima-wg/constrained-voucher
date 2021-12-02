@@ -928,7 +928,7 @@ In CMS signed artifacts, the CMS structure has a place for such certificates.
 
 In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used for this.
 
-## No Certificate operations!
+## No PKIX operations!
 
 The pledge that uses RPK to pin is assumed not to support doing any PKIX operations.
 It does not retrieve trust anchor certificates via the /crts resource, nor is it expected to communicate with other end devices using certificates.
