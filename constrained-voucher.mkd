@@ -928,6 +928,22 @@ In CMS signed artifacts, the CMS structure has a place for such certificates.
 
 In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used for this.
 
+## No Certificate operations!
+
+The pledge that uses RPK to pin is assumed not to support doing any PKIX operations.
+It does not retrieve trust anchor certificates via the /crts end point, nor is it expected to communicate with other end devices using certificates.
+Not having any PKIX validation code it would be unable to validate the certificates of the other peers.
+
+The pledge MAY perform an enrollment operation, and if it does, it likely will do so without doing any kind of CSR attributes call, but instead using a carefully constructed CSR object: one that does not require any ASN.1 operations.
+The pledge would receive an LDevID which it would include as it's TLS client certificate to communicate with an application server.
+As the only anchor the pledge has is the pinned RPK of the Registrar, that is the only identity that the pledge can authenticate, so the application server would need to be co-located with the Registrar.
+While this seems of limited applicability, it may be entirely suitable for installations that are relatively self-contained, for instance, a sensor suite deployed at a construction site, or the site of a disaster.
+
+There could be some other extensions to the voucher to provide for additional trust anchors.
+Such things are out of scope for this document.
+
+If there is a need to change the pinned RPK that the pledge trusts, then the pledge will need to be reset, and go through the onboarding process another time.
+
 # Security Considerations {#security}
 
 ## Duplicate serial-numbers
@@ -1387,7 +1403,8 @@ The Minimal Pledge profile (Min) aims to reduce code size and hardware cost to a
 * No support for change of Registrar: for this case, a factory reset followed by a new bootstrap process is required.
 
 This profile would be appropriate for single-use devices which must be replaced rather than re-deployed.
-That might  include medical devices, but also sensors used during construction, such as concrete temperature  sensors.
+That might include some medical devices, but also sensors used during construction, such as concrete temperature sensors, which once the concrete has set, effectively reach their end of life.
+
 ## Typical Pledge
 The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI feature set including EST re-enrollment support and Registrar changes.
 
