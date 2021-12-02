@@ -444,7 +444,7 @@ When creating the CSR, the Pledge selects which attributes to include. One or mo
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
 The Pledge can receive such information via the voucher (encoded in a vendor-specific way) or some other, out-of-band means.
 
-A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic.
+A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize network traffic.
 
 1. if the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words,
 it provisionally accepts this CA certificate as if it were the result of "CA certificates request" (/crts) to the Registrar.
