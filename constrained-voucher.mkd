@@ -1199,11 +1199,6 @@ INSERT_CODE_FROM_FILE examples/openssl-verify.c END
                                  &certVerifyResultFlags, NULL, NULL);
 ~~~~
 
-## wolfSSL
-
-To be added (TBD).
-
-
 #Constrained BRSKI-EST messages
 
 This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}} with the constrained BRSKI requests. The CoAP headers are only worked out for the enrollstatus example.
