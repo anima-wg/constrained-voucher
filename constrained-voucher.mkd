@@ -931,7 +931,7 @@ In the COSE-signed Constrained Vouchers described in this document, the x5bag at
 ## No Certificate operations!
 
 The pledge that uses RPK to pin is assumed not to support doing any PKIX operations.
-It does not retrieve trust anchor certificates via the /crts end point, nor is it expected to communicate with other end devices using certificates.
+It does not retrieve trust anchor certificates via the /crts resource, nor is it expected to communicate with other end devices using certificates.
 Not having any PKIX validation code it would be unable to validate the certificates of the other peers.
 
 The pledge MAY perform an enrollment operation, and if it does, it likely will do so without doing any kind of CSR attributes call, but instead using a carefully constructed CSR object: one that does not require any ASN.1 operations.
