@@ -438,13 +438,13 @@ A Pledge that already is DTLS-connected to either a Join Proxy or Registrar, and
 This is because it is more efficient to just try its supported enrollment method (e.g. /sen) via the well-known EST resource on the current DTLS connection.
 This avoids an additional round-trip of packets and avoids the Pledge having to unnecessarily implement CoRE Link Format parsing.
 
-A constrained Pledge SHOULD NOT perform the optional EST "CSR attributes request" (/att) to minimize network traffic and reduce code size.
+A constrained Pledge SHOULD NOT perform the optional EST "CSR attributes request" (/att) to minimize network traffic.
 
 When creating the CSR, the Pledge selects which attributes to include. One or more Subject Distinguished Name fields MUST be included.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
 The Pledge can receive such information via the voucher (encoded in a vendor-specific way) or some other, out-of-band means.
 
-A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic and code size:
+A constrained Pledge MAY use the following optimized EST-coaps procedure to minimize both network traffic.
 
 1. if the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, in other words,
 it provisionally accepts this CA certificate as if it were the result of "CA certificates request" (/crts) to the Registrar.
