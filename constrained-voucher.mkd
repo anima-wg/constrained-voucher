@@ -937,7 +937,7 @@ On constrained networks with constrained devices, it make senses to use them tog
 However, this document does not mandate that this be the only way.
 
 There are devices that have multiple form factors, such as having either 802.15.4 radios or 802.11 (wifi) radios.
-Such a device may wish to have code only for the constrained voucher format, and use it on the 802.11 radio, but HTTPS rather than CoAP as may be appropriate for that environment.
+Such a device may wish to have code only for the constrained voucher format (COSE), and use it on the 802.11 radio.
 This is supported by this document.
 In such a case, the normal {{RFC8995}} end points are used, with the constrained MIME types described in this document.
 
