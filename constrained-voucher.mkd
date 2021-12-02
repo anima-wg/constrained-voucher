@@ -101,7 +101,7 @@ informative:
   Thread:
     title: "Thread support page, White Papers"
     target: "https://www.threadgroup.org/support#Whitepapers"
-    author: 
+    author:
       ins: "Thread Group, Inc."
     date: "accessed 2021-10-31"
 
@@ -132,7 +132,7 @@ The BRSKI solution described in {{RFC8995}} was designed to be modular, and this
 
 Therefore, this document defines a constrained version of the voucher artifact (described in {{RFC8366}}), along with a constrained version of BRSKI.
 This constrained-BRSKI protocol makes use of the constrained CoAP-based version of EST (EST-coaps from {{I-D.ietf-ace-coap-est}}) rather than the EST over HTTPS {{RFC7030}}.
-Constrained-BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this. 
+Constrained-BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this.
 
 In BRSKI, the the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
 This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
@@ -864,12 +864,12 @@ This mechanism does not easily support mesh networks.  It can be used over unenc
 
 ## Thread networks using Mesh Link Establishment (MLE)
 
-Thread {{Thread}} is a wireless mesh network protocol based on 6LoWPAN {{RFC6282}} and other IETF protocols. In Thread, a new device 
-discovers potential Thread networks and Thread routers to join by using the Mesh Link Establishment (MLE) {{I-D.ietf-6lo-mesh-link-establishment}} protocol. 
-MLE uses the UDP port number 19788. The new device sends discovery requests on different IEEE 802.15.4 radio channels, to which routers (if any present) respond with a discovery response containing information about 
-their respective network. Once a suitable router is selected the new device initiates a DTLS transport-layer secured connection to the network's commissioning application, over a link-local single radio hop to the selected 
-Thread router. This link is not yet secured at the radio level: link-layer security will be set up once the new device is approved by the commissioning application to join the Thread network, and it gets provisioned with 
-network access credentials. 
+Thread {{Thread}} is a wireless mesh network protocol based on 6LoWPAN {{RFC6282}} and other IETF protocols. In Thread, a new device
+discovers potential Thread networks and Thread routers to join by using the Mesh Link Establishment (MLE) {{I-D.ietf-6lo-mesh-link-establishment}} protocol.
+MLE uses the UDP port number 19788. The new device sends discovery requests on different IEEE 802.15.4 radio channels, to which routers (if any present) respond with a discovery response containing information about
+their respective network. Once a suitable router is selected the new device initiates a DTLS transport-layer secured connection to the network's commissioning application, over a link-local single radio hop to the selected
+Thread router. This link is not yet secured at the radio level: link-layer security will be set up once the new device is approved by the commissioning application to join the Thread network, and it gets provisioned with
+network access credentials.
 
 The Thread router acts here as a Join Proxy. The MLE discovery response message contains UDP port information to signal the new device which port to use for its DTLS connection.
 
@@ -977,14 +977,14 @@ A Registrar that uses a Raw Public Key (RPK) has no certificate structure, and t
 
 ## Use of RPK alternatives to proximity-registrar-cert
 
-In {{voucher-request-artifact}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256. 
-The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields 
-by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate. 
-The MASA will not be able to detect such act by the Registrar. But since any 'other' certificate the Registrar could insert in this way still encodes its identity the additional risk 
+In {{voucher-request-artifact}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256.
+The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields
+by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate.
+The MASA will not be able to detect such act by the Registrar. But since any 'other' certificate the Registrar could insert in this way still encodes its identity the additional risk
 of using the RPK alternatives is neglible.
 
 When a Registrar sees a PVR that uses one of proximity-registrar-pubk or proximity-registrar-pubk-sha256 fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
-Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}. 
+Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}.
 
 ## MASA support of CoAPS {#security-masa-coaps}
 
@@ -1373,7 +1373,7 @@ INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END
 
 # Pledge Device Class Profiles {#appendix-pledge-profiles}
 
-This specification allows implementers to select between various functional options for the Pledge, 
+This specification allows implementers to select between various functional options for the Pledge,
 yielding different code size footprints and different requirements on Pledge hardware.
 Thus for each product an optimal trade-off between functionality, development/maintenance cost and hardware cost can be made.
 
@@ -1386,19 +1386,19 @@ The Minimal Pledge profile (Min) aims to reduce code size and hardware cost to a
 * No support for EST re-enrollment: whenever this would be needed, a factory reset followed by a new bootstrap process is required.
 * No support for change of Registrar: for this case, a factory reset followed by a new bootstrap process is required.
 
-This profile would be appropriate for single-use devices which must be replaced rather than re-deployed. 
+This profile would be appropriate for single-use devices which must be replaced rather than re-deployed.
 That might  include medical devices, but also sensors used during construction, such as concrete temperature  sensors.
 ## Typical Pledge
 The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI feature set including EST re-enrollment support and Registrar changes.
 
 ## Full-featured Pledge
-The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple bootstrap methods, hardware real-time clock, BRSKI/EST resource discovery, and 
+The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple bootstrap methods, hardware real-time clock, BRSKI/EST resource discovery, and
 CSR Attributes request/response. It also supports most of the optional features defined in this specification.
 
 ## Comparison chart of Pledge Classes
 The below table specifies the functions implemented in the three example Pledge classes Min, Typ and Full.
 
-|Function \|====================\| Profiles -> |Min|Typ|Full 
+|Function \|====================\| Profiles -> |Min|Typ|Full
 |-|:-:|:-:|:-:
 |**General** |===|===|====
 |Support Constrained BRSKI bootstrap| Y | Y | Y
