@@ -114,9 +114,9 @@ of a domain owner. This protocol is designed for constrained networks, which may
 experience frequent packet loss. Constrained BRSKI is a variant of the BRSKI protocol, which uses an artifact signed by the 
 device manufacturer called the "voucher" which enables a new device and the owner's network to mutually authenticate. 
 While the BRSKI voucher is typically encoded in JSON, Constrained BRSKI defines a compact CBOR-encoded voucher. 
-The BRSKI voucher is extended with new fields that allow for smaller voucher sizes. 
+The BRSKI voucher is extended with new data types that allow for smaller voucher sizes. 
 The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS; 
-additionally HTTPS used by BRSKI is replaced with CoAPS. 
+and HTTPS used in BRSKI is replaced with CoAPS. 
 
 --- middle
 
@@ -138,8 +138,7 @@ Constrained-BRSKI is itself scalable to multiple resource levels through the def
 In BRSKI, the the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
 This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
 
-This COSE-signed CBOR-encoded voucher is transported using secured CoAP and HTTPS.
-
+This COSE-signed CBOR-encoded voucher is transported using both secured CoAP and HTTPS.
 The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC {{-EDHOC}} or DTLS (CoAPS).
 The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
@@ -228,47 +227,47 @@ The constrained BRSKI-EST protocol described in this section is between the Pled
 
 ## Registrar and the Server Name Indicator (SNI)
 
-A DTLS connection is established between the pledge and the Registrar.
-As described in {{Section 5.1 of RFC8995}} the pledge establishes a TLS connection to the Registrar.
-This occurs via a variety of Join Proxy mechanisms described in {{joinproxy}}.
+A DTLS connection is established between the Pledge and the Registrar.
+As described in {{Section 5.1 of RFC8995}} the Pledge establishes a TLS connection to the Registrar.
+This occurs either directly (link-local) or via a variety of Join Proxy mechanisms described in {{joinproxy}}.
 Regardless of the mechanism, the DTLS connection should operate identically.
 
-This issue affects {{RFC8995}} as well, and is reported in errata: https://www.rfc-editor.org/errata/eid6648
+The issue described below affects {{RFC8995}} as well, and is reported in errata: https://www.rfc-editor.org/errata/eid6648
 
-As the Registrar is discovered by IP address, and connected via the Join proxy, the name of the Registrar is not known to the Pledge.
-The Pledge will not know what the hostname for the Registrar is, so the pledge can not do RFC6125 DNS-ID validation on the Registrar's certificate.
-That is the purpose of the RFC8366 voucher.
+As the Registrar is discovered by IP address, and typically connected via a Join Proxy, the name of the Registrar is not known to the Pledge.
+The Pledge will not know what the hostname for the Registrar is, so it cannot do RFC6125 DNS-ID validation on the Registrar's certificate.
+Instead, it must do validation using the RFC8366 voucher.
 
 As the Pledge does not know the name of the Registrar, the Pledge cannot put any reasonable value into the {{RFC6066}} Server Name Indicator (SNI).
-The pledge SHOULD omit the SNI extension as per {{Section 9.2 of RFC8446}}.
+Threfore the Pledge SHOULD omit the SNI extension as per {{Section 9.2 of RFC8446}}.
 
-In some cases, particularly when debugging and doing interoperability testing, a Pledge may be  given the hostname of a particular Registrar to connect to.
-Such a bypass of the discovery process may result in the Pledge taking a different path to DTLS connection, and may result in the SNI being inserted by a library.
+In some cases, particularly when debugging and doing interoperability testing, a Pledge may be given the hostname of a particular Registrar to connect to directly.
+Such a bypass of the discovery process may result in the Pledge taking a different code path to establish a DTLS connection, and may result in the SNI being inserted by a library.
 The Registrar MUST ignore any SNI seen.
 
 A primary motivation for making the SNI ubiquitous in the public web is because it allows for multi-tenant hosting of HTTPS sites on a single (scarce) IPv4 address.
-This consideration does not apply to the Registrar because:
+This consideration does not apply to the server function in the Registrar because:
 
 * it uses DTLS and CoAP, not HTTPS
 
-* it uses IPv6, often {{RFC4193}} Unique Local Address, which are plentiful
+* it typically uses IPv6, often {{RFC4193}} Unique Local Address, which are plentiful
 
-* the port number number is discovered, so multiple tenants can be accomodate via unique port numbers.
+* the server port number is typically discovered, so multiple tenants can be accomodated via unique port numbers.
 
 As per {{Section 3.6.1 of RFC7030}}, the Registrar certificate MUST have the Extended Key Usage (EKU) id-kp-cmcRA.
-This certificate is also used as a TLS Server Certificate, so it must also have the EKU id-kp-serverAuth.
+This certificate is also used as a TLS Server Certificate, so it MUST also have the EKU id-kp-serverAuth.
 
 ## TLS Client Certificates: IDevID authentication
 
-As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the Registrar using  TLS Client Certificate for authentication.
+As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the Registrar using a TLS Client Certificate for authentication.
 
-Subsequently the pledge will send a Pledge Voucher Request (PVR).
+Subsequently the Pledge will send a Pledge Voucher Request (PVR).
 
-As explained below in {{registrar-identity}}, the "x5bag" may be used in the RVR to communicate identity of the Registrar to MASA.
+As explained below in {{registrar-identity}}, the "x5bag" element may be used in the RVR to communicate identity of the Registrar to MASA.
 The Pledge SHOULD NOT use the x5bag attribute in this way in the PVR.
 A Registrar that processes a PVR with an x5bag attribute MUST ignore it, and MUST use only the TLS Client Certificate extension for authentication of the Pledge.
 
-A situation where the pledge MAY use the x5bag is for communications of certificate chains to the MASA.
+A situation where the Pledge MAY use the x5bag is for communication of certificate chains to the MASA.
 This would arise in some vendor-specific situations involving outsourcing of MASA functionality, or rekey of IDevID certification authority.
 
 ## Discovery, URIs and Content Formats {#discovery}
@@ -354,8 +353,8 @@ Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
 If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least TBD3 is supported.
 
 Note that this specification allows for voucher-cose+cbor format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
-The burden for this flexibility is places upon the Registrar.
-The pledge is expected to support a single format only.
+The burden for this flexibility is placed upon the Registrar.
+A Pledge that is a constrained device is expected to support a single format only.
 
 The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge, produced by that manufacturer, supports.
@@ -580,9 +579,9 @@ This conforms to the example in {{Section 3.3 of RFC8995}} of carrying the asser
 A TLS/HTTPS connection is established between the Registrar and MASA.
 
 {{Section 5.4 of RFC8995}} explains this process, and there are no externally visible changes.
-A MASA that supports the unconstrained voucher formats should be able to support constrained vouchers requests equally well.
+A MASA that supports the unconstrained voucher formats should be able to support constrained voucher formats equally well.
 
-There is no requirement that a single MASA be used for both constrained and unconstrained voucher requests: the choice of MASA is determined by the id-mod-MASAURLExnn2016 extension contained in the IDevID.
+There is no requirement that a single MASA be used for both constrained and unconstrained voucher requests: the choice of MASA is determined by the id-mod-MASAURLExtn2016 extension contained in the IDevID.
 
 The Registrar MUST do {{RFC6125}} DNS-ID checks on the contents of the certificate provided by the MASA.
 
@@ -590,10 +589,10 @@ In constrast to the Pledge/Registrar situation, the Registrar always knows the n
 The SNI is optional in TLS1.2, but common.
 The SNI it considered mandatory with TLS1.3, so this requirement is not unusual.
 
-The presence of the SNI is need by the MASA in order for the MASA to host multiple tenants (for different customers).
+The presence of the SNI is needed by the MASA, in order for the MASA's server to host multiple tenants (for different customers).
 
-The Registrar SHOULD use a TLS Client Certificate to authenticate to the MASA.
-If the certificate that the Registrar uses is marked as a cmcRA certificate, via Extended Key Usage, then it MUST also have the id-kp-clientAuth EKU attribute set.
+The Registrar SHOULD use a TLS Client Certificate to authenticate to the MASA per {{Section 5.4.1 of RFC8995}}.
+If the certificate that the Registrar uses is marked as a id-kp-cmcRA certificate, via Extended Key Usage, then it MUST also have the id-kp-clientAuth EKU attribute set.
 
 ### Registrar Certificate Requirement {#registrar-certificate-requirement}
 
@@ -929,26 +928,28 @@ In CMS signed artifacts, the CMS structure has a place for such certificates.
 
 In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used for this.
 
-# Use of constrained-vouchers with HTTPS
+# Use of constrained vouchers with HTTPS
 
 This specification contains two extensions to {{RFC8995}}: a constrained voucher format (COSE), and a constrained transfer protocol (CoAP).
 
-On constrained networks with constrained devices, it make senses to use them together.
+On constrained networks with constrained devices, it make senses to use both together.
 However, this document does not mandate that this be the only way.
 
-There are devices that have multiple form factors, such as having either 802.15.4 radios or 802.11 (wifi) radios.
-Such a device may wish to have code only for the constrained voucher format (COSE), and use it on the 802.11 radio.
-This is supported by this document.
-In the case that HTTPS is used, the normal {{RFC8995}} resources are used, with the constrained MIME types described in this document.
+A given constrained device design and software may be re-used for multiple device models, such as a model having only an IEEE 802.15.4 radio, or a model 
+having only an IEEE 802.11 (Wi-Fi) radio, or a model having both these radios.
+A manufacturer of such device models may wish to have code only for the use of the constrained voucher format (COSE), and use it on all supported radios 
+including the IEEE 802.11 radio. For this radio, the software stack to support HTTP/TLS may be already integrated into the radio module hence it is 
+attractive for the manufacturer to reuse this. This type of approach is supported by this document.
+In the case that HTTPS is used, the normal {{RFC8995}} resource names are used, together with the media types described in this document.
 
 Other combinations are possible, but they are not enumerated here.
-New work such as {{I-D.ietf-anima-jws-voucher}} provide for new formats that may be useable over a number of different transports.
+New work such as {{I-D.ietf-anima-jws-voucher}} provides new formats that may be useable over a number of different transports.
 In general, sending larger payloads over constrained networks makes less sense,
 while sending smaller payloads over unconstrained networks is perfectly acceptable.
 
-The pledge will in most cases support a single voucher format, which it uses without negotiation.
-The registrar, being unconstrained, is expected to support all voucher formats.
-There will be cases where a registrar does not support a new format that a new pledge device uses, and this is an unfortunate situation that will result in lack of interoperation.
+The Pledge will in most cases support a single voucher format, which it uses without negotiation i.e. without discovery of formats supported.
+The Registrar, being unconstrained, is expected to support all voucher formats.
+There will be cases where a Registrar does not support a new format that a new Pledge uses, and this is an unfortunate situation that will result in lack of interoperation.
 
 The responsability for supporting new formats is on the Registrar.
 
@@ -975,17 +976,15 @@ TBD.
 
 ## Security of CoAP and UDP protocols
 
-{{brski-masa-protocol-format}} explains that no CoAPS version of the BRSKI-MASA protocol is  proposed.
+{{brski-masa-protocol-format}} explains that no CoAPS version of the BRSKI-MASA protocol is proposed.
 The connection from the Registrar to the MASA continues to be HTTPS as in {{RFC8995}}.
-This has been done as it simplifies the MASA deployment for the manufacturer because no new protocol needs to be enabled.
+This has been done to simplify the MASA deployment for the manufacturer, because no new protocol needs to be enabled on the server.
 
 The use of UDP protocols across the open Internet is sometimes fraught with security challenges.
-Denial of service attacks against UDP based protocols is trivial as there is no three-way handshake as done for TCP.
+Denial-of-service attacks against UDP based protocols are trivial as there is no three-way handshake as done for TCP.
 The three-way handshake of TCP guarantees that the node sending the connection request is reachable using the origin IP address.
-While DTLS contains an option to do a stateless challenge -- a process actually stronger than that done by TCP, it is not yet common for this mechanism to be available in hardware at multigigabit speeds.
-It is for this reason that this protocols sticks to using HTTPS for the Registrar->MASA connection.
-
-
+While DTLS contains an option to do a stateless challenge -- a process actually stronger than that done by TCP -- it is not yet common for this mechanism to be available in hardware at multigigabit speeds.
+It is for this reason that this document defines using HTTPS for the Registrar to MASA connection.
 
 
 ## Registrar Certificate may be self-signed
@@ -1093,7 +1092,7 @@ signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
     Published specification:  THIS RFC.
     Applications that use this media type:  ANIMA, 6tisch, and other
       zero-touch onboarding systems
-   Fragment identifier considerations:  The syntax and semantics of
+    Fragment identifier considerations:  The syntax and semantics of
       fragment identifiers specified for application/voucher-cose+cbor are
       as specified for application/cbor.  (At publication of this
       document, there is no fragment identification syntax defined for
