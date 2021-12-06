@@ -1078,8 +1078,8 @@ signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
     Applications that use this media type:  ANIMA, 6tisch, and other
       zero-touch onboarding systems
     Fragment identifier considerations:  The syntax and semantics of
-      fragment identifiers specified for application/voucher-cose+cbor are
-      as specified for application/cbor.  (At publication of this
+      fragment identifiers specified for application/voucher-cose+cbor
+      are as specified for application/cbor.  (At publication of this
       document, there is no fragment identification syntax defined for
       application/cbor.)
     Additional information:
