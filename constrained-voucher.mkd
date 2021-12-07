@@ -755,7 +755,7 @@ INSERT_FIG_FROM_FILE ietf-voucher-constrained-sid.txt END
 In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attributes.
 Two attributes of the voucher are "refined" to be optional.
 
-INSERT_FIG_FROM_FILE ietf-constrained-voucher@DATE.yang END
+INSERT_FIG_FROM_FILE ietf-voucher-constrained@DATE.yang END
 
 ### Example voucher artifacts {#example1}
 
@@ -1021,11 +1021,11 @@ Additions to the sub-registry "Resource Type Link Target Attribute Values", with
 This document registers two URIs in the IETF XML registry {{RFC3688}}.
 Following the format in {{RFC3688}}, the following registration is requested:
 
-      URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
+      URI: urn:ietf:params:xml:ns:yang:ietf-voucher-constrained
       Registrant Contact: The ANIMA WG of the IETF.
       XML: N/A, the requested URI is an XML namespace.
 
-      URI: urn:ietf:params:xml:ns:yang:ietf-constrained-voucher-request
+      URI: urn:ietf:params:xml:ns:yang:ietf-voucher-request-constrained
       Registrant Contact: The ANIMA WG of the IETF.
       XML: N/A, the requested URI is an XML namespace.
 
@@ -1033,14 +1033,14 @@ Following the format in {{RFC3688}}, the following registration is requested:
 
 This document registers two YANG modules in the YANG Module Names registry {{RFC6020}}.  Following the format defined in {{RFC6020}}, the the following registration is requested:
 
-      name:         ietf-constrained-voucher
-      namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained-voucher
+      name:         ietf-voucher-constrained
+      namespace:    urn:ietf:params:xml:ns:yang:ietf-voucher-constrained
       prefix:       vch
       reference:    RFC XXXX
 
-      name:         ietf-constrained-voucher-request
-      namespace:    urn:ietf:params:xml:ns:yang:ietf-constrained
-                                               -voucher-request
+      name:         ietf-voucher-request-constrained
+      namespace:    urn:ietf:params:xml:ns:yang:ietf-voucher-
+                                               request-constrained
       prefix:       vch
       reference:    RFC XXXX
 
