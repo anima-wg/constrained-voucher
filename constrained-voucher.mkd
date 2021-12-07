@@ -108,15 +108,15 @@ informative:
 
 --- abstract
 
-This document defines the Constrained Bootstrapping Remote Secure Key Infrastructure (Constrained BRSKI) protocol, 
-which provides a solution for secure zero-touch bootstrapping of resource-constrained (IoT) devices into the network 
-of a domain owner. This protocol is designed for constrained networks, which may have limited data throughput or may 
-experience frequent packet loss. Constrained BRSKI is a variant of the BRSKI protocol, which uses an artifact signed by the 
-device manufacturer called the "voucher" which enables a new device and the owner's network to mutually authenticate. 
-While the BRSKI voucher is typically encoded in JSON, Constrained BRSKI defines a compact CBOR-encoded voucher. 
-The BRSKI voucher is extended with new data types that allow for smaller voucher sizes. 
-The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS; 
-and HTTPS used in BRSKI is replaced with CoAPS. 
+This document defines the Constrained Bootstrapping Remote Secure Key Infrastructure (Constrained BRSKI) protocol,
+which provides a solution for secure zero-touch bootstrapping of resource-constrained (IoT) devices into the network
+of a domain owner. This protocol is designed for constrained networks, which may have limited data throughput or may
+experience frequent packet loss. Constrained BRSKI is a variant of the BRSKI protocol, which uses an artifact signed by the
+device manufacturer called the "voucher" which enables a new device and the owner's network to mutually authenticate.
+While the BRSKI voucher is typically encoded in JSON, Constrained BRSKI defines a compact CBOR-encoded voucher.
+The BRSKI voucher is extended with new data types that allow for smaller voucher sizes.
+The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS;
+and HTTPS used in BRSKI is replaced with CoAPS.
 
 --- middle
 
@@ -224,7 +224,7 @@ The constrained BRSKI-EST protocol described in this section is between the Pled
 
 ## Registrar and the Server Name Indicator (SNI)
 
-A DTLS connection is established between the Pledge and the Registrar, similar to the TLS connection 
+A DTLS connection is established between the Pledge and the Registrar, similar to the TLS connection
 described in {{Section 5.1 of RFC8995}}.
 This may occur via a Join Proxy as described in {{joinproxy}}.
 Regardless of the Join Proxy mechanism, the DTLS connection should operate identically.
@@ -372,7 +372,7 @@ The new CBOR format described as CoAP Content-Format 60 ("application/cbor"), MU
 
 ## Join Proxy options {#joinproxy}
 
-{{I-D.ietf-anima-constrained-join-proxy}} specifies a constrained Join Proxy that is optionally placed between Pledge and Registrar. 
+{{I-D.ietf-anima-constrained-join-proxy}} specifies a constrained Join Proxy that is optionally placed between Pledge and Registrar.
 This includes methods for discovery of the Join Proxy by the Pledge and discovery of the Registrar by the Join Proxy.
 
 ## Extensions to BRSKI {#brski-extensions}
@@ -923,10 +923,10 @@ This specification contains two extensions to {{RFC8995}}: a constrained voucher
 On constrained networks with constrained devices, it make senses to use both together.
 However, this document does not mandate that this be the only way.
 
-A given constrained device design and software may be re-used for multiple device models, such as a model having only an IEEE 802.15.4 radio, or a model 
+A given constrained device design and software may be re-used for multiple device models, such as a model having only an IEEE 802.15.4 radio, or a model
 having only an IEEE 802.11 (Wi-Fi) radio, or a model having both these radios.
-A manufacturer of such device models may wish to have code only for the use of the constrained voucher format (COSE), and use it on all supported radios 
-including the IEEE 802.11 radio. For this radio, the software stack to support HTTP/TLS may be already integrated into the radio module hence it is 
+A manufacturer of such device models may wish to have code only for the use of the constrained voucher format (COSE), and use it on all supported radios
+including the IEEE 802.11 radio. For this radio, the software stack to support HTTP/TLS may be already integrated into the radio module hence it is
 attractive for the manufacturer to reuse this. This type of approach is supported by this document.
 In the case that HTTPS is used, the normal {{RFC8995}} resource names are used, together with the media types described in this document.
 
