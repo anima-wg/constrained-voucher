@@ -326,7 +326,7 @@ In particular, a Pledge MAY use the longer and shorter URLs in any combination.
 When responding to a discovery request for BRSKI resources, the server MAY in addition return
 the full resource paths and the content types which are supported by these resources as shown in above example.
 This is useful when multiple content types are specified for a particular resource on the server.
-The server responds with only the root path for the BRSKI resource (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources.
+The server responds with only the root path for the BRSKI resources (rt=brski, resource /b in above example) and no others in case the client queries for only rt=brski type resources.
 (So, a query for rt=brski, without the wildcard character.)
 
 Without discovery, a longer well-known URL can only be used, such as:
@@ -1009,12 +1009,17 @@ The following security considerations have led to this choice of scope:
 
 ## Resource Type Registry
 
-Additions to the sub-registry "Resource Type Link Target Attribute Values", within the "CoRE parameters" IANA registry are specified below.
+Additions to the sub-registry "Resource Type Link Target Attribute Values", within the "CoRE Parameters" IANA registry are specified below.
 
-     brski    needs registration with IANA
-     brski.rv needs registration with IANA
-     brski.vs needs registration with IANA
-     brski.es needs registration with IANA
+Reference: [This RFC]
+ 
+Attribute | Description 
+|-|-|
+brski    | Root path of Bootstrapping Remote Secure Key Infrastructure (BRSKI) resources
+brski.rv | BRSKI request voucher resource
+brski.vs | BRSKI voucher status telemetry resource
+brski.es | BRSKI enrollment status telemetry resource
+
 
 ## The IETF XML Registry
 
@@ -1049,8 +1054,8 @@ This document registers two YANG modules in the YANG Module Names registry {{RFC
     ------------ ------ --------------------------- ------------
     Entry-point | Size | Module name               | RFC Number
     ------------ ------ --------------------------- ------------
-    2450          50     ietf-voucher-constrained    [ThisRFC]
-    2500          50     ietf-voucher-request        [ThisRFC}
+    2450          50     ietf-voucher-constrained    [This RFC]
+    2500          50     ietf-voucher-request        [This RFC]
                                      -constrained
     ----------- ------  --------------------------- ------------
 
@@ -1071,10 +1076,10 @@ signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
     Required parameters:  N/A
     Optional parameters:  N/A
     Encoding considerations:  binary (CBOR)
-    Security considerations:  Security Considerations of THIS RFC.
+    Security considerations:  Security Considerations of [This RFC].
     Interoperability considerations:  The format is designed to be
       broadly interoperable.
-    Published specification:  THIS RFC.
+    Published specification:  [This RFC]
     Applications that use this media type:  ANIMA, 6tisch, and other
       zero-touch onboarding systems
     Fragment identifier considerations:  The syntax and semantics of
