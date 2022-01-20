@@ -721,7 +721,7 @@ INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-sid.txt END
 
 ### YANG Module {#yang-voucher-request}
 
-In the constrained-voucher-request YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher-request module name, all voucher attributes, and the constrained-voucher-request attributes. Two attributes of the voucher are "refined" to be optional.
+In the voucher-request-constrained YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the voucher-request-constrained module name, all voucher attributes, and the voucher-request-constrained attributes. Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained@DATE.yang END
 
@@ -752,7 +752,7 @@ INSERT_FIG_FROM_FILE ietf-voucher-constrained-sid.txt END
 
 ### YANG Module {#yang-voucher}
 
-In the constrained-voucher YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the constrained-voucher module name, all voucher attributes, and the constrained-voucher attributes.
+In the voucher-constrained YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the voucher-constrained module name, all voucher attributes, and the voucher-constrained attributes.
 Two attributes of the voucher are "refined" to be optional.
 
 INSERT_FIG_FROM_FILE ietf-voucher-constrained@DATE.yang END
