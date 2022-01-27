@@ -161,6 +161,9 @@ The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the v
 
 The term Registrar Voucher Request, or acronym RVR, is introduced to refer to the voucher request between the Registrar and the MASA.
 
+In code examples, the string "\<CODE BEGINS\>" denotes the start of a code example and "\<CODE ENDS\>" the end of the code example.
+Four dots ("....") in a CBOR diagnostic notation byte string denotes a further sequence of bytes that is not shown for brevity.
+
 # Requirements Language {#reqlang}
 
 {::boilerplate bcp14}
@@ -728,7 +731,6 @@ INSERT_FIG_FROM_FILE ietf-voucher-request-constrained@DATE.yang END
 ### Example voucher request artifact {#example2}
 
 Below is a CBOR serialization of an example constrained voucher request from a Pledge to a Registrar, shown in CBOR diagnostic notation. The enum value of the assertion field is calculated to be 2 by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
-Four dots ("....") in a CBOR byte string denotes a sequence of bytes that are not shown for brevity.
 
 INSERT_FIG_FROM_FILE examples/voucher-request-example1.txt END
 
@@ -787,14 +789,14 @@ In general, the Pledge is expected to support only a single algorithm, while the
 An example of the supported COSE_Sign1 object structure is shown in {{fig-cose}}.
 
 ~~~~
-COSE_Sign1(
+18( / COSE_Sign1 /
   [
-    h'A101382E',        # protected header encoding: {1: -47} , which means { "alg": ES256K }
-    {
-      4 : h'7890A03F1234'       # 4 is the "kid" binary key identifier
+    h'A101382E',        / protected header encoding: {1: -47}     /
+    {                   /       which means { "alg": ES256K }     /
+      4 : h'7890A03F1234'  / 4 is the "kid" binary key identifier /
     },
-    h'1234....5678', #voucher-request binary content (CBOR)
-    h'4567....1234'  #voucher-request binary public signature
+    h'1234....5678', / voucher-request binary content (CBOR)      /
+    h'4567....1234'  / voucher-request binary public signature    /
   ]
 )
 ~~~~
@@ -948,7 +950,7 @@ The responsability for supporting new formats is on the Registrar.
 In the absense of correct use of idevid-issuer by the Registrar as detailed in {{registrar-idevid-issuer}}, it would be possible for a malicious Registrar to use an unauthorized voucher for a device.
 This would apply only to the case where a Manufacturer Authorized Signing Authority (MASA) is trusted by different products from the same manufacturer, and the manufacturer has duplicated serial numbers as a result of a merge, acquisition or mis-management.
 
-For example, imagine the same manufacturer makes light bulbs as well as gas centrofuges,
+For example, imagine the same manufacturer makes light bulbs as well as gas centrifuges,
 and said manufacturer does not uniquely allocate product serial numbers.
 This attack only works for nonceless vouchers.
 The attacker has obtained a light bulb which happens to have the same serial-number as a gas centrofuge which it wishes to obtain access.
@@ -1156,9 +1158,9 @@ Michel Veillette did extensive work on _pyang_ to extend it to support the SID a
 
 --- back
 
-#Library support for BRSKI {#libsup}
+#Library Support for BRSKI {#libsup}
 
-For the implementation of BRSKI, the use of a software library to manipulate certificates and use crypto algorithms is often beneficial. Two C-based examples are OPENSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
+For the implementation of BRSKI, the use of a software library to manipulate certificates and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
 
 Libraries do not support all known crypto algorithms. Before deciding on a library, it is important to look at their supported crypto algorithms and the roadmap for future support. Apart from availability, the library footprint, and the required execution cycles should be investigated beforehand.
 
@@ -1168,33 +1170,37 @@ A libary can be used to construct a (D)TLS connection. It is useful to realize t
 
 ## OpensSSL
 
-from openssl's apps/verify.c
+From openssl's apps/verify.c :
 
 INSERT_CODE_FROM_FILE examples/openssl-verify.c END
 
 
 ## mbedTLS
 
-
 ~~~~
-    mbedtls_x509_crt cert;
-    mbedtls_x509_crt caCert;
-    uint32_t         certVerifyResultFlags;
-    ...
-    int result = mbedtls_x509_crt_verify(&cert, &caCert, NULL, NULL,
-                                 &certVerifyResultFlags, NULL, NULL);
+<CODE BEGINS>
+mbedtls_x509_crt cert;
+mbedtls_x509_crt caCert;
+uint32_t         certVerifyResultFlags;
+...
+int result = mbedtls_x509_crt_verify(&cert, &caCert, NULL, NULL,
+                             &certVerifyResultFlags, NULL, NULL);
+<CODE ENDS>
 ~~~~
 
-#Constrained BRSKI-EST messages
+#Constrained BRSKI-EST Message Examples
 
-This section extends the examples from Appendix A of {{I-D.ietf-ace-coap-est}} with the constrained BRSKI requests. The CoAP headers are only worked out for the enrollstatus example.
+This appendix extends the message examples from Appendix A of {{I-D.ietf-ace-coap-est}} with constrained BRSKI messages.
+The CoAP headers are only fully worked out for the first example, enrollstatus.
 
 ##enrollstatus {#es}
 
-A coaps enrollstatus message can be :
+A coaps enrollstatus message from Pledge to Registrar can be as follows:
 
 ~~~
     POST coaps://192.0.2.1:8085/b/es
+      Content-Format: 60
+      Payload: <binary CBOR enrollstatus document>
 ~~~
 
 The corresponding CoAP header fields are shown below.
@@ -1202,7 +1208,10 @@ The corresponding CoAP header fields are shown below.
 ~~~
   Ver = 1
   T = 0 (CON)
-  Code = 0x02 (0.02 is POST)
+  TKL = 1
+  Code = 0x02 (0.02 is POST method)
+  Message ID = 0xab0f
+  Token = 0x4d
   Options
    Option  (Uri-Path)
      Option Delta = 0xb   (option nr = 11)
@@ -1217,13 +1226,35 @@ The corresponding CoAP header fields are shown below.
      Option Length = 0x1
      Option Value = 60    (application/cbor)
   Payload Marker = 0xFF
-  Payload = <binary CBOR enrollstatus document>
+  Payload = A26776657273696F6E0166737461747573F5 (18 bytes binary)
 ~~~
 
-The Uri-Host and Uri-Port Options are omitted because they coincide with the transport protocol destination address and port respectively.
-TBD - Show the binary CBOR payload of this example.
+The Uri-Host and Uri-Port Options are omitted because they coincide with the transport protocol (UDP) destination address and port respectively.
 
-A 2.04 Changed response from the Registrar will then be:
+The above binary CBOR enrollstatus payload looks as follows in CBOR diagnostic notation, for the case of enrollment success:
+
+~~~
+  {
+    "version": 1,
+    "status": true
+   }
+~~~
+
+Alternatively the payload could look as follows in case of enrollment failure, using the reason field to describe the failure:
+
+~~~
+  Payload = A36776657273696F6E0166737461747573F466726561736F6E782A3C
+            496E666F726D61746976652068756D616E207265616461626C652065
+            72726F72206D6573736167653E
+            
+  {
+    "version": 1,
+    "status": false,
+    "reason": "<Informative human readable error message>"
+  }            
+~~~
+
+To indicate successful reception of the enrollmentstatus telemetry report, a response from the Registrar may then be:
 
 ~~~
    2.04 Changed
@@ -1232,19 +1263,22 @@ A 2.04 Changed response from the Registrar will then be:
 With CoAP fields:
 
 ~~~
-   Ver=1
-   T=2 (ACK)
-   Code = 0x44 (2.04 Changed)
+  Ver=1
+  T=2 (ACK)
+  TKL=1
+  Code = 0x44 (2.04 Changed)
+  Message ID = 0xab0f
+  Token = 0x4d
 ~~~
 
 ##voucher_status
 
-A coaps voucher_status message can be:
+A coaps voucher_status message from Pledge to Registrar can be as follows:
 
 ~~~~
-   POST coaps://[2001:db8::2:1]:61616/b/vs
-     Content-Format: 60 (application/cbor)
-     Payload =
+    POST coaps://[2001:db8::2:1]/.well-known/brski/vs
+      Content-Format: 60 (application/cbor)
+      Payload: 
 INSERT_TEXT_FROM_FILE examples/voucher-status.hex END
 ~~~~
 
@@ -1254,104 +1288,102 @@ The request payload above is binary CBOR but represented here in hexadecimal for
 INSERT_TEXT_FROM_FILE examples/voucher-statusdiag.txt END
 ~~~~
 
-A 2.04 Changed response without payload will then be sent by the Registrar back to the Pledge.
+A success response without payload will then be sent by the Registrar back to the Pledge to indicate reception of the telemetry report:
 
 ~~~~
    2.04 Changed
 ~~~~
 
-# COSE examples {#cosesign}
 
-These examples are generated on a Pi 4 and a PC running BASH. Keys and Certificates have been generated with openssl with the following shell script:
+# COSE-signed Voucher (Request) Examples {#cosesign}
 
-INSERT_FIG_FROM_FILE examples/brski-cert.sh END
+This appendix provides examples of COSE-signed voucher requests and vouchers. First, the used test keys and certificates are described, following by examples of 
+a constrained PVR, RVR and voucher.
 
-The xxxx-comb certificates have been generated as required by libcoap for the DTLS connection generation.
 
-## Pledge, Registrar and MASA keys
+## Pledge, Registrar and MASA Keys
 
-This first section documents the public and private keys used in the
-subsequent test vectors below.  These keys come from test code and are not used in any
-production system, and should only be used only to validate implementations.
+This section documents the public and private keys used for all examples in this appendix. These keys are not used in any
+production system, and must only be used for testing purposes.
 
-### Pledge private key
+### Pledge IDevID private key {#pledgepriv}
 
-INSERT_FIG_FROM_FILE examples/pledge-key.txt END
+INSERT_CODE_FROM_FILE examples/pledge-key.txt END
 
 ### Registrar private key {#jrcpriv}
 
-INSERT_FIG_FROM_FILE examples/registrar-key.txt END
+INSERT_CODE_FROM_FILE examples/registrar-key.txt END
 
 ### MASA private key {#masapriv}
 
-INSERT_FIG_FROM_FILE examples/masa-key.txt END
+INSERT_CODE_FROM_FILE examples/masa-key.txt END
 
-## Pledge, Registrar and MASA certificates
+## Pledge, Registrar and MASA Certificates
 
-Below the certificates that accompany the keys. The certificate description is followed by the hexadecimal DER of the certificate
+All keys and certificates used for the examples have been generated with OpenSSL - see {{appendix-gencerts}} for more details on certificate generation.
+Below the certificates are listed that accompany the keys shown above. Each certificate description is followed by the hexadecimal representation of the X.509 ASN.1 DER encoded certificate.
+This representation can be for example decoded using an online ASN.1 decoder.
 
-### Pledge IDevID certificate
+### Pledge IDevID Certificate
 
-INSERT_FIG_FROM_FILE examples/pledge-cert.txt END
+INSERT_CODE_FROM_FILE examples/pledge-cert.txt END
 
-This is the hexadecimal representation in (request-)voucher examples referred to as pledge-cert-hex.
+Below is the hexadecimal representation:
 
-INSERT_FIG_FROM_FILE examples/pledge-cert.hex END
+INSERT_CODE_FROM_FILE examples/pledge-cert.hex END
 
-### Registrar Certificate
+### Registrar Certificate {#jrccert}
 
-INSERT_FIG_FROM_FILE examples/registrar-cert.txt END
+INSERT_CODE_FROM_FILE examples/registrar-cert.txt END
 
-This the hexadecimal representation, in (request-)voucher examples referred to as regis-cert-hex
+Below is the hexadecimal representation which is in (request-)voucher examples referred to as regis-cert-hex:
 
-INSERT_FIG_FROM_FILE examples/registrar-cert.hex END
+INSERT_CODE_FROM_FILE examples/registrar-cert.hex END
 
 ### MASA Certificate
 
-INSERT_FIG_FROM_FILE examples/masa-cert.txt END
+INSERT_CODE_FROM_FILE examples/masa-cert.txt END
 
-This is the hexadecimal representation, in (request-)voucher examples referred to as masa-cert-hex.
+Below is the hexadecimal representation:
 
-INSERT_FIG_FROM_FILE examples/masa-cert.hex END
+INSERT_CODE_FROM_FILE examples/masa-cert.hex END
+ 
 
+## COSE-signed Pledge Voucher Request (PVR)
 
-## COSE signed voucher request from Pledge to Registrar
-
-In this example the voucher request has been signed by the Pledge, and has been sent to the JRC over CoAPS.
-The Pledge uses the proximity assertion together with an included proximity-registrar-cert field to inform
-MASA about its proximity to the specific Registrar.
+In this COSE example the voucher request has been signed by the Pledge using the private key of {{pledgepriv}}, and has been sent to the link-local JRC (Registrar) over CoAPS.
 
 ~~~
-    POST coaps://registrar.example.com/b/rv
-    (Content-Format: application/voucher-cose+cbor)
-    signed_request_voucher
+    POST coaps://[JRC-link-local-address]/b/rv
+    Content-Format: TBD3
+    Payload: signed_request_voucher
 ~~~
 
 The payload signed_request_voucher is shown as hexadecimal dump (with lf added):
 
 INSERT_CODE_FROM_FILE examples/pledge-to-regis.txt END
 
+The Pledge uses the "proximity" (SID 2502, enum 2) assertion together with an included proximity-registrar-cert field (SID 2511) to inform
+MASA about its proximity to the specific Registrar.
 The representiation of signed_voucher_request in CBOR diagnostic format is:
 
 INSERT_CODE_FROM_FILE examples/pledge-to-regisdiag.txt END
 
 
-## COSE signed voucher request from Registrar to MASA
+## COSE-signed Registrar Voucher Request (RVR)
 
-TBD - modify example to use full paths to MASA, not short-names.
-Also not use CoAP but HTTP protocol.
-
-In this example the voucher request has been signed by the JRC using the private key from
-{{jrcpriv}}.  Contained within this voucher request is the voucher
-request from the Pledge to JRC.
-
+In this example the Registrar's voucher request has been signed by the JRC (Registrar) using the private key from
+{{jrcpriv}}.  Contained within this voucher request is the voucher request PVR that was made by the Pledge to JRC.
+Note that the RVR uses the HTTPS protocol (not CoAP) and corresponding long URI path names as defined in {{RFC8995}}.
+The Content-Type and Accept headers indicate the constrained voucher format that is defined in the present document.
+Because the Pledge used this format in the PVR, the JRC must also use this format in the RVR.
 
 ~~~
-    POST coaps://masa.example.com/b/rv
-    (Content-Format: application/voucher-cose+cbor)
-    signed_masa_request_voucher
+    POST https://masa.example.com/.well-known/brski/requestvoucher
+    Content-Type: application/voucher-cose+cbor
+    Accept: application/voucher-cose+cbor
+    Body: signed_masa_request_voucher
 ~~~
-
 
 The payload signed_masa_voucher_request is shown as hexadecimal dump (with lf added):
 
@@ -1361,19 +1393,31 @@ The representiation of signed_masa_voucher_request in CBOR diagnostic format is:
 
 INSERT_CODE_FROM_FILE examples/regis-to-MASAdiag.txt END
 
-## COSE signed voucher from MASA to Pledge via Registrar
+## COSE-signed Voucher from MASA
 
 The resulting voucher is created by the MASA and returned via the JRC to the
-Pledge.  It is signed by the MASA's private key {{masapriv}} and can be
-verified by the Pledge using the MASA's public key contained within the MASA certificate.
+Pledge.  It is signed by the MASA's private key (see {{masapriv}}) and can be
+verified by the Pledge using the MASA's public key that it stores.
 
-This is the raw binary signed_voucher, encoded in hexadecimal (with lf added):
+Below is the binary signed_voucher, encoded in hexadecimal (with lf added):
 
-INSERT_FIG_FROM_FILE examples/voucher-from-MASA.txt END
+INSERT_CODE_FROM_FILE examples/voucher-from-MASA.txt END
 
 The representiation of signed_voucher in CBOR diagnostic format is:
 
-INSERT_FIG_FROM_FILE examples/voucher-from-MASAdiag.txt END
+INSERT_CODE_FROM_FILE examples/voucher-from-MASAdiag.txt END
+
+In above, regis-cert-hex represents the hexadecimal encoding of the Registrar certificate of {{jrccert}}.
+
+# Generating Certificates with OpenSSL {#appendix-gencerts}
+
+This informative appendix shows an example of a Bash shell script to generate test certificates for the Pledge IDevID, the Registrar and the MASA.
+This shell script cannot be run stand-alone because it depends on particular input files which are not included in this appendix. Nevertheless, 
+this example script may provide guidance on how OpenSSL can be configured for generating Constrained BRSKI certificates.
+
+Note: the *-comb.crt certificate files combine the certificate with the private key. These are generated to be used by libcoap for DTLS connection establishment.
+
+INSERT_CODE_FROM_FILE examples/brski-cert.sh END
 
 
 # Pledge Device Class Profiles {#appendix-pledge-profiles}
@@ -1401,7 +1445,7 @@ The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI fea
 The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple bootstrap methods, hardware real-time clock, BRSKI/EST resource discovery, and
 CSR Attributes request/response. It also supports most of the optional features defined in this specification.
 
-## Comparison chart of Pledge Classes
+## Comparison Chart of Pledge Classes
 The below table specifies the functions implemented in the three example Pledge classes Min, Typ and Full.
 
 |Function \|====================\| Profiles -> |Min|Typ|Full
