@@ -1113,6 +1113,18 @@ in the Expert Review range (0-255) or the IETF Review range (256-9999).
     -----------------------------  --------- ----  ----------
     application/voucher-cose+cbor  -         TBD3  [This RFC]
 
+## BRSKI Parameters Registry
+
+This section registers the short names of BRSKI URIs into the BRSKI Well-Known URIs sub-registry of the IANA BRSKI Parameters Registry.
+
+Reference: [This RFC]
+
+| URI | Description |
+| rv | Constrained BRSKI short name for 'requestvoucher' |
+| vs | Constrained BRSKI short name for 'voucher_status' |
+| es | Constrained BRSKI short name for 'enrollstatus' |
+{: #brski-wellknown-uri title='BRSKI Well-known URI registrations'}
+
 # Acknowledgements
 
 We are very grateful to Jim Schaad for explaining COSE and CMS choices.
