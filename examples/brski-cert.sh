@@ -62,14 +62,14 @@ $OPENSSL_BIN req -new -x509 \
 
 # Combine authority certificate and key
 echo "Combine authority certificate and key"
-$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+$OPENSSL_BIN pkcs12 -passin pass:watnietWT -passout pass:watnietWT\
    -inkey $cadir/private/ca-regis.key \
    -in $cadir/certs/ca-regis.crt -export \
    -out $cadir/certs/ca-regis-comb.pfx
 
 # converteer authority pkcs12 file to pem
 echo "converteer authority pkcs12 file to pem"
-$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+$OPENSSL_BIN pkcs12 -passin pass:watnietWT -passout pass:watnietWT\
    -in $cadir/certs/ca-regis-comb.pfx \
    -out $cadir/certs/ca-regis-comb.crt -nodes
 
@@ -97,14 +97,14 @@ $OPENSSL_BIN req -new -x509 \
 
 # Combine authority certificate and key
 echo "Combine authority certificate and key for masa"
-$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+$OPENSSL_BIN pkcs12 -passin pass:watnietWT -passout pass:watnietWT\
    -inkey $cadir/private/ca-masa.key \
    -in $cadir/certs/ca-masa.crt -export \
    -out $cadir/certs/ca-masa-comb.pfx
 
 # converteer authority pkcs12 file to pem for masa
 echo "converteer authority pkcs12 file to pem for masa"
-$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+$OPENSSL_BIN pkcs12 -passin pass:watnietWT -passout pass:watnietWT\
    -in $cadir/certs/ca-masa-comb.pfx \
    -out $cadir/certs/ca-masa-comb.crt -nodes
 
@@ -142,14 +142,14 @@ $OPENSSL_BIN ca -config $cnfdir/openssl-pledge.cnf \
 # Add pledge key and pledge certificate to pkcs12 file
 echo "Add derived pledge key and derived pledge \
  certificate to pkcs12 file"
-$OPENSSL_BIN pkcs12  -passin pass:watnietweet -passout pass:watnietweet\
+$OPENSSL_BIN pkcs12  -passin pass:watnietWT -passout pass:watnietWT\
    -inkey $dir/private/pledge.key \
    -in $dir/certs/pledge.crt -export \
    -out $dir/certs/pledge-comb.pfx
 
 # converteer pledge pkcs12 file to pem
 echo "converteer pledge pkcs12 file to pem"
-$OPENSSL_BIN pkcs12 -passin pass:watnietweet -passout pass:watnietweet\
+$OPENSSL_BIN pkcs12 -passin pass:watnietWT -passout pass:watnietWT\
    -in $dir/certs/pledge-comb.pfx \
    -out $dir/certs/pledge-comb.crt -nodes
 

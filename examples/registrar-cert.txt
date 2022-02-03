@@ -1,45 +1,44 @@
 Certificate:
-    Data:
-        Version: 3 (0x2)
-        Serial Number:
-            70:56:ea:aa:30:66:d8:82:6a:55:5b:90:88:d4:62:bf:9c:f2:8c:fd
-        Signature Algorithm: ecdsa-with-SHA256
-        Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
-                                                 CN=registrar.stok.nl
-        Validity
-            Not Before: Dec  9 10:02:36 2020 GMT
-            Not After : Dec  9 10:02:36 2021 GMT
-        Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
-                                                  CN=registrar.stok.nl
-        Subject Public Key Info:
-            Public Key Algorithm: id-ecPublicKey
-                Public-Key: (256 bit)
-                pub:
-                    04:50:7a:c8:49:1a:8c:69:c7:b5:c3:1d:03:09:ed:
-                    35:ba:13:f5:88:4c:e6:2b:88:cf:30:18:15:4f:a0:
-                    59:b0:20:ec:6b:eb:b9:4e:02:b8:93:40:21:89:8d:
-                    a7:89:c7:11:ce:a7:13:39:f5:0e:34:8e:df:0d:92:
-                    3e:d0:2d:c7:b7
-                ASN1 OID: prime256v1
-                NIST CURVE: P-256
-        X509v3 extensions:
-            X509v3 Subject Key Identifier: 
-      08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
-            X509v3 Authority Key Identifier: 
-                keyid:
-      08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
+  Data:
+      Version: 3 (0x2)
+      Serial Number:
+        70:56:ea:aa:30:66:d8:82:6a:55:5b:90:88:d4:62:bf:9c:f2:8c:fd
+      Signature Algorithm: ecdsa-with-SHA256
+      Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
+                                               CN=registrar.stok.nl
+      Validity
+          Not Before: Dec  9 10:02:36 2020 GMT
+          Not After : Dec  9 10:02:36 2021 GMT
+      Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
+                                                CN=registrar.stok.nl
+      Subject Public Key Info:
+          Public Key Algorithm: id-ecPublicKey
+              Public-Key: (256 bit)
+              pub:
+                  04:50:7a:c8:49:1a:8c:69:c7:b5:c3:1d:03:09:ed:
+                  35:ba:13:f5:88:4c:e6:2b:88:cf:30:18:15:4f:a0:
+                  59:b0:20:ec:6b:eb:b9:4e:02:b8:93:40:21:89:8d:
+                  a7:89:c7:11:ce:a7:13:39:f5:0e:34:8e:df:0d:92:
+                  3e:d0:2d:c7:b7
+              ASN1 OID: prime256v1
+              NIST CURVE: P-256
+      X509v3 extensions:
+          X509v3 Subject Key Identifier: 
+    08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
+          X509v3 Authority Key Identifier: 
+              keyid:
+    08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
 
-            X509v3 Basic Constraints: critical
-                CA:TRUE
-            X509v3 Extended Key Usage: 
-                CMC Registration Authority, TLS Web Server 
-                Authentication, TLS Web Client Authentication
-            X509v3 Key Usage: critical
-                Digital Signature, Non Repudiation, Key Encipherment, 
-                Data Encipherment, Certificate Sign, CRL Sign
-    Signature Algorithm: ecdsa-with-SHA256
-         30:44:02:20:74:4c:99:00:85:13:b2:f1:bc:fd:f9:02:1a:46:
-         fb:17:4c:f8:83:a2:7c:a1:d9:3f:ae:ac:f3:1e:4e:dd:12:c6:
-         02:20:11:47:14:db:f5:1a:5e:78:f5:81:b9:42:1c:6e:47:02:
-         ab:53:72:70:c5:ba:fb:2d:16:c3:de:9a:a1:82:c3:5f
-
+          X509v3 Basic Constraints: critical
+              CA:TRUE
+          X509v3 Extended Key Usage: 
+              CMC Registration Authority, TLS Web Server 
+              Authentication, TLS Web Client Authentication
+          X509v3 Key Usage: critical
+              Digital Signature, Non Repudiation, Key Encipherment, 
+              Data Encipherment, Certificate Sign, CRL Sign
+  Signature Algorithm: ecdsa-with-SHA256
+       30:44:02:20:74:4c:99:00:85:13:b2:f1:bc:fd:f9:02:1a:46:
+       fb:17:4c:f8:83:a2:7c:a1:d9:3f:ae:ac:f3:1e:4e:dd:12:c6:
+       02:20:11:47:14:db:f5:1a:5e:78:f5:81:b9:42:1c:6e:47:02:
+       ab:53:72:70:c5:ba:fb:2d:16:c3:de:9a:a1:82:c3:5f

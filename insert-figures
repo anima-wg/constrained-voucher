@@ -5,6 +5,7 @@ sub insert {
 
     my $file;
     my $basefile;
+    my $lastline;
     $file = $1;
     print STDERR "File: $file\n";
     if( $file =~ /(.*)\@DATE/ ) {
@@ -23,16 +24,23 @@ sub insert {
     }
     open(FILE, "<" . $file) || die "Can not open $file: $!\n";
     print "<figure><artwork><![CDATA[\n" if $wrapped;
+    print "<sourcecode><![CDATA[\n" if !$wrapped && $codewrapped;
     if($file =~ /\.yang$/) {
-        $codewrapper=1;
+        $codewrapped=1;
         print "<CODE BEGINS> file \"$basefile\"\n";
-    }
+    } else {
+        print "<CODE BEGINS>\n" if $codewrapped;
+    } 
     while(<FILE>) {
-        print;
+        print;        
+        $lastline = $_;
     }
     close(FILE);
-    print "<CODE ENDS>\n" if $codewrapper;
+    $lastline=~ s/^\s+|\s+$//g;
+    print "\n" if length($lastline)>0;    
+    print "<CODE ENDS>\n" if $codewrapped;    
     print "]]></artwork></figure>\n" if $wrapped;
+    print "]]></sourcecode>\n" if !$wrapped && $codewrapped;
 }
 
 while(<>) {
@@ -43,7 +51,7 @@ while(<>) {
         insert($1, 1, 0);
     }
     elsif(/INSERT_CODE_FROM_FILE (.*) END/) {
-        insert($1, 1, 1);
+        insert($1, 0, 1);
     } else {
         print;
     }
