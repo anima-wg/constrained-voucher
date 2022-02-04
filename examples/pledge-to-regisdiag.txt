@@ -1,9 +1,9 @@
 Diagnose(signed_request_voucher) =
 18([
-h'A101382E',     // {"alg": -47}
+h'A101382E',     / {"alg": -47} /
 {4: h'97113DB094EEE8EAE48683E7337875C0372164B
       E89D023A5F3DF52699C0FBFB5'},
-h'1234',         // request_voucher
+h'<request_voucher>',  / byte string as detailed below /
 h'3045022063766C7BBD1B339DBC398E764AF3563E93B
 25A69104BEFE9AAC2B3336B8F56E1022100CD0419559A
 D960CCAED4DEE3F436ECA40B7570B25A52EB60332BC1F
@@ -16,5 +16,5 @@ Diagnose(request_voucher) =
         1: 2,
         7: h'684CA83E27230AFF97630CF2C1EC409A',
         13: "pledge.1.2.3.4",
-        10: h'1234' // regis-cert-hex
+        10: h'<regis-cert-hex>' / byte string as defined in C.2.2 /
 }}
