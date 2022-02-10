@@ -1013,7 +1013,7 @@ The following security considerations have led to this choice of scope:
 
 Additions to the sub-registry "Resource Type Link Target Attribute Values", within the "CoRE Parameters" IANA registry are specified below.
 
-Reference: [This RFC]
+Reference: \[This RFC\]
  
 Attribute | Description 
 |-|-|
@@ -1113,17 +1113,21 @@ in the Expert Review range (0-255) or the IETF Review range (256-9999).
     -----------------------------  --------- ----  ----------
     application/voucher-cose+cbor  -         TBD3  [This RFC]
 
-## BRSKI Parameters Registry
+## Update to BRSKI Parameters Registry
 
-This section registers the short names of BRSKI URIs into the BRSKI Well-Known URIs sub-registry of the IANA BRSKI Parameters Registry.
+This section updates the BRSKI Well-Known URIs sub-registry of the IANA Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters Registry
+by adding a field "Short URI". The contents of this field MUST be specified for any newly registered URI as follows:
 
-Reference: [This RFC]
+Short URI: A short name for the "URI" resource that can be used by a Constrained BRSKI Pledge in a CoAP request to the Registrar. In case the "URI" resource is only used between Registrar and MASA, the value "--" is registered denoting that a short name is not applicable.
 
-| URI | Description |
-| rv | Constrained BRSKI short name for 'requestvoucher' |
-| vs | Constrained BRSKI short name for 'voucher_status' |
-| es | Constrained BRSKI short name for 'enrollstatus' |
-{: #brski-wellknown-uri title='BRSKI Well-known URI registrations'}
+The initial contents of the sub-registry including the new column are as follows:
+
+| URI | Short URI | Description | Reference
+requestvoucher | rv | Request voucher: Pledge to Registrar, and Registrar to MASA      | [RFC8995], \[This RFC\]
+voucher_status | vs | Voucher status telemetry: Pledge to Registrar                    | [RFC8995], \[This RFC\]
+requestauditlog| -- | Request audit log: Registrar to MASA                             | [RFC8995]
+enrollstatus   | es | Enrollment status telemetry: Pledge to Registrar                 | [RFC8995], \[This RFC\]
+{: #brski-wellknown-uri title='Update of the BRSKI Well-Known URI Sub-Registry'}
 
 # Acknowledgements
 
