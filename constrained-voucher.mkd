@@ -1116,7 +1116,7 @@ in the Expert Review range (0-255) or the IETF Review range (256-9999).
 ## Update to BRSKI Parameters Registry
 
 This section updates the BRSKI Well-Known URIs sub-registry of the IANA Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters Registry
-by adding a field "Short URI". The contents of this field MUST be specified for any newly registered URI as follows:
+by adding a new column "Short URI". The contents of this field MUST be specified for any newly registered URI as follows:
 
 Short URI: A short name for the "URI" resource that can be used by a Constrained BRSKI Pledge in a CoAP request to the Registrar. In case the "URI" resource is only used between Registrar and MASA, the value "--" is registered denoting that a short name is not applicable.
 
