@@ -1014,8 +1014,8 @@ The following security considerations have led to this choice of scope:
 Additions to the sub-registry "Resource Type Link Target Attribute Values", within the "CoRE Parameters" IANA registry are specified below.
 
 Reference: \[This RFC\]
- 
-Attribute | Description 
+
+Attribute | Description
 |-|-|
 brski    | Root path of Bootstrapping Remote Secure Key Infrastructure (BRSKI) resources
 brski.rv | BRSKI request voucher resource
@@ -1141,7 +1141,7 @@ Michel Veillette did extensive work on _pyang_ to extend it to support the SID a
 
 -11 to -16
     (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues)
-    
+
 -10
     Design considerations extended
     Examples made consistent
@@ -1265,12 +1265,12 @@ Alternatively the payload could look as follows in case of enrollment failure, u
   Payload = A36776657273696F6E0166737461747573F466726561736F6E782A3C
             496E666F726D61746976652068756D616E207265616461626C652065
             72726F72206D6573736167653E
-            
+
   {
     "version": 1,
     "status": false,
     "reason": "<Informative human readable error message>"
-  }            
+  }
 ~~~
 
 To indicate successful reception of the enrollmentstatus telemetry report, a response from the Registrar may then be:
@@ -1297,7 +1297,7 @@ A coaps voucher_status message from Pledge to Registrar can be as follows:
 ~~~~
     POST coaps://[2001:db8::2:1]/.well-known/brski/vs
       Content-Format: 60 (application/cbor)
-      Payload: 
+      Payload:
 INSERT_TEXT_FROM_FILE examples/voucher-status.hex END
 ~~~~
 
@@ -1316,7 +1316,7 @@ A success response without payload will then be sent by the Registrar back to th
 
 # COSE-signed Voucher (Request) Examples {#cosesign}
 
-This appendix provides examples of COSE-signed voucher requests and vouchers. First, the used test keys and certificates are described, following by examples of 
+This appendix provides examples of COSE-signed voucher requests and vouchers. First, the used test keys and certificates are described, following by examples of
 a constrained PVR, RVR and voucher.
 
 
@@ -1366,7 +1366,7 @@ INSERT_CODE_FROM_FILE examples/masa-cert.txt END
 Below is the hexadecimal representation:
 
 INSERT_CODE_FROM_FILE examples/masa-cert.hex END
- 
+
 
 ## COSE-signed Pledge Voucher Request (PVR)
 
@@ -1431,7 +1431,7 @@ In above, regis-cert-hex represents the hexadecimal encoding of the Registrar ce
 # Generating Certificates with OpenSSL {#appendix-gencerts}
 
 This informative appendix shows an example of a Bash shell script to generate test certificates for the Pledge IDevID, the Registrar and the MASA.
-This shell script cannot be run stand-alone because it depends on particular input files which are not included in this appendix. Nevertheless, 
+This shell script cannot be run stand-alone because it depends on particular input files which are not included in this appendix. Nevertheless,
 this example script may provide guidance on how OpenSSL can be configured for generating Constrained BRSKI certificates.
 
 Note: the *-comb.crt certificate files combine the certificate with the private key. These are generated to be used by libcoap for DTLS connection establishment.
