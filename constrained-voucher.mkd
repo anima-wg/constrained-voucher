@@ -718,9 +718,21 @@ for the most constrained cases where RPK is used by the Pledge.
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-tree.txt END
 
-### SID values
+### SID values {#request-sid-values}
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-sid.txt END
+
+The "assertion" attribute is an enumerated type, and the current PYANG tooling does not document the valid values for this attribute.
+In the JSON serialization, the literal strings from the enumerated types are used so there is no ambiguity.
+In the CBOR serialization, a small integer is used.
+This following values are documented here, but the YANG module should be considered authoritative. No IANA registry is provided or necessary because the YANG module provides for extensions.
+
+integer  | assertion type
+|-|-|
+0        | verified
+1        | logged
+2        | proximity
+
 
 ### YANG Module {#yang-voucher-request}
 
@@ -751,6 +763,7 @@ INSERT_FIG_FROM_FILE ietf-voucher-constrained-tree.txt END
 
 INSERT_FIG_FROM_FILE ietf-voucher-constrained-sid.txt END
 
+The "assertion" enumerated attribute is numbered as per {{request-sid-values}}.
 
 ### YANG Module {#yang-voucher}
 
