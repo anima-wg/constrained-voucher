@@ -1147,6 +1147,15 @@ Also thanks to Jim Schaad for correcting earlier versions of the COSE_Sign1 obje
 
 Michel Veillette did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
 
+Daniel Franke and Henk Birkholtz provided review feedback.
+
+The BRSKI design team has met on many Thursdays for document review.  
+It includes: 
+Aurelio Schellenbaum, 
+David von Oheimb
+Steffen Fries, 
+Thomas Werner, 
+Toerless Eckert, 
 
 # Changelog
 
