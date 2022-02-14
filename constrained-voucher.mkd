@@ -820,6 +820,14 @@ Michel Veillette did extensive work on _pyang_ to extend it to support the SID a
 
 Daniel Franke and Henk Birkholtz provided review feedback.
 
+The BRSKI design team has met on many Thursdays for document review.  
+It includes: 
+Aurelio Schellenbaum, 
+David von Oheimb
+Steffen Fries, 
+Thomas Werner, 
+Toerless Eckert, 
+
 # Changelog
 
 -10
