@@ -294,13 +294,13 @@ This is the same "/.well-known/brski" prefix as defined in {{Section 5 of RFC899
 ~~~~
 
 Figure 5 in {{Section 3.2.2 of RFC7030}} enumerates the operations supported by EST, for which Table 1 in {{Section 5.1 of I-D.ietf-ace-coap-est}} enumerates the corresponding
-EST-coaps short path names. Similarly, {{est-uri}} provides the mapping from the supported BRSKI extension URI paths to the constrained-BRSKI URI paths.
+EST-coaps short path names. Similarly, {{brski-short-uri}} below provides the mapping from the supported BRSKI extension URI paths to the constrained-BRSKI URI paths.
 
 | BRSKI resource | constrained-BRSKI resource |
 | /requestvoucher| /rv |
 | /voucher_status | /vs |
 | /enrollstatus | /es  |
-{: #est-uri title='BRSKI URI paths mapping to constrained BRSKI URI paths'}
+{: #brski-short-uri title='BRSKI URI paths mapping to Constrained BRSKI URI paths'}
 
 Note that /requestvoucher indicated above occurs between the Pledge and Registrar (in scope of the BRSKI-EST protocol), but it also occurs between Registrar and MASA. However,
 as described in {{brski-est}}, this section and above table addresses only the BRSKI-EST protocol.
@@ -321,7 +321,7 @@ For example, if the Registrar supports a short BRSKI URL (/b) and supports the v
   </b/es>;rt=brski.es;ct="50 60"
 ~~~~
 
-The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" resources for the short names as defined in {{est-uri}}.
+The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" resources for the short names as defined in {{brski-short-uri}}.
 
 Registrars that have implemented shorter URLs MUST also respond in equivalent ways to the corresponding "/.well-known/brski/\<short-name\>" URLs, and MUST NOT distinguish between them.
 In particular, a Pledge MAY use the longer and shorter URLs in any combination.
@@ -419,19 +419,17 @@ Collecting the resource definitions from both {{RFC8995}}, {{RFC7030}}, and {{I-
 for the commonly used resources:
 
 <!-- Table order is currently the order in which typically the resources are used by Pledge. Change if we want to -->
-       +------------------+-------------------+----------------+
-       | EST + BRSKI      | Constrained-BRSKI | Well-known URI +
-       |                  |                   |   namespace    +
-       +------------------+-------------------+----------------+
-       | /requestvoucher  | /rv               | brski          +
-       | /voucher_status  | /vs               | brski          +
-       | /csrattrs        | /att              | est            +
-       | /simpleenroll    | /sen              | est            +
-       | /cacerts         | /crts             | est            +
-       | /enrollstatus    | /es               | brski          +
-       | /simplereenroll  | /sren             | est            +
-       +------------------+-------------------+----------------+
 
+|-|-|-|
+| BRSKI + EST      | Constrained-BRSKI + EST | Well-known URI namespace |
+| /requestvoucher  | /rv     | brski  |
+| /voucher_status  | /vs     | brski  |
+| /csrattrs        | /att    | est    |
+| /simpleenroll    | /sen    | est    |
+| /cacerts         | /crts   | est    |
+| /enrollstatus    | /es     | brski  |
+| /simplereenroll  | /sren   | est    |
+{: #brski-est-short-uri title='BRSKI/EST URI paths mapping to Constrained BRSKI/EST short URI paths'}
 
 ### Pledge Extensions {#brski-est-extensions-pledge}
 
@@ -718,9 +716,21 @@ for the most constrained cases where RPK is used by the Pledge.
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-tree.txt END
 
-### SID values
+### SID values {#request-sid-values}
 
 INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-sid.txt END
+
+The "assertion" attribute is an enumerated type {{RFC8366}}, and the current PYANG tooling does not document the valid values for this attribute.
+In the JSON serialization, the literal strings from the enumerated types are used so there is no ambiguity.
+In the CBOR serialization, a small integer is used.
+This following values are documented here, but the YANG module should be considered authoritative. No IANA registry is provided or necessary because the YANG module provides for extensions.
+
+Integer  | Assertion Type
+|-|-|
+0        | verified
+1        | logged
+2        | proximity
+{: #assertion-enums title='CBOR integers for the "assertion" attribute enum'}
 
 ### YANG Module {#yang-voucher-request}
 
@@ -751,6 +761,7 @@ INSERT_FIG_FROM_FILE ietf-voucher-constrained-tree.txt END
 
 INSERT_FIG_FROM_FILE ietf-voucher-constrained-sid.txt END
 
+The "assertion" enumerated attribute is numbered as per {{request-sid-values}}.
 
 ### YANG Module {#yang-voucher}
 
@@ -1021,7 +1032,7 @@ brski    | Root path of Bootstrapping Remote Secure Key Infrastructure (BRSKI) r
 brski.rv | BRSKI request voucher resource
 brski.vs | BRSKI voucher status telemetry resource
 brski.es | BRSKI enrollment status telemetry resource
-
+{: #iana-core-rt-values title='Resource Type (rt) link target attribute values for IANA registration'}
 
 ## The IETF XML Registry
 
