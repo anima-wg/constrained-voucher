@@ -216,7 +216,29 @@ The terminology for Updates is taken from {{I-D.kuehlewind-update-tag}}.
 
 This document Updates {{RFC8366}}. It Extends {{RFC8366}} by creating a new serialization format.
 
-This document Updates {{RFC8995}}. It Amends {{RFC8995}} by clarifying how pinning is done, and ???.
+This document Updates {{RFC8995}}. It Amends {{RFC8995}}
+
+* by clarifying how pinning is done, including for raw public keys,
+
+* adopts clearer explanation of why SNI must be ignored on the Pledge/Registrar connection, but is mandatory on the Registrar/MASA connection
+
+* clarifies when new trust anchors should be retrieved, and how transition to new trust anchors can be done with a minimum of traffic
+
+* clarified what kinds of Extended Key Usage attributes are appropriate for each certificate
+
+It Extends {{RFC8995} as follows:
+
+* adopts shorter resource names,
+
+* includes an optional discovery step,
+
+* includes Telemetry messages in CBOR,
+
+* makes some messages optional if the results can be inferred from other validations
+
+* provides the option to return trust anchors in a simpler format
+
+* extends the BRSKI-MASA protocol to carry the new voucher-cose+cbor format.
 
 # BRSKI-EST Protocol {#brski-est}
 
