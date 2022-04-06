@@ -973,30 +973,30 @@ The idevid-issuer is not included by default: a MASA needs to be aware if there 
 
 ## IDevID security in Pledge
 
-The security of this protocol depends upon the Pledge identifying itself to the network using it's manufacturer installed certificate: the IDevID.
-Associated with this certificate is a private key known only to the Pledge.
-Disclosure of this private key to an attacker would permit the attacker to impersonate the device to the network, probably gaining access credentials on that network.
+The security of this protocol depends upon the Pledge identifying itself to the Registrar using it's manufacturer installed certificate: the IDevID certificate.
+Associated with this certificate is the IDevID private key, known only to the Pledge.
+Disclosure of this private key to an attacker would permit the attacker to impersonate the Pledge towards the Registrar, probably gaining access credentials to that Registrar's network.
 
-If the private key disclosure is known to the manufacturer, there is little recourse other than recall of the relevant part numbers.
+If the IDevID private key disclosure is known to the manufacturer, there is little recourse other than recall of the relevant part numbers.
 The process for communicating this recall would be within the BRSKI-MASA protocol.
-Neither this specification nor {{RFC8995}} provides for consultation of a Certification Revocation List (CRL) or Open Certificate Status Protocol (OCSP) when accepting an IDevID.
-However, the BRSKI-MASA protocol submits the IDevID to the manufacturer and a manufacturer would have an opportunity to decline to issue a voucher for a device which they believe has become compromised.
+Neither this specification nor {{RFC8995}} provides for consultation of a Certification Revocation List (CRL) or Open Certificate Status Protocol (OCSP) by a Registrar when evaluating an IDevID certificate.
+However, the BRSKI-MASA protocol submits the IDevID from the Registrar to the manufacturer's MASA and a manufacturer would have an opportunity to decline to issue a voucher for a device which they believe has become compromised.
 
-It may be difficult for a manufacturer to determine when a private key has been disclosed.
-Two situations present themselves: in the first situation a device whose key is compromised might be reused in a counterfeit device, which is sold to another customer.
-This would present itself as an onboarding situation in two different networks.
-The manufacturer may become suspicious seeing two voucher requests from different Registrars.
-Such activity could be indisguishable from a device which has been resold from one operator to another, or re-deployed by an operator from one location to another.
+It may be difficult for a manufacturer to determine when an IDevID private key has been disclosed.
+Two situations present themselves: in the first situation a compromised private key might be reused in a counterfeit device, which is sold to another customer.
+This would present itself as an onboarding of the same device in two different networks.
+The manufacturer may become suspicious seeing two voucher requests for the same device from different Registrars.
+Such activity could be indistinguishable from a device which has been resold from one operator to another, or re-deployed by an operator from one location to another.
 
-In the second situation, an attacker having compromised the private key of a device might then install malware into the same device and attempt to return it to service.
+In the second situation, an attacker having compromised the IDevID private key of a device might then install malware into the same device and attempt to return it to service.
 The device, now blank, would go through a second onboarding process with the original Registrar.
 Such a Registrar could notice that the device has been "factory reset" and alert the operator to this situation.
-One remedy to the presences of malware is through the use of Remote Attestation such as described in {{?I-D.ietf-rats-architecture}}.
-Future work will specify a background-check Attestation flow within the voucher-request/voucher process.
-Attestation may still require access to a private key in order to sign Evidence, so a primary goal should be to keep the private key safe.
+One remedy against the presence of malware is through the use of Remote Attestation such as described in {{?I-D.ietf-rats-architecture}}.
+Future work will need to specify a background-check Attestation flow as part of the voucher-request/voucher-response process.
+Attestation may still require access to a private key (e.g. IDevID private key) in order to sign Evidence, so a primary goal should be to keep any private key safe within the Pledge.
 
-In larger, more expensive, systems there is budget (power, space, and bill of materials) to include more specific defenses for the private key.
-For instance, this includes putting the IDevID associated private key in a Trusted Platform Module (TPM), or use of Trusted Execution Environments (TEE) for access to the key.
+In larger, more expensive, systems there is budget (power, space, and bill of materials) to include more specific defenses for a private key.
+For instance, this includes putting the IDevID private key in a Trusted Platform Module (TPM), or use of Trusted Execution Environments (TEE) for access to the key.
 On smaller IoT devices, the cost and power budget for an extra part is often prohibitive.
 
 It is becoming more and more common for CPUs to have an internal set of one-time fuses that can be programmed (often they are "burnt" by a laser) at the factory.
@@ -1004,8 +1004,8 @@ This section of memory is only accessible in some priviledged CPU state.
 The use of this kind of CPU is appropriate as it provides significant resistance against key disclosure even when the device can be disassembled by an attacker.
 
 In a number of industry verticals, there is increasing concern about counterfeit parts.
-These may look-alike parts created in a different factory, or parts which are created in the same  factory during an illegal night-shift, and but which are not subject to the appropriate level of quality control.
-The use of a manufacturer signed IDevID provides for discovery of the pedigree of each part, and this often justifies the cost of the security associated with the private key.
+These may be look-alike parts created in a different factory, or parts which are created in the same factory during an illegal night-shift, but which are not subject to the appropriate level of quality control.
+The use of a manufacturer-signed IDevID certificate provides for discovery of the pedigree of each part, and this often justifies the cost of the security measures associated with storing the private key.
 
 
 ## Security of CoAP and UDP protocols
