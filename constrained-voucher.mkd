@@ -214,29 +214,27 @@ This is described in more detail in {{yang-voucher}}, {{pinning}} and {{pinned-w
 This section details the ways in which this document updates other RFCs.
 The terminology for Updates is taken from {{I-D.kuehlewind-update-tag}}.
 
-This document Updates {{RFC8366}}. It Extends {{RFC8366}} by creating a new serialization format.
+This document Updates {{RFC8366}}. It Extends {{RFC8366}} by creating a new serialization format, and creates a mechanism to pin Raw Public Key (RPK).
 
 This document Updates {{RFC8995}}. It Amends {{RFC8995}}
 
-* by clarifying how pinning is done, including for raw public keys,
+* by clarifying how pinning is done,
 
-* adopts clearer explanation of why SNI must be ignored on the Pledge/Registrar connection, but is mandatory on the Registrar/MASA connection
+* adopts clearer explanation of the TLS Server Name Indicator (SNI), see {{sni}} and {{sni-masa}}
 
-* clarifies when new trust anchors should be retrieved, and how transition to new trust anchors can be done with a minimum of traffic
+* clarifies when new trust anchors should be retrieved ({{brski-est-extensions-pledge}}), 
 
-* clarified what kinds of Extended Key Usage attributes are appropriate for each certificate
+* clarified what kinds of Extended Key Usage attributes are appropriate for each certificate ({{registrar-certificate-requirement}})
 
 It Extends {{RFC8995} as follows:
+* defines the CoAP version of the BRSKI protocol
 
-* adopts shorter resource names,
 
-* includes an optional discovery step,
 
-* includes Telemetry messages in CBOR,
 
-* makes some messages optional if the results can be inferred from other validations
+* makes some messages optional if the results can be inferred from other validations ({{brski-est-extensions}}),
 
-* provides the option to return trust anchors in a simpler format
+* provides the option to return trust anchors in a simpler format ({{brski-est-extensions-registrar}})
 
 * extends the BRSKI-MASA protocol to carry the new voucher-cose+cbor format.
 
