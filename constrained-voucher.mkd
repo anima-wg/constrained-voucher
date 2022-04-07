@@ -227,6 +227,7 @@ This document Updates {{RFC8995}}. It Amends {{RFC8995}}
 * clarified what kinds of Extended Key Usage attributes are appropriate for each certificate ({{registrar-certificate-requirement}})
 
 It Extends {{RFC8995}} as follows:
+
 * defines the CoAP version of the BRSKI protocol
 
 * makes some messages optional if the results can be inferred from other validations ({{brski-est-extensions}}),
