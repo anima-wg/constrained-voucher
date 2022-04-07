@@ -1,6 +1,6 @@
 module: ietf-voucher-request-constrained
 
-  grouping voucher-request-constrained-grouping
+  grouping voucher-request-constrained-grouping:
     +-- voucher
        +-- created-on?                        yang:date-and-time
        +-- expires-on?                        yang:date-and-time
