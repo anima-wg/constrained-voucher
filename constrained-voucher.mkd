@@ -587,7 +587,7 @@ Some consideration was made to specify CoAP support for consistency, but:
 If the PVR contains a proximity assertion, the Registrar MUST propagate this assertion into the RVR by including the "assertion" field with the value "proximity".
 This conforms to the example in {{Section 3.3 of RFC8995}} of carrying the assertion forward.
 
-## MASA and the Server Name Indicator (SNI)
+## MASA and the Server Name Indicator (SNI) {#sni-masa}
 
 A TLS/HTTPS connection is established between the Registrar and MASA.
 
