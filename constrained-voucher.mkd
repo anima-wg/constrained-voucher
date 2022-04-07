@@ -225,7 +225,7 @@ The extensions are targeting low-resource networks with small packets.
 
 The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
 
-## Registrar and the Server Name Indicator (SNI)
+## Registrar and the Server Name Indicator (SNI) {#sni}
 
 A DTLS connection is established between the Pledge and the Registrar, similar to the TLS connection
 described in {{Section 5.1 of RFC8995}}.
