@@ -325,7 +325,7 @@ as described in {{brski-est}}, this section and above table addresses only the B
 
 Pledges that wish to discover the available BRSKI bootstrap options/formats, or reduce the size of the CoAP headers by eliminating the "/.well-known/brski" path, can do a discovery operation using {{RFC6690}} Section 4 by sending a discovery query to the Registrar.
 
-For example, if the Registrar supports a short BRSKI URL (/b) and supports the voucher format "application/voucher-cose+cbor" (TBD3), and status reporting in both CBOR and JSON formats:
+For example, if the Registrar supports a short BRSKI URL (/b) and supports the voucher format "application/voucher-cose+cbor" (836), and status reporting in both CBOR and JSON formats:
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
@@ -334,7 +334,7 @@ For example, if the Registrar supports a short BRSKI URL (/b) and supports the v
   Content-Format: 40
   Payload:
   </b>;rt=brski,
-  </b/rv>;rt=brski.rv;ct=TBD3,
+  </b/rv>;rt=brski.rv;ct=836,
   </b/vs>;rt=brski.vs;ct="50 60",
   </b/es>;rt=brski.es;ct="50 60"
 ~~~~
@@ -365,16 +365,16 @@ while with discovery of shorter URLs, a request such as:
 is possible.
 
 The return of multiple content-types in the "ct" attribute allows the Pledge to choose the most appropriate one.
-Note that Content-Format TBD3 ("application/voucher-cose+cbor") is defined in this document.
+Note that Content-Format 836 ("application/voucher-cose+cbor") is defined in this document.
 
-Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
-If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least TBD3 is supported.
+Content-Format 836 MUST be supported by the Registrar for the /rv resource.
+If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least 836 is supported.
 
 Note that this specification allows for voucher-cose+cbor format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
 The burden for this flexibility is placed upon the Registrar.
 A Pledge on constrained hardware is expected to support a single format only.
 
-The Pledge and MASA need to support one or more formats (at least TBD3) for the voucher and for the voucher request.
+The Pledge and MASA need to support one or more formats (at least 836) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge supports.
 
 {{discovery-considerations}} details how the Pledge discovers the Registrar and Join Proxy in different deployment scenarios.
@@ -532,7 +532,7 @@ This avoids the overhead of the Pledge reconnecting using DTLS, when it performs
 
 The Content-Format 50 (application/json) MUST be supported and 60 (application/cbor) MUST be supported by the Registrar for the /vs and /es resources.
 
-Content-Format TBD3 MUST be supported by the Registrar for the /rv resource.
+Content-Format 836 MUST be supported by the Registrar for the /rv resource.
 
 When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 ("application/pkix-cert") it SHOULD return only the
 single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request.
@@ -1167,13 +1167,11 @@ signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
 
 ## CoAP Content-Format Registry
 
-One addition to the sub-registry "CoAP Content-Formats", within the "CoRE
-Parameters" registry is needed for a new content-format. It can be registered
-in the Expert Review range (0-255) or the IETF Review range (256-9999).
+IANA has allocated ID 836 from the sub-registry "CoAP Content-Formats".
 
     Media type                     Encoding   ID   Reference
     -----------------------------  --------- ----  ----------
-    application/voucher-cose+cbor  -         TBD3  [This RFC]
+    application/voucher-cose+cbor  -          836  [This RFC]
 
 ## Update to BRSKI Parameters Registry
 
@@ -1445,7 +1443,7 @@ In this COSE example the voucher request has been signed by the Pledge using the
 
 ~~~
     POST coaps://[JRC-link-local-address]/b/rv
-    Content-Format: TBD3
+    Content-Format: 836
     Payload: signed_request_voucher
 ~~~
 
