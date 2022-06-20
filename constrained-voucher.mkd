@@ -1093,7 +1093,7 @@ In certain cases, the MASA's public key counterpart of the (private) signing key
 In other cases, if the MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} Section 2.3), then a certificate chain may need to be included with the voucher in order for the pledge to validate the signature.
 In CMS signed artifacts, the CMS structure has a place for such certificates.
 
-In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is to be used for this.
+In the COSE-signed Constrained Vouchers described in this document, the x5bag attribute from {{I-D.ietf-cose-x509}} is used to contain the needed certificates and chain.
 
 # Use of constrained vouchers with HTTPS
 
