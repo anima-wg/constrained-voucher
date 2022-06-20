@@ -161,6 +161,8 @@ The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the v
 
 The term Registrar Voucher Request, or acronym RVR, is introduced to refer to the voucher request between the Registrar and the MASA.
 
+This document uses the term "PKIX Certificate" to refer to the X.509v3 profile described in {{RFC5280}}.
+
 In code examples, the string "\<CODE BEGINS\>" denotes the start of a code example and "\<CODE ENDS\>" the end of the code example.
 Four dots ("....") in a CBOR diagnostic notation byte string denotes a further sequence of bytes that is not shown for brevity.
 
@@ -193,14 +195,14 @@ They are presented in the order "voucher-request", followed by a "voucher" respo
 the order that they occur in the protocol.
 
 The constrained voucher request MUST be signed by the Pledge.
-It signs using the private key associated with its IDevID X.509 certificate, or if an IDevID is not available, then the private key associated with its manufacturer-installed raw public key (RPK).
+It signs using the private key associated with its IDevID PKIX certificate, or if an IDevID is not available, then the private key associated with its manufacturer-installed raw public key (RPK).
 {{rpk-considerations}} provides additional details on PKIX-less operations.
 
 The constrained voucher MUST be signed by the MASA.
 
-For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's X.509 certificate, or using a raw public key (RPK) of the Registrar.
+For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's PKIX certificate, or using a raw public key (RPK) of the Registrar.
 
-For the constrained voucher both methods are supported to indicate (pin) a trusted domain identity: using either a pinned domain X.509 certificate, or a pinned raw public key (RPK).
+For the constrained voucher both methods are supported to indicate (pin) a trusted domain identity: using either a pinned domain PKIX certificate, or a pinned raw public key (RPK).
 
 The BRSKI architectures mandates that the MASA be aware of the capabilities of the pledge.
 This is not a drawback as the pledges are constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
@@ -665,12 +667,12 @@ customer to obtain flexible long-lived vouchers).
 
 ## Pinning of Raw Public Keys {#pinned-with-rpk}
 
-Specifically for constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of an X.509 certificate.
+Specifically for constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of an PKIX certificate.
 If an RPK is pinned it MUST be the RPK of the Registrar.
 
-When the Pledge is known by MASA to support RPK but not X.509 certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
+When the Pledge is known by MASA to support RPK but not PKIX certificates, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
 or "pinned-domain-pubk-sha256" field of a voucher.
-This is described in more detail in {{yang-voucher}}. A Pledge that does not support X.509 certificates cannot use EST to enroll; it has to use
+This is described in more detail in {{yang-voucher}}. A Pledge that does not support PKIX certificates cannot use EST to enroll; it has to use
 another method for enrollment without certificates and the Registrar has to support this method also.
 It is possible that the Pledge will not enroll, but instead only a network join operation will occur (See {{RFC9031}}).
 How the Pledge discovers this method and details of the enrollment method are out of scope of this document.
