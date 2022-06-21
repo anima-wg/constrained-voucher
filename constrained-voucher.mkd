@@ -390,30 +390,35 @@ The new CBOR format described as CoAP Content-Format 60 ("application/cbor"), MU
 
 ## Join Proxy options {#joinproxy}
 
-{{I-D.ietf-anima-constrained-join-proxy}} specifies a constrained Join Proxy that is optionally placed between Pledge and Registrar.
-This includes methods for discovery of the Join Proxy by the Pledge and discovery of the Registrar by the Join Proxy.
+{{I-D.ietf-anima-constrained-join-proxy}} specifies the details for a stateful and stateless constrained Join Proxy which is equivalent to {{RFC8995, Section 4}}.
 
 ## Extensions to BRSKI {#brski-extensions}
 
-### Discovery {#brski-extensions-discovery}
+The following section explains extension within the BRSKI/CoAP connection itself.
+{{discovery}} explains ways in which a pledge may discover the capability to use constrained vouchers, and to use the CoAPS transport.
 
-The Pledge discovers an IP address and port number that connects to the Registrar (possibly via a Join Proxy), and it establishes a DTLS connection.
+### CoAP EST Resource Discovery and BRSKI {#brski-extensions-discovery}
+
+Once the Pledge discovers an IP address and port number that connects to the Registrar (probably via a Join Proxy), and it establishes a DTLS connection.
 
 No further discovery of hosts or port numbers is required, but a pledge that can do more than one kind of enrollment (future work offers protocols other than {{I-D.ietf-ace-coap-est}}), then a pledge may need to use CoAP Discovery to determine what other protocols are available.
 
-A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use discovery for BRSKI resources.
+A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use CoAP discovery for BRSKI/EST resources.
 It is more efficient to just try the supported enrollment method via the well-known BRSKI/EST-coaps resources.
-This also avoids the Pledge doing any CoRE Link Format parsing, which is specified in {{I-D.ietf-ace-coap-est, Section 4.1}}.
+This also avoids the Pledge having to do any CoRE Link Format parsing, which is specified in {{I-D.ietf-ace-coap-est, Section 4.1}}.
 
 The Registrar MUST support all of the EST resources at their default ".well-known" locations (on the specified port)
 as well as any server-specific shorter form that might also be supported.
 
-However, when discovery is being done by the Pledge, it is possible for the Registrar to return references to resources which are on different port numbers.
+However, if discovery is done by the Pledge, it is possible for the Registrar to return references to resources which are on different port numbers.
 The Registrar SHOULD NOT use different ports numbers by default, because a Pledge that is connected via a Join Proxy can only access a single UDP port.
+
+A Pledge that receives different port numbers or names SHOULD ignore those port numbers and continue to use the DTLS connection that it has already created.
+Or it MAY fail the entire transaction and look for another Join Proxy/Registrar to do onboarding with. (If the resources without the port numbers do not work, then the Pledge will fail anyway)
+
 A Registrar configured to never use Join Proxies MAY be configured to use multiple port numbers.
 Therefore a Registrar MUST host all discoverable BRSKI resources on the same (UDP) server port that the Pledge's DTLS connection is using.
-Using the same UDP server port for all resources allows the Pledge to continue via the same DTLS connection
-which is more efficient.
+However, using the same UDP server port for all resources allows the Pledge to continue via the  same DTLS connection which is more efficient.
 
 ### CoAP responses {#brski-coap-responses}
 
