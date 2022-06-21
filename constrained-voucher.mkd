@@ -563,7 +563,6 @@ This section describes extensions to and clarifications of the BRSKI-MASA protoc
 This document does not change that. The Registrar MUST use the format "application/voucher-cose+cbor" in its voucher request to MASA, when the Pledge uses this format in its request to the Registrar {{RFC8995}}.
 
 The MASA only needs to support formats for which it has constructed Pledges that use that format.
-(A pledge not built in coordination with the MASA would be unknown to the MASA, and would never direct the Registrar to this MASA)
 
 The Registrar MUST use the same format for the RVR as the Pledge used for its PVR.
 
