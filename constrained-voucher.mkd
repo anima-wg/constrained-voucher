@@ -959,29 +959,50 @@ Here is an example of a more complex announcement:
 
 ## Discovery operations by Join-Proxy
 
-## GRASP Discovery
+### GRASP Discovery
 
-This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateless Join Proxy using ACP instance of GRASP using M_FLOOD messages. Section 4.3 of {{RFC8995}} discusses this in more detail.
+This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateful Join Proxy using ACP instance of GRASP using M_FLOOD messages.
+Section 4.3 of {{RFC8995}} discusses this in more detail.
 
 The following changes are necessary with respect to figure 10 of {{RFC8995}}:
 
 * The transport-proto is IPPROTO_UDP
 * the objective is AN_registrar, identical to {{RFC8995}}.
-* the objective name is "BRSKI_RJP".
+* the objective name is "BRSKI_JP".
 
-The Registrar announces itself using ACP instance of GRASP using M_FLOOD messages.
+The Registrar announces itself using ACP instance of GRASP using M\_FLOOD messages.
 Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}} .
-Here is an example M_FLOOD announcing the Registrar on example port 5685.
+Here is an example M\_FLOOD announcing the Registrar on example port 5685.
 
 ~~~
    [M_FLOOD, 51804321, h'fda379a6f6ee00000200000064000001', 180000,
-   [["AN_join_registrar", 4, 255, "BRSKI_RJP"],
-   [O_IPv6_LOCATOR,
-   h'fda379a6f6ee00000200000064000001', IPPROTO_UDP, 5685]]]
+   [["AN_join_registrar", 4, 255, "BRSKI_JP"],
+    [O_IPv6_LOCATOR,
+     h'fda379a6f6ee00000200000064000001', IPPROTO_UDP, 5685]]]
 ~~~
 {: #fig-grasp-rgj title='Example of Registrar announcement message' align="left"}
 
 The Registrar uses a routable address that can be used by enrolled constrained Join Proxies.
+The address will typically be a ULA (as it is in the example), but could also be a GUA.
+
+### CoAP discovery {#coap-disc}
+
+Section {{brski-extensions-discovery}} describes the mechanism by which a Pledge can learn about the different resource end-points that a Registrar supports.
+
+This section explains how a Join Proxy can discover the join-port and IP address of the Registrar  by sending a GET request to "/.well-known/core" including a resource type (rt) parameter with the value "brski.jp" {{RFC6690}}.
+
+This will typically be sent to the all-hosts Link-Local multicast address.
+
+Upon success, the return payload will contain the join-port of the Registrar.
+
+~~~~
+  REQ: GET coap://[IP_address]/.well-known/core?rt=brski.jp
+
+  RES: 2.05 Content
+  <coaps://[IP_address]:join-port>; rt="brski.jp"
+~~~~
+
+The discoverable port numbers are usually returned for Join Proxy resources in the &lt;URI-Reference&gt; of the payload (see section 5.1 of {{RFC9148}}).
 
 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
