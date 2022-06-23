@@ -889,13 +889,100 @@ The MASA SHOULD NOT include an x5bag structure in the voucher response - excepti
 
 # Extensions to Discovery {#discovery}
 
+It is assumed that Join Proxy seamlessly provides a coaps connection between Pledge and Registrar. In particular this section extends section 4.1 of {{RFC8995}} for the constrained case.
+
+In general, the Pledge may be one or more hops away from the Registrar.
+
+In the degenerate case, the Pledge is zero hops away from the Registrar.
+This would be unusual in wireless cases due to encryption of the layer two: one of the main purposes of the Join Proxy is to bridge between encrypted operational networks and unencrypted join networks.
+
+The situation where the link is not encrypted could occur in wired IoT networks such as BACnet,  Power-Line Ethernet, etc.
+
+In order to support the degenerate case the Registrar SHOULD announce itself as if it were a Join Proxy, but it would actually announce it's real (stateful) CoAPS endpoint.
+No actual Join Proxy functionality is required though.
+
+When, as is typical, the Pledge is more than one hop away from a relevant Registrar, it needs to discover the link-local address and join-port of a Join Proxy. The Pledge then follows the BRSKI procedure using the link-local address of the Join Proxy.
+
+Once enrolled, a Pledge may function as a Join Proxy.
+The decision whether or not to provide this functionality depends upon many factors and is out of scope for this document.
+Such a decision might depend upon amount of power available to the device, network bandwidth available, as well CPU and memory availability.
+
+The process by which a Pledge discovers the Join Proxy, and by which the Join Proxy discovers the location of the Registar are the subject to the following sections.
+
 ## Discovery operations by Pledge
 
-TBD
+The Pledge must discover the address/port and protocol with which to communicate.
+
+Note that the format the voucher-request and voucher is not part of the determination.
+It is assumed that Registrars support all relevant voucher formats, while the pledge on supports a single format.
+A pledge that makes a voucher request to a Registrar that does not support that format will fail with a 406 (4.6) status code.
+
+### GRASP discovery
+
+This section is normative for uses with an ANIMA ACP.
+In the context of autonomic networks, the Join-Proxy uses the DULL GRASP M_FLOOD mechanism to announce itself.
+Section 4.1.1 of {{RFC8995}} discusses this in more detail.
+
+The following changes are necessary with respect to figure 10 of {{RFC8995}}:
+
+* The transport-proto is IPPROTO_UDP
+* the objective is AN_Proxy
+
+The Registrar announces itself using ACP instance of GRASP using M_FLOOD messages.
+Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}} .
+
+Here is an example M_FLOOD announcing the Join-Proxy at fe80::1, on standard coaps port 5684, using DTLS.
+
+~~~
+     [M_FLOOD, 12340815, h'fe800000000000000000000000000001', 180000,
+     [["AN_Proxy", 4, 1, "DTLS"],
+     [O_IPv6_LOCATOR,
+     h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]]
+~~~
+{: #fig-grasp-rg title='Example of Join Proxy announcement message' align="left"}
+
+Note that a join proxy that supports also supports RFC8995 onboarding using HTTPS may announce more than one objective.
+Objectives with an empty objective-value (whether CBOR NULL or an empty string) refer to {{RFC8995}}.
+
+Here is an example of a more complex announcement:
+
+~~~
+     [M_FLOOD, 12340851, h'fe800000000000000000000000000001', 180000,
+     [["AN_Proxy", 4, 1, ""],
+      [O_IPv6_LOCATOR,
+       h'fe800000000000000000000000000001', IPPROTO_TCP, 4443],
+      ["AN_Proxy", 4, 1, "DTLS"],
+      [O_IPv6_LOCATOR,
+       h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]
+~~~
+{: #fig-grasp-duo title='Example of Join Proxy announcing two methods' align="left"}
 
 ## Discovery operations by Join-Proxy
 
-TBD
+## GRASP Discovery
+
+This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateless Join Proxy using ACP instance of GRASP using M_FLOOD messages. Section 4.3 of {{RFC8995}} discusses this in more detail.
+
+The following changes are necessary with respect to figure 10 of {{RFC8995}}:
+
+* The transport-proto is IPPROTO_UDP
+* the objective is AN_registrar, identical to {{RFC8995}}.
+* the objective name is "BRSKI_RJP".
+
+The Registrar announces itself using ACP instance of GRASP using M_FLOOD messages.
+Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}} .
+Here is an example M_FLOOD announcing the Registrar on example port 5685.
+
+~~~
+   [M_FLOOD, 51804321, h'fda379a6f6ee00000200000064000001', 180000,
+   [["AN_join_registrar", 4, 255, "BRSKI_RJP"],
+   [O_IPv6_LOCATOR,
+   h'fda379a6f6ee00000200000064000001', IPPROTO_UDP, 5685]]]
+~~~
+{: #fig-grasp-rgj title='Example of Registrar announcement message' align="left"}
+
+The Registrar uses a routable address that can be used by enrolled constrained Join Proxies.
+
 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
 
