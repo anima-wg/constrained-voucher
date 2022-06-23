@@ -285,7 +285,7 @@ Subsequently the Pledge will send a Pledge Voucher Request (PVR).
 
 In {{registrar-identity}}, the contents of the "x5bag" structure in the Registrar Voucher Request (RVR) are explained. In {{VR-COSE}} the use of the "x5bag" structure and the "kid" attribute in the PVR and the RVR are specified.
 
-## Discovery, URIs and Content Formats {#discovery}
+## Resource Discovery, URIs and Content Formats {#resource-discovery}
 
 To keep the protocol messages small the EST-coaps and constrained-BRSKI URIs are shorter than the respective EST and BRSKI URIs.
 
@@ -848,7 +848,7 @@ may be a unique serial number encoded in the binary content (CBOR) field.
 A Registrar MUST include a COSE "x5bag" structure as explained in {{registrar-identity}}.
 
 By default, a Registrar does not include a "kid" parameter in its RVR since the signing key
-is already identified by the included signing certificates in the COSE "x5bag" structure. 
+is already identified by the included signing certificates in the COSE "x5bag" structure.
 
 A Registrar MAY use a "kid" parameter in its RVR to identify its signing key as used to sign the RVR.
 The method of generating this "kid" is vendor-specific and SHOULD be configurable in the Registrar to
@@ -886,6 +886,16 @@ a "kid" parameter in the voucher response to help the Pledge identify the right 
 for example if a Pledge has multiple IDevID identities.
 
 The MASA SHOULD NOT include an x5bag structure in the voucher response - exception is if the MASA knows the Pledge doesn't pre-store the signing public key/cert , and thus needs to provide a cert or cert chain that links the signing identity/key to the pre-stored Trust Anchor that is inside the Pledge.
+
+# Extensions to Discovery {#discovery}
+
+## Discovery operations by Pledge
+
+TBD
+
+## Discovery operations by Join-Proxy
+
+TBD
 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
 
