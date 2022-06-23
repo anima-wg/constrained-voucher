@@ -69,7 +69,7 @@ normative:
   I-D.ietf-core-sid:
   I-D.ietf-cose-rfc8152bis-struct:
   I-D.ietf-cose-rfc8152bis-algs:
-  I-D.ietf-ace-coap-est:
+  RFC9148:
   I-D.ietf-cose-x509:
   I-D.ietf-tls-dtls13:
   ieee802-1AR:
@@ -132,7 +132,7 @@ In it, new devices, such as IoT devices, are called "pledges", and equipped with
 The BRSKI solution described in {{RFC8995}} was designed to be modular, and this document describes a version scaled to the constraints of IoT deployments.
 
 Therefore, this document defines a constrained version of the voucher artifact (described in {{RFC8366}}), along with a constrained version of BRSKI.
-This constrained-BRSKI protocol makes use of the constrained CoAP-based version of EST (EST-coaps from {{I-D.ietf-ace-coap-est}}) rather than the EST over HTTPS {{RFC7030}}.
+This constrained-BRSKI protocol makes use of the constrained CoAP-based version of EST (EST-coaps from {{RFC9148}}) rather than the EST over HTTPS {{RFC7030}}.
 Constrained-BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this.
 
 In BRSKI, the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
@@ -143,7 +143,7 @@ The CoAP connection (between Pledge and Registrar) is to be protected by either 
 The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
 This document specifies a constrained voucher-request artifact based on {{Section 3 of RFC8995}}, and
-voucher(-request) transport over CoAP based on {{Section 3 of RFC8995}} and on {{I-D.ietf-ace-coap-est}}.
+voucher(-request) transport over CoAP based on {{Section 3 of RFC8995}} and on {{RFC9148}}.
 
 The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
 As the tooling to convert YANG documents into a list of SID keys is still in its infancy, the table of SID values presented here MUST be considered normative rather than the output of the tool specified in {{I-D.ietf-core-sid}}.
@@ -240,7 +240,7 @@ It Extends {{RFC8995}} as follows:
 
 # BRSKI-EST Protocol {#brski-est}
 
-This section describes the constrained BRSKI extensions to EST-coaps {{I-D.ietf-ace-coap-est}} to transport the voucher between Registrar and Pledge (optionally via a Join Proxy) over CoAP.
+This section describes the constrained BRSKI extensions to EST-coaps {{RFC9148}} to transport the voucher between Registrar and Pledge (optionally via a Join Proxy) over CoAP.
 The extensions are targeting low-resource networks with small packets.
 
 The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
@@ -308,7 +308,7 @@ This is the same "/.well-known/brski" prefix as defined in {{Section 5 of RFC899
   coaps://server.example.com/.well-known/brski/<short-name>
 ~~~~
 
-Figure 5 in {{Section 3.2.2 of RFC7030}} enumerates the operations supported by EST, for which Table 1 in {{Section 5.1 of I-D.ietf-ace-coap-est}} enumerates the corresponding
+Figure 5 in {{Section 3.2.2 of RFC7030}} enumerates the operations supported by EST, for which Table 1 in {{Section 5.1 of RFC9148}} enumerates the corresponding
 EST-coaps short path names. Similarly, {{brski-short-uri}} below provides the mapping from the supported BRSKI extension URI paths to the constrained-BRSKI URI paths.
 
 | BRSKI resource | constrained-BRSKI resource |
@@ -401,11 +401,11 @@ The following section explains extension within the BRSKI/CoAP connection itself
 
 Once the Pledge discovers an IP address and port number that connects to the Registrar (probably via a Join Proxy), and it establishes a DTLS connection.
 
-No further discovery of hosts or port numbers is required, but a pledge that can do more than one kind of enrollment (future work offers protocols other than {{I-D.ietf-ace-coap-est}}), then a pledge may need to use CoAP Discovery to determine what other protocols are available.
+No further discovery of hosts or port numbers is required, but a pledge that can do more than one kind of enrollment (future work offers protocols other than {{RFC9148}}), then a pledge may need to use CoAP Discovery to determine what other protocols are available.
 
 A Pledge that only supports the EST-coaps enrollment method SHOULD NOT use CoAP discovery for BRSKI/EST resources.
 It is more efficient to just try the supported enrollment method via the well-known BRSKI/EST-coaps resources.
-This also avoids the Pledge having to do any CoRE Link Format parsing, which is specified in {{I-D.ietf-ace-coap-est, Section 4.1}}.
+This also avoids the Pledge having to do any CoRE Link Format parsing, which is specified in {{RFC9148, Section 4.1}}.
 
 The Registrar MUST support all of the EST resources at their default ".well-known" locations (on the specified port)
 as well as any server-specific shorter form that might also be supported.
@@ -426,16 +426,16 @@ However, using the same UDP server port for all resources allows the Pledge to c
 
 The 401, 403, 404, 406 and 415 response codes map directly to CoAP codes 4.01, 4.03, 4.04, 4.06 and 4.15.
 
-The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{Section 5.7 of I-D.ietf-ace-coap-est}} process for Delayed Responses.
+The 202 Retry process which occurs in the voucher request, is to be handled in the same way as {{Section 5.7 of RFC9148}} process for Delayed Responses.
 
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
-This document extends {{I-D.ietf-ace-coap-est}}, and it inherits the functions described in that document:
+This document extends {{RFC9148}}, and it inherits the functions described in that document:
 specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certification Authority certificates request (/crts).
 Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST server.
 
-Collecting the resource definitions from both {{RFC8995}}, {{RFC7030}}, and {{I-D.ietf-ace-coap-est}} results in the following shorter forms of URI paths
+Collecting the resource definitions from both {{RFC8995}}, {{RFC7030}}, and {{RFC9148}} results in the following shorter forms of URI paths
 for the commonly used resources:
 
 <!-- Table order is currently the order in which typically the resources are used by Pledge. Change if we want to -->
@@ -474,7 +474,7 @@ A constrained Pledge MAY use the following optimized EST-coaps procedure to mini
 4. If the trust anchor CA was NOT used to sign its LDevID certificate, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these can differ from the (temporary) pinned domain CA.
 
 5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
-A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}.
+A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of RFC9148}}.
 
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID certificate, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
@@ -485,7 +485,7 @@ Note that even though the Pledge may avoid performing any /crts request using th
 
 This section defines extensions to EST-coaps clients, used after the BRSKI bootstrap procedure is completed.
 (Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain.)
-A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of I-D.ietf-ace-coap-est}}.
+A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of RFC9148}}.
 In this case, it can only store one trust anchor of the domain.
 
 An EST-coaps client that has an idea of the current time (internally, or via NTP) SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA using the /crts request when the CA has 50% of it's validity time (notAfter - notBefore) left.
@@ -1020,7 +1020,7 @@ The Thread router acts here as a Join Proxy. The MLE discovery response message 
 
 ## Non-mesh networks using CoAP Discovery
 
-On unencrypted constrained networks such as 802.15.4, CoAP discover may be done using the mechanism detailed in {{I-D.ietf-ace-coap-est}} section 5.1.
+On unencrypted constrained networks such as 802.15.4, CoAP discover may be done using the mechanism detailed in {{RFC9148}} section 5.1.
 
 
 # Design Considerations
@@ -1404,7 +1404,7 @@ int result = mbedtls_x509_crt_verify(&cert, &caCert, NULL, NULL,
 
 #Constrained BRSKI-EST Message Examples
 
-This appendix extends the message examples from Appendix A of {{I-D.ietf-ace-coap-est}} with constrained BRSKI messages.
+This appendix extends the message examples from Appendix A of {{RFC9148}} with constrained BRSKI messages.
 The CoAP headers are only fully worked out for the first example, enrollstatus.
 
 ##enrollstatus {#es}
