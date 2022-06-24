@@ -944,7 +944,7 @@ Here is an example M_FLOOD announcing the Join-Proxy at fe80::1, on standard coa
 Note that a join proxy that supports also supports RFC8995 onboarding using HTTPS may announce more than one objective.
 Objectives with an empty objective-value (whether CBOR NULL or an empty string) refer to {{RFC8995}}.
 
-Here is an example of a more complex announcement:
+Here is an example of an announcement that offers both constrained and unconstrained onboarding:
 
 ~~~
      [M_FLOOD, 12340851, h'fe800000000000000000000000000001', 180000,
