@@ -283,12 +283,7 @@ As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the
 
 Subsequently the Pledge will send a Pledge Voucher Request (PVR).
 
-As explained below in {{registrar-identity}}, the "x5bag" element may be used in the RVR to communicate identity of the Registrar to MASA.
-The Pledge SHOULD NOT use the x5bag attribute in this way in the PVR.
-A Registrar that processes a PVR with an x5bag attribute MUST ignore it, and MUST use only the TLS Client Certificate extension for authentication of the Pledge.
-
-A situation where the Pledge MAY use the x5bag is for communication of certificate chains to the MASA.
-This would arise in some vendor-specific situations involving outsourcing of MASA functionality, or rekeying of the IDevID certification authority.
+In {{registrar-identity}}, the contents of the "x5bag" structure in the Registrar Voucher Request (RVR) are explained. In {{VR-COSE}} the use of the "x5bag" structure and the "kid" attribute in the PVR and the RVR are specified.
 
 ## Discovery, URIs and Content Formats {#discovery}
 
@@ -797,7 +792,7 @@ The enum value of the assertion field is calculated to be zero by following the 
 
 INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
-## Signing voucher and voucher-request artifacts with COSE
+## Signing voucher and voucher-request artifacts with COSE {#VR-COSE}
 
 The COSE_Sign1 structure is discussed in {{Section 4.2 of I-D.ietf-cose-rfc8152bis-struct}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
@@ -843,20 +838,38 @@ vendor-specific. If "kid" is not present, then a verifying party needs to use ot
 retrieve the right public key to verify the COSE_Sign1 object against. For example, this context information
 may be a unique serial number encoded in the binary content (CBOR) field.
 
+### signing of Registrar Voucher Request (RVR)
+
+A Registrar MUST include a COSE "x5bag" structure as explained in {{registrar-identity}}.
+
+By default, a Registrar does not include a "kid" parameter in its RVR since the signing key
+is already identified by the included signing certificates in the COSE "x5bag" structure. 
+
 A Registrar MAY use a "kid" parameter in its RVR to identify its signing key as used to sign the RVR.
 The method of generating this "kid" is vendor-specific and SHOULD be configurable in the Registrar to
 support commonly used methods.
 In order to support future business cases and supply chain integrations, a Registrar MUST be configurable, on a per-manufacturer basis, to be able to configure the "kid" to a particular value.
 Both binary and string values are to be supported, each being inserted using a CBOR bstr or tstr.
-By default, a Registrar does not include a "kid" parameter in its RVR since the signing key
-is already identified by the included signing certificates in the COSE "x5bag" structure.
 
-A Pledge normally SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified
+### signing of Pledge Voucher Request (PVR)
+
+A Pledge SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified
 by the Pledge's unique serial number that is included in the PVR. Still, where needed the Pledge MAY use
 a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur
 for example if a Pledge has multiple IDevID identities.
 A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA.
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
+
+The Pledge
+SHOULD NOT use the "x5bag" structure in the PVR.  A
+Registrar that processes a PVR with an "x5bag" structure MUST ignore
+it, and MUST use only the TLS Client Certificate extension for
+authentication of the Pledge.
+
+A situation where the Pledge MAY use the x5bag structure is for communication
+of certificate chains to the MASA.  This would arise in some vendor-
+specific situations involving outsourcing of MASA functionality, or
+rekeying of the IDevID certification authority.
 
 In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request example of {{example2}}.
 
