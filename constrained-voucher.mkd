@@ -967,18 +967,19 @@ Section 4.3 of {{RFC8995}} discusses this in more detail.
 The following changes are necessary with respect to figure 10 of {{RFC8995}}:
 
 * The transport-proto is IPPROTO_UDP
-* the objective is AN_registrar, identical to {{RFC8995}}.
+* the objective is AN_join_registrar, identical to {{RFC8995}}.
 * the objective name is "BRSKI_JP".
 
 The Registrar announces itself using ACP instance of GRASP using M\_FLOOD messages.
-Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}} .
-Here is an example M\_FLOOD announcing the Registrar on example port 5685.
+Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}}.
+
+Here is an example M\_FLOOD announcing the Registrar on example port 5684, which is the standard CoAPS port number.
 
 ~~~
    [M_FLOOD, 51804321, h'fda379a6f6ee00000200000064000001', 180000,
    [["AN_join_registrar", 4, 255, "BRSKI_JP"],
     [O_IPv6_LOCATOR,
-     h'fda379a6f6ee00000200000064000001', IPPROTO_UDP, 5685]]]
+     h'fda379a6f6ee00000200000064000001', IPPROTO_UDP, 5684]]]
 ~~~
 {: #fig-grasp-rgj title='Example of Registrar announcement message' align="left"}
 
