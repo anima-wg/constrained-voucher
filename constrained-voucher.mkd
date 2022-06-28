@@ -873,6 +873,15 @@ rekeying of the IDevID certification authority.
 
 In {{cosesign}} a binary COSE_Sign1 object is shown based on the voucher-request example of {{example2}}.
 
+###signing of voucher by MASA
+
+The MASA SHOULD NOT use a "kid" parameter in the voucher response, because its signing key is already identified
+by the Pledge. Still, where needed the MASA MAY use
+a "kid" parameter in the voucher response to help the Pledge identify the right public key to verify against. This can occur
+for example if a Pledge has multiple IDevID identities.
+
+The MASA SHOULD NOT include an x5bag structure in the voucher response - exception is if the MASA knows the Pledge doesn't pre-store the signing public key/cert , and thus needs to provide a cert or cert chain that links the signing identity/key to the pre-stored Trust Anchor that is inside the Pledge.
+
 # Deployment-specific Discovery Considerations {#discovery-considerations}
 
 This section details how discovery is done in specific deployment scenarios.
