@@ -917,7 +917,7 @@ Note that the format the voucher-request and voucher is not part of the determin
 It is assumed that Registrars support all relevant voucher formats, while the pledge on supports a single format.
 A pledge that makes a voucher request to a Registrar that does not support that format will fail with a 406 (4.6) status code.
 
-### GRASP discovery
+### GRASP discovery {#grasppledgediscovery}
 
 This section is normative for uses with an ANIMA ACP.
 In the context of autonomic networks, the Join-Proxy uses the DULL GRASP M_FLOOD mechanism to announce itself.
@@ -959,7 +959,7 @@ Here is an example of an announcement that offers both constrained and unconstra
 
 ## Discovery operations by Join-Proxy
 
-### GRASP Discovery
+### GRASP Discovery {#graspregistrardiscocvery}
 
 This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateful Join Proxy using ACP instance of GRASP using M_FLOOD messages.
 Section 4.3 of {{RFC8995}} discusses this in more detail.
@@ -1218,6 +1218,14 @@ The following security considerations have led to this choice of scope:
 * reducing the complexity of MASA (i.e. less protocols supported) would also reduce its potential attack surface, which is relevant since the MASA is 24/7 exposed on the Internet and accepting (untrusted) incoming connections.
 
 # IANA Considerations
+
+## GRASP Discovery Registry
+
+IANA is asked to extend the registration of the "AN\_Proxy" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
+This document should also be cited for the new protocol value UDP defined in {{grasppledgediscovery}}.
+
+IANA is asked to extend the registration of the "AN\_join\_registrar" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
+This document should also be cited for the objective values "BRSKI_JP" defined in {{graspregistrardiscovery}}.
 
 ## Resource Type Registry
 
