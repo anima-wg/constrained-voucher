@@ -1222,10 +1222,10 @@ The following security considerations have led to this choice of scope:
 ## GRASP Discovery Registry
 
 IANA is asked to extend the registration of the "AN\_Proxy" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for the new protocol value UDP defined in {{grasppledgediscovery}}.
+This document should also be cited for this existing registration, because {{grasppledgediscovery}} defines the new protocol value IPPROTO_UDP for the objective.
 
 IANA is asked to extend the registration of the "AN\_join\_registrar" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for the objective values "BRSKI_JP" defined in {{graspregistrardiscovery}}.
+This document should also be cited for this existing registration, because {{graspregistrardiscovery}} adds the objective value "BRSKI_JP" to the objective.
 
 ## Resource Type Registry
 
