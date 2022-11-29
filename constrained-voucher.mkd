@@ -959,7 +959,7 @@ Here is an example of an announcement that offers both constrained and unconstra
 
 ## Discovery operations by Join-Proxy
 
-### GRASP Discovery {#graspregistrardiscocvery}
+### GRASP Discovery {#graspregistrardiscovery}
 
 This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateful Join Proxy using ACP instance of GRASP using M_FLOOD messages.
 Section 4.3 of {{RFC8995}} discusses this in more detail.
