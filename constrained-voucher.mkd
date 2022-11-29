@@ -63,15 +63,15 @@ normative:
   RFC8995:
   RFC9031: minimal-security
   RFC9032:
-#  I-D.ietf-core-object-security:
-#  I-D.ietf-ace-cbor-web-token:
-  I-D.ietf-core-yang-cbor:
-  I-D.ietf-core-sid:
-  I-D.ietf-cose-rfc8152bis-struct:
-  I-D.ietf-cose-rfc8152bis-algs:
+  RFC9052:
+  RFC9053:
+  RFC9147:
   RFC9148:
+  RFC9254:
+#  I-D.ietf-core-object-security:
+#  I-D.ietf-ace-cbor-web-token:  
+  I-D.ietf-core-sid:  
   I-D.ietf-cose-x509:
-  I-D.ietf-tls-dtls13:
   ieee802-1AR:
     target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
     title: "IEEE 802.1AR Secure Device Identifier"
@@ -104,7 +104,7 @@ informative:
     target: "https://www.threadgroup.org/support#Whitepapers"
     author:
       ins: "Thread Group, Inc."
-    date: "accessed 2021-11-26"
+    date: "accessed 2022-11-28"
 
 --- abstract
 
@@ -136,7 +136,7 @@ This constrained-BRSKI protocol makes use of the constrained CoAP-based version 
 Constrained-BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this.
 
 In BRSKI, the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
-This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{I-D.ietf-cose-rfc8152bis-struct}}.
+This document defines a new voucher serialization to CBOR {{RFC8949}} with a signature in COSE {{RFC9052}}.
 
 This COSE-signed CBOR-encoded voucher is transported using both secured CoAP and HTTPS.
 The CoAP connection (between Pledge and Registrar) is to be protected by either OSCORE+EDHOC {{-EDHOC}} or DTLS (CoAPS).
@@ -145,7 +145,7 @@ The HTTP connection (between Registrar and MASA) is to be protected using TLS (H
 This document specifies a constrained voucher-request artifact based on {{Section 3 of RFC8995}}, and
 voucher(-request) transport over CoAP based on {{Section 3 of RFC8995}} and on {{RFC9148}}.
 
-The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{I-D.ietf-core-yang-cbor}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
+The CBOR definitions for the constrained voucher format are defined using the mechanism described in {{RFC9254}} using the SID mechanism explained in {{I-D.ietf-core-sid}}.
 As the tooling to convert YANG documents into a list of SID keys is still in its infancy, the table of SID values presented here MUST be considered normative rather than the output of the tool specified in {{I-D.ietf-core-sid}}.
 
 # Terminology          {#Terminology}
@@ -546,7 +546,7 @@ If the current authenticated client is an EST-coaps client that was already enro
 ## DTLS handshake fragmentation Considerations {#dtls-fragments}
 
 DTLS includes a mechanism to fragment the handshake messages.
-This is described in {{Section 4.4 of I-D.ietf-tls-dtls13}}.
+This is described in {{Section 4.4 of RFC9147}}.
 The protocol described in this document will often be used with a Join Proxy described in {{I-D.ietf-anima-constrained-join-proxy}}.
 The Join Proxy will need some overhead, while the maximum packet sized guaranteed on 802.15.4 networks is 1280 bytes.
 It is RECOMMENDED that a PMTU of 1024 bytes be assumed for the DTLS handshake.
@@ -799,18 +799,18 @@ INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
 ## Signing voucher and voucher-request artifacts with COSE {#VR-COSE}
 
-The COSE_Sign1 structure is discussed in {{Section 4.2 of I-D.ietf-cose-rfc8152bis-struct}}.
+The COSE_Sign1 structure is discussed in {{Section 4.2 of RFC9052}}.
 The CBOR object that carries the body, the signature, and the information about the body  and signature is called the COSE_Sign1 structure.
 It is used when only one signature is used on the body.
 
 Support for ECDSA with SHA2-256 using curve secp256r1 (aka prime256k1) is RECOMMENDED.
 Most current low power hardware has support for acceleration of this algorithm.
 Future hardware designs could omit this in favour of a newer algorithms.
-This is the ES256 keytype from Table 1 of {{I-D.ietf-cose-rfc8152bis-algs}}.
+This is the ES256 keytype from Table 1 of {{RFC9053}}.
 Support for curve secp256k1 is OPTIONAL.
 
 Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware support is available.
-This is keytype EDDSA (-8) from Table 2 of {{I-D.ietf-cose-rfc8152bis-algs}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
+This is keytype EDDSA (-8) from Table 2 of {{RFC9053}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
 
 A transition towards EdDSA is occuring in the industry.
 Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any eliptic curve algorithm.
@@ -1287,7 +1287,7 @@ IANA: please update the names in the Registry to match these revised names, if t
 
 This section registers the 'application/voucher-cose+cbor' in the IANA "Media Types" registry.
 This media type is used to indicate that the content is a CBOR voucher or voucher request
-signed with a COSE_Sign1 structure {{I-D.ietf-cose-rfc8152bis-struct}}.
+signed with a COSE_Sign1 structure {{RFC9052}}.
 
 ### application/voucher-cose+cbor
 
