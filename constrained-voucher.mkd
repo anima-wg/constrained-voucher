@@ -473,7 +473,7 @@ A constrained Pledge MAY use the following optimized EST-coaps procedure to mini
 
 4. If the trust anchor CA was NOT used to sign its LDevID certificate, the Pledge MUST perform an actual "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these can differ from the (temporary) pinned domain CA.
 
-5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value TBD287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
+5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value 287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
 A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of RFC9148}}.
 
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID certificate, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
@@ -485,7 +485,7 @@ Note that even though the Pledge may avoid performing any /crts request using th
 
 This section defines extensions to EST-coaps clients, used after the BRSKI bootstrap procedure is completed.
 (Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain.)
-A constrained EST-coaps client MAY support only the Content-Format TBD287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of RFC9148}}.
+A constrained EST-coaps client MAY support only the Content-Format 287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of RFC9148}}.
 In this case, it can only store one trust anchor of the domain.
 
 An EST-coaps client that has an idea of the current time (internally, or via NTP) SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA using the /crts request when the CA has 50% of it's validity time (notAfter - notBefore) left.
@@ -536,12 +536,12 @@ The Content-Format 50 (application/json) MUST be supported and 60 (application/c
 
 Content-Format 836 MUST be supported by the Registrar for the /rv resource.
 
-When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value TBD287 ("application/pkix-cert") it SHOULD return only the
+When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value 287 ("application/pkix-cert") it SHOULD return only the
 single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request.
 
-If the Pledge included in its request an Accept Option for only the TBD287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 Not Acceptable error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
+If the Pledge included in its request an Accept Option for only the 287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 Not Acceptable error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
 
-If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for TBD287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
+If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for 287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
 
 ## DTLS handshake fragmentation Considerations {#dtls-fragments}
 
@@ -1707,7 +1707,7 @@ The below table specifies the functions implemented in the three example Pledge 
 |Discovery for rt=ace.est* | - | - | Y
 |GET /att and response parsing | - | - | Y
 |GET /crts format 281 (multiple CA certs) | - | - | Y
-|GET /crts only format TBD287 (one CA cert only) | Y | Y | -
+|GET /crts only format 287 (one CA cert only) | Y | Y | -
 |ETag handling support for GET /crts | - | Y | Y
 |Re-enrollment supported | - (1) | Y | Y
 |6.6.1 optimized procedure | Y | Y | -
