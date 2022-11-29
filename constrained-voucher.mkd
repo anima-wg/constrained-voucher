@@ -889,33 +889,34 @@ The MASA SHOULD NOT include an x5bag structure in the voucher response - excepti
 
 # Extensions to Discovery {#discovery}
 
-It is assumed that Join Proxy seamlessly provides a coaps connection between Pledge and Registrar. In particular this section extends section 4.1 of {{RFC8995}} for the constrained case.
+It is assumed that a Join Proxy as defined in {{I-D.ietf-anima-constrained-join-proxy}} seamlessly provides a (relayed) DTLS connection between the Pledge and the Registrar. 
+To use a Join Proxy, a Pledge needs to discover it. For Pledge discovery of a Join Proxy, this section extends Section 4.1 of {{RFC8995}} for the constrained BRSKI case.
 
-In general, the Pledge may be one or more hops away from the Registrar.
+In general, the Pledge may be one or more hops away from the Registrar, where one hop means the Registrar is a direct link-local neighbor of the Pledge.
+The case of one hop away can be considered as a degenerate case, because a Join Proxy is not really needed then. 
 
-In the degenerate case, the Pledge is zero hops away from the Registrar.
-This would be unusual in wireless cases due to encryption of the layer two: one of the main purposes of the Join Proxy is to bridge between encrypted operational networks and unencrypted join networks.
+The degenerate case would be unusual in constrained wireless network deployments, because a Registrar would typically not have a wireless network interface of the type used for constrained devices. Rather, it would have a high-speed network interface.
+Nevertheless, the situation where the Registrar is one hop away from the Pledge could occur in various cases like wired IoT networks or in wireless constrained networks where the Pledge is in radio range of a 6LoWPAN Border Router (6LBR) and the 6LBR happens to host a Registrar.
 
-The situation where the link is not encrypted could occur in wired IoT networks such as BACnet,  Power-Line Ethernet, etc.
+In order to support the degenerate case, the Registrar SHOULD announce itself as if it were a Join Proxy -- though it would actually announce its real (stateful) Registrar CoAPS endpoint.
+No actual Join Proxy functionality is then required on the Registrar.
 
-In order to support the degenerate case the Registrar SHOULD announce itself as if it were a Join Proxy, but it would actually announce it's real (stateful) CoAPS endpoint.
-No actual Join Proxy functionality is required though.
+So, a Pledge only needs to discover a Join Proxy, regardless of whether it is one or more than one hop away from a relevant Registrar. It first discovers the link-local address and the join-port of a Join Proxy. The Pledge then follows the constrained BRSKI procedure of initiating a DTLS connection using the link-local address and join-port of the Join Proxy.
 
-When, as is typical, the Pledge is more than one hop away from a relevant Registrar, it needs to discover the link-local address and join-port of a Join Proxy. The Pledge then follows the BRSKI procedure using the link-local address of the Join Proxy.
-
-Once enrolled, a Pledge may function as a Join Proxy.
+Once enrolled, a Pledge itself may function as a Join Proxy.
 The decision whether or not to provide this functionality depends upon many factors and is out of scope for this document.
-Such a decision might depend upon amount of power available to the device, network bandwidth available, as well CPU and memory availability.
+Such a decision might depend upon the amount of energy available to the device, the network bandwidth available, as well CPU and memory availability.
 
-The process by which a Pledge discovers the Join Proxy, and by which the Join Proxy discovers the location of the Registar are the subject to the following sections.
+The process by which a Pledge discovers the Join Proxy, and how a Join Proxy discovers the location of the Registrar, are the subject of the remainder of this section. 
+Further details on both these topics are provided in {{I-D.ietf-anima-constrained-join-proxy}}.
 
 ## Discovery operations by Pledge
 
-The Pledge must discover the address/port and protocol with which to communicate.
+The Pledge must discover the address/port and protocol with which to communicate. The present document only defines coaps (CoAP over DTLS) as a protocol.
 
-Note that the format the voucher-request and voucher is not part of the determination.
-It is assumed that Registrars support all relevant voucher formats, while the pledge on supports a single format.
-A pledge that makes a voucher request to a Registrar that does not support that format will fail with a 406 (4.6) status code.
+Note that the identifying the format of the voucher-request and the voucher is not a required part of the Pledge's discovery operation.
+It is assumed that all Registrars support all relevant voucher(-request) formats, while the Pledge only supports a single format.
+A Pledge that makes a voucher request to a Registrar that does not support that format will receive a CoAP 4.06 Not Acceptable status code and the bootstrap attempt will fail.
 
 ### GRASP discovery {#grasppledgediscovery}
 
@@ -941,8 +942,8 @@ Here is an example M_FLOOD announcing the Join-Proxy at fe80::1, on standard coa
 ~~~
 {: #fig-grasp-rg title='Example of Join Proxy announcement message' align="left"}
 
-Note that a join proxy that supports also supports RFC8995 onboarding using HTTPS may announce more than one objective.
-Objectives with an empty objective-value (whether CBOR NULL or an empty string) refer to {{RFC8995}}.
+Note that a Join Proxy that supports also supports RFC8995 onboarding using HTTPS may announce more than one objective.
+Objectives with an empty objective-value (whether CBOR NULL or an empty string) refer to {{RFC8995}} defaults.
 
 Here is an example of an announcement that offers both constrained and unconstrained onboarding:
 
@@ -955,9 +956,14 @@ Here is an example of an announcement that offers both constrained and unconstra
       [O_IPv6_LOCATOR,
        h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]
 ~~~
-{: #fig-grasp-duo title='Example of Join Proxy announcing two methods' align="left"}
+{: #fig-grasp-duo title='Example of Join Proxy announcing two bootstrap methods' align="left"}
 
-## Discovery operations by Join-Proxy
+### CoAP Discovery
+Further details on CoAP discovery by a Pledge are provided in {{Section 5.2.1 of I-D.ietf-anima-constrained-join-proxy}}. 
+
+
+## Discovery operations by Join Proxy
+The Join Proxy needs to discover a Registrar, at the moment it needs to relay data towards the Registrar or prior to that moment.
 
 ### GRASP Discovery {#graspregistrardiscovery}
 
@@ -987,23 +993,8 @@ The Registrar uses a routable address that can be used by enrolled constrained J
 The address will typically be a ULA (as it is in the example), but could also be a GUA.
 
 ### CoAP discovery {#coap-disc}
+Further details on CoAP discovery of the Registrar by a Join Proxy are provided in {{Section 5.1.1 of I-D.ietf-anima-constrained-join-proxy}}. 
 
-Section {{brski-extensions-discovery}} describes the mechanism by which a Pledge can learn about the different resource end-points that a Registrar supports.
-
-This section explains how a Join Proxy can discover the join-port and IP address of the Registrar  by sending a GET request to "/.well-known/core" including a resource type (rt) parameter with the value "brski.jp" {{RFC6690}}.
-
-This will typically be sent to the all-hosts Link-Local multicast address.
-
-Upon success, the return payload will contain the join-port of the Registrar.
-
-~~~~
-  REQ: GET coap://[IP_address]/.well-known/core?rt=brski.jp
-
-  RES: 2.05 Content
-  <coaps://[IP_address]:join-port>; rt="brski.jp"
-~~~~
-
-The discoverable port numbers are usually returned for Join Proxy resources in the &lt;URI-Reference&gt; of the payload (see section 5.1 of {{RFC9148}}).
 
 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
@@ -1039,10 +1030,6 @@ Thread router. This link is not yet secured at the radio level: link-layer secur
 network access credentials.
 
 The Thread router acts here as a Join Proxy. The MLE discovery response message contains UDP port information to signal the new device which port to use for its DTLS connection.
-
-## Non-mesh networks using CoAP Discovery
-
-On unencrypted constrained networks such as 802.15.4, CoAP discover may be done using the mechanism detailed in {{RFC9148}} section 5.1.
 
 
 # Design Considerations
