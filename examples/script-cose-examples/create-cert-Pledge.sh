@@ -1,0 +1,30 @@
+#!/bin/bash
+# Create new cert for: Pledge IDevID
+
+# days certificate is valid - try to get close to the 802.1AR specified 9999-12-31 end date.
+SECONDS1=`date +%s` # time now
+SECONDS2=`date --date="9999-12-31 23:59:59Z" +%s`   # target end time
+let VALIDITY="(${SECONDS2}-${SECONDS1})/(24*3600)"
+echo "Using validity param -days ${VALIDITY}"
+
+# create csr for device
+# conform to 802.1AR guidelines, using only CN + serialNumber when manufacturer is already present as CA.
+# CN is not even mandatory, but just good practice.
+openssl req -new -key keys/privkey_pledge.pem -out pledge.csr -subj "/CN=Stok IoT sensor Y-42/serialNumber=JADA123456789"
+
+# sign csr
+openssl x509 -set_serial 32429 -CAform PEM -CA output/masa_ca.pem -CAkey keys/privkey_masa_ca.pem -extfile x509v3.ext -extensions pledge_ext -req -in pledge.csr -out output/pledge.pem -days $VALIDITY -sha256
+
+# delete temp files
+rm -f pledge.csr
+
+# convert to .der / .hex format
+openssl x509 -in output/pledge.pem -inform PEM -out output/pledge.der -outform DER
+hexdump -ve '1/1 "%.2X "' output/pledge.der > output/pledge.hex
+
+# show cert and hex
+openssl x509 -text -noout -in output/pledge.pem
+echo ""
+echo "Hex format of certificate:"
+cat output/pledge.hex
+

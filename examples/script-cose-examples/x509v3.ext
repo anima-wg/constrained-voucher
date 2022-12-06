@@ -1,0 +1,38 @@
+
+[ req ]
+prompt = no
+
+[ masa_ca_ext ]
+subjectAltName=email:info@masa.stok.nl
+keyUsage = critical,digitalSignature, keyCertSign, cRLSign
+basicConstraints = critical,CA:TRUE,pathlen:3
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+
+[ pledge_ext ]
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+# basicConstraints for a non-CA cert MAY be marked either non-critical or critical.
+basicConstraints=CA:FALSE
+# Don't include subjectKeyIdentifier (SKI) - see 802.1AR-2018
+authorityKeyIdentifier=keyid
+# Include the MASA URI
+1.3.6.1.5.5.7.1.32 = ASN1:IA5STRING:masa.stok.nl
+
+[ domain_ca_ext ]
+basicConstraints=critical,CA:TRUE
+subjectAltName=email:help@custom-er.example.com
+keyUsage = critical, keyCertSign, digitalSignature, cRLSign
+# RFC 5280 4.2.1.1 : AKI MAY be omitted, and MUST be non-critical ; SKI MUST be non-critical
+subjectKeyIdentifier=hash
+
+[ registrar_ext ]
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid
+# Set Registrar 'RA' flag along with TLS client/server usage
+#  see https://datatracker.ietf.org/doc/html/draft-ietf-anima-constrained-voucher#section-7.3
+#  see https://tools.ietf.org/html/rfc6402#section-2.10
+#  see https://www.openssl.org/docs/man1.1.1/man5/x509v3_config.html
+extendedKeyUsage = critical,1.3.6.1.5.5.7.3.28, serverAuth, clientAuth
+

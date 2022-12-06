@@ -1539,7 +1539,9 @@ production system, and must only be used for testing purposes.
 
 ### Pledge IDevID private key {#pledgepriv}
 
-INSERT_CODE_FROM_FILE examples/pledge-key.txt END
+INSERT_CODE_FROM_FILE examples/script-cose-examples/keys/privkey_pledge.pem END
+
+INSERT_CODE_FROM_FILE examples/cose-examples/privkey_pledge.txt END
 
 ### Registrar private key {#jrcpriv}
 
@@ -1582,15 +1584,18 @@ INSERT_CODE_FROM_FILE examples/masa-cert.hex END
 
 ## COSE-signed Pledge Voucher Request (PVR)
 
-In this COSE example the voucher request has been signed by the Pledge using the private key of {{pledgepriv}}, and has been sent to the link-local JRC (Registrar) over CoAPS.
+In this example, the voucher request (PVR) has been signed by the Pledge using the IDevID private key of {{pledgepriv}}, 
+and has been sent to the link-local constrained Join Proxy (JP) over CoAPS to the JP's join port. The join port happens to 
+use the default CoAPS UDP port 5684.
 
 ~~~
-    POST coaps://[JRC-link-local-address]/b/rv
-    Content-Format: 836
-    Payload: signed_request_voucher
+  REQ: POST coaps://[JP-link-local-address]/b/rv
+  Content-Format: 836
+  Payload: <signed_voucher_request>
 ~~~
 
-The payload signed_request_voucher is shown as hexadecimal dump (with lf added):
+When the Join Proxy receives the DTLS handshake messages from the Pledge, it will relay these messages to the Registrar. 
+The payload signed_voucher_request is shown as hexadecimal dump (with lf added) below:
 
 INSERT_CODE_FROM_FILE examples/pledge-to-regis.txt END
 
