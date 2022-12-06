@@ -1,13 +1,8 @@
-{
-  2501: {
-    +2 : "2016-10-07T19:31:42Z", / SID=2503, created-on /
-    +4 : "2016-10-21T19:31:42Z", / SID=2505, expires-on /
-    +1 : 2,                      / SID=2502, assertion "proximity" /
-    +13: "JADA123456789",        / SID=2514, serial-number /
-    +5 : h'08C2BF36....B3D2B3',  / SID=2506, idevid-issuer /
-    +10: h'30820275....82c35f',  / SID=2511, proximity-registrar-cert/
-    +3 : true,                   / SID=2504, domain-cert
-                                                   -revocation-checks/
-    +6 : "2017-10-07T19:31:42Z"  / SID=2507, last-renewal-date /
-  }
+{ 
+ 2501: {      / SID=2501, ietf-voucher-request-constrained:voucher /
+    1: 2,                     / SID=2502, assertion 2 = "proximity"/
+    7: h'831D5198A6CA2C7F',   / SID=2508, nonce                    /
+   12: h'30593013....D29A54', / SID=2513, proximity-registrar-pubk /    
+   13: "JADA123456789"        / SID=2514, serial-number            /
+ }
 }

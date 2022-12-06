@@ -1,0 +1,10 @@
+{
+ "ietf-request-voucher:voucher": {
+    "assertion":     2, 
+    "created-on":    "2022-12-05T19:19:19.536Z", 
+    "nonce":         h'831D5198A6CA2C7F', 
+    "idevid-issuer": h'04183016....1736C3E0', 
+    "serial-number": "JADA123456789", 
+    "prior-signed-voucher-request": h'A11909....373839'
+ }
+}
