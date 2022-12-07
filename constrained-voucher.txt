@@ -184,24 +184,23 @@ Internet-Draft              Constrained BRSKI              December 2022
    Appendix C.  COSE-signed Voucher (Request) Examples . . . . . . .  65
      C.1.  Pledge, Registrar and MASA Keys . . . . . . . . . . . . .  65
        C.1.1.  Pledge IDevID private key . . . . . . . . . . . . . .  65
-       C.1.2.  Registrar private key . . . . . . . . . . . . . . . .  66
+       C.1.2.  Registrar private key . . . . . . . . . . . . . . . .  65
        C.1.3.  MASA private key  . . . . . . . . . . . . . . . . . .  66
-     C.2.  Pledge, Registrar, Domain CA and MASA Certificates  . . .  67
-       C.2.1.  Pledge IDevID Certificate . . . . . . . . . . . . . .  67
-       C.2.2.  Registrar Certificate . . . . . . . . . . . . . . . .  69
-       C.2.3.  Domain CA Certificate . . . . . . . . . . . . . . . .  71
-       C.2.4.  MASA Certificate  . . . . . . . . . . . . . . . . . .  73
-     C.3.  COSE-signed Pledge Voucher Request (PVR)  . . . . . . . .  75
-     C.4.  COSE-signed Registrar Voucher Request (RVR) . . . . . . .  76
-     C.5.  COSE-signed Voucher from MASA . . . . . . . . . . . . . .  79
-   Appendix D.  Generating Certificates with OpenSSL . . . . . . . .  82
-   Appendix E.  Pledge Device Class Profiles . . . . . . . . . . . .  86
-     E.1.  Minimal Pledge  . . . . . . . . . . . . . . . . . . . . .  86
-     E.2.  Typical Pledge  . . . . . . . . . . . . . . . . . . . . .  87
-     E.3.  Full-featured Pledge  . . . . . . . . . . . . . . . . . .  87
-     E.4.  Comparison Chart of Pledge Classes  . . . . . . . . . . .  87
-   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  88
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  88
+     C.2.  Pledge, Registrar and MASA Certificates . . . . . . . . .  66
+       C.2.1.  Pledge IDevID Certificate . . . . . . . . . . . . . .  66
+       C.2.2.  Registrar Certificate . . . . . . . . . . . . . . . .  68
+       C.2.3.  MASA Certificate  . . . . . . . . . . . . . . . . . .  70
+     C.3.  COSE-signed Pledge Voucher Request (PVR)  . . . . . . . .  72
+     C.4.  COSE-signed Registrar Voucher Request (RVR) . . . . . . .  74
+     C.5.  COSE-signed Voucher from MASA . . . . . . . . . . . . . .  76
+   Appendix D.  Generating Certificates with OpenSSL . . . . . . . .  78
+   Appendix E.  Pledge Device Class Profiles . . . . . . . . . . . .  81
+     E.1.  Minimal Pledge  . . . . . . . . . . . . . . . . . . . . .  82
+     E.2.  Typical Pledge  . . . . . . . . . . . . . . . . . . . . .  82
+     E.3.  Full-featured Pledge  . . . . . . . . . . . . . . . . . .  82
+     E.4.  Comparison Chart of Pledge Classes  . . . . . . . . . . .  82
+   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  83
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  84
 
 1.  Introduction
 
@@ -216,6 +215,7 @@ Internet-Draft              Constrained BRSKI              December 2022
    devices, such as IoT devices, are called "pledges", and equipped with
    a factory-installed Initial Device Identifier (IDevID) (see
    [ieee802-1AR]), are enrolled into a network.
+
 
 
 
@@ -3613,22 +3613,22 @@ C.1.  Pledge, Registrar and MASA Keys
 C.1.1.  Pledge IDevID private key
 
    <CODE BEGINS>
-   -----BEGIN EC PRIVATE KEY-----
-   MHcCAQEEIMv+C4dbzeyrEH20qkpFlWIH2FFACGZv9kW7rNWtSlYtoAoGCCqGSM49
-   AwEHoUQDQgAESH6OUiYFRhfIgWl4GG8jHoj8a+8rf6t5s1mZ/4SePlKom39GQ34p
-   VYryJ9aHmboLLfz69bzICQFKbkoQ5oaiew==
-   -----END EC PRIVATE KEY-----
+   Private-Key: (256 bit)
+   priv:
+       9b:4d:43:b6:a9:e1:7c:04:93:45:c3:13:d9:b5:f0:
+       41:a9:6a:9c:45:79:73:b8:62:f1:77:03:3a:fc:c2:
+       9c:9a
+   pub:
+       04:d6:b7:6f:74:88:bd:80:ae:5f:28:41:2c:72:02:
+       ef:5f:98:b4:81:e1:d9:10:4c:f8:1b:66:d4:3e:5c:
+       ea:da:73:e6:a8:38:a9:f1:35:11:85:b6:cd:e2:04:
+       10:be:fe:d5:0b:3b:14:69:2e:e1:b0:6a:bc:55:40:
+       60:eb:95:5c:54
+   ASN1 OID: prime256v1
+   NIST CURVE: P-256
    <CODE ENDS>
 
-
-
-
-
-
-
-
-
-
+C.1.2.  Registrar private key
 
 
 
@@ -3645,85 +3645,38 @@ Internet-Draft              Constrained BRSKI              December 2022
    <CODE BEGINS>
    Private-Key: (256 bit)
    priv:
-       cb:fe:0b:87:5b:cd:ec:ab:10:7d:b4:aa:4a:45:95:
-       62:07:d8:51:40:08:66:6f:f6:45:bb:ac:d5:ad:4a:
-       56:2d
+       81:df:bb:50:a3:45:58:06:b5:56:3b:46:de:f3:e9:
+       e9:00:ae:98:13:9e:2f:36:68:81:fc:d9:65:24:fb:
+       21:7e
    pub:
-       04:48:7e:8e:52:26:05:46:17:c8:81:69:78:18:6f:
-       23:1e:88:fc:6b:ef:2b:7f:ab:79:b3:59:99:ff:84:
-       9e:3e:52:a8:9b:7f:46:43:7e:29:55:8a:f2:27:d6:
-       87:99:ba:0b:2d:fc:fa:f5:bc:c8:09:01:4a:6e:4a:
-       10:e6:86:a2:7b
+       04:50:7a:c8:49:1a:8c:69:c7:b5:c3:1d:03:09:ed:
+       35:ba:13:f5:88:4c:e6:2b:88:cf:30:18:15:4f:a0:
+       59:b0:20:ec:6b:eb:b9:4e:02:b8:93:40:21:89:8d:
+       a7:89:c7:11:ce:a7:13:39:f5:0e:34:8e:df:0d:92:
+       3e:d0:2d:c7:b7
    ASN1 OID: prime256v1
    NIST CURVE: P-256
-
-   <CODE ENDS>
-
-C.1.2.  Registrar private key
-
-   <CODE BEGINS>
-   -----BEGIN PRIVATE KEY-----
-   MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgYJ/MP0dWA9BkYd4W
-   s6oRY62hDddaEmrAVm5dtAXE/UGhRANCAAQgMIVb6EaRCz7LFcr4Vy0+tWW9xlSh
-   Xvr27euqi54WCMXJEMk6IIaPyFBNNw8bJvqXWfZ5g7t4hj7amsvqUST2
-   -----END PRIVATE KEY-----
-   <CODE ENDS>
-
-   <CODE BEGINS>
-   Private-Key: (256 bit)
-   priv:
-       60:9f:cc:3f:47:56:03:d0:64:61:de:16:b3:aa:11:
-       63:ad:a1:0d:d7:5a:12:6a:c0:56:6e:5d:b4:05:c4:
-       fd:41
-   pub:
-       04:20:30:85:5b:e8:46:91:0b:3e:cb:15:ca:f8:57:
-       2d:3e:b5:65:bd:c6:54:a1:5e:fa:f6:ed:eb:aa:8b:
-       9e:16:08:c5:c9:10:c9:3a:20:86:8f:c8:50:4d:37:
-       0f:1b:26:fa:97:59:f6:79:83:bb:78:86:3e:da:9a:
-       cb:ea:51:24:f6
-   ASN1 OID: prime256v1
-   NIST CURVE: P-256
-
    <CODE ENDS>
 
 C.1.3.  MASA private key
 
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 66]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   <CODE BEGINS>
-   -----BEGIN PRIVATE KEY-----
-   MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgrbJ1oU+HIJ2SWYAk
-   DkBTL+YNPxQG+gwsMsZB94N8mZ2hRANCAASS9NVlWJdztwNY81yPlH2UODYWhlYA
-   ZfsqnEPSFZKnq8mq8gF78ZVbYi6q2FEg8kkORY/rpIU/X7SQsRuD+wMW
-   -----END PRIVATE KEY-----
-   <CODE ENDS>
-
    <CODE BEGINS>
    Private-Key: (256 bit)
    priv:
-       ad:b2:75:a1:4f:87:20:9d:92:59:80:24:0e:40:53:
-       2f:e6:0d:3f:14:06:fa:0c:2c:32:c6:41:f7:83:7c:
-       99:9d
+       c6:bb:a5:8f:b6:d3:c4:75:28:d8:d3:d9:46:c3:31:
+       83:6d:00:0a:9a:38:ce:22:5c:e9:d9:ea:3b:98:32:
+       ec:31
    pub:
-       04:92:f4:d5:65:58:97:73:b7:03:58:f3:5c:8f:94:
-       7d:94:38:36:16:86:56:00:65:fb:2a:9c:43:d2:15:
-       92:a7:ab:c9:aa:f2:01:7b:f1:95:5b:62:2e:aa:d8:
-       51:20:f2:49:0e:45:8f:eb:a4:85:3f:5f:b4:90:b1:
-       1b:83:fb:03:16
+       04:59:80:94:66:14:94:20:30:3c:66:08:85:55:86:
+       db:e7:d4:d1:d7:7a:d2:a3:1a:0c:73:6b:01:0d:02:
+       12:15:d6:1f:f3:6e:c8:d4:84:60:43:3b:21:c5:83:
+       80:1e:fc:e2:37:85:77:97:94:d4:aa:34:b5:b6:c6:
+       ed:f3:17:5c:f1
    ASN1 OID: prime256v1
    NIST CURVE: P-256
-
    <CODE ENDS>
 
-C.2.  Pledge, Registrar, Domain CA and MASA Certificates
+C.2.  Pledge, Registrar and MASA Certificates
 
    All keys and certificates used for the examples have been generated
    with OpenSSL - see Appendix D for more details on certificate
@@ -3737,6 +3690,53 @@ C.2.1.  Pledge IDevID Certificate
 
 
 
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 66]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+   <CODE BEGINS>
+   Certificate:
+     Data:
+         Version: 3 (0x2)
+         Serial Number: 4822678189204992 (0x11223344556600)
+         Signature Algorithm: ecdsa-with-SHA256
+         Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=manufacturer,
+                                                       CN=masa.stok.nl
+         Validity
+             Not Before: Dec  9 10:02:36 2020 GMT
+             Not After : Dec 31 23:59:59 9999 GMT
+         Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=manufacturing,
+                    CN=uuid:pledge.1.2.3.4/serialNumber=pledge.1.2.3.4
+         Subject Public Key Info:
+             Public Key Algorithm: id-ecPublicKey
+                 Public-Key: (256 bit)
+                 pub:
+                     04:d6:b7:6f:74:88:bd:80:ae:5f:28:41:2c:72:02:
+                     ef:5f:98:b4:81:e1:d9:10:4c:f8:1b:66:d4:3e:5c:
+                     ea:da:73:e6:a8:38:a9:f1:35:11:85:b6:cd:e2:04:
+                     10:be:fe:d5:0b:3b:14:69:2e:e1:b0:6a:bc:55:40:
+                     60:eb:95:5c:54
+                 ASN1 OID: prime256v1
+                 NIST CURVE: P-256
+         X509v3 extensions:
+             X509v3 Basic Constraints:
+                 CA:FALSE
+             X509v3 Authority Key Identifier:
+                 keyid:
+         E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
+
+     Signature Algorithm: ecdsa-with-SHA256
+            30:46:02:21:00:d2:e6:45:3b:b0:c3:00:b3:25:8d:f1:83:fe:
+            d9:37:c1:a2:49:65:69:7f:6b:b9:ef:2c:05:07:06:31:ac:17:
+            bd:02:21:00:e2:ce:9e:7b:7f:74:50:33:ad:9e:ff:12:4e:e9:
+            a6:f3:b8:36:65:ab:7d:80:bb:56:88:bc:03:1d:e5:1e:31:6f
+   <CODE ENDS>
+
+   Below is the hexadecimal representation:
 
 
 
@@ -3755,78 +3755,24 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
    <CODE BEGINS>
-   Certificate:
-   Data:
-    Version: 3 (0x2)
-    Serial Number: 32429 (0x7ead)
-    Signature Algorithm: ecdsa-with-SHA256
-    Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond,
-            C = NL
-    Validity
-      Not Before: Dec  7 17:26:49 2022 GMT
-      Not After : Dec 31 17:26:49 9999 GMT
-    Subject: CN = Stok IoT sensor Y-42, serialNumber = JADA123456789
-    Subject Public Key Info:
-      Public Key Algorithm: id-ecPublicKey
-        Public-Key: (256 bit)
-        pub:
-          04:48:7e:8e:52:26:05:46:17:c8:81:69:78:18:6f:
-          23:1e:88:fc:6b:ef:2b:7f:ab:79:b3:59:99:ff:84:
-          9e:3e:52:a8:9b:7f:46:43:7e:29:55:8a:f2:27:d6:
-          87:99:ba:0b:2d:fc:fa:f5:bc:c8:09:01:4a:6e:4a:
-          10:e6:86:a2:7b
-        ASN1 OID: prime256v1
-        NIST CURVE: P-256
-    X509v3 extensions:
-      X509v3 Key Usage: critical
-        Digital Signature, Non Repudiation, Key Encipherment,
-                Data Encipherment
-      X509v3 Basic Constraints:
-        CA:FALSE
-      X509v3 Authority Key Identifier:
-       keyid:CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
-
-      1.3.6.1.5.5.7.1.32:
-         hl=2 l=  12 prim: IA5STRING     :masa.stok.nl
-
-   Signature Algorithm: ecdsa-with-SHA256
-     30:45:02:20:0e:5f:c6:1d:c2:a4:b1:71:3e:17:b6:58:33:30:
-     fb:c9:74:eb:be:00:72:80:b3:d1:35:de:77:df:a0:88:e9:0a:
-     02:21:00:ba:8e:85:97:ff:c0:f9:a0:b2:7a:a5:6d:4d:62:31:
-     47:9a:a1:a8:53:94:a1:4c:e1:84:9b:4a:d0:f1:af:db:5f
-
-   <CODE ENDS>
-
-   Below is the hexadecimal representation of the binary X.509 DER-
-   encoded certificate:
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 68]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   <CODE BEGINS>
-   308201CE30820174A00302010202027EAD300A06082A8648CE3D040302304B31
-   15301306035504030C0C6D6173612E73746F6B2E6E6C31133011060355040A0C
-   0A76616E64657273746F6B3110300E06035504070C0748656C6D6F6E64310B30
-   09060355040613024E4C3020170D3232313230373137323634395A180F393939
-   39313233313137323634395A3037311D301B06035504030C1453746F6B20496F
-   542073656E736F7220592D3432311630140603550405130D4A41444131323334
-   35363738393059301306072A8648CE3D020106082A8648CE3D03010703420004
-   487E8E5226054617C8816978186F231E88FC6BEF2B7FAB79B35999FF849E3E52
-   A89B7F46437E29558AF227D68799BA0B2DFCFAF5BCC809014A6E4A10E686A27B
-   A35A3058300E0603551D0F0101FF0404030204F030090603551D130402300030
-   1F0603551D23041830168014CB8D98CA74C51B58DDE7ACEF869A9443A8D666A6
-   301A06082B06010505070120040E160C6D6173612E73746F6B2E6E6C300A0608
-   2A8648CE3D040302034800304502200E5FC61DC2A4B1713E17B6583330FBC974
-   EBBE007280B3D135DE77DFA088E90A022100BA8E8597FFC0F9A0B27AA56D4D62
-   31479AA1A85394A14CE1849B4AD0F1AFDB5F
-
+   30820226308201cba003020102020711223344556600300a06082a8648ce3d04
+   0302306f310b3009060355040613024e4c310b300906035504080c024e423110
+   300e06035504070c0748656c6d6f6e6431133011060355040a0c0a76616e6465
+   7273746f6b31153013060355040b0c0c6d616e75666163747572657231153013
+   06035504030c0c6d6173612e73746f6b2e6e6c3020170d323031323039313030
+   3233365a180f39393939313233313233353935395a308190310b300906035504
+   0613024e4c310b300906035504080c024e423110300e06035504070c0748656c
+   6d6f6e6431133011060355040a0c0a76616e64657273746f6b31163014060355
+   040b0c0d6d616e75666163747572696e67311c301a06035504030c1375756964
+   3a706c656467652e312e322e332e34311730150603550405130e706c65646765
+   2e312e322e332e343059301306072a8648ce3d020106082a8648ce3d03010703
+   420004d6b76f7488bd80ae5f28412c7202ef5f98b481e1d9104cf81b66d43e5c
+   eada73e6a838a9f1351185b6cde20410befed50b3b14692ee1b06abc554060eb
+   955c54a32e302c30090603551d1304023000301f0603551d23041830168014e4
+   0393b4c3d3f42a80a47718f6964903011768a3300a06082a8648ce3d04030203
+   49003046022100d2e6453bb0c300b3258df183fed937c1a24965697f6bb9ef2c
+   05070631ac17bd022100e2ce9e7b7f745033ad9eff124ee9a6f3b83665ab7d80
+   bb5688bc031de51e316f
    <CODE ENDS>
 
 C.2.2.  Registrar Certificate
@@ -3859,6 +3805,60 @@ C.2.2.  Registrar Certificate
 
 
 
+Richardson, et al.        Expires 10 June 2023                 [Page 68]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+   <CODE BEGINS>
+   Certificate:
+     Data:
+         Version: 3 (0x2)
+         Serial Number:
+           70:56:ea:aa:30:66:d8:82:6a:55:5b:90:88:d4:62:bf:9c:f2:8c:fd
+         Signature Algorithm: ecdsa-with-SHA256
+         Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
+                                                  CN=registrar.stok.nl
+         Validity
+             Not Before: Dec  9 10:02:36 2020 GMT
+             Not After : Dec  9 10:02:36 2021 GMT
+         Subject: C=NL, ST=NB, L=Helmond, O=vanderstok, OU=consultancy,
+                                                   CN=registrar.stok.nl
+         Subject Public Key Info:
+             Public Key Algorithm: id-ecPublicKey
+                 Public-Key: (256 bit)
+                 pub:
+                     04:50:7a:c8:49:1a:8c:69:c7:b5:c3:1d:03:09:ed:
+                     35:ba:13:f5:88:4c:e6:2b:88:cf:30:18:15:4f:a0:
+                     59:b0:20:ec:6b:eb:b9:4e:02:b8:93:40:21:89:8d:
+                     a7:89:c7:11:ce:a7:13:39:f5:0e:34:8e:df:0d:92:
+                     3e:d0:2d:c7:b7
+                 ASN1 OID: prime256v1
+                 NIST CURVE: P-256
+         X509v3 extensions:
+             X509v3 Subject Key Identifier:
+       08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
+             X509v3 Authority Key Identifier:
+                 keyid:
+       08:C2:BF:36:88:7F:79:41:21:85:87:2F:16:A7:AC:A6:EF:B3:D2:B3
+
+             X509v3 Basic Constraints: critical
+                 CA:TRUE
+             X509v3 Extended Key Usage:
+                 CMC Registration Authority, TLS Web Server
+                 Authentication, TLS Web Client Authentication
+             X509v3 Key Usage: critical
+                 Digital Signature, Non Repudiation, Key Encipherment,
+                 Data Encipherment, Certificate Sign, CRL Sign
+     Signature Algorithm: ecdsa-with-SHA256
+          30:44:02:20:74:4c:99:00:85:13:b2:f1:bc:fd:f9:02:1a:46:
+          fb:17:4c:f8:83:a2:7c:a1:d9:3f:ae:ac:f3:1e:4e:dd:12:c6:
+          02:20:11:47:14:db:f5:1a:5e:78:f5:81:b9:42:1c:6e:47:02:
+          ab:53:72:70:c5:ba:fb:2d:16:c3:de:9a:a1:82:c3:5f
+   <CODE ENDS>
+
+
+
 
 
 Richardson, et al.        Expires 10 June 2023                 [Page 69]
@@ -3866,54 +3866,54 @@ Richardson, et al.        Expires 10 June 2023                 [Page 69]
 Internet-Draft              Constrained BRSKI              December 2022
 
 
+   Below is the hexadecimal representation which is in (request-)voucher
+   examples referred to as regis-cert-hex:
+
    <CODE BEGINS>
-   Certificate:
-   Data:
-    Version: 3 (0x2)
-    Serial Number:
-      c3:f6:21:49:b2:e3:0e:3e
-    Signature Algorithm: ecdsa-with-SHA256
-    Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.",
-            L = San Jose, ST = CA, C = US
-    Validity
-      Not Before: Dec  7 17:26:50 2022 GMT
-      Not After : Dec  6 17:26:50 2025 GMT
-    Subject: CN = Custom-ER Registrar, OU = Office dept, O = "Custom-ER,
-            Inc.", L = Ottowa, ST = ON, C = CA
-    Subject Public Key Info:
-      Public Key Algorithm: id-ecPublicKey
-        Public-Key: (256 bit)
-        pub:
-          04:20:30:85:5b:e8:46:91:0b:3e:cb:15:ca:f8:57:
-          2d:3e:b5:65:bd:c6:54:a1:5e:fa:f6:ed:eb:aa:8b:
-          9e:16:08:c5:c9:10:c9:3a:20:86:8f:c8:50:4d:37:
-          0f:1b:26:fa:97:59:f6:79:83:bb:78:86:3e:da:9a:
-          cb:ea:51:24:f6
-        ASN1 OID: prime256v1
-        NIST CURVE: P-256
-    X509v3 extensions:
-      X509v3 Key Usage: critical
-        Digital Signature, Non Repudiation, Key Encipherment,
-                Data Encipherment
-      X509v3 Basic Constraints:
-        CA:FALSE
-      X509v3 Subject Key Identifier:
-        C9:08:0B:38:7D:8D:D8:5B:3A:59:E7:EC:10:0B:86:63:93:A9:CA:4C
-      X509v3 Authority Key Identifier:
-       keyid:92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
-
-      X509v3 Extended Key Usage: critical
-        CMC Registration Authority, TLS Web Server Authentication,
-                TLS Web Client Authentication
-   Signature Algorithm: ecdsa-with-SHA256
-     30:44:02:20:1e:fa:e1:bc:48:c7:12:c2:57:91:8c:53:9f:6f:
-     e9:0d:8b:e4:9d:87:5f:57:8b:8d:f4:75:ec:0f:ee:c6:69:8f:
-     02:20:32:ed:85:f6:36:8d:7c:35:f6:3d:f6:31:dc:69:67:4a:
-     b0:1d:f1:c5:03:25:6c:1a:08:03:e2:34:4a:57:89:57
-
+   308202753082021ca00302010202147056eaaa3066d8826a555b9088d462bf9c
+   f28cfd300a06082a8648ce3d0403023073310b3009060355040613024e4c310b
+   300906035504080c024e423110300e06035504070c0748656c6d6f6e64311330
+   11060355040a0c0a76616e64657273746f6b31143012060355040b0c0b636f6e
+   73756c74616e6379311a301806035504030c117265676973747261722e73746f
+   6b2e6e6c301e170d3230313230393130303233365a170d323131323039313030
+   3233365a3073310b3009060355040613024e4c310b300906035504080c024e42
+   3110300e06035504070c0748656c6d6f6e6431133011060355040a0c0a76616e
+   64657273746f6b31143012060355040b0c0b636f6e73756c74616e6379311a30
+   1806035504030c117265676973747261722e73746f6b2e6e6c3059301306072a
+   8648ce3d020106082a8648ce3d03010703420004507ac8491a8c69c7b5c31d03
+   09ed35ba13f5884ce62b88cf3018154fa059b020ec6bebb94e02b8934021898d
+   a789c711cea71339f50e348edf0d923ed02dc7b7a3818d30818a301d0603551d
+   0e0416041408c2bf36887f79412185872f16a7aca6efb3d2b3301f0603551d23
+   04183016801408c2bf36887f79412185872f16a7aca6efb3d2b3300f0603551d
+   130101ff040530030101ff30270603551d250420301e06082b0601050507031c
+   06082b0601050507030106082b06010505070302300e0603551d0f0101ff0404
+   030201f6300a06082a8648ce3d04030203470030440220744c99008513b2f1bc
+   fdf9021a46fb174cf883a27ca1d93faeacf31e4edd12c60220114714dbf51a5e
+   78f581b9421c6e4702ab537270c5bafb2d16c3de9aa182c35f
    <CODE ENDS>
 
+C.2.3.  MASA Certificate
 
+   <CODE BEGINS>
+   Certificate:
+     Data:
+         Version: 3 (0x2)
+         Serial Number:
+           14:26:b8:1c:ce:d8:c3:e8:14:05:cb:87:67:0d:be:ef:d5:81:25:b4
+         Signature Algorithm: ecdsa-with-SHA256
+         Issuer: C=NL, ST=NB, L=Helmond, O=vanderstok,
+             OU=manufacturer, CN=masa.stok.nl
+
+         Validity
+             Not Before: Dec  9 10:02:36 2020 GMT
+             Not After : Sep  5 10:02:36 2023 GMT
+         Subject: C=NL, ST=NB, L=Helmond, O=vanderstok,
+             OU=manufacturer, CN=masa.stok.nl
+         Subject Public Key Info:
+             Public Key Algorithm: id-ecPublicKey
+                 Public-Key: (256 bit)
+                 pub:
+                     04:59:80:94:66:14:94:20:30:3c:66:08:85:55:86:
 
 
 
@@ -3922,37 +3922,37 @@ Richardson, et al.        Expires 10 June 2023                 [Page 70]
 Internet-Draft              Constrained BRSKI              December 2022
 
 
-   Below is the hexadecimal representation of the binary X.509 DER-
-   encoded certificate:
+                     db:e7:d4:d1:d7:7a:d2:a3:1a:0c:73:6b:01:0d:02:
+                     12:15:d6:1f:f3:6e:c8:d4:84:60:43:3b:21:c5:83:
+                     80:1e:fc:e2:37:85:77:97:94:d4:aa:34:b5:b6:c6:
+                     ed:f3:17:5c:f1
+                 ASN1 OID: prime256v1
+                 NIST CURVE: P-256
+         X509v3 extensions:
+             X509v3 Subject Key Identifier:
+       E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
+             X509v3 Authority Key Identifier:
+                 keyid:
+        E4:03:93:B4:C3:D3:F4:2A:80:A4:77:18:F6:96:49:03:01:17:68:A3
 
-   <CODE BEGINS>
-   3082026C30820213A003020102020900C3F62149B2E30E3E300A06082A8648CE
-   3D0403023072311C301A06035504030C13437573746F6D2D455220476C6F6261
-   6C204341310B3009060355040B0C02495431183016060355040A0C0F43757374
-   6F6D2D45522C20496E632E3111300F06035504070C0853616E204A6F7365310B
-   300906035504080C024341310B3009060355040613025553301E170D32323132
-   30373137323635305A170D3235313230363137323635305A3079311C301A0603
-   5504030C13437573746F6D2D4552205265676973747261723114301206035504
-   0B0C0B4F6666696365206465707431183016060355040A0C0F437573746F6D2D
-   45522C20496E632E310F300D06035504070C064F74746F7761310B3009060355
-   04080C024F4E310B30090603550406130243413059301306072A8648CE3D0201
-   06082A8648CE3D030107034200042030855BE846910B3ECB15CAF8572D3EB565
-   BDC654A15EFAF6EDEBAA8B9E1608C5C910C93A20868FC8504D370F1B26FA9759
-   F67983BB78863EDA9ACBEA5124F6A3818A308187300E0603551D0F0101FF0404
-   030204F030090603551D1304023000301D0603551D0E04160414C9080B387D8D
-   D85B3A59E7EC100B866393A9CA4C301F0603551D2304183016801492EA764040
-   4A8FAB4F270BF3BC379D86CD7280F8302A0603551D250101FF0420301E06082B
-   0601050507031C06082B0601050507030106082B06010505070302300A06082A
-   8648CE3D040302034700304402201EFAE1BC48C712C257918C539F6FE90D8BE4
-   9D875F578B8DF475EC0FEEC6698F022032ED85F6368D7C35F63DF631DC69674A
-   B01DF1C503256C1A0803E2344A578957
-
+             X509v3 Basic Constraints: critical
+                 CA:TRUE
+             X509v3 Extended Key Usage:
+                 CMC Registration Authority,
+                 TLS Web Server Authentication,
+                 TLS Web Client Authentication
+             X509v3 Key Usage: critical
+                 Digital Signature, Non Repudiation, Key Encipherment,
+                       Data Encipherment, Certificate Sign, CRL Sign
+     Signature Algorithm: ecdsa-with-SHA256
+          30:44:02:20:2e:c5:f2:24:72:70:20:ea:6e:74:8b:13:93:67:
+          8a:e6:fe:fb:8d:56:7f:f5:34:18:a9:ef:a5:0f:c3:99:ca:53:
+          02:20:3d:dc:91:d0:e9:6a:69:20:01:fb:e4:20:40:de:7c:7d:
+          98:ed:d8:84:53:61:84:a7:f9:13:06:4c:a9:b2:8f:5c
    <CODE ENDS>
 
-C.2.3.  Domain CA Certificate
+   Below is the hexadecimal representation:
 
-   The Domain CA certificate is the CA of the customer's domain.  It has
-   signed the Registrar (RA) certificate.
 
 
 
@@ -3979,48 +3979,48 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
    <CODE BEGINS>
-   Certificate:
-   Data:
-    Version: 3 (0x2)
-    Serial Number: 3092288576548618702 (0x2aea0413a42dc1ce)
-    Signature Algorithm: ecdsa-with-SHA256
-    Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.",
-            L = San Jose, ST = CA, C = US
-    Validity
-      Not Before: Dec  7 17:26:50 2022 GMT
-      Not After : Dec  4 17:26:50 2032 GMT
-    Subject: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.",
-            L = San Jose, ST = CA, C = US
-    Subject Public Key Info:
-      Public Key Algorithm: id-ecPublicKey
-        Public-Key: (256 bit)
-        pub:
-          04:97:b1:ed:96:91:64:93:09:85:bb:b8:ac:9a:2a:
-          f9:45:5c:df:ee:a4:b1:1d:e2:e7:9d:06:8b:fa:80:
-          39:26:b4:00:52:51:b3:4f:1c:08:15:a4:cb:e0:3f:
-          bd:1b:bc:b6:35:f6:43:1a:22:de:78:65:3b:87:b9:
-          95:37:ec:e1:6c
-        ASN1 OID: prime256v1
-        NIST CURVE: P-256
-    X509v3 extensions:
-      X509v3 Subject Alternative Name:
-        email:help@custom-er.example.com
-      X509v3 Key Usage: critical
-        Digital Signature, Certificate Sign, CRL Sign
-      X509v3 Basic Constraints: critical
-        CA:TRUE
-      X509v3 Subject Key Identifier:
-        92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
-   Signature Algorithm: ecdsa-with-SHA256
-     30:44:02:20:19:43:dc:a3:27:46:e6:13:5f:52:37:61:aa:78:
-     6d:52:5b:5a:da:63:0f:f4:1d:ab:b6:a6:10:35:9b:31:f3:18:
-     02:20:71:c8:fc:8c:1a:ef:bc:f2:81:7d:6a:ac:9e:ae:22:27:
-     81:01:3c:ae:40:71:52:2d:89:1a:14:3e:e2:e8:4c:dd
-
+   3082026d30820214a00302010202141426b81cced8c3e81405cb87670dbeefd5
+   8125b4300a06082a8648ce3d040302306f310b3009060355040613024e4c310b
+   300906035504080c024e423110300e06035504070c0748656c6d6f6e64311330
+   11060355040a0c0a76616e64657273746f6b31153013060355040b0c0c6d616e
+   7566616374757265723115301306035504030c0c6d6173612e73746f6b2e6e6c
+   301e170d3230313230393130303233365a170d3233303930353130303233365a
+   306f310b3009060355040613024e4c310b300906035504080c024e423110300e
+   06035504070c0748656c6d6f6e6431133011060355040a0c0a76616e64657273
+   746f6b31153013060355040b0c0c6d616e756661637475726572311530130603
+   5504030c0c6d6173612e73746f6b2e6e6c3059301306072a8648ce3d02010608
+   2a8648ce3d0301070342000459809466149420303c6608855586dbe7d4d1d77a
+   d2a31a0c736b010d021215d61ff36ec8d48460433b21c583801efce237857797
+   94d4aa34b5b6c6edf3175cf1a3818d30818a301d0603551d0e04160414e40393
+   b4c3d3f42a80a47718f6964903011768a3301f0603551d23041830168014e403
+   93b4c3d3f42a80a47718f6964903011768a3300f0603551d130101ff04053003
+   0101ff30270603551d250420301e06082b0601050507031c06082b0601050507
+   030106082b06010505070302300e0603551d0f0101ff0404030201f6300a0608
+   2a8648ce3d040302034700304402202ec5f224727020ea6e748b1393678ae6fe
+   fb8d567ff53418a9efa50fc399ca5302203ddc91d0e96a692001fbe42040de7c
+   7d98edd884536184a7f913064ca9b28f5c
    <CODE ENDS>
 
-   Below is the hexadecimal representation of the binary X.509 DER-
-   encoded certificate:
+C.3.  COSE-signed Pledge Voucher Request (PVR)
+
+   In this COSE example the voucher request has been signed by the
+   Pledge using the private key of Appendix C.1.1, and has been sent to
+   the link-local JRC (Registrar) over CoAPS.
+
+       POST coaps://[JRC-link-local-address]/b/rv
+       Content-Format: 836
+       Payload: signed_request_voucher
+
+   The payload signed_request_voucher is shown as hexadecimal dump (with
+   lf added):
+
+
+
+
+
+
+
+
 
 
 
@@ -4035,42 +4035,42 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
    <CODE BEGINS>
-   30820242308201E9A00302010202082AEA0413A42DC1CE300A06082A8648CE3D
-   0403023072311C301A06035504030C13437573746F6D2D455220476C6F62616C
-   204341310B3009060355040B0C02495431183016060355040A0C0F437573746F
-   6D2D45522C20496E632E3111300F06035504070C0853616E204A6F7365310B30
-   0906035504080C024341310B3009060355040613025553301E170D3232313230
-   373137323635305A170D3332313230343137323635305A3072311C301A060355
-   04030C13437573746F6D2D455220476C6F62616C204341310B3009060355040B
-   0C02495431183016060355040A0C0F437573746F6D2D45522C20496E632E3111
-   300F06035504070C0853616E204A6F7365310B300906035504080C024341310B
-   30090603550406130255533059301306072A8648CE3D020106082A8648CE3D03
-   01070342000497B1ED969164930985BBB8AC9A2AF9455CDFEEA4B11DE2E79D06
-   8BFA803926B4005251B34F1C0815A4CBE03FBD1BBCB635F6431A22DE78653B87
-   B99537ECE16CA369306730250603551D11041E301C811A68656C704063757374
-   6F6D2D65722E6578616D706C652E636F6D300E0603551D0F0101FF0404030201
-   86300F0603551D130101FF040530030101FF301D0603551D0E0416041492EA76
-   40404A8FAB4F270BF3BC379D86CD7280F8300A06082A8648CE3D040302034700
-   304402201943DCA32746E6135F523761AA786D525B5ADA630FF41DABB6A61035
-   9B31F318022071C8FC8C1AEFBCF2817D6AAC9EAE222781013CAE4071522D891A
-   143EE2E84CDD
-
+   d28444a101382ea104582097113db094eee8eae48683e7337875c0372164
+   be89d023a5f3df52699c0fbfb55902d2a11909c5a60274323032302d3132
+   2d32335431323a30353a32325a0474323032322d31322d32335431323a30
+   353a32325a01020750684ca83e27230aff97630cf2c1ec409a0d6e706c65
+   6467652e312e322e332e340a590279308202753082021ca0030201020214
+   7056eaaa3066d8826a555b9088d462bf9cf28cfd300a06082a8648ce3d04
+   03023073310b3009060355040613024e4c310b300906035504080c024e42
+   3110300e06035504070c0748656c6d6f6e6431133011060355040a0c0a76
+   616e64657273746f6b31143012060355040b0c0b636f6e73756c74616e63
+   79311a301806035504030c117265676973747261722e73746f6b2e6e6c30
+   1e170d3230313230393130303233365a170d323131323039313030323336
+   5a3073310b3009060355040613024e4c310b300906035504080c024e4231
+   10300e06035504070c0748656c6d6f6e6431133011060355040a0c0a7661
+   6e64657273746f6b31143012060355040b0c0b636f6e73756c74616e6379
+   311a301806035504030c117265676973747261722e73746f6b2e6e6c3059
+   301306072a8648ce3d020106082a8648ce3d03010703420004507ac8491a
+   8c69c7b5c31d0309ed35ba13f5884ce62b88cf3018154fa059b020ec6beb
+   b94e02b8934021898da789c711cea71339f50e348edf0d923ed02dc7b7a3
+   818d30818a301d0603551d0e0416041408c2bf36887f79412185872f16a7
+   aca6efb3d2b3301f0603551d2304183016801408c2bf36887f7941218587
+   2f16a7aca6efb3d2b3300f0603551d130101ff040530030101ff30270603
+   551d250420301e06082b0601050507031c06082b0601050507030106082b
+   06010505070302300e0603551d0f0101ff0404030201f6300a06082a8648
+   ce3d04030203470030440220744c99008513b2f1bcfdf9021a46fb174cf8
+   83a27ca1d93faeacf31e4edd12c60220114714dbf51a5e78f581b9421c6e
+   4702ab537270c5bafb2d16c3de9aa182c35f58473045022063766c7bbd1b
+   339dbc398e764af3563e93b25a69104befe9aac2b3336b8f56e1022100cd
+   0419559ad960ccaed4dee3f436eca40b7570b25a52eb60332bc1f2991484
+   e9
    <CODE ENDS>
 
-C.2.4.  MASA Certificate
-
-   The MASA CA certificate is the CA that signed the Pledge's IDevID
-   certificate.
-
-
-
-
-
-
-
-
-
-
+   The Pledge uses the "proximity" (SID 2502, enum 2) assertion together
+   with an included proximity-registrar-cert field (SID 2511) to inform
+   MASA about its proximity to the specific Registrar.  The
+   representiation of signed_voucher_request in CBOR diagnostic format
+   is:
 
 
 
@@ -4091,146 +4091,27 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
    <CODE BEGINS>
-   Certificate:
-   Data:
-    Version: 3 (0x2)
-    Serial Number:
-      e3:9c:da:17:e1:38:6a:0a
-    Signature Algorithm: ecdsa-with-SHA256
-    Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond,
-            C = NL
-    Validity
-      Not Before: Dec  7 17:26:49 2022 GMT
-      Not After : Dec  4 17:26:49 2032 GMT
-    Subject: CN = masa.stok.nl, O = vanderstok, L = Helmond,
-            C = NL
-    Subject Public Key Info:
-      Public Key Algorithm: id-ecPublicKey
-        Public-Key: (256 bit)
-        pub:
-          04:92:f4:d5:65:58:97:73:b7:03:58:f3:5c:8f:94:
-          7d:94:38:36:16:86:56:00:65:fb:2a:9c:43:d2:15:
-          92:a7:ab:c9:aa:f2:01:7b:f1:95:5b:62:2e:aa:d8:
-          51:20:f2:49:0e:45:8f:eb:a4:85:3f:5f:b4:90:b1:
-          1b:83:fb:03:16
-        ASN1 OID: prime256v1
-        NIST CURVE: P-256
-    X509v3 extensions:
-      X509v3 Subject Alternative Name:
-        email:info@masa.stok.nl
-      X509v3 Key Usage: critical
-        Digital Signature, Certificate Sign, CRL Sign
-      X509v3 Basic Constraints: critical
-        CA:TRUE, pathlen:3
-      X509v3 Subject Key Identifier:
-        CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
-      X509v3 Authority Key Identifier:
-       keyid:CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
+   Diagnose(signed_request_voucher) =
+   18([
+   h'A101382E',     / {"alg": -47} /
+   {4: h'97113DB094EEE8EAE48683E7337875C0372164B
+         E89D023A5F3DF52699C0FBFB5'},
+   h'<request_voucher>',  / byte string as detailed below /
+   h'3045022063766C7BBD1B339DBC398E764AF3563E93B
+   25A69104BEFE9AAC2B3336B8F56E1022100CD0419559A
+   D960CCAED4DEE3F436ECA40B7570B25A52EB60332BC1F
+   2991484E9'
+   ])
 
-   Signature Algorithm: ecdsa-with-SHA256
-     30:44:02:20:3d:10:6d:2b:cf:a7:11:77:c0:0d:e9:04:69:cf:
-     81:67:3f:5f:d6:34:1c:af:5c:9b:32:e2:38:49:98:10:50:c7:
-     02:20:7c:4d:18:83:20:ec:34:9a:e0:b4:2d:96:41:18:6a:59:
-     22:a1:65:1f:70:bd:ad:e7:1a:d6:8c:2b:f9:fa:c9:1c
-
+   Diagnose(request_voucher) =
+   {2501: {2: "2020-12-23T12:05:22Z",
+           4: "2022-12-23T12:05:22Z",
+           1: 2,
+           7: h'684CA83E27230AFF97630CF2C1EC409A',
+           13: "pledge.1.2.3.4",
+           10: h'<regis-cert-hex>' / byte string as defined in C.2.2 /
+   }}
    <CODE ENDS>
-
-   Below is the hexadecimal representation of the binary X.509 DER-
-   encoded certificate:
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 74]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   <CODE BEGINS>
-   30820212308201B9A003020102020900E39CDA17E1386A0A300A06082A8648CE
-   3D040302304B3115301306035504030C0C6D6173612E73746F6B2E6E6C311330
-   11060355040A0C0A76616E64657273746F6B3110300E06035504070C0748656C
-   6D6F6E64310B3009060355040613024E4C301E170D3232313230373137323634
-   395A170D3332313230343137323634395A304B3115301306035504030C0C6D61
-   73612E73746F6B2E6E6C31133011060355040A0C0A76616E64657273746F6B31
-   10300E06035504070C0748656C6D6F6E64310B3009060355040613024E4C3059
-   301306072A8648CE3D020106082A8648CE3D0301070342000492F4D565589773
-   B70358F35C8F947D9438361686560065FB2A9C43D21592A7ABC9AAF2017BF195
-   5B622EAAD85120F2490E458FEBA4853F5FB490B11B83FB0316A3818530818230
-   1C0603551D11041530138111696E666F406D6173612E73746F6B2E6E6C300E06
-   03551D0F0101FF04040302018630120603551D130101FF040830060101FF0201
-   03301D0603551D0E04160414CB8D98CA74C51B58DDE7ACEF869A9443A8D666A6
-   301F0603551D23041830168014CB8D98CA74C51B58DDE7ACEF869A9443A8D666
-   A6300A06082A8648CE3D040302034700304402203D106D2BCFA71177C00DE904
-   69CF81673F5FD6341CAF5C9B32E23849981050C702207C4D188320EC349AE0B4
-   2D9641186A5922A1651F70BDADE71AD68C2BF9FAC91C
-
-   <CODE ENDS>
-
-C.3.  COSE-signed Pledge Voucher Request (PVR)
-
-   In this example, the voucher request (PVR) has been signed by the
-   Pledge using the IDevID private key of Appendix C.1.1, and has been
-   sent to the link-local constrained Join Proxy (JP) over CoAPS to the
-   JP's join port.  The join port happens to use the default CoAPS UDP
-   port 5684.
-
-     REQ: POST coaps://[JP-link-local-address]/b/rv
-     Content-Format: 836
-     Payload: <signed_pvr>
-
-   When the Join Proxy receives the DTLS handshake messages from the
-   Pledge, it will relay these messages to the Registrar.  The payload
-   signed_voucher_request is shown as hexadecimal dump (with lf added)
-   below:
-
-   <CODE BEGINS>
-   D28443A10126A0587EA11909C5A40102074823BFBBC9C2BCF2130C585B305930
-   1306072A8648CE3D020106082A8648CE3D030107034200042030855BE846910B
-   3ECB15CAF8572D3EB565BDC654A15EFAF6EDEBAA8B9E1608C5C910C93A20868F
-   C8504D370F1B26FA9759F67983BB78863EDA9ACBEA5124F60D6D4A4144413132
-   33343536373839584068987DE8B007F4E9416610BBE2D48E1D7EA1032092B8BF
-   CE611421950F45B22F17E214820C07E777ADF86175E25D3205568404C25FCEEC
-   1B817C7861A6104B3D
-
-   <CODE ENDS>
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 75]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   The representiation of signed_pvr in CBOR diagnostic format (with lf
-   added) is:
-
-   <CODE BEGINS>
-   18([h'A10126', {}, h'A11909C5A40102074823BFBBC9C2BCF2130C585B3059301
-   306072A8648CE3D020106082A8648CE3D030107034200042030855BE846910B3ECB1
-   5CAF8572D3EB565BDC654A15EFAF6EDEBAA8B9E1608C5C910C93A20868FC8504D370
-   F1B26FA9759F67983BB78863EDA9ACBEA5124F60D6D4A41444131323334353637383
-   9', h'68987DE8B007F4E9416610BBE2D48E1D7EA1032092B8BFCE611421950F45B2
-   2F17E214820C07E777ADF86175E25D3205568404C25FCEEC1B817C7861A6104B3D']
-   )
-
-   <CODE ENDS>
-
-   The COSE payload is the PVR, encoded as a CBOR byte string.  The
-   diagnostic representation of it is shown below:
-
-   <CODE BEGINS>
-   {2501: {1: 2, 7: h'23BFBBC9C2BCF213', 12: h'3059301306072A8648CE3D02
-   0106082A8648CE3D030107034200042030855BE846910B3ECB15CAF8572D3EB565BD
-   C654A15EFAF6EDEBAA8B9E1608C5C910C93A20868FC8504D370F1B26FA9759F67983
-   BB78863EDA9ACBEA5124F6', 13: "JADA123456789"}}
-
-   <CODE ENDS>
-
-   The Pledge uses the "proximity" (key '1', SID key 2502, enum value 2)
-   assertion together with an included proximity-registrar-pubk field
-   (key '12', SID 2513) to inform MASA about its proximity to the
-   specific Registrar.
 
 C.4.  COSE-signed Registrar Voucher Request (RVR)
 
@@ -4244,163 +4125,117 @@ C.4.  COSE-signed Registrar Voucher Request (RVR)
    Because the Pledge used this format in the PVR, the JRC must also use
    this format in the RVR.
 
-     REQ: POST https://masa.stok.nl/.well-known/brski/requestvoucher
-     Content-Type: application/voucher-cose+cbor
-     Accept: application/voucher-cose+cbor
-     Body: <signed_rvr>
+       POST https://masa.example.com/.well-known/brski/requestvoucher
+       Content-Type: application/voucher-cose+cbor
+       Accept: application/voucher-cose+cbor
+       Body: signed_masa_request_voucher
 
-   The payload signed_rvr is shown as hexadecimal dump (with lf added):
+   The payload signed_masa_voucher_request is shown as hexadecimal dump
+   (with lf added):
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 76]
+
+
+
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 74]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
    <CODE BEGINS>
-   D28443A10126A11820825902843082028030820225A003020102020900C3F621
-   49B2E30E3E300A06082A8648CE3D0403023072311C301A06035504030C134375
-   73746F6D2D455220476C6F62616C204341310B3009060355040B0C0249543118
-   3016060355040A0C0F437573746F6D2D45522C20496E632E3111300F06035504
-   070C0853616E204A6F7365310B300906035504080C024341310B300906035504
-   0613025553301E170D3232313230363131333735395A170D3235313230353131
-   333735395A30818D3131302F06035504030C28437573746F6D2D455220436F6D
-   6D65726369616C204275696C64696E6773205265676973747261723113301106
-   0355040B0C0A4F6666696365206F707331183016060355040A0C0F437573746F
-   6D2D45522C20496E632E310F300D06035504070C064F74746F7761310B300906
-   035504080C024F4E310B30090603550406130243413059301306072A8648CE3D
-   020106082A8648CE3D030107034200042030855BE846910B3ECB15CAF8572D3E
-   B565BDC654A15EFAF6EDEBAA8B9E1608C5C910C93A20868FC8504D370F1B26FA
-   9759F67983BB78863EDA9ACBEA5124F6A3818730818430090603551D13040230
-   00300B0603551D0F0404030204F0301D0603551D0E04160414C9080B387D8DD8
-   5B3A59E7EC100B866393A9CA4C301F0603551D2304183016801492EA7640404A
-   8FAB4F270BF3BC379D86CD7280F8302A0603551D250101FF0420301E06082B06
-   01050507031C06082B0601050507030106082B06010505070302300A06082A86
-   48CE3D040302034900304602210091A2033692EB81503D53505FFC8DA326B1EE
-   7DEA96F29174F0B3341A07812201022100FF7339288108B712F418530A18025A
-   895408CC45E0BB678B46FBAB37DDB4D36B59024730820243308201E9A0030201
-   0202082AEA0413A42DC1CE300A06082A8648CE3D0403023072311C301A060355
-   04030C13437573746F6D2D455220476C6F62616C204341310B3009060355040B
-   0C02495431183016060355040A0C0F437573746F6D2D45522C20496E632E3111
-   300F06035504070C0853616E204A6F7365310B300906035504080C024341310B
-   3009060355040613025553301E170D3232313230363131333735395A170D3332
-   313230333131333735395A3072311C301A06035504030C13437573746F6D2D45
-   5220476C6F62616C204341310B3009060355040B0C0249543118301606035504
-   0A0C0F437573746F6D2D45522C20496E632E3111300F06035504070C0853616E
-   204A6F7365310B300906035504080C024341310B300906035504061302555330
-   59301306072A8648CE3D020106082A8648CE3D0301070342000497B1ED969164
-   930985BBB8AC9A2AF9455CDFEEA4B11DE2E79D068BFA803926B4005251B34F1C
-   0815A4CBE03FBD1BBCB635F6431A22DE78653B87B99537ECE16CA3693067300F
-   0603551D130101FF040530030101FF30250603551D11041E301C811A68656C70
-   40637573746F6D2D65722E6578616D706C652E636F6D300E0603551D0F0101FF
-   040403020186301D0603551D0E0416041492EA7640404A8FAB4F270BF3BC379D
-   86CD7280F8300A06082A8648CE3D0403020348003045022100D6D813B390BD3A
-   7B4E85424BCB1ED933AD1E981F2817B59083DD6EC1C5E3FADF02202CEE440619
-   2BC767E98D7CFAE044C6807481AD8564A7D569DCA3D1CDF1E5E843590124A119
-   09C5A60102027818323032322D31322D30365432303A30343A31352E3735345A
-   05581A041830168014CB8D98CA74C51B58DDE7ACEF869A9443A8D666A6074823
-   BFBBC9C2BCF2130958C9D28443A10126A0587EA11909C5A40102074823BFBBC9
-   C2BCF2130C585B3059301306072A8648CE3D020106082A8648CE3D0301070342
-   00042030855BE846910B3ECB15CAF8572D3EB565BDC654A15EFAF6EDEBAA8B9E
-   1608C5C910C93A20868FC8504D370F1B26FA9759F67983BB78863EDA9ACBEA51
-   24F60D6D4A414441313233343536373839584068987DE8B007F4E9416610BBE2
-   D48E1D7EA1032092B8BFCE611421950F45B22F17E214820C07E777ADF86175E2
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 77]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   5D3205568404C25FCEEC1B817C7861A6104B3D0D6D4A41444131323334353637
-   38395840B1DD40B10787437588AEAC9036899191C16CCDBECA31C197855CCB6B
-   BA142D709FE329CBC3F76297D6063ACB6759EAB98E96EA4C4AA2135AA48A247B
-   AC1D6A3F
-
+   d28444a101382ea1045820e8735bc4b470c3aa6a7aa9aa8ee584c09c1113
+   1b205efec5d0313bad84c5cd05590414a11909c5a60274323032302d3132
+   2d32385431303a30333a33355a0474323032322d31322d32385431303a30
+   333a33355a07501551631f6e0416bd162ba53ea00c2a050d6e706c656467
+   652e312e322e332e3405587131322d32385431303a30333a33355a075015
+   51631f6e0416bd162ba53ea00c2a050d6e706c656467652e312e322e332e
+   3405587131322d32385431303a300000000000000000000000000416bd16
+   2ba53ea00c2a050d6e706c656467652e312e322e332e3405587131322d32
+   385431303a09590349d28444a101382ea104582097113db094eee8eae486
+   83e7337875c0372164be89d023a5f3df52699c0fbfb55902d2a11909c5a6
+   0274323032302d31322d32385431303a30333a33355a0474323032322d31
+   322d32385431303a30333a33355a010207501551631f6e0416bd162ba53e
+   a00c2a050d6e706c656467652e312e322e332e340a590279308202753082
+   021ca00302010202147056eaaa3066d8826a555b9088d462bf9cf28cfd30
+   0a06082a8648ce3d0403023073310b3009060355040613024e4c310b3009
+   06035504080c024e423110300e06035504070c0748656c6d6f6e64311330
+   11060355040a0c0a76616e64657273746f6b31143012060355040b0c0b63
+   6f6e73756c74616e6379311a301806035504030c11726567697374726172
+   2e73746f6b2e6e6c301e170d3230313230393130303233365a170d323131
+   3230393130303233365a3073310b3009060355040613024e4c310b300906
+   035504080c024e423110300e06035504070c0748656c6d6f6e6431133011
+   060355040a0c0a76616e64657273746f6b31143012060355040b0c0b636f
+   6e73756c74616e6379311a301806035504030c117265676973747261722e
+   73746f6b2e6e6c3059301306072a8648ce3d020106082a8648ce3d030107
+   03420004507ac8491a8c69c7b5c31d0309ed35ba13f5884ce62b88cf3018
+   154fa059b020ec6bebb94e02b8934021898da789c711cea71339f50e348e
+   df0d923ed02dc7b7a3818d30818a301d0603551d0e0416041408c2bf3688
+   7f79412185872f16a7aca6efb3d2b3301f0603551d2304183016801408c2
+   bf36887f79412185872f16a7aca6efb3d2b3300f0603551d130101ff0405
+   30030101ff30270603551d250420301e06082b0601050507031c06082b06
+   01050507030106082b06010505070302300e0603551d0f0101ff04040302
+   01f6300a06082a8648ce3d04030203470030440220744c99008513b2f1bc
+   fdf9021a46fb174cf883a27ca1d93faeacf31e4edd12c60220114714dbf5
+   1a5e78f581b9421c6e4702ab537270c5bafb2d16c3de9aa182c35f584730
+   45022063766c7bbd1b339dbc398e764af3563e93b25a69104befe9aac2b3
+   336b8f56e1022100cd0419559ad960ccaed4dee3f436eca40b7570b25a52
+   eb60332bc1f2991484e958473045022100e6b45558c1b806bba23f4ac626
+   c9bdb6fd354ef4330d8dfb7c529f29cca934c802203c1f2ccbbac89733d1
+   7ee7775bc2654c5f1cc96afba2741cc31532444aa8fed8
    <CODE ENDS>
 
-   The representiation of signed_rvr in CBOR diagnostic format (with lf
-   added) is:
-
-   <CODE BEGINS>
-   18([h'A10126', {32: [h'3082028030820225A003020102020900C3F62149B2E30
-   E3E300A06082A8648CE3D0403023072311C301A06035504030C13437573746F6D2D4
-   55220476C6F62616C204341310B3009060355040B0C02495431183016060355040A0
-   C0F437573746F6D2D45522C20496E632E3111300F06035504070C0853616E204A6F7
-   365310B300906035504080C024341310B3009060355040613025553301E170D32323
-   13230363131333735395A170D3235313230353131333735395A30818D3131302F060
-   35504030C28437573746F6D2D455220436F6D6D65726369616C204275696C64696E6
-   7732052656769737472617231133011060355040B0C0A4F6666696365206F7073311
-   83016060355040A0C0F437573746F6D2D45522C20496E632E310F300D06035504070
-   C064F74746F7761310B300906035504080C024F4E310B30090603550406130243413
-   059301306072A8648CE3D020106082A8648CE3D030107034200042030855BE846910
-   B3ECB15CAF8572D3EB565BDC654A15EFAF6EDEBAA8B9E1608C5C910C93A20868FC85
-   04D370F1B26FA9759F67983BB78863EDA9ACBEA5124F6A3818730818430090603551
-   D1304023000300B0603551D0F0404030204F0301D0603551D0E04160414C9080B387
-   D8DD85B3A59E7EC100B866393A9CA4C301F0603551D2304183016801492EA7640404
-   A8FAB4F270BF3BC379D86CD7280F8302A0603551D250101FF0420301E06082B06010
-   50507031C06082B0601050507030106082B06010505070302300A06082A8648CE3D0
-   40302034900304602210091A2033692EB81503D53505FFC8DA326B1EE7DEA96F2917
-   4F0B3341A07812201022100FF7339288108B712F418530A18025A895408CC45E0BB6
-   78B46FBAB37DDB4D36B', h'30820243308201E9A00302010202082AEA0413A42DC1
-   CE300A06082A8648CE3D0403023072311C301A06035504030C13437573746F6D2D45
-   5220476C6F62616C204341310B3009060355040B0C02495431183016060355040A0C
-   0F437573746F6D2D45522C20496E632E3111300F06035504070C0853616E204A6F73
-   65310B300906035504080C024341310B3009060355040613025553301E170D323231
-   3230363131333735395A170D3332313230333131333735395A3072311C301A060355
-   04030C13437573746F6D2D455220476C6F62616C204341310B3009060355040B0C02
-   495431183016060355040A0C0F437573746F6D2D45522C20496E632E3111300F0603
-   5504070C0853616E204A6F7365310B300906035504080C024341310B300906035504
-   06130255533059301306072A8648CE3D020106082A8648CE3D0301070342000497B1
-   ED969164930985BBB8AC9A2AF9455CDFEEA4B11DE2E79D068BFA803926B4005251B3
-   4F1C0815A4CBE03FBD1BBCB635F6431A22DE78653B87B99537ECE16CA3693067300F
-   0603551D130101FF040530030101FF30250603551D11041E301C811A68656C704063
-   7573746F6D2D65722E6578616D706C652E636F6D300E0603551D0F0101FF04040302
-   0186301D0603551D0E0416041492EA7640404A8FAB4F270BF3BC379D86CD7280F830
-   0A06082A8648CE3D0403020348003045022100D6D813B390BD3A7B4E85424BCB1ED9
-   33AD1E981F2817B59083DD6EC1C5E3FADF02202CEE4406192BC767E98D7CFAE044C6
-   807481AD8564A7D569DCA3D1CDF1E5E843']}, h'A11909C5A601020278183230323
+   The representiation of signed_masa_voucher_request in CBOR diagnostic
+   format is:
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 78]
+
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 75]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
-   22D31322D30365432303A30343A31352E3735345A05581A041830168014CB8D98CA7
-   4C51B58DDE7ACEF869A9443A8D666A6074823BFBBC9C2BCF2130958C9D28443A1012
-   6A0587EA11909C5A40102074823BFBBC9C2BCF2130C585B3059301306072A8648CE3
-   D020106082A8648CE3D030107034200042030855BE846910B3ECB15CAF8572D3EB56
-   5BDC654A15EFAF6EDEBAA8B9E1608C5C910C93A20868FC8504D370F1B26FA9759F67
-   983BB78863EDA9ACBEA5124F60D6D4A414441313233343536373839584068987DE8B
-   007F4E9416610BBE2D48E1D7EA1032092B8BFCE611421950F45B22F17E214820C07E
-   777ADF86175E25D3205568404C25FCEEC1B817C7861A6104B3D0D6D4A41444131323
-   3343536373839', h'B1DD40B10787437588AEAC9036899191C16CCDBECA31C19785
-   5CCB6BBA142D709FE329CBC3F76297D6063ACB6759EAB98E96EA4C4AA2135AA48A24
-   7BAC1D6A3F'])
+   <CODE BEGINS>
+   Diagnose(signed_registrar_request-voucher)
+   18([
+   h'A101382E',     / {"alg": -47} /
+   h'E8735BC4B470C3AA6A7AA9AA8EE584C09C11131B205EFEC5D0313BAD84
+   C5CD05'},
+   h'<registrar_request_voucher>', / byte string as detailed below /
+   h'3045022100E6B45558C1B806BBA23F4AC626C9BDB6FD354EF4330D8DFB
+   7C529F29CCA934C802203C1F2CCBBAC89733D17EE7775BC2654C5F1CC96A
+   FBA2741CC31532444AA8FED8'
+   ])
 
+   Diagnose(registrar_request_voucher)
+   {2501:
+       {2: "2020-12-28T10:03:35Z",
+        4: "2022-12-28T10:03:35Z",
+        7: h'1551631F6E0416BD162BA53EA00C2A05',
+       13: "pledge.1.2.3.4",
+        5: h'31322D32385431303A30333A33355A07501551631F6E0416BD
+             162BA53EA00C2A050D6E706C656467652E312E322E332E3405
+             587131322D32385431303A3000000000000000000000000004
+             16BD162BA53EA00C2A050D6E706C656467652E312E322E332E
+             3405587131322D32385431303A', / idevid-issuer /
+        9: h'<prior-pvr>'  / prior-signed-voucher-request = PVR /
+        }
+   }
    <CODE ENDS>
 
 C.5.  COSE-signed Voucher from MASA
 
-   The resulting voucher is created by the MASA and returned to the
-   Registrar:
-
-     RES: 200 OK
-     Content-Type: application/voucher-cose+cbor
-     Body: <signed_voucher>
-
-   The Registrar then returns the voucher to the Pledge:
-
-     RES: 2.04 Changed
-     Content-Format: 836
-     Body: <signed_voucher>
-
-   It is signed by the MASA's private key (see Appendix C.1.3) and can
-   be verified by the Pledge using the MASA's public key that it stores.
+   The resulting voucher is created by the MASA and returned via the JRC
+   to the Pledge.  It is signed by the MASA's private key (see
+   Appendix C.1.3) and can be verified by the Pledge using the MASA's
+   public key that it stores.
 
    Below is the binary signed_voucher, encoded in hexadecimal (with lf
    added):
@@ -4418,43 +4253,53 @@ C.5.  COSE-signed Voucher from MASA
 
 
 
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 79]
+Richardson, et al.        Expires 10 June 2023                 [Page 76]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
    <CODE BEGINS>
-   D28443A10126A0590288A1190993A60102027818323032322D31322D30365432
-   303A32333A33302E3730385A03F4074857EED786AD4049070859024730820243
-   308201E9A00302010202082AEA0413A42DC1CE300A06082A8648CE3D04030230
-   72311C301A06035504030C13437573746F6D2D455220476C6F62616C20434131
-   0B3009060355040B0C02495431183016060355040A0C0F437573746F6D2D4552
-   2C20496E632E3111300F06035504070C0853616E204A6F7365310B3009060355
-   04080C024341310B3009060355040613025553301E170D323231323036313133
-   3735395A170D3332313230333131333735395A3072311C301A06035504030C13
-   437573746F6D2D455220476C6F62616C204341310B3009060355040B0C024954
-   31183016060355040A0C0F437573746F6D2D45522C20496E632E3111300F0603
-   5504070C0853616E204A6F7365310B300906035504080C024341310B30090603
-   550406130255533059301306072A8648CE3D020106082A8648CE3D0301070342
-   000497B1ED969164930985BBB8AC9A2AF9455CDFEEA4B11DE2E79D068BFA8039
-   26B4005251B34F1C0815A4CBE03FBD1BBCB635F6431A22DE78653B87B99537EC
-   E16CA3693067300F0603551D130101FF040530030101FF30250603551D11041E
-   301C811A68656C7040637573746F6D2D65722E6578616D706C652E636F6D300E
-   0603551D0F0101FF040403020186301D0603551D0E0416041492EA7640404A8F
-   AB4F270BF3BC379D86CD7280F8300A06082A8648CE3D04030203480030450221
-   00D6D813B390BD3A7B4E85424BCB1ED933AD1E981F2817B59083DD6EC1C5E3FA
-   DF02202CEE4406192BC767E98D7CFAE044C6807481AD8564A7D569DCA3D1CDF1
-   E5E8430B6D4A4144413132333435363738395840DF31B21A6AD3F5AC7F4C8B02
-   6F551BD28FBCE62330D3E262AC170F6BFEDDBA5F2E8FBAA2CAACFED9E8614EAC
-   5BF2450DADC53AC29DFA30E8787A1400B2E7C832
-
+   d28444a101382ea104582039920a34ee92d3148ab3a729f58611193270c9
+   029f7784daf112614b19445d5158cfa1190993a70274323032302d31322d
+   32335431353a30333a31325a0474323032302d31322d32335431353a3233
+   3a31325a010007506508e06b2959d5089d7a3169ea889a490b6e706c6564
+   67652e312e322e332e340858753073310b3009060355040613024e4c310b
+   300906035504080c024e423110300e06035504070c0748656c6d6f6e6431
+   133011060355040a0c0a76616e64657273746f6b31143012060355040b0c
+   0b636f6e73756c74616e6379311a301806035504030c1172656769737472
+   61722e73746f6b2e6e6c03f458473045022022515d96cd12224ee5d3ac67
+   3237163bba24ad84815699285d9618f463ee73fa022100a6bff9d8585c1c
+   9256371ece94da3d26264a5dfec0a354fe7b3aef58344c512f
    <CODE ENDS>
 
-   The representiation of signed_voucher in CBOR diagnostic format (with
-   lf added) is:
+   The representiation of signed_voucher in CBOR diagnostic format is:
+
+   <CODE BEGINS>
+   Diagnose(signed_voucher) =
+   18([
+   h'A101382E',     / {"alg": -47} /
+   {4: h'39920A34EE92D3148AB3A729F58611193270C9029F7784DAF112614B194
+   45D51'},
+   h'<voucher>',    / byte string as detailed below /
+   h'3045022022515D96CD12224EE5D3AC673237163BBA24AD84815699285D9618F
+   463EE73FA022100A6BFF9D8585C1C9256371ECE94DA3D26264A5DFEC0A354FE7B
+   3AEF58344C512F'
+   ])
+
+   Diagnose(voucher) =
+   {2451:
+      {2: "2020-12-23T15:03:12Z",
+       4: "2020-12-23T15:23:12Z",
+       1: 0,
+       7: h'6508E06B2959D5089D7A3169EA889A49',
+      11: "pledge.1.2.3.4",
+       8: h'<regis-cert-hex>', / as detailed in C.2.2 /
+       3: false}
+   }
+   <CODE ENDS>
+
+   In above, regis-cert-hex represents the hexadecimal encoding of the
+   Registrar certificate of Appendix C.2.2.
 
 
 
@@ -4464,107 +4309,10 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 80]
+Richardson, et al.        Expires 10 June 2023                 [Page 77]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
-
-   <CODE BEGINS>
-   18([h'A10126', {}, h'A1190993A60102027818323032322D31322D30365432303
-   A32333A33302E3730385A03F4074857EED786AD4049070859024730820243308201E
-   9A00302010202082AEA0413A42DC1CE300A06082A8648CE3D0403023072311C301A0
-   6035504030C13437573746F6D2D455220476C6F62616C204341310B3009060355040
-   B0C02495431183016060355040A0C0F437573746F6D2D45522C20496E632E3111300
-   F06035504070C0853616E204A6F7365310B300906035504080C024341310B3009060
-   355040613025553301E170D3232313230363131333735395A170D333231323033313
-   1333735395A3072311C301A06035504030C13437573746F6D2D455220476C6F62616
-   C204341310B3009060355040B0C02495431183016060355040A0C0F437573746F6D2
-   D45522C20496E632E3111300F06035504070C0853616E204A6F7365310B300906035
-   504080C024341310B30090603550406130255533059301306072A8648CE3D0201060
-   82A8648CE3D0301070342000497B1ED969164930985BBB8AC9A2AF9455CDFEEA4B11
-   DE2E79D068BFA803926B4005251B34F1C0815A4CBE03FBD1BBCB635F6431A22DE786
-   53B87B99537ECE16CA3693067300F0603551D130101FF040530030101FF302506035
-   51D11041E301C811A68656C7040637573746F6D2D65722E6578616D706C652E636F6
-   D300E0603551D0F0101FF040403020186301D0603551D0E0416041492EA7640404A8
-   FAB4F270BF3BC379D86CD7280F8300A06082A8648CE3D0403020348003045022100D
-   6D813B390BD3A7B4E85424BCB1ED933AD1E981F2817B59083DD6EC1C5E3FADF02202
-   CEE4406192BC767E98D7CFAE044C6807481AD8564A7D569DCA3D1CDF1E5E8430B6D4
-   A414441313233343536373839', h'DF31B21A6AD3F5AC7F4C8B026F551BD28FBCE6
-   2330D3E262AC170F6BFEDDBA5F2E8FBAA2CAACFED9E8614EAC5BF2450DADC53AC29D
-   FA30E8787A1400B2E7C832'])
-
-   <CODE ENDS>
-
-   In above, the third element in the array is the plain CBOR voucher
-   encoded as a CBOR byte string.  When decoded, it can be represented
-   by the following CBOR diagnostic notation:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 81]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   <CODE BEGINS>
-   {2451: {1: 2, 2: "2022-12-06T20:23:30.708Z", 3: false, 7: h'57EED786
-   AD404907', 8: h'30820243308201E9A00302010202082AEA0413A42DC1CE300A06
-   082A8648CE3D0403023072311C301A06035504030C13437573746F6D2D455220476C
-   6F62616C204341310B3009060355040B0C02495431183016060355040A0C0F437573
-   746F6D2D45522C20496E632E3111300F06035504070C0853616E204A6F7365310B30
-   0906035504080C024341310B3009060355040613025553301E170D32323132303631
-   31333735395A170D3332313230333131333735395A3072311C301A06035504030C13
-   437573746F6D2D455220476C6F62616C204341310B3009060355040B0C0249543118
-   3016060355040A0C0F437573746F6D2D45522C20496E632E3111300F06035504070C
-   0853616E204A6F7365310B300906035504080C024341310B30090603550406130255
-   533059301306072A8648CE3D020106082A8648CE3D0301070342000497B1ED969164
-   930985BBB8AC9A2AF9455CDFEEA4B11DE2E79D068BFA803926B4005251B34F1C0815
-   A4CBE03FBD1BBCB635F6431A22DE78653B87B99537ECE16CA3693067300F0603551D
-   130101FF040530030101FF30250603551D11041E301C811A68656C7040637573746F
-   6D2D65722E6578616D706C652E636F6D300E0603551D0F0101FF040403020186301D
-   0603551D0E0416041492EA7640404A8FAB4F270BF3BC379D86CD7280F8300A06082A
-   8648CE3D0403020348003045022100D6D813B390BD3A7B4E85424BCB1ED933AD1E98
-   1F2817B59083DD6EC1C5E3FADF02202CEE4406192BC767E98D7CFAE044C6807481AD
-   8564A7D569DCA3D1CDF1E5E843', 11: "JADA123456789"}}
-
-   <CODE ENDS>
-
-   The largest element in the voucher is identified by key 8, which
-   decodes to SID key 2459 (pinned-domain-cert).  It contains the
-   complete DER-encoded X.509 certificate of the Registrar's domain CA.
-   This certificate is shown in Appendix C.2.3.
 
 Appendix D.  Generating Certificates with OpenSSL
 
@@ -4586,14 +4334,6 @@ Appendix D.  Generating Certificates with OpenSSL
    export dir=./brski/intermediate
    export cadir=./brski
    export cnfdir=./conf
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 82]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
    export format=pem
    export default_crl_days=30
    sn=8
@@ -4622,6 +4362,14 @@ Internet-Draft              Constrained BRSKI              December 2022
    # intermediate level
    mkdir intermediate
    cd intermediate
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 78]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    mkdir certs crl csr newcerts private
    chmod 700 private
    touch index.txt
@@ -4641,14 +4389,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    echo "create root registrar certificate using ecdsa with sha 256 key"
    $OPENSSL_BIN ecparam -name prime256v1 -genkey \
       -noout -out $cadir/private/ca-regis.key
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 83]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    $OPENSSL_BIN req -new -x509 \
     -config $cnfdir/openssl-regis.cnf \
@@ -4678,6 +4418,14 @@ Internet-Draft              Constrained BRSKI              December 2022
    #
    # Certificate Authority for MASA
    #
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 79]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    echo "#############################"
    echo "create MASA keys and certificates "
    echo "#############################"
@@ -4698,14 +4446,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    echo "Combine authority certificate and key for masa"
    $OPENSSL_BIN pkcs12 -passin pass:watnietWT -passout pass:watnietWT\
       -inkey $cadir/private/ca-masa.key \
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 84]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
       -in $cadir/certs/ca-masa.crt -export \
       -out $cadir/certs/ca-masa-comb.pfx
 
@@ -4734,6 +4474,14 @@ Internet-Draft              Constrained BRSKI              December 2022
       -out $dir/private/pledge.key
 
    echo "create pledge certificate request"
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 80]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    $OPENSSL_BIN req -nodes -new -sha256 \
       -key $dir/private/pledge.key -out $dir/csr/pledge.csr \
      -subj "/C=NL/ST=NB/L=Helmond/O=vanderstok/OU=manufacturing\
@@ -4753,14 +4501,6 @@ Internet-Draft              Constrained BRSKI              December 2022
       -inkey $dir/private/pledge.key \
       -in $dir/certs/pledge.crt -export \
       -out $dir/certs/pledge-comb.pfx
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 85]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    # converteer pledge pkcs12 file to pem
    echo "converteer pledge pkcs12 file to pem"
@@ -4790,6 +4530,14 @@ Appendix E.  Pledge Device Class Profiles
    following subsections, these profiles are defined and a comparison is
    provided.
 
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 81]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
 E.1.  Minimal Pledge
 
    The Minimal Pledge profile (Min) aims to reduce code size and
@@ -4806,17 +4554,6 @@ E.1.  Minimal Pledge
    be replaced rather than re-deployed.  That might include medical
    devices, but also sensors used during construction, such as concrete
    temperature sensors.
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 86]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
 E.2.  Typical Pledge
 
@@ -4849,6 +4586,14 @@ E.4.  Comparison Chart of Pledge Classes
    | Real-time clock and cert time checks         |   -   |  -  |  Y   |
    +----------------------------------------------+-------+-----+------+
    | *Constrained BRSKI*                          |  ===  | === | ==== |
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 82]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    +----------------------------------------------+-------+-----+------+
    | Discovery for rt=brski*                      |   -   |  -  |  Y   |
    +----------------------------------------------+-------+-----+------+
@@ -4866,14 +4611,6 @@ E.4.  Comparison Chart of Pledge Classes
    +----------------------------------------------+-------+-----+------+
    | GET /crts format 281 (multiple CA certs)     |   -   |  -  |  Y   |
    +----------------------------------------------+-------+-----+------+
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 87]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
    | GET /crts only format 287 (one CA cert only) |   Y   |  Y  |  -   |
    +----------------------------------------------+-------+-----+------+
    | ETag handling support for GET /crts          |   -   |  Y  |  Y   |
@@ -4904,6 +4641,15 @@ Contributors
    Email: housley@vigilsec.com
 
 
+
+
+
+
+Richardson, et al.        Expires 10 June 2023                 [Page 83]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
 Authors' Addresses
 
    Michael Richardson
@@ -4919,15 +4665,6 @@ Authors' Addresses
    Panos Kampanakis
    Cisco Systems
    Email: pkampana@cisco.com
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 88]
-
-Internet-Draft              Constrained BRSKI              December 2022
 
 
    Esko Dijk
@@ -4964,21 +4701,4 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 89]
+Richardson, et al.        Expires 10 June 2023                 [Page 84]
