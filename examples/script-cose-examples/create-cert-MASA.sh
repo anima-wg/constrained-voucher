@@ -16,13 +16,5 @@ openssl x509 -set_serial 0xE39CDA17E1386A0A  -extfile x509v3.ext -extensions mas
 # delete temp files
 rm -f $NAME.csr
 
-# convert to .der / .hex format
+# convert to .der format
 openssl x509 -in output/$NAME.pem -inform PEM -out output/$NAME.der -outform DER
-hexdump -ve '1/1 "%.2X "' output/$NAME.der > output/$NAME.hex
-
-# show cert and hex
-openssl x509 -text -noout -in output/$NAME.pem
-echo ""
-echo "Hex format of certificate:"
-cat output/$NAME.hex
-

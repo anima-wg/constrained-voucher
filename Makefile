@@ -14,6 +14,7 @@ EXAMPLES+=examples/voucher-status.hex
 EXAMPLES+=examples/voucher-statusdiag.txt
 EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.b64
 EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.diag
+EXAMPLES+=examples/cose-examples/*.*
 PYANG=./pyang.sh
 PYANGPATH=--path=../../anima/bootstrap/yang --path ${HOME}/.local/share/yang/modules/ietf
 

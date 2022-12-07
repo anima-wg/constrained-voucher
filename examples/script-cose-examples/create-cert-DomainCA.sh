@@ -4,7 +4,6 @@
 # days certificate is valid
 VALIDITY=3650
 
-# filename of cert
 NAME=domain_ca
 
 # create an example Domain CA of company.
@@ -14,10 +13,6 @@ openssl x509 -set_serial 0x2AEA0413A42DC1CE -extfile x509v3.ext -extensions doma
 # delete temp files
 rm -f $NAME.csr
 
-# convert to .der / .hex format
+# convert to .der format
 openssl x509 -in output/$NAME.pem -inform PEM -out output/$NAME.der -outform DER
-hexdump -ve '1/1 "%.2X "' output/$NAME.der > output/$NAME.hex
-
-# show cert
-openssl x509 -text -noout -in output/$NAME.pem
 

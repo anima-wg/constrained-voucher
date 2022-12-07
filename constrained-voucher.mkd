@@ -1543,15 +1543,22 @@ INSERT_CODE_FROM_FILE examples/script-cose-examples/keys/privkey_pledge.pem END
 
 INSERT_CODE_FROM_FILE examples/cose-examples/privkey_pledge.txt END
 
+
 ### Registrar private key {#jrcpriv}
 
-INSERT_CODE_FROM_FILE examples/registrar-key.txt END
+INSERT_CODE_FROM_FILE examples/script-cose-examples/keys/privkey_registrar.pem END
+
+INSERT_CODE_FROM_FILE examples/cose-examples/privkey_registrar.txt END
+
 
 ### MASA private key {#masapriv}
 
-INSERT_CODE_FROM_FILE examples/masa-key.txt END
+INSERT_CODE_FROM_FILE examples/script-cose-examples/keys/privkey_masa_ca.pem END
 
-## Pledge, Registrar and MASA Certificates
+INSERT_CODE_FROM_FILE examples/cose-examples/privkey_masa_ca.txt END
+
+
+## Pledge, Registrar, Domain CA and MASA Certificates
 
 All keys and certificates used for the examples have been generated with OpenSSL - see {{appendix-gencerts}} for more details on certificate generation.
 Below the certificates are listed that accompany the keys shown above. Each certificate description is followed by the hexadecimal representation of the X.509 ASN.1 DER encoded certificate.
@@ -1559,28 +1566,39 @@ This representation can be for example decoded using an online ASN.1 decoder.
 
 ### Pledge IDevID Certificate
 
-INSERT_CODE_FROM_FILE examples/pledge-cert.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/pledge.txt END
 
-Below is the hexadecimal representation:
+Below is the hexadecimal representation of the binary X.509 DER-encoded certificate:
 
-INSERT_CODE_FROM_FILE examples/pledge-cert.hex END
+INSERT_CODE_FROM_FILE examples/cose-examples/pledge.hex END
 
-### Registrar Certificate {#jrccert}
+### Registrar Certificate
 
-INSERT_CODE_FROM_FILE examples/registrar-cert.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/registrar.txt END
 
-Below is the hexadecimal representation which is in (request-)voucher examples referred to as regis-cert-hex:
+Below is the hexadecimal representation of the binary X.509 DER-encoded certificate:
 
-INSERT_CODE_FROM_FILE examples/registrar-cert.hex END
+INSERT_CODE_FROM_FILE examples/cose-examples/registrar.hex END
+
+### Domain CA Certificate {#cose-example-domain-ca-cert}
+
+The Domain CA certificate is the CA of the customer's domain. It has signed the Registrar (RA) certificate.
+
+INSERT_CODE_FROM_FILE examples/cose-examples/domain_ca.txt END
+
+Below is the hexadecimal representation of the binary X.509 DER-encoded certificate:
+
+INSERT_CODE_FROM_FILE examples/cose-examples/domain_ca.hex END
 
 ### MASA Certificate
 
-INSERT_CODE_FROM_FILE examples/masa-cert.txt END
+The MASA CA certificate is the CA that signed the Pledge's IDevID certificate.
 
-Below is the hexadecimal representation:
+INSERT_CODE_FROM_FILE examples/cose-examples/masa_ca.txt END
 
-INSERT_CODE_FROM_FILE examples/masa-cert.hex END
+Below is the hexadecimal representation of the binary X.509 DER-encoded certificate:
 
+INSERT_CODE_FROM_FILE examples/cose-examples/masa_ca.hex END
 
 ## COSE-signed Pledge Voucher Request (PVR)
 
@@ -1591,20 +1609,24 @@ use the default CoAPS UDP port 5684.
 ~~~
   REQ: POST coaps://[JP-link-local-address]/b/rv
   Content-Format: 836
-  Payload: <signed_voucher_request>
+  Payload: <signed_pvr>
 ~~~
 
 When the Join Proxy receives the DTLS handshake messages from the Pledge, it will relay these messages to the Registrar. 
 The payload signed_voucher_request is shown as hexadecimal dump (with lf added) below:
 
-INSERT_CODE_FROM_FILE examples/pledge-to-regis.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/pvr.hex END
 
-The Pledge uses the "proximity" (SID 2502, enum 2) assertion together with an included proximity-registrar-cert field (SID 2511) to inform
-MASA about its proximity to the specific Registrar.
-The representiation of signed_voucher_request in CBOR diagnostic format is:
+The representiation of signed_pvr in CBOR diagnostic format (with lf added) is:
 
-INSERT_CODE_FROM_FILE examples/pledge-to-regisdiag.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/pvr.txt END
 
+The COSE payload is the PVR, encoded as a CBOR byte string. The diagnostic representation of it is shown below:
+
+INSERT_CODE_FROM_FILE examples/cose-examples/pvr-nonsigned.txt END
+
+The Pledge uses the "proximity" (key '1', SID key 2502, enum value 2) assertion together with an included 
+proximity-registrar-pubk field (key '12', SID 2513) to inform MASA about its proximity to the specific Registrar.
 
 ## COSE-signed Registrar Voucher Request (RVR)
 
@@ -1615,35 +1637,58 @@ The Content-Type and Accept headers indicate the constrained voucher format that
 Because the Pledge used this format in the PVR, the JRC must also use this format in the RVR.
 
 ~~~
-    POST https://masa.example.com/.well-known/brski/requestvoucher
-    Content-Type: application/voucher-cose+cbor
-    Accept: application/voucher-cose+cbor
-    Body: signed_masa_request_voucher
+  REQ: POST https://masa.stok.nl/.well-known/brski/requestvoucher
+  Content-Type: application/voucher-cose+cbor
+  Accept: application/voucher-cose+cbor
+  Body: <signed_rvr>
 ~~~
 
-The payload signed_masa_voucher_request is shown as hexadecimal dump (with lf added):
+The payload signed_rvr is shown as hexadecimal dump (with lf added):
 
-INSERT_CODE_FROM_FILE examples/regis-to-MASA.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/rvr.hex END
 
-The representiation of signed_masa_voucher_request in CBOR diagnostic format is:
+The representiation of signed_rvr in CBOR diagnostic format (with lf added) is:
 
-INSERT_CODE_FROM_FILE examples/regis-to-MASAdiag.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/rvr.txt END
+
 
 ## COSE-signed Voucher from MASA
 
-The resulting voucher is created by the MASA and returned via the JRC to the
-Pledge.  It is signed by the MASA's private key (see {{masapriv}}) and can be
+The resulting voucher is created by the MASA and returned to the Registrar:
+
+~~~
+  RES: 200 OK
+  Content-Type: application/voucher-cose+cbor
+  Body: <signed_voucher>
+~~~
+
+The Registrar then returns the voucher to the Pledge:
+
+~~~
+  RES: 2.04 Changed
+  Content-Format: 836
+  Body: <signed_voucher>
+~~~
+
+It is signed by the MASA's private key (see {{masapriv}}) and can be
 verified by the Pledge using the MASA's public key that it stores.
 
 Below is the binary signed_voucher, encoded in hexadecimal (with lf added):
 
-INSERT_CODE_FROM_FILE examples/voucher-from-MASA.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/voucher.hex END
 
-The representiation of signed_voucher in CBOR diagnostic format is:
+The representiation of signed_voucher in CBOR diagnostic format (with lf added) is:
 
-INSERT_CODE_FROM_FILE examples/voucher-from-MASAdiag.txt END
+INSERT_CODE_FROM_FILE examples/cose-examples/voucher.txt END
 
-In above, regis-cert-hex represents the hexadecimal encoding of the Registrar certificate of {{jrccert}}.
+In the above, the third element in the array is the plain CBOR voucher encoded as a CBOR byte string. 
+When decoded, it can be represented by the following CBOR diagnostic notation:
+
+INSERT_CODE_FROM_FILE examples/cose-examples/voucher-nonsigned.txt END
+
+The largest element in the voucher is identified by key 8, which decodes to SID key 2459 (pinned-domain-cert).
+It contains the complete DER-encoded X.509 certificate of the Registrar's domain CA. This certificate is 
+shown in {{cose-example-domain-ca-cert}}.
 
 # Generating Certificates with OpenSSL {#appendix-gencerts}
 
