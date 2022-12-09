@@ -6,8 +6,8 @@ Data:
  Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.", 
          L = San Jose, ST = CA, C = US
  Validity
-   Not Before: Dec  7 17:26:50 2022 GMT
-   Not After : Dec  4 17:26:50 2032 GMT
+   Not Before: Dec  9 12:50:47 2022 GMT
+   Not After : Dec  6 12:50:47 2032 GMT
  Subject: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.", 
          L = San Jose, ST = CA, C = US
  Subject Public Key Info:
@@ -31,7 +31,8 @@ Data:
    X509v3 Subject Key Identifier: 
      92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
 Signature Algorithm: ecdsa-with-SHA256
-  30:44:02:20:19:43:dc:a3:27:46:e6:13:5f:52:37:61:aa:78:
-  6d:52:5b:5a:da:63:0f:f4:1d:ab:b6:a6:10:35:9b:31:f3:18:
-  02:20:71:c8:fc:8c:1a:ef:bc:f2:81:7d:6a:ac:9e:ae:22:27:
-  81:01:3c:ae:40:71:52:2d:89:1a:14:3e:e2:e8:4c:dd
+Signature Value:
+ 30:44:02:20:66:15:df:c3:70:11:f6:73:78:d8:fd:1c:2a:3f:
+ bd:d1:3f:51:f6:b6:6f:2d:7c:e2:7a:13:18:21:bb:70:f0:c0:
+ 02:20:69:86:d8:d2:28:b2:92:6e:23:9e:19:0b:8f:18:25:c9:
+ c1:4c:67:95:ff:a0:b3:24:bd:4d:ac:2e:cb:68:d7:13

@@ -7,8 +7,8 @@ Data:
  Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.", 
          L = San Jose, ST = CA, C = US
  Validity
-   Not Before: Dec  7 17:26:50 2022 GMT
-   Not After : Dec  6 17:26:50 2025 GMT
+   Not Before: Dec  9 12:50:47 2022 GMT
+   Not After : Dec  8 12:50:47 2025 GMT
  Subject: CN = Custom-ER Registrar, OU = Office dept, O = "Custom-ER, 
          Inc.", L = Ottowa, ST = ON, C = CA
  Subject Public Key Info:
@@ -31,13 +31,13 @@ Data:
    X509v3 Subject Key Identifier: 
      C9:08:0B:38:7D:8D:D8:5B:3A:59:E7:EC:10:0B:86:63:93:A9:CA:4C
    X509v3 Authority Key Identifier: 
-    keyid:92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
-
+     92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
    X509v3 Extended Key Usage: critical
      CMC Registration Authority, TLS Web Server Authentication, 
              TLS Web Client Authentication
 Signature Algorithm: ecdsa-with-SHA256
-  30:44:02:20:1e:fa:e1:bc:48:c7:12:c2:57:91:8c:53:9f:6f:
-  e9:0d:8b:e4:9d:87:5f:57:8b:8d:f4:75:ec:0f:ee:c6:69:8f:
-  02:20:32:ed:85:f6:36:8d:7c:35:f6:3d:f6:31:dc:69:67:4a:
-  b0:1d:f1:c5:03:25:6c:1a:08:03:e2:34:4a:57:89:57
+Signature Value:
+ 30:45:02:21:00:d8:4a:7c:69:2f:f9:58:6e:82:22:87:18:f6:
+ 3b:c3:05:f0:ae:b8:ae:ec:42:78:82:38:79:81:2a:5d:15:61:
+ 64:02:20:08:f2:3c:13:69:13:b0:2c:e2:63:09:d5:99:4f:eb:
+ 75:70:af:af:ed:98:cd:f1:12:11:c0:37:f7:18:4d:c1:9d

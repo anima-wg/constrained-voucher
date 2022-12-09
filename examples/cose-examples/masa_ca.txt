@@ -7,8 +7,8 @@ Data:
  Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond, 
          C = NL
  Validity
-   Not Before: Dec  7 17:26:49 2022 GMT
-   Not After : Dec  4 17:26:49 2032 GMT
+   Not Before: Dec  9 12:50:47 2022 GMT
+   Not After : Dec  6 12:50:47 2032 GMT
  Subject: CN = masa.stok.nl, O = vanderstok, L = Helmond, 
          C = NL
  Subject Public Key Info:
@@ -31,11 +31,9 @@ Data:
      CA:TRUE, pathlen:3
    X509v3 Subject Key Identifier: 
      CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
-   X509v3 Authority Key Identifier: 
-    keyid:CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
-
 Signature Algorithm: ecdsa-with-SHA256
-  30:44:02:20:3d:10:6d:2b:cf:a7:11:77:c0:0d:e9:04:69:cf:
-  81:67:3f:5f:d6:34:1c:af:5c:9b:32:e2:38:49:98:10:50:c7:
-  02:20:7c:4d:18:83:20:ec:34:9a:e0:b4:2d:96:41:18:6a:59:
-  22:a1:65:1f:70:bd:ad:e7:1a:d6:8c:2b:f9:fa:c9:1c
+Signature Value:
+ 30:46:02:21:00:94:3f:a5:26:51:68:16:38:5b:78:9a:d8:c3:
+ af:8e:49:28:22:60:56:26:43:4a:14:98:3e:e1:e4:81:ad:ca:
+ 1b:02:21:00:ba:4d:aa:fd:fa:68:42:74:03:2b:a8:41:6b:e2:
+ 90:0c:9e:7b:b8:c0:9c:f7:0e:3f:b4:36:8a:b3:9c:3e:31:0e
