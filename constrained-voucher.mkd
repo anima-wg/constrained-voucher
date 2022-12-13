@@ -295,7 +295,7 @@ A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragmen
 The SNI issue described below affects {{RFC8995}} as well, and is reported in errata: https://www.rfc-editor.org/errata/eid6648
 
 As the Registrar is discovered by IP address, and typically connected via a Join Proxy, the name of the Registrar is not known to the Pledge.
-The Pledge will not know what the hostname for the Registrar is, so it cannot do DNS-ID validation ({{RFC6125}}) on the Registrar's certificate.
+The Pledge will not know what the hostname for the Registrar is, so it cannot do DNS-ID validation ({{I-D.uta-rfc6125bis}}) on the Registrar's certificate.
 Instead, it must do validation using the voucher.
 
 As the Pledge does not know the name of the Registrar, the Pledge cannot put any reasonable value into the {{RFC6066}} Server Name Indicator (SNI).
