@@ -1,0 +1,39 @@
+Certificate:
+Data:
+ Version: 3 (0x2)
+ Serial Number:
+   e3:9c:da:17:e1:38:6a:0a
+ Signature Algorithm: ecdsa-with-SHA256
+ Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond, 
+         C = NL
+ Validity
+   Not Before: Dec  9 12:50:47 2022 GMT
+   Not After : Dec  6 12:50:47 2032 GMT
+ Subject: CN = masa.stok.nl, O = vanderstok, L = Helmond, 
+         C = NL
+ Subject Public Key Info:
+   Public Key Algorithm: id-ecPublicKey
+     Public-Key: (256 bit)
+     pub:
+       04:92:f4:d5:65:58:97:73:b7:03:58:f3:5c:8f:94:
+       7d:94:38:36:16:86:56:00:65:fb:2a:9c:43:d2:15:
+       92:a7:ab:c9:aa:f2:01:7b:f1:95:5b:62:2e:aa:d8:
+       51:20:f2:49:0e:45:8f:eb:a4:85:3f:5f:b4:90:b1:
+       1b:83:fb:03:16
+     ASN1 OID: prime256v1
+     NIST CURVE: P-256
+ X509v3 extensions:
+   X509v3 Subject Alternative Name: 
+     email:info@masa.stok.nl
+   X509v3 Key Usage: critical
+     Digital Signature, Certificate Sign, CRL Sign
+   X509v3 Basic Constraints: critical
+     CA:TRUE, pathlen:3
+   X509v3 Subject Key Identifier: 
+     CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
+Signature Algorithm: ecdsa-with-SHA256
+Signature Value:
+ 30:46:02:21:00:94:3f:a5:26:51:68:16:38:5b:78:9a:d8:c3:
+ af:8e:49:28:22:60:56:26:43:4a:14:98:3e:e1:e4:81:ad:ca:
+ 1b:02:21:00:ba:4d:aa:fd:fa:68:42:74:03:2b:a8:41:6b:e2:
+ 90:0c:9e:7b:b8:c0:9c:f7:0e:3f:b4:36:8a:b3:9c:3e:31:0e

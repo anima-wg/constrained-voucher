@@ -1,0 +1,39 @@
+Certificate:
+Data:
+ Version: 3 (0x2)
+ Serial Number: 32429 (0x7ead)
+ Signature Algorithm: ecdsa-with-SHA256
+ Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond, 
+         C = NL
+ Validity
+   Not Before: Dec  9 12:50:47 2022 GMT
+   Not After : Dec 31 12:50:47 9999 GMT
+ Subject: CN = Stok IoT sensor Y-42, serialNumber = JADA123456789
+ Subject Public Key Info:
+   Public Key Algorithm: id-ecPublicKey
+     Public-Key: (256 bit)
+     pub:
+       04:48:7e:8e:52:26:05:46:17:c8:81:69:78:18:6f:
+       23:1e:88:fc:6b:ef:2b:7f:ab:79:b3:59:99:ff:84:
+       9e:3e:52:a8:9b:7f:46:43:7e:29:55:8a:f2:27:d6:
+       87:99:ba:0b:2d:fc:fa:f5:bc:c8:09:01:4a:6e:4a:
+       10:e6:86:a2:7b
+     ASN1 OID: prime256v1
+     NIST CURVE: P-256
+ X509v3 extensions:
+   X509v3 Key Usage: critical
+     Digital Signature, Non Repudiation, Key Encipherment, 
+             Data Encipherment
+   X509v3 Basic Constraints: 
+     CA:FALSE
+   X509v3 Authority Key Identifier: 
+     CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
+   1.3.6.1.5.5.7.1.32: 
+      hl=2 l=  12 prim: IA5STRING     :masa.stok.nl
+
+Signature Algorithm: ecdsa-with-SHA256
+Signature Value:
+ 30:45:02:20:4d:89:90:7e:03:fb:52:56:42:0c:3f:c1:b1:f1:
+ 47:b5:b3:93:65:45:2e:be:50:db:67:85:8f:23:89:a2:3f:9e:
+ 02:21:00:95:33:69:d1:c6:db:f0:f1:f6:52:24:59:d3:0a:95:
+ 4e:b2:f4:96:a1:31:3c:7b:d9:2f:28:b3:29:71:bb:60:df

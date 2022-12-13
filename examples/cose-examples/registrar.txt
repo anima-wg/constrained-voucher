@@ -1,0 +1,43 @@
+Certificate:
+Data:
+ Version: 3 (0x2)
+ Serial Number:
+   c3:f6:21:49:b2:e3:0e:3e
+ Signature Algorithm: ecdsa-with-SHA256
+ Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.", 
+         L = San Jose, ST = CA, C = US
+ Validity
+   Not Before: Dec  9 12:50:47 2022 GMT
+   Not After : Dec  8 12:50:47 2025 GMT
+ Subject: CN = Custom-ER Registrar, OU = Office dept, O = "Custom-ER, 
+         Inc.", L = Ottowa, ST = ON, C = CA
+ Subject Public Key Info:
+   Public Key Algorithm: id-ecPublicKey
+     Public-Key: (256 bit)
+     pub:
+       04:20:30:85:5b:e8:46:91:0b:3e:cb:15:ca:f8:57:
+       2d:3e:b5:65:bd:c6:54:a1:5e:fa:f6:ed:eb:aa:8b:
+       9e:16:08:c5:c9:10:c9:3a:20:86:8f:c8:50:4d:37:
+       0f:1b:26:fa:97:59:f6:79:83:bb:78:86:3e:da:9a:
+       cb:ea:51:24:f6
+     ASN1 OID: prime256v1
+     NIST CURVE: P-256
+ X509v3 extensions:
+   X509v3 Key Usage: critical
+     Digital Signature, Non Repudiation, Key Encipherment, 
+             Data Encipherment
+   X509v3 Basic Constraints: 
+     CA:FALSE
+   X509v3 Subject Key Identifier: 
+     C9:08:0B:38:7D:8D:D8:5B:3A:59:E7:EC:10:0B:86:63:93:A9:CA:4C
+   X509v3 Authority Key Identifier: 
+     92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
+   X509v3 Extended Key Usage: critical
+     CMC Registration Authority, TLS Web Server Authentication, 
+             TLS Web Client Authentication
+Signature Algorithm: ecdsa-with-SHA256
+Signature Value:
+ 30:45:02:21:00:d8:4a:7c:69:2f:f9:58:6e:82:22:87:18:f6:
+ 3b:c3:05:f0:ae:b8:ae:ec:42:78:82:38:79:81:2a:5d:15:61:
+ 64:02:20:08:f2:3c:13:69:13:b0:2c:e2:63:09:d5:99:4f:eb:
+ 75:70:af:af:ed:98:cd:f1:12:11:c0:37:f7:18:4d:c1:9d

@@ -1,0 +1,38 @@
+Certificate:
+Data:
+ Version: 3 (0x2)
+ Serial Number: 3092288576548618702 (0x2aea0413a42dc1ce)
+ Signature Algorithm: ecdsa-with-SHA256
+ Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.", 
+         L = San Jose, ST = CA, C = US
+ Validity
+   Not Before: Dec  9 12:50:47 2022 GMT
+   Not After : Dec  6 12:50:47 2032 GMT
+ Subject: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.", 
+         L = San Jose, ST = CA, C = US
+ Subject Public Key Info:
+   Public Key Algorithm: id-ecPublicKey
+     Public-Key: (256 bit)
+     pub:
+       04:97:b1:ed:96:91:64:93:09:85:bb:b8:ac:9a:2a:
+       f9:45:5c:df:ee:a4:b1:1d:e2:e7:9d:06:8b:fa:80:
+       39:26:b4:00:52:51:b3:4f:1c:08:15:a4:cb:e0:3f:
+       bd:1b:bc:b6:35:f6:43:1a:22:de:78:65:3b:87:b9:
+       95:37:ec:e1:6c
+     ASN1 OID: prime256v1
+     NIST CURVE: P-256
+ X509v3 extensions:
+   X509v3 Subject Alternative Name: 
+     email:help@custom-er.example.com
+   X509v3 Key Usage: critical
+     Digital Signature, Certificate Sign, CRL Sign
+   X509v3 Basic Constraints: critical
+     CA:TRUE
+   X509v3 Subject Key Identifier: 
+     92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
+Signature Algorithm: ecdsa-with-SHA256
+Signature Value:
+ 30:44:02:20:66:15:df:c3:70:11:f6:73:78:d8:fd:1c:2a:3f:
+ bd:d1:3f:51:f6:b6:6f:2d:7c:e2:7a:13:18:21:bb:70:f0:c0:
+ 02:20:69:86:d8:d2:28:b2:92:6e:23:9e:19:0b:8f:18:25:c9:
+ c1:4c:67:95:ff:a0:b3:24:bd:4d:ac:2e:cb:68:d7:13
