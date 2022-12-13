@@ -963,7 +963,44 @@ Here is an example of an announcement that offers both constrained and unconstra
 {: #fig-grasp-duo title='Example of Join Proxy announcing two bootstrap methods' align="left"}
 
 ### CoAP Discovery
-Further details on CoAP discovery by a Pledge are provided in {{Section 5.2.1 of I-D.ietf-anima-constrained-join-proxy}}. 
+The details on CoAP discovery of a Join Proxy by a Pledge are provided in {{Section 5.2.1 of I-D.ietf-anima-constrained-join-proxy}}. 
+In this section some examples of CoAP discovery interactions are given.
+
+Below, a typical example is provided showing the Pledge's CoAP request and the Join Proxy's CoAP response. The Join Proxy responds with a link-local 
+source address, which is the same address as indicated in the URI-reference element ({{RFC6690}}) in the discovery response payload. The Join 
+Proxy has a dedicated port 8485 opened for DTLS connections of Pledges.
+
+~~~~
+  REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
+
+  RES: 2.05 Content
+  <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
+~~~~
+
+The next example shows a Join Proxy that uses the default CoAPS port 5684 for DTLS connections of Pledges. In this case, the Join Proxy host 
+is not using port 5684 for any other purposes.
+
+~~~~
+  REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
+
+  RES: 2.05 Content
+  <coaps://[fe80::c78:e3c4:58a0:a4ad]>;rt=brski.jp
+~~~~
+
+In the following example, two Join Proxies respond to the multicast query. The Join Proxies use a slightly different CoRE Link Format 
+encoding. While the first encoding is more compact, both encodings are allowed per {{RFC6690}}. The Pledge may now select one of the 
+two Join Proxies for initiating its DTLS connection.
+
+~~~~
+  REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski*
+
+  RES: 2.05 Content
+  <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
+
+  RES: 2.05 Content
+  <coaps://[fe80::d359:3813:f382:3b23]:63245>;rt="brski.jp"
+~~~~
+
 
 
 ## Discovery operations by Join Proxy
