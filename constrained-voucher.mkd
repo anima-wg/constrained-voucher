@@ -1681,7 +1681,7 @@ INSERT_CODE_FROM_FILE examples/pledge-cert.hex END
 
 INSERT_CODE_FROM_FILE examples/registrar-cert.txt END
 
-Below is the hexadecimal representation which is in voucher and voucher-request examples referred to as regis-cert-hex:
+Below is the hexadecimal representation of the binary X.509 DER-encoded certificate:
 
 INSERT_CODE_FROM_FILE examples/registrar-cert.hex END
 
