@@ -54,6 +54,7 @@ normative:
   RFC6020:
   RFC6066:
   RFC6125:
+  RFC6347:
   RFC7250:
   RFC7950:
   RFC8366:
@@ -226,21 +227,23 @@ This document Updates {{RFC8995}}. It Amends {{RFC8995}}
 
 * by clarifying how pinning is done,
 
-* adopts clearer explanation of the TLS Server Name Indicator (SNI), see {{sni}} and {{sni-masa}}
+* adopts clearer explanation of the TLS Server Name Indicator (SNI), see {{sni}} and {{sni-masa}},
 
 * clarifies when new trust anchors should be retrieved ({{brski-est-extensions-pledge}}),
 
-* clarified what kinds of Extended Key Usage attributes are appropriate for each certificate ({{registrar-certificate-requirement}})
+* clarifies what kinds of Extended Key Usage attributes are appropriate for each certificate ({{registrar-certificate-requirement}}).
 
 It Extends {{RFC8995}} as follows:
 
-* defines the CoAP version of the BRSKI protocol
+* defines the CoAP version of the BRSKI protocol,
 
 * makes some messages optional if the results can be inferred from other validations ({{brski-est-extensions}}),
 
-* provides the option to return trust anchors in a simpler format ({{brski-est-extensions-registrar}})
+* provides the option to return trust anchors in a simpler format ({{brski-est-extensions-registrar}}),
 
 * extends the BRSKI-MASA protocol to carry the new voucher-cose+cbor format.
+
+
 
 # BRSKI-EST Protocol {#brski-est}
 
@@ -249,18 +252,51 @@ The extensions are targeting low-resource networks with small packets.
 
 The constrained BRSKI-EST protocol described in this section is between the Pledge and the Registrar only.
 
-## Registrar and the Server Name Indicator (SNI) {#sni}
+## DTLS Connection {#brski-est-dtls}
 
 A DTLS connection is established between the Pledge and the Registrar, similar to the TLS connection
-described in {{Section 5.1 of RFC8995}}.
-This may occur via a Join Proxy as described in {{joinproxy}}.
-Regardless of the Join Proxy mechanism, the DTLS connection should operate identically.
+described in {{Section 5.1 of RFC8995}}. This may occur via a Join Proxy as described in {{joinproxy}}.
+Regardless of the Join Proxy presence or particular mechanism used, the DTLS connection should operate identically.
+The Constrained BRSKI and EST-coaps requests and responses for bootstrapping are carried over this DTLS connection.
 
+### DTLS Version {#dtls-version}
+
+DTLS version 1.3 {{RFC9147}} SHOULD be used in any implementation of this specification. An exception case where DTLS 1.2 {{RFC6347}} MAY 
+be used is in a Pledge that uses a software platform where DTLS 1.3 is not available (yet). This may occur for example if a legacy 
+device gets software-upgraded to support Constrained BRSKI. For this reason, a Registrar MUST by default support both DTLS 1.3 and DTLS 1.2 
+client connections. However, for security reasons the Registrar MAY be administratively configured to support only a particular DTLS version or higher.
+
+An EST-coaps server {{RFC9148}} that implements this specification also MUST support both DTLS 1.3 and DTLS 1.2 client connections by default.
+However, for security reasons the EST-coaps server MAY be administratively configured to support only a particular DTLS version or higher.
+
+### TLS Client Certificates: IDevID authentication
+
+As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the Registrar using a TLS Client Certificate for authentication.
+This is the Pledge's IDevID certificate. 
+
+Subsequently the Pledge will send a Pledge Voucher Request (PVR). Further elements of Pledge authentication may be present in the PVR, 
+as detailed in {{VR-COSE}}.
+
+### DTLS Handshake Fragmentation Considerations {#dtls-fragments}
+
+DTLS includes a mechanism to fragment handshake messages. This is described in {{Section 4.4 of RFC9147}}.
+Constrained BRSKI will often be used with a Join Proxy, described in {{I-D.ietf-anima-constrained-join-proxy}}, which relays each DTLS message to the Registrar.
+A stateless Join Proxy will need some additional space to wrap each DTLS message inside a CoAP request, while the wrapped result needs to fit in the maximum packet 
+sized guaranteed on 6LoWPAN networks, which is 1280 bytes.
+
+For this reason it is RECOMMENDED that a PMTU of 1024 bytes be assumed for the DTLS handshake and appropriate DTLS fragmentation is used.
+It is unlikely that any Packet Too Big indications {{RFC4443}} will be relayed by the Join Proxy back to the Pledge.
+
+During the operation of the constrained BRSKI-EST protocol, the CoAP Blockwise transfer mechanism will be used when message sizes exceed the PMTU.
+A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragment length extension ("max_fragment_length") defined in Section 4 of {{RFC6066}} with the maximum fragment length set to a value of either 2^9 or 2^10.
+
+
+### Registrar and the Server Name Indicator (SNI) {#sni}
 The SNI issue described below affects {{RFC8995}} as well, and is reported in errata: https://www.rfc-editor.org/errata/eid6648
 
 As the Registrar is discovered by IP address, and typically connected via a Join Proxy, the name of the Registrar is not known to the Pledge.
-The Pledge will not know what the hostname for the Registrar is, so it cannot do RFC6125 DNS-ID validation on the Registrar's certificate.
-Instead, it must do validation using the RFC8366 voucher.
+The Pledge will not know what the hostname for the Registrar is, so it cannot do DNS-ID validation ({{RFC6125}}) on the Registrar's certificate.
+Instead, it must do validation using the voucher.
 
 As the Pledge does not know the name of the Registrar, the Pledge cannot put any reasonable value into the {{RFC6066}} Server Name Indicator (SNI).
 Threfore the Pledge SHOULD omit the SNI extension as per {{Section 9.2 of RFC8446}}.
@@ -280,14 +316,8 @@ This consideration does not apply to the server function in the Registrar becaus
 
 As per {{Section 3.6.1 of RFC7030}}, the Registrar certificate MUST have the Extended Key Usage (EKU) id-kp-cmcRA.
 This certificate is also used as a TLS Server Certificate, so it MUST also have the EKU id-kp-serverAuth.
+See {{cosesign-registrar-cert}} for an example of a Registrar certificate with these EKUs set.
 
-## TLS Client Certificates: IDevID authentication
-
-As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the Registrar using a TLS Client Certificate for authentication.
-
-Subsequently the Pledge will send a Pledge Voucher Request (PVR).
-
-In {{registrar-identity}}, the contents of the "x5bag" structure in the Registrar Voucher Request (RVR) are explained. In {{VR-COSE}} the use of the "x5bag" structure and the "kid" attribute in the PVR and the RVR are specified.
 
 ## Resource Discovery, URIs and Content Formats {#resource-discovery}
 
@@ -547,17 +577,6 @@ If the Pledge included in its request an Accept Option for only the 287 ("applic
 
 If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for 287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
 
-## DTLS handshake fragmentation Considerations {#dtls-fragments}
-
-DTLS includes a mechanism to fragment the handshake messages.
-This is described in {{Section 4.4 of RFC9147}}.
-The protocol described in this document will often be used with a Join Proxy described in {{I-D.ietf-anima-constrained-join-proxy}}.
-The Join Proxy will need some overhead, while the maximum packet sized guaranteed on 802.15.4 networks is 1280 bytes.
-It is RECOMMENDED that a PMTU of 1024 bytes be assumed for the DTLS handshake.
-It is unlikely that any Packet Too Big indications {{RFC4443}} will be relayed by the Join Proxy.
-
-During the operation of the constrained BRSKI-EST protocol, the CoAP Blockwise transfer mechanism will be used when message sizes exceed the PMTU.
-A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragment length extension ("max_fragment_length") defined in Section 4 of {{RFC6066}} with the maximum fragment length set to a value of either 2^9 or 2^10.
 
 # BRSKI-MASA Protocol {#brski-masa}
 
@@ -1576,7 +1595,7 @@ Below is the hexadecimal representation of the binary X.509 DER-encoded certific
 
 INSERT_CODE_FROM_FILE examples/cose-examples/pledge.hex END
 
-### Registrar Certificate
+### Registrar Certificate {#cosesign-registrar-cert}
 
 INSERT_CODE_FROM_FILE examples/cose-examples/registrar.txt END
 
