@@ -40,9 +40,6 @@ author:
   org: IoTconsultancy.nl
   email: esko.dijk@iotconsultancy.nl
 
-contributor:
-  - name: Russ Housley
-    email: housley@vigilsec.com
 
 normative:
 #  RFC2119:
@@ -1336,27 +1333,22 @@ requestauditlog| -- | Request audit log: Registrar to MASA                      
 enrollstatus   | es | Enrollment status telemetry: Pledge to Registrar                 | [RFC8995], \[This RFC\]
 {: #brski-wellknown-uri title='Update of the BRSKI Well-Known URI Sub-Registry'}
 
+
 # Acknowledgements
 
-We are very grateful to Jim Schaad for explaining COSE and CMS choices.
-Also thanks to Jim Schaad for correcting earlier versions of the COSE_Sign1 objects.
-
-Michel Veillette did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
-
-Daniel Franke and Henk Birkholtz provided review feedback.
-
-The BRSKI design team has met on many Thursdays for document review.
-It includes:
-Aurelio Schellenbaum,
-David von Oheimb
-Steffen Fries,
-Thomas Werner,
-Toerless Eckert,
-
+<t>We are very grateful to <contact initials="J." surname="Schaad" fullname="Jim Schaad"/> for explaining COSE/CMS choices and for correcting early versions of the COSE_Sign1 objects. 
+</t><t>
+<contact initials="M." surname="Veillette" fullname="Michel Veillette"/> did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users. 
+</t><t>
+<contact initials="R." surname="Housley" fullname="Russ Housley"/>, <contact initials="D." surname="Franke" fullname="Daniel Franke"/> and <contact initials="H." surname="Birkholtz" fullname="Henk Birkholtz"/> provided review feedback. 
+</t><t>
+The BRSKI design team has met on many Tuesdays and Thursdays for document review. The team includes: <contact initials="A." surname="Schellenbaum" fullname="Aurelio Schellenbaum"/>, <contact initials="D." surname="von Oheimb" fullname="David von Oheimb"/>, <contact initials="S." surname="Fries" fullname="Steffen Fries"/>, <contact initials="T." surname="Werner" fullname="Thomas Werner"/> and <contact initials="T." surname="Eckert" fullname="Toerless Eckert"/>.
+</t>
+    
 # Changelog
 
--11 to -18
-    (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues)
+-11 to -19
+    (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues and related Pull Requests.)
 
 -10
     Design considerations extended
