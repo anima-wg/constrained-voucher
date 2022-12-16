@@ -6,11 +6,11 @@ anima Working Group                                        M. Richardson
 Internet-Draft                                  Sandelman Software Works
 Updates: 8366, 8995 (if approved)                        P. van der Stok
 Intended status: Standards Track                  vanderstok consultancy
-Expires: 10 June 2023                                      P. Kampanakis
+Expires: 19 June 2023                                      P. Kampanakis
                                                            Cisco Systems
                                                                  E. Dijk
                                                        IoTconsultancy.nl
-                                                         7 December 2022
+                                                        16 December 2022
 
 
    Constrained Bootstrapping Remote Secure Key Infrastructure (BRSKI)
@@ -33,6 +33,31 @@ Abstract
    over Secure Transport (EST) protocol, used in BRSKI, is replaced with
    EST-over-CoAPS; and HTTPS used in BRSKI is replaced with CoAPS.
 
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-ietf-anima-constrained-
+   voucher/.
+
+   Discussion of this document takes place on the anima Working Group
+   mailing list (mailto:anima@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/anima/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/anima/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/anima-wg/constrained-voucher.
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                  [Page 1]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
@@ -48,15 +73,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 June 2023.
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                  [Page 1]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
+   This Internet-Draft will expire on 19 June 2023.
 
 Copyright Notice
 
@@ -74,134 +91,145 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   4
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   5
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   6
    3.  Requirements Language . . . . . . . . . . . . . . . . . . . .   6
    4.  Overview of Protocol  . . . . . . . . . . . . . . . . . . . .   6
-   5.  Updates to RFC8366 and RFC8995  . . . . . . . . . . . . . . .   7
-   6.  BRSKI-EST Protocol  . . . . . . . . . . . . . . . . . . . . .   8
-     6.1.  Registrar and the Server Name Indicator (SNI) . . . . . .   8
-     6.2.  TLS Client Certificates: IDevID authentication  . . . . .   9
-     6.3.  Resource Discovery, URIs and Content Formats  . . . . . .  10
-       6.3.1.  RFC8995 Telemetry Returns . . . . . . . . . . . . . .  13
-     6.4.  Join Proxy options  . . . . . . . . . . . . . . . . . . .  13
-     6.5.  Extensions to BRSKI . . . . . . . . . . . . . . . . . . .  13
-       6.5.1.  CoAP EST Resource Discovery and BRSKI . . . . . . . .  13
-       6.5.2.  CoAP responses  . . . . . . . . . . . . . . . . . . .  14
-     6.6.  Extensions to EST-coaps . . . . . . . . . . . . . . . . .  14
-       6.6.1.  Pledge Extensions . . . . . . . . . . . . . . . . . .  15
-       6.6.2.  EST-client Extensions . . . . . . . . . . . . . . . .  16
-       6.6.3.  Registrar Extensions  . . . . . . . . . . . . . . . .  19
-     6.7.  DTLS handshake fragmentation Considerations . . . . . . .  19
-   7.  BRSKI-MASA Protocol . . . . . . . . . . . . . . . . . . . . .  20
-     7.1.  Protocol and Formats  . . . . . . . . . . . . . . . . . .  20
-     7.2.  Registrar Voucher Request . . . . . . . . . . . . . . . .  21
-     7.3.  MASA and the Server Name Indicator (SNI)  . . . . . . . .  21
-       7.3.1.  Registrar Certificate Requirement . . . . . . . . . .  22
-   8.  Pinning in Voucher Artifacts  . . . . . . . . . . . . . . . .  22
-     8.1.  Registrar Identity Selection and Encoding . . . . . . . .  22
-     8.2.  MASA Pinning Policy . . . . . . . . . . . . . . . . . . .  23
-     8.3.  Pinning of Raw Public Keys  . . . . . . . . . . . . . . .  24
-     8.4.  Considerations for use of IDevID-Issuer . . . . . . . . .  25
-   9.  Artifacts . . . . . . . . . . . . . . . . . . . . . . . . . .  26
-     9.1.  Voucher Request artifact  . . . . . . . . . . . . . . . .  26
-       9.1.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  26
+   5.  Updates to RFC8366 and RFC8995  . . . . . . . . . . . . . . .   8
+   6.  BRSKI-EST Protocol  . . . . . . . . . . . . . . . . . . . . .   9
+     6.1.  DTLS Connection . . . . . . . . . . . . . . . . . . . . .   9
+       6.1.1.  DTLS Version  . . . . . . . . . . . . . . . . . . . .   9
+       6.1.2.  TLS Client Certificates: IDevID authentication  . . .   9
+       6.1.3.  DTLS Handshake Fragmentation Considerations . . . . .  10
+       6.1.4.  Registrar and the Server Name Indicator (SNI) . . . .  10
+     6.2.  Resource Discovery, URIs and Content Formats  . . . . . .  11
+       6.2.1.  RFC8995 Telemetry Returns . . . . . . . . . . . . . .  14
+     6.3.  Join Proxy options  . . . . . . . . . . . . . . . . . . .  14
+     6.4.  Extensions to BRSKI . . . . . . . . . . . . . . . . . . .  15
 
 
 
-Richardson, et al.        Expires 10 June 2023                  [Page 2]
+Richardson, et al.        Expires 19 June 2023                  [Page 2]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
-       9.1.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  27
-       9.1.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  28
-       9.1.4.  Example voucher request artifact  . . . . . . . . . .  32
-     9.2.  Voucher artifact  . . . . . . . . . . . . . . . . . . . .  32
-       9.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  32
-       9.2.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  33
-       9.2.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  33
-       9.2.4.  Example voucher artifacts . . . . . . . . . . . . . .  36
+       6.4.1.  CoAP EST Resource Discovery and BRSKI . . . . . . . .  15
+       6.4.2.  CoAP responses  . . . . . . . . . . . . . . . . . . .  16
+     6.5.  Extensions to EST-coaps . . . . . . . . . . . . . . . . .  16
+       6.5.1.  Pledge Extensions . . . . . . . . . . . . . . . . . .  17
+       6.5.2.  EST-client Extensions . . . . . . . . . . . . . . . .  18
+       6.5.3.  Registrar Extensions  . . . . . . . . . . . . . . . .  20
+   7.  BRSKI-MASA Protocol . . . . . . . . . . . . . . . . . . . . .  21
+     7.1.  Protocol and Formats  . . . . . . . . . . . . . . . . . .  21
+     7.2.  Registrar Voucher Request . . . . . . . . . . . . . . . .  22
+     7.3.  MASA and the Server Name Indicator (SNI)  . . . . . . . .  22
+       7.3.1.  Registrar Certificate Requirement . . . . . . . . . .  23
+   8.  Pinning in Voucher Artifacts  . . . . . . . . . . . . . . . .  23
+     8.1.  Registrar Identity Selection and Encoding . . . . . . . .  23
+     8.2.  MASA Pinning Policy . . . . . . . . . . . . . . . . . . .  24
+     8.3.  Pinning of Raw Public Keys  . . . . . . . . . . . . . . .  25
+     8.4.  Considerations for use of IDevID-Issuer . . . . . . . . .  26
+   9.  Artifacts . . . . . . . . . . . . . . . . . . . . . . . . . .  27
+     9.1.  Voucher Request artifact  . . . . . . . . . . . . . . . .  27
+       9.1.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  27
+       9.1.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  28
+       9.1.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  29
+       9.1.4.  Example Pledge voucher request (PVR) artifact . . . .  33
+       9.1.5.  Example Registrar voucher request (RVR) artifact  . .  33
+     9.2.  Voucher artifact  . . . . . . . . . . . . . . . . . . . .  34
+       9.2.1.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  34
+       9.2.2.  SID values  . . . . . . . . . . . . . . . . . . . . .  34
+       9.2.3.  YANG Module . . . . . . . . . . . . . . . . . . . . .  35
+       9.2.4.  Example voucher artifacts . . . . . . . . . . . . . .  38
      9.3.  Signing voucher and voucher-request artifacts with
-           COSE  . . . . . . . . . . . . . . . . . . . . . . . . . .  37
-       9.3.1.  signing of Registrar Voucher Request (RVR)  . . . . .  38
-       9.3.2.  signing of Pledge Voucher Request (PVR) . . . . . . .  38
-       9.3.3.  signing of voucher by MASA  . . . . . . . . . . . . .  39
-   10. Extensions to Discovery . . . . . . . . . . . . . . . . . . .  39
-     10.1.  Discovery operations by Pledge . . . . . . . . . . . . .  40
-       10.1.1.  GRASP discovery  . . . . . . . . . . . . . . . . . .  41
-       10.1.2.  CoAP Discovery . . . . . . . . . . . . . . . . . . .  42
-     10.2.  Discovery operations by Join Proxy . . . . . . . . . . .  42
-       10.2.1.  GRASP Discovery  . . . . . . . . . . . . . . . . . .  42
-       10.2.2.  CoAP discovery . . . . . . . . . . . . . . . . . . .  43
-   11. Deployment-specific Discovery Considerations  . . . . . . . .  43
-     11.1.  6TSCH Deployments  . . . . . . . . . . . . . . . . . . .  43
-     11.2.  Generic networks using GRASP . . . . . . . . . . . . . .  43
-     11.3.  Generic networks using mDNS  . . . . . . . . . . . . . .  43
-     11.4.  Thread networks using Mesh Link Establishment (MLE)  . .  43
-   12. Design Considerations . . . . . . . . . . . . . . . . . . . .  44
-   13. Raw Public Key Use Considerations . . . . . . . . . . . . . .  44
-     13.1.  The Registrar Trust Anchor . . . . . . . . . . . . . . .  44
-     13.2.  The Pledge Voucher Request . . . . . . . . . . . . . . .  45
-     13.3.  The Voucher Response . . . . . . . . . . . . . . . . . .  45
-   14. Use of constrained vouchers with HTTPS  . . . . . . . . . . .  46
-   15. Security Considerations . . . . . . . . . . . . . . . . . . .  46
-     15.1.  Duplicate serial-numbers . . . . . . . . . . . . . . . .  47
-     15.2.  IDevID security in Pledge  . . . . . . . . . . . . . . .  47
-     15.3.  Security of CoAP and UDP protocols . . . . . . . . . . .  49
-     15.4.  Registrar Certificate may be self-signed . . . . . . . .  49
-     15.5.  Use of RPK alternatives to proximity-registrar-cert  . .  49
-     15.6.  MASA support of CoAPS  . . . . . . . . . . . . . . . . .  50
-   16. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  50
-     16.1.  GRASP Discovery Registry . . . . . . . . . . . . . . . .  50
-     16.2.  Resource Type Registry . . . . . . . . . . . . . . . . .  50
-     16.3.  The IETF XML Registry  . . . . . . . . . . . . . . . . .  51
-     16.4.  The YANG Module Names Registry . . . . . . . . . . . . .  51
-     16.5.  The RFC SID range assignment sub-registry  . . . . . . .  52
-     16.6.  Media Types Registry . . . . . . . . . . . . . . . . . .  52
-       16.6.1.  application/voucher-cose+cbor  . . . . . . . . . . .  52
-     16.7.  CoAP Content-Format Registry . . . . . . . . . . . . . .  53
-     16.8.  Update to BRSKI Parameters Registry  . . . . . . . . . .  53
+           COSE  . . . . . . . . . . . . . . . . . . . . . . . . . .  39
+       9.3.1.  Signing of Registrar Voucher Request (RVR)  . . . . .  40
+       9.3.2.  Signing of Pledge Voucher Request (PVR) . . . . . . .  41
+       9.3.3.  Signing of voucher by MASA  . . . . . . . . . . . . .  42
+   10. Extensions to Discovery . . . . . . . . . . . . . . . . . . .  43
+     10.1.  Discovery operations by Pledge . . . . . . . . . . . . .  44
+       10.1.1.  GRASP discovery  . . . . . . . . . . . . . . . . . .  44
+       10.1.2.  CoAP Discovery . . . . . . . . . . . . . . . . . . .  45
+     10.2.  Discovery operations by Join Proxy . . . . . . . . . . .  46
+       10.2.1.  GRASP Discovery  . . . . . . . . . . . . . . . . . .  46
+       10.2.2.  CoAP discovery . . . . . . . . . . . . . . . . . . .  47
+   11. Deployment-specific Discovery Considerations  . . . . . . . .  47
+     11.1.  6TSCH Deployments  . . . . . . . . . . . . . . . . . . .  47
+     11.2.  Generic networks using GRASP . . . . . . . . . . . . . .  47
+     11.3.  Generic networks using mDNS  . . . . . . . . . . . . . .  47
+     11.4.  Thread networks using Mesh Link Establishment (MLE)  . .  47
+   12. Design Considerations . . . . . . . . . . . . . . . . . . . .  48
+   13. Raw Public Key Use Considerations . . . . . . . . . . . . . .  48
+     13.1.  The Registrar Trust Anchor . . . . . . . . . . . . . . .  48
 
 
 
-Richardson, et al.        Expires 10 June 2023                  [Page 3]
+Richardson, et al.        Expires 19 June 2023                  [Page 3]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
-   17. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  54
-   18. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .  55
-   19. References  . . . . . . . . . . . . . . . . . . . . . . . . .  55
-     19.1.  Normative References . . . . . . . . . . . . . . . . . .  55
-     19.2.  Informative References . . . . . . . . . . . . . . . . .  58
-   Appendix A.  Library Support for BRSKI  . . . . . . . . . . . . .  61
-     A.1.  OpensSSL  . . . . . . . . . . . . . . . . . . . . . . . .  61
-     A.2.  mbedTLS . . . . . . . . . . . . . . . . . . . . . . . . .  62
-   Appendix B.  Constrained BRSKI-EST Message Examples . . . . . . .  63
-     B.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  63
-     B.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  64
-   Appendix C.  COSE-signed Voucher (Request) Examples . . . . . . .  65
-     C.1.  Pledge, Registrar and MASA Keys . . . . . . . . . . . . .  65
-       C.1.1.  Pledge IDevID private key . . . . . . . . . . . . . .  65
-       C.1.2.  Registrar private key . . . . . . . . . . . . . . . .  66
-       C.1.3.  MASA private key  . . . . . . . . . . . . . . . . . .  66
-     C.2.  Pledge, Registrar, Domain CA and MASA Certificates  . . .  67
-       C.2.1.  Pledge IDevID Certificate . . . . . . . . . . . . . .  67
-       C.2.2.  Registrar Certificate . . . . . . . . . . . . . . . .  69
-       C.2.3.  Domain CA Certificate . . . . . . . . . . . . . . . .  71
-       C.2.4.  MASA Certificate  . . . . . . . . . . . . . . . . . .  73
-     C.3.  COSE-signed Pledge Voucher Request (PVR)  . . . . . . . .  75
-     C.4.  COSE-signed Registrar Voucher Request (RVR) . . . . . . .  76
-     C.5.  COSE-signed Voucher from MASA . . . . . . . . . . . . . .  79
-   Appendix D.  Generating Certificates with OpenSSL . . . . . . . .  82
-   Appendix E.  Pledge Device Class Profiles . . . . . . . . . . . .  86
-     E.1.  Minimal Pledge  . . . . . . . . . . . . . . . . . . . . .  86
-     E.2.  Typical Pledge  . . . . . . . . . . . . . . . . . . . . .  87
-     E.3.  Full-featured Pledge  . . . . . . . . . . . . . . . . . .  87
-     E.4.  Comparison Chart of Pledge Classes  . . . . . . . . . . .  87
-   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  88
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  88
+     13.2.  The Pledge Voucher Request . . . . . . . . . . . . . . .  49
+     13.3.  The Voucher Response . . . . . . . . . . . . . . . . . .  49
+   14. Use of constrained vouchers with HTTPS  . . . . . . . . . . .  50
+   15. Security Considerations . . . . . . . . . . . . . . . . . . .  50
+     15.1.  Duplicate serial-numbers . . . . . . . . . . . . . . . .  51
+     15.2.  IDevID security in Pledge  . . . . . . . . . . . . . . .  51
+     15.3.  Security of CoAP and UDP protocols . . . . . . . . . . .  53
+     15.4.  Registrar Certificate may be self-signed . . . . . . . .  53
+     15.5.  Use of RPK alternatives to proximity-registrar-cert  . .  53
+     15.6.  MASA support of CoAPS  . . . . . . . . . . . . . . . . .  54
+   16. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  54
+     16.1.  GRASP Discovery Registry . . . . . . . . . . . . . . . .  54
+     16.2.  Resource Type Registry . . . . . . . . . . . . . . . . .  54
+     16.3.  The IETF XML Registry  . . . . . . . . . . . . . . . . .  55
+     16.4.  The YANG Module Names Registry . . . . . . . . . . . . .  55
+     16.5.  The RFC SID range assignment sub-registry  . . . . . . .  56
+     16.6.  Media Types Registry . . . . . . . . . . . . . . . . . .  56
+       16.6.1.  application/voucher-cose+cbor  . . . . . . . . . . .  56
+     16.7.  CoAP Content-Format Registry . . . . . . . . . . . . . .  57
+     16.8.  Update to BRSKI Parameters Registry  . . . . . . . . . .  57
+   17. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  58
+   18. Changelog . . . . . . . . . . . . . . . . . . . . . . . . . .  59
+   19. References  . . . . . . . . . . . . . . . . . . . . . . . . .  59
+     19.1.  Normative References . . . . . . . . . . . . . . . . . .  59
+     19.2.  Informative References . . . . . . . . . . . . . . . . .  62
+   Appendix A.  Library Support for BRSKI  . . . . . . . . . . . . .  65
+     A.1.  OpensSSL  . . . . . . . . . . . . . . . . . . . . . . . .  65
+     A.2.  mbedTLS . . . . . . . . . . . . . . . . . . . . . . . . .  66
+   Appendix B.  Constrained BRSKI-EST Message Examples . . . . . . .  67
+     B.1.  enrollstatus  . . . . . . . . . . . . . . . . . . . . . .  67
+     B.2.  voucher_status  . . . . . . . . . . . . . . . . . . . . .  68
+   Appendix C.  COSE-signed Voucher (Request) Examples . . . . . . .  69
+     C.1.  Pledge, Registrar and MASA Keys . . . . . . . . . . . . .  69
+       C.1.1.  Pledge IDevID private key . . . . . . . . . . . . . .  69
+       C.1.2.  Registrar private key . . . . . . . . . . . . . . . .  70
+       C.1.3.  MASA private key  . . . . . . . . . . . . . . . . . .  70
+     C.2.  Pledge, Registrar, Domain CA and MASA Certificates  . . .  71
+       C.2.1.  Pledge IDevID Certificate . . . . . . . . . . . . . .  71
+       C.2.2.  Registrar Certificate . . . . . . . . . . . . . . . .  73
+       C.2.3.  Domain CA Certificate . . . . . . . . . . . . . . . .  75
+       C.2.4.  MASA Certificate  . . . . . . . . . . . . . . . . . .  77
+     C.3.  COSE-signed Pledge Voucher Request (PVR)  . . . . . . . .  79
+     C.4.  COSE-signed Registrar Voucher Request (RVR) . . . . . . .  80
+     C.5.  COSE-signed Voucher from MASA . . . . . . . . . . . . . .  83
+   Appendix D.  Generating Certificates with OpenSSL . . . . . . . .  86
+   Appendix E.  Pledge Device Class Profiles . . . . . . . . . . . .  90
+     E.1.  Minimal Pledge  . . . . . . . . . . . . . . . . . . . . .  90
+     E.2.  Typical Pledge  . . . . . . . . . . . . . . . . . . . . .  91
+
+
+
+Richardson, et al.        Expires 19 June 2023                  [Page 4]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+     E.3.  Full-featured Pledge  . . . . . . . . . . . . . . . . . .  91
+     E.4.  Comparison Chart of Pledge Classes  . . . . . . . . . . .  91
+   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  92
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  92
 
 1.  Introduction
 
@@ -216,15 +244,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    devices, such as IoT devices, are called "pledges", and equipped with
    a factory-installed Initial Device Identifier (IDevID) (see
    [ieee802-1AR]), are enrolled into a network.
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                  [Page 4]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    The BRSKI solution described in [RFC8995] was designed to be modular,
    and this document describes a version scaled to the constraints of
@@ -255,6 +274,14 @@ Internet-Draft              Constrained BRSKI              December 2022
    The CBOR definitions for the constrained voucher format are defined
    using the mechanism described in [RFC9254] using the SID mechanism
    explained in [I-D.ietf-core-sid].  As the tooling to convert YANG
+
+
+
+Richardson, et al.        Expires 19 June 2023                  [Page 5]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    documents into a list of SID keys is still in its infancy, the table
    of SID values presented here MUST be considered normative rather than
    the output of the tool specified in [I-D.ietf-core-sid].
@@ -273,14 +300,6 @@ Internet-Draft              Constrained BRSKI              December 2022
 
    The term Pledge Voucher Request, or acronym PVR, is introduced to
    refer to the voucher request between the pledge and the Registrar.
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                  [Page 5]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    The term Registrar Voucher Request, or acronym RVR, is introduced to
    refer to the voucher request between the Registrar and the MASA.
@@ -307,6 +326,18 @@ Internet-Draft              Constrained BRSKI              December 2022
    the Registrar, and can offer varying levels of anti-replay
    protection.
 
+
+
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                  [Page 6]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    The proximity proof provided for in [RFC8366], is an assertion that
    the Pledge and the Registrar are believed to be close together, from
    a network topology point of view.  Like in [RFC8995], proximity is
@@ -327,17 +358,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    protocol between Pledge and Registrar, and BRSKI-MASA for the
    protocol between the Registrar and the MASA.
 
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                  [Page 6]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
    Time-based vouchers are supported in this definition, but given that
    constrained devices are extremely unlikely to have accurate time,
    their use will be uncommon.  Most Pledges using constrained vouchers
@@ -351,10 +371,12 @@ Internet-Draft              Constrained BRSKI              December 2022
    response as this is the order that they occur in the protocol.
 
    The constrained voucher request MUST be signed by the Pledge.  It
-   signs using the private key associated with its IDevID certificate,
-   or if an IDevID is not available, then the private key associated
-   with its manufacturer-installed raw public key (RPK).  Section 13
-   provides additional details on PKIX-less operations.
+   signs using the private key associated with its IDevID certificate.
+   This also holds for the most constrained types of Pledges that are
+   unable to perform certain PKIX operations (such as certificate chain
+   validation).  These types of Pledge still contain an IDevID identity
+   that is used for authentication.  See Section 13 for additional
+   details on PKIX-less operations.
 
    The constrained voucher MUST be signed by the MASA.
 
@@ -362,6 +384,15 @@ Internet-Draft              Constrained BRSKI              December 2022
    distinct methods for the Pledge to identify the Registrar: using
    either the Registrar's PKIX certificate, or using a raw public key
    (RPK) of the Registrar.
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                  [Page 7]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    For the constrained voucher both methods are supported to indicate
    (pin) a trusted domain identity: using either a pinned domain PKIX
@@ -385,15 +416,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    RFCs.  The terminology for Updates is taken from
    [I-D.kuehlewind-update-tag].
 
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                  [Page 7]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
    This document Updates [RFC8366].  It Extends [RFC8366] by creating a
    new serialization format, and creates a mechanism to pin Raw Public
    Key (RPK).
@@ -403,23 +425,30 @@ Internet-Draft              Constrained BRSKI              December 2022
    *  by clarifying how pinning is done,
 
    *  adopts clearer explanation of the TLS Server Name Indicator (SNI),
-      see Section 6.1 and Section 7.3
+      see Section 6.1.4 and Section 7.3,
 
    *  clarifies when new trust anchors should be retrieved
-      (Section 6.6.1),
+      (Section 6.5.1),
 
-   *  clarified what kinds of Extended Key Usage attributes are
-      appropriate for each certificate (Section 7.3.1)
+   *  clarifies what kinds of Extended Key Usage attributes are
+      appropriate for each certificate (Section 7.3.1).
 
    It Extends [RFC8995] as follows:
 
-   *  defines the CoAP version of the BRSKI protocol
+   *  defines the CoAP version of the BRSKI protocol,
 
    *  makes some messages optional if the results can be inferred from
-      other validations (Section 6.6),
+      other validations (Section 6.5),
 
    *  provides the option to return trust anchors in a simpler format
-      (Section 6.6.3)
+      (Section 6.5.3),
+
+
+
+Richardson, et al.        Expires 19 June 2023                  [Page 8]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    *  extends the BRSKI-MASA protocol to carry the new voucher-cose+cbor
       format.
@@ -434,21 +463,77 @@ Internet-Draft              Constrained BRSKI              December 2022
    The constrained BRSKI-EST protocol described in this section is
    between the Pledge and the Registrar only.
 
-6.1.  Registrar and the Server Name Indicator (SNI)
+6.1.  DTLS Connection
 
    A DTLS connection is established between the Pledge and the
    Registrar, similar to the TLS connection described in Section 5.1 of
    [RFC8995].  This may occur via a Join Proxy as described in
-   Section 6.4.  Regardless of the Join Proxy mechanism, the DTLS
-   connection should operate identically.
+   Section 6.3.  Regardless of the Join Proxy presence or particular
+   mechanism used, the DTLS connection should operate identically.  The
+   Constrained BRSKI and EST-coaps requests and responses for
+   bootstrapping are carried over this DTLS connection.
+
+6.1.1.  DTLS Version
+
+   DTLS version 1.3 [RFC9147] SHOULD be used in any implementation of
+   this specification.  An exception case where DTLS 1.2 [RFC6347] MAY
+   be used is in a Pledge that uses a software platform where DTLS 1.3
+   is not available (yet).  This may occur for example if a legacy
+   device gets software-upgraded to support Constrained BRSKI.  For this
+   reason, a Registrar MUST by default support both DTLS 1.3 and DTLS
+   1.2 client connections.  However, for security reasons the Registrar
+   MAY be administratively configured to support only a particular DTLS
+   version or higher.
+
+   An EST-coaps server [RFC9148] that implements this specification also
+   MUST support both DTLS 1.3 and DTLS 1.2 client connections by
+   default.  However, for security reasons the EST-coaps server MAY be
+   administratively configured to support only a particular DTLS version
+   or higher.
+
+6.1.2.  TLS Client Certificates: IDevID authentication
+
+   As described in Section 5.1 of [RFC8995], the Pledge makes a
+   connection to the Registrar using a TLS Client Certificate for
+   authentication.  This is the Pledge's IDevID certificate.
 
 
 
 
-Richardson, et al.        Expires 10 June 2023                  [Page 8]
+
+Richardson, et al.        Expires 19 June 2023                  [Page 9]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
+
+   Subsequently the Pledge will send a Pledge Voucher Request (PVR).
+   Further elements of Pledge authentication may be present in the PVR,
+   as detailed in Section 9.3.
+
+6.1.3.  DTLS Handshake Fragmentation Considerations
+
+   DTLS includes a mechanism to fragment handshake messages.  This is
+   described in Section 4.4 of [RFC9147].  Constrained BRSKI will often
+   be used with a Join Proxy, described in
+   [I-D.ietf-anima-constrained-join-proxy], which relays each DTLS
+   message to the Registrar.  A stateless Join Proxy will need some
+   additional space to wrap each DTLS message inside a CoAP request,
+   while the wrapped result needs to fit in the maximum packet sized
+   guaranteed on 6LoWPAN networks, which is 1280 bytes.
+
+   For this reason it is RECOMMENDED that a PMTU of 1024 bytes be
+   assumed for the DTLS handshake and appropriate DTLS fragmentation is
+   used.  It is unlikely that any Packet Too Big indications [RFC4443]
+   will be relayed by the Join Proxy back to the Pledge.
+
+   During the operation of the constrained BRSKI-EST protocol, the CoAP
+   Blockwise transfer mechanism will be used when message sizes exceed
+   the PMTU.  A Pledge/EST-client on a constrained network MUST use the
+   (D)TLS maximum fragment length extension ("max_fragment_length")
+   defined in Section 4 of [RFC6066] with the maximum fragment length
+   set to a value of either 2^9 or 2^10.
+
+6.1.4.  Registrar and the Server Name Indicator (SNI)
 
    The SNI issue described below affects [RFC8995] as well, and is
    reported in errata: https://www.rfc-editor.org/errata/eid6648
@@ -456,14 +541,26 @@ Internet-Draft              Constrained BRSKI              December 2022
    As the Registrar is discovered by IP address, and typically connected
    via a Join Proxy, the name of the Registrar is not known to the
    Pledge.  The Pledge will not know what the hostname for the Registrar
-   is, so it cannot do RFC6125 DNS-ID validation on the Registrar's
-   certificate.  Instead, it must do validation using the RFC8366
-   voucher.
+   is, so it cannot do DNS-ID validation ([I-D.ietf-uta-rfc6125bis]) on
+   the Registrar's certificate.  Instead, it must do validation using
+   the voucher.
 
    As the Pledge does not know the name of the Registrar, the Pledge
    cannot put any reasonable value into the [RFC6066] Server Name
    Indicator (SNI).  Threfore the Pledge SHOULD omit the SNI extension
    as per Section 9.2 of [RFC8446].
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 10]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    In some cases, particularly while testing BRSKI, a Pledge may be
    given the hostname of a particular Registrar to connect to directly.
@@ -488,30 +585,10 @@ Internet-Draft              Constrained BRSKI              December 2022
    As per Section 3.6.1 of [RFC7030], the Registrar certificate MUST
    have the Extended Key Usage (EKU) id-kp-cmcRA.  This certificate is
    also used as a TLS Server Certificate, so it MUST also have the EKU
-   id-kp-serverAuth.
+   id-kp-serverAuth.  See Appendix C.2.2 for an example of a Registrar
+   certificate with these EKUs set.
 
-6.2.  TLS Client Certificates: IDevID authentication
-
-   As described in Section 5.1 of [RFC8995], the Pledge makes a
-   connection to the Registrar using a TLS Client Certificate for
-   authentication.
-
-   Subsequently the Pledge will send a Pledge Voucher Request (PVR).
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                  [Page 9]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   In Section 8.1, the contents of the "x5bag" structure in the
-   Registrar Voucher Request (RVR) are explained.  In Section 9.3 the
-   use of the "x5bag" structure and the "kid" attribute in the PVR and
-   the RVR are specified.
-
-6.3.  Resource Discovery, URIs and Content Formats
+6.2.  Resource Discovery, URIs and Content Formats
 
    To keep the protocol messages small the EST-coaps and constrained-
    BRSKI URIs are shorter than the respective EST and BRSKI URIs.
@@ -520,47 +597,36 @@ Internet-Draft              Constrained BRSKI              December 2022
    scheme https by coaps and by specifying shorter resource path names.
    Below are some examples; the first two using a discovered short path
    name and the last one using the well-known URI of EST which requires
-   no discovery.
+   no resource discovery by the EST client.
 
-     coaps://server.example.com/est/<short-name>
-     coaps://server.example.com/e/<short-name>
-     coaps://server.example.com/.well-known/est/<short-name>
+     coaps://estserver.example.com/est/<short-name>
+     coaps://estserver.example.com/e/<short-name>
+     coaps://estserver.example.com/.well-known/est/<short-name>
 
-   Similarly the constrained BRSKI server URIs differ from the BRSKI
-   URIs by replacing the scheme https by coaps and by specifying shorter
-   resource path names.  Below are some examples; the first two using a
-   discovered short path name and the last one using the well-known URI
-   prefix which requires no discovery.  This is the same "/.well-known/
-   brski" prefix as defined in Section 5 of [RFC8995].
+   Similarly the constrained BRSKI Registrar URIs differ from the RFC
+   8995 BRSKI URIs by replacing the scheme https by coaps and by
+   specifying shorter resource path names.  Below are some examples; the
+   first two are using a discovered short path name and the last one is
+   using the well-known URI prefix which requires no resource discovery
+   by the Pledge.  This is the same "/.well-known/brski" prefix as
+   defined in Section 5 of [RFC8995].
 
-     coaps://server.example.com/brski/<short-name>
-     coaps://server.example.com/b/<short-name>
-     coaps://server.example.com/.well-known/brski/<short-name>
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 11]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+     coaps://registrar.example.com/brski/<short-name>
+     coaps://registrar.example.com/b/<short-name>
+     coaps://registrar.example.com/.well-known/brski/<short-name>
 
    Figure 5 in Section 3.2.2 of [RFC7030] enumerates the operations
    supported by EST, for which Table 1 in Section 5.1 of [RFC9148]
    enumerates the corresponding EST-coaps short path names.  Similarly,
    Table 1 below provides the mapping from the supported BRSKI extension
    URI paths to the constrained-BRSKI URI paths.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 10]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
              +=================+============================+
              | BRSKI resource  | constrained-BRSKI resource |
@@ -575,20 +641,21 @@ Internet-Draft              Constrained BRSKI              December 2022
                    Table 1: BRSKI URI paths mapping to
                        Constrained BRSKI URI paths
 
-   Note that /requestvoucher indicated above occurs between the Pledge
-   and Registrar (in scope of the BRSKI-EST protocol), but it also
-   occurs between Registrar and MASA.  However, as described in
-   Section 6, this section and above table addresses only the BRSKI-EST
-   protocol.
+   Note that /requestvoucher occurs between the Pledge and Registrar (in
+   scope of the BRSKI-EST protocol), but it also occurs between
+   Registrar and MASA.  However, as described in Section 6, this section
+   and above table addresses only the BRSKI-EST protocol.
 
    Pledges that wish to discover the available BRSKI bootstrap options/
    formats, or reduce the size of the CoAP headers by eliminating the
    "/.well-known/brski" path, can do a discovery operation using
-   [RFC6690] Section 4 by sending a discovery query to the Registrar.
+   Section 4 of [RFC6690] by sending a discovery query to the Registrar
+   over the secured DTLS connection.
 
    For example, if the Registrar supports a short BRSKI URL (/b) and
    supports the voucher format "application/voucher-cose+cbor" (836),
-   and status reporting in both CBOR and JSON formats:
+   and status reporting in both CBOR and JSON formats, a CoAP resource
+   discovery request and response may look as follows:
 
      REQ: GET /.well-known/core?rt=brski*
 
@@ -600,52 +667,81 @@ Internet-Draft              Constrained BRSKI              December 2022
      </b/vs>;rt=brski.vs;ct="50 60",
      </b/es>;rt=brski.es;ct="50 60"
 
-   The Registrar is under no obligation to provide shorter URLs, and MAY
-   respond to this query with only the "/.well-known/brski/<short-name>"
-   resources for the short names as defined in Table 1.
-
-   Registrars that have implemented shorter URLs MUST also respond in
-   equivalent ways to the corresponding "/.well-known/brski/<short-
-   name>" URLs, and MUST NOT distinguish between them.  In particular, a
-   Pledge MAY use the longer and shorter URLs in any combination.
 
 
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 11]
+Richardson, et al.        Expires 19 June 2023                 [Page 12]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
+   The Registrar is under no obligation to provide shorter URLs, and MAY
+   respond to this query with only the "/.well-known/brski/<short-name>"
+   resources for the short names as defined in Table 1.
+
    When responding to a discovery request for BRSKI resources, the
-   server MAY in addition return the full resource paths and the content
-   types which are supported by these resources as shown in above
-   example.  This is useful when multiple content types are specified
-   for a particular resource on the server.  The server responds with
-   only the root path for the BRSKI resources (rt=brski, resource /b in
-   above example) and no others in case the client queries for only
-   rt=brski type resources.  (So, a query for rt=brski, without the
-   wildcard character.)
+   Registrar MAY in addition return the full resource paths and the
+   content types which are supported by these resources as shown in
+   above example.  This is useful when multiple content types are
+   specified for a particular resource on the Registrar.
 
-   Without discovery, a longer well-known URL can only be used, such as:
+   Registrars that have implemented shorter URLs MUST also respond in
+   equivalent ways to the corresponding "/.well-known/brski/<short-
+   name>" URLs, and MUST NOT distinguish between them.  In particular, a
+   Pledge MAY use the longer (e.g. well-known) and shorter URLs in any
+   combination.
 
-      REQ: GET /.well-known/brski/rv
+   In case the client queries for only rt=brski type resources, the
+   Registrar responds with only the root path for the BRSKI resources
+   (rt=brski, resource /b in above example) and no others.  (So, a query
+   for rt=brski, without the wildcard character.)  This is shown in the
+   below example.  The Pledge requests only the BRSKI root resource of
+   type rt=brski to check if short names are supported or not.  In this
+   case, the Pledge is not interested to check what voucher request
+   formats, or status telemetry formats -- other than the mandatory
+   default formats -- are supported.  The compact response then shows
+   that the Registrar indeed supports a short-name BRSKI resource at /b:
+
+     REQ: GET /.well-known/core?rt=brski
+
+     RES: 2.05 Content
+     Content-Format: 40
+     Payload:
+     </b>;rt=brski
+
+   In above example, the well-known resource present under /.well-known/
+   brski is not returned because this is assumed to be well-known to the
+   Pledge and would not require discovery anyway.  Effectively, the
+   client is guided to preferably use the short names under resource /b
+   instead.
+
+   Without discovery, a Pledge can only use the longer well-known URI
+   for its voucher request, such as:
+
+     REQ: GET /.well-known/brski/rv
 
    while with discovery of shorter URLs, a request such as:
 
-      REQ: GET /b/rv
+     REQ: GET /b/rv
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 13]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    is possible.
 
    The return of multiple content-types in the "ct" attribute allows the
-   Pledge to choose the most appropriate one.  Note that Content-Format
-   836 ("application/voucher-cose+cbor") is defined in this document.
+   Pledge to choose the most appropriate one for a particular operation,
+   and allows extension with new voucher (request) formats.  Note that
+   only Content-Format 836 ("application/voucher-cose+cbor") is defined
+   in this document for the voucher request resource (/rv).
 
    Content-Format 836 MUST be supported by the Registrar for the /rv
    resource.  If the "ct" attribute is not indicated for the /rv
    resource in the link format description, this implies that at least
-   836 is supported.
+   format 836 is supported.
 
    Note that this specification allows for voucher-cose+cbor format
    requests and vouchers to be transmitted over HTTPS, as well as for
@@ -654,27 +750,13 @@ Internet-Draft              Constrained BRSKI              December 2022
    on constrained hardware is expected to support a single format only.
 
    The Pledge and MASA need to support one or more formats (at least
-   836) for the voucher and for the voucher request.  The MASA needs to
-   support all formats that the Pledge supports.
+   format 836) for the voucher and for the voucher request.  The MASA
+   needs to support all formats that the Pledge supports.
 
    Section 11 details how the Pledge discovers the Registrar and Join
    Proxy in different deployment scenarios.
 
-
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 12]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-6.3.1.  RFC8995 Telemetry Returns
+6.2.1.  RFC8995 Telemetry Returns
 
    [RFC8995] defines two telemetry returns from the Pledge which are
    sent to the Registrar.  These are the BRSKI Status Telemetry
@@ -691,20 +773,27 @@ Internet-Draft              Constrained BRSKI              December 2022
    described as CoAP Content-Format 60 ("application/cbor"), MUST be
    supported by the Registrar for both the /vs and /es resources.
 
-6.4.  Join Proxy options
+6.3.  Join Proxy options
 
    [I-D.ietf-anima-constrained-join-proxy] specifies the details for a
    stateful and stateless constrained Join Proxy which is equivalent to
    [RFC8995], Section 4.
 
-6.5.  Extensions to BRSKI
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 14]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+6.4.  Extensions to BRSKI
 
    The following section explains extension within the BRSKI/CoAP
    connection itself.  Section 10 explains ways in which a pledge may
    discover the capability to use constrained vouchers, and to use the
    CoAPS transport.
 
-6.5.1.  CoAP EST Resource Discovery and BRSKI
+6.4.1.  CoAP EST Resource Discovery and BRSKI
 
    Once the Pledge discovers an IP address and port number that connects
    to the Registrar (probably via a Join Proxy), and it establishes a
@@ -721,14 +810,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    EST-coaps resources.  This also avoids the Pledge having to do any
    CoRE Link Format parsing, which is specified in [RFC9148],
    Section 4.1.
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 13]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    The Registrar MUST support all of the EST resources at their default
    ".well-known" locations (on the specified port) as well as any
@@ -754,7 +835,14 @@ Internet-Draft              Constrained BRSKI              December 2022
    server port for all resources allows the Pledge to continue via the
    same DTLS connection which is more efficient.
 
-6.5.2.  CoAP responses
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 15]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+6.4.2.  CoAP responses
 
    [RFC8995], Section 5 defines a number of HTTP response codes that the
    Registrar is to return when certain conditions occur.
@@ -766,7 +854,7 @@ Internet-Draft              Constrained BRSKI              December 2022
    handled in the same way as Section 5.7 of [RFC9148] process for
    Delayed Responses.
 
-6.6.  Extensions to EST-coaps
+6.5.  Extensions to EST-coaps
 
    This document extends [RFC9148], and it inherits the functions
    described in that document: specifically, the mandatory Simple
@@ -778,13 +866,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    Collecting the resource definitions from both [RFC8995], [RFC7030],
    and [RFC9148] results in the following shorter forms of URI paths for
    the commonly used resources:
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 14]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
        +=================+=========================+===============+
        | BRSKI + EST     | Constrained-BRSKI + EST | Well-known    |
@@ -808,7 +889,16 @@ Internet-Draft              Constrained BRSKI              December 2022
             Table 2: BRSKI/EST URI paths mapping to Constrained
                          BRSKI/EST short URI paths
 
-6.6.1.  Pledge Extensions
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 16]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+6.5.1.  Pledge Extensions
 
    This section defines extensions to the BRSKI Pledge, which are
    applicable during the BRSKI bootstrap procedure.  A Pledge which only
@@ -832,16 +922,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    A constrained Pledge MAY use the following optimized EST-coaps
    procedure to minimize network traffic.
 
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 15]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
    1.  if the voucher, that validates the current Registrar, contains a
        single pinned domain CA certificate, the Pledge provisionally
        considers this certificate as the EST trust anchor, as if it were
@@ -862,6 +942,18 @@ Internet-Draft              Constrained BRSKI              December 2022
        anchor(s) since these can differ from the (temporary) pinned
        domain CA.
 
+
+
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 17]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    5.  When doing this /crts request, the Pledge MAY use a CoAP Accept
        Option with value 287 ("application/pkix-cert") to limit the
        number of returned EST CA trust anchors to only one.  A
@@ -878,7 +970,7 @@ Internet-Draft              Constrained BRSKI              December 2022
    SHOULD support retrieval of the trust anchor CA periodically as
    detailed in the next section.
 
-6.6.2.  EST-client Extensions
+6.5.2.  EST-client Extensions
 
    This section defines extensions to EST-coaps clients, used after the
    BRSKI bootstrap procedure is completed.  (Note that such client is
@@ -887,16 +979,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    the Content-Format 287 ("application/pkix-cert") in a /crts response,
    per Section 5.3 of [RFC9148].  In this case, it can only store one
    trust anchor of the domain.
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 16]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    An EST-coaps client that has an idea of the current time (internally,
    or via NTP) SHOULD consider the validity time of the trust anchor CA,
@@ -920,6 +1002,14 @@ Internet-Draft              Constrained BRSKI              December 2022
    domain, or due to key update of the trust anchor as described in
    [RFC4210], Section 4.4.
 
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 18]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    From the client's viewpoint, a trust anchor change typically happens
    during EST re-enrollment: a change of domain CA requires all devices
    operating under the old domain CA to acquire a new LDevID issued by
@@ -939,20 +1029,11 @@ Internet-Draft              Constrained BRSKI              December 2022
    single certificate in a /crts response it implies that the EST client
    cannot obtain the certificates OldWithNew and NewWithOld in this way,
    to perform the complete verification of the new domain CA.  Instead,
-   the client only verifies the EST server (Registrar) using its old
-   domain CA certificate in its trust store as detailed below, and based
-   on this trust in the active and valid DTLS connection it
-   automatically trusts the new (NewWithNew) domain CA certificate that
-   the EST server provides in the /crts response.
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 17]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
+   the client only verifies the EST-coaps server using its old domain CA
+   certificate in its trust store as detailed below, and based on this
+   trust in the active and valid DTLS connection it automatically trusts
+   the new (NewWithNew) domain CA certificate that the EST-coaps server
+   provides in the /crts response.
 
    In this manner, even during rollover of trust anchors, it is possible
    to have only a single trust anchor provided in a /crts response.
@@ -965,16 +1046,25 @@ Internet-Draft              Constrained BRSKI              December 2022
    recommended period for certificate renewal is 24 hours.  For re-
    enrollment, the constrained EST-coaps client MUST support the
    following EST-coaps procedure, where optional re-enrollment to a new
-   domain is under control of the Registrar:
+   domain is under control of the EST-coaps server:
 
-   1.  The client connects with DTLS to the Registrar, and authenticates
-       with its present domain certificate (LDevID certificate) as
-       usual.  The Registrar authenticates itself with its domain
-       certificate that is trusted by the client, i.e. it chains to the
-       single trust anchor that the client has stored.  This is the
-       "old" trust anchor, the one that will be eventually replaced in
-       case the Registrar decides to re-enroll the client into a new
-       domain.
+   1.  The client connects with DTLS to the EST-coaps server, and
+       authenticates with its present domain certificate (LDevID
+       certificate) as usual.  The EST-coaps server authenticates itself
+       with its domain certificate that is trusted by the client, i.e.
+       it chains to the single trust anchor that the client has stored.
+       This is the "old" trust anchor, the one that will be eventually
+       replaced in case the server decides to re-enroll the client into
+       a new domain.  The client also checks that the server is a
+       Registration Authority (RA) of the domain as required by
+       Section 3.6.1 of [RFC7030].
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 19]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    2.  The client performs the simple re-enrollment request (/sren) and
        upon success it obtains a new LDevID.
@@ -995,22 +1085,20 @@ Internet-Draft              Constrained BRSKI              December 2022
        stops using it prior LDevID certificate.  If it does not chain
        successfully, the client MUST NOT update its LDevID certificate,
        it MUST NOT update its (single) domain trust anchor, and the
-       client MUST abort the enrollment process and report the error to
-       the Registrar using enrollment status telemetry (/es).
+       client MUST abort the enrollment process and MUST attempt to
+       report the error to the EST-coaps server using enrollment status
+       telemetry (/es).
 
    Note that even though the EST-coaps client may skip the /crts request
    in step 3, it SHOULD support retrieval of the trust anchor CA
    periodically as detailed earlier in this section.
 
+   Note that an EST-coaps server that is also a Registrar will already
+   support the enrollment status telemetry resource (/es) in step 4,
+   while an EST-coaps server that purely implements [RFC9148], and not
+   the present specification, will not support this resource.
 
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 18]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-6.6.3.  Registrar Extensions
+6.5.3.  Registrar Extensions
 
    A Registrar SHOULD host any discoverable EST-coaps resources on the
    same (UDP) server port that the Pledge's DTLS initial connection is
@@ -1024,6 +1112,15 @@ Internet-Draft              Constrained BRSKI              December 2022
 
    Content-Format 836 MUST be supported by the Registrar for the /rv
    resource.
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 20]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    When a Registrar receives a "CA certificates request" (/crts) request
    with a CoAP Accept Option with value 287 ("application/pkix-cert") it
@@ -1045,33 +1142,7 @@ Internet-Draft              Constrained BRSKI              December 2022
    new domain CA certificate in case the client performs the "CA
    Certificates request" (/crts) with an Accept Option for 287 only.
    This signals the client that a new domain is assigned to it.  The
-   client follows the procedure as defined in Section 6.6.2.
-
-6.7.  DTLS handshake fragmentation Considerations
-
-   DTLS includes a mechanism to fragment the handshake messages.  This
-   is described in Section 4.4 of [RFC9147].  The protocol described in
-   this document will often be used with a Join Proxy described in
-   [I-D.ietf-anima-constrained-join-proxy].  The Join Proxy will need
-   some overhead, while the maximum packet sized guaranteed on 802.15.4
-   networks is 1280 bytes.  It is RECOMMENDED that a PMTU of 1024 bytes
-   be assumed for the DTLS handshake.  It is unlikely that any Packet
-   Too Big indications [RFC4443] will be relayed by the Join Proxy.
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 19]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   During the operation of the constrained BRSKI-EST protocol, the CoAP
-   Blockwise transfer mechanism will be used when message sizes exceed
-   the PMTU.  A Pledge/EST-client on a constrained network MUST use the
-   (D)TLS maximum fragment length extension ("max_fragment_length")
-   defined in Section 4 of [RFC6066] with the maximum fragment length
-   set to a value of either 2^9 or 2^10.
+   client follows the procedure as defined in Section 6.5.2.
 
 7.  BRSKI-MASA Protocol
 
@@ -1097,6 +1168,16 @@ Internet-Draft              Constrained BRSKI              December 2022
    MASA using the HTTP Accept header.  This format MUST be the same as
    the format of the PVR, so that the Pledge can parse it.
 
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 21]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    At the moment of writing the creation of coaps based MASAs is deemed
    unrealistic.  The use of CoAP for the BRSKI-MASA connection can be
    the subject of another document.  Some consideration was made to
@@ -1112,15 +1193,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    *  a Registrar is likely to provide onboarding services to both
       constrained and non-constrained devices.  Such a Registrar would
       need to speak HTTPS anyway.
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 20]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    *  a manufacturer is likely to offer both constrained and non-
       constrained devices, so there may in practice be no situation in
@@ -1152,8 +1224,15 @@ Internet-Draft              Constrained BRSKI              December 2022
    determined by the id-mod-MASAURLExtn2016 extension contained in the
    IDevID.
 
-   The Registrar MUST do [RFC6125] DNS-ID checks on the contents of the
-   certificate provided by the MASA.
+   The Registrar MUST do DNS-ID checks ([I-D.ietf-uta-rfc6125bis]) on
+   the contents of the certificate provided by the MASA.
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 22]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    In constrast to the Pledge/Registrar situation, the Registrar always
    knows the name of the MASA, and MUST always include an [RFC6066]
@@ -1168,15 +1247,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    Registrar uses is marked as a id-kp-cmcRA certificate, via Extended
    Key Usage, then it MUST also have the id-kp-clientAuth EKU attribute
    set.
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 21]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
 7.3.1.  Registrar Certificate Requirement
 
@@ -1215,21 +1285,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 22]
+Richardson, et al.        Expires 19 June 2023                 [Page 23]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1285,7 +1341,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 23]
+Richardson, et al.        Expires 19 June 2023                 [Page 24]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1304,7 +1360,7 @@ Internet-Draft              Constrained BRSKI              December 2022
    networks: the pinned certificate in the voucher can in common cases
    be re-used as a Domain CA trust anchor during the EST enrollment and
    during the operational phase that follows after EST enrollment, as
-   explained in Section 6.6.1.
+   explained in Section 6.5.1.
 
    The rationale for 2. follows from the flexible BRSKI trust model for,
    and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of
@@ -1341,7 +1397,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 24]
+Richardson, et al.        Expires 19 June 2023                 [Page 25]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1397,7 +1453,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 25]
+Richardson, et al.        Expires 19 June 2023                 [Page 26]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1453,7 +1509,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 26]
+Richardson, et al.        Expires 19 June 2023                 [Page 27]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1509,7 +1565,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 27]
+Richardson, et al.        Expires 19 June 2023                 [Page 28]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1565,7 +1621,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 28]
+Richardson, et al.        Expires 19 June 2023                 [Page 29]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1621,7 +1677,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 29]
+Richardson, et al.        Expires 19 June 2023                 [Page 30]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1677,7 +1733,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 30]
+Richardson, et al.        Expires 19 June 2023                 [Page 31]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1733,7 +1789,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 31]
+Richardson, et al.        Expires 19 June 2023                 [Page 32]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -1749,27 +1805,68 @@ Internet-Draft              Constrained BRSKI              December 2022
    }
    <CODE ENDS>
 
-9.1.4.  Example voucher request artifact
+9.1.4.  Example Pledge voucher request (PVR) artifact
 
-   Below is a CBOR serialization of an example constrained voucher
-   request from a Pledge to a Registrar, shown in CBOR diagnostic
-   notation.  The enum value of the assertion field is calculated to be
-   2 by following the algorithm described in section 9.6.4.2 of
-   [RFC7950].
+   Below, an example constrained voucher request (PVR) from a Pledge to
+   a Registrar is shown in CBOR diagnostic notation.  Long CBOR byte
+   strings have been shortened (with "....") for readability.  The enum
+   value of the assertion field is calculated to be 2 for the
+   "proximity" assertion by following the algorithm described in section
+   9.6.4.2 of [RFC7950].  For reference, Section 9.1.2 shows a table
+   with all currently defined assertion values.
 
-  {
-    2501: {
-      +2 : "2016-10-07T19:31:42Z", / SID=2503, created-on /
-      +4 : "2016-10-21T19:31:42Z", / SID=2505, expires-on /
-      +1 : 2,                      / SID=2502, assertion "proximity" /
-      +13: "JADA123456789",        / SID=2514, serial-number /
-      +5 : h'08C2BF36....B3D2B3',  / SID=2506, idevid-issuer /
-      +10: h'30820275....82c35f',  / SID=2511, proximity-registrar-cert/
-      +3 : true,                   / SID=2504, domain-cert
-                                                     -revocation-checks/
-      +6 : "2017-10-07T19:31:42Z"  / SID=2507, last-renewal-date /
+   {
+    2501: {      / SID=2501, ietf-voucher-request-constrained:voucher /
+       1: 2,                     / SID=2502, assertion 2 = "proximity"/
+       7: h'831D5198A6CA2C7F',   / SID=2508, nonce                    /
+      12: h'30593013....D29A54', / SID=2513, proximity-registrar-pubk /
+      13: "JADA123456789"        / SID=2514, serial-number            /
     }
-  }
+   }
+
+   The Pledge has included the item proximity-registrar-pubk which
+   carries the public key of the Registrar, instead of including the
+   full Registrar certificate in a proximity-registrar-cert item.  This
+   is done to reduce the size of the PVR.  Also note that the Pledge did
+   not include the created-on field since it lacks an internal real-time
+   clock and has no knowledge of the current time at the moment of
+   performing the bootstrapping.
+
+9.1.5.  Example Registrar voucher request (RVR) artifact
+
+   Next, an example constrained voucher request (RVR) from a Registrar
+   to a MASA is shown in CBOR diagnostic notation.  The Registrar has
+   created this request triggered by the reception of the Pledge voucher
+   request (PVR) of the previous example.  Again, long CBOR byte strings
+   have been shortened for readability.
+
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 33]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+   {
+    "ietf-request-voucher:voucher": {
+       "assertion":     2,
+       "created-on":    "2022-12-05T19:19:19.536Z",
+       "nonce":         h'831D5198A6CA2C7F',
+       "idevid-issuer": h'04183016....1736C3E0',
+       "serial-number": "JADA123456789",
+       "prior-signed-voucher-request": h'A11909....373839'
+    }
+   }
+
+   Note that the Registrar uses here the string data type for all key
+   names, instead of the more compact SID integer keys.  This is fine
+   for any use cases where the network between Registrar and MASA is an
+   unconstrained network where data size is not critical.  The
+   constrained voucher request format supports both the string and SID
+   key types.
 
 9.2.  Voucher artifact
 
@@ -1782,17 +1879,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    The following diagram is largely a duplicate of the contents of
    [RFC8366], with only the addition of the fields pinned-domain-pubk
    and pinned-domain-pubk-sha256.
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 32]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    module: ietf-voucher-constrained
 
@@ -1811,6 +1897,13 @@ Internet-Draft              Constrained BRSKI              December 2022
           +-- pinned-domain-pubk-sha256?       binary
 
 9.2.2.  SID values
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 34]
+
+Internet-Draft              Constrained BRSKI              December 2022
 
 
          SID Assigned to
@@ -1839,17 +1932,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    voucher attributes, and the voucher-constrained attributes.  Two
    attributes of the voucher are "refined" to be optional.
 
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 33]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
    <CODE BEGINS> file "ietf-voucher-constrained@2021-04-15.yang"
    module ietf-voucher-constrained {
      yang-version 1.1;
@@ -1872,6 +1954,13 @@ Internet-Draft              Constrained BRSKI              December 2022
 
      organization
       "IETF ANIMA Working Group";
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 35]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
      contact
       "WG Web:   <http://tools.ietf.org/wg/anima/>
@@ -1898,14 +1987,6 @@ Internet-Draft              Constrained BRSKI              December 2022
       always required, that expiration dates are rather weak, as no
       clocks can be assumed, and that the Registrar is identified
       by either a pinned Raw Public Key of the Registrar, or by a
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 34]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
       pinned X.509 certificate of the Registrar or domain CA.
 
       The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
@@ -1929,6 +2010,13 @@ Internet-Draft              Constrained BRSKI              December 2022
      grouping voucher-constrained-grouping {
        description
          "Grouping to allow reuse/extensions in future work.";
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 36]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
        uses v:voucher-artifact-grouping {
 
@@ -1954,14 +2042,6 @@ Internet-Draft              Constrained BRSKI              December 2022
                 as specified in RFC7250, in section 3.
                 The ECDSA algorithm MUST be supported.
                 The EdDSA algorithm as specified in
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 35]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
                 draft-ietf-tls-rfc4492bis-17 SHOULD be supported.
                 Support for the DSA algorithm is not recommended.
                 Support for the RSA algorithm is a MAY.";
@@ -1986,37 +2066,74 @@ Internet-Draft              Constrained BRSKI              December 2022
          }
        }
      }
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 37]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    }
    <CODE ENDS>
 
 9.2.4.  Example voucher artifacts
 
-   Below the CBOR serialization of an example constrained voucher is
-   shown in CBOR diagnostic notation.  The enum value of the assertion
-   field is calculated to be zero by following the algorithm described
-   in section 9.6.4.2 of [RFC7950].
+   Below, an example constrained voucher is shown in CBOR diagnostic
+   notation.  It was created by a MASA in response to
+   receiving the Registrar Voucher Request (RVR) shown in Section 9.1.5.
+   The enum value of the assertion field is set to 2, to acknowledge to
+   both the Pledge and the Registrar that the proximity of the Pledge to
+   the Registrar is considered proven.
 
    {
-     2451: {
-       +2 : "2016-10-07T19:31:42Z", / SID = 2453, created-on /
-       +4 : "2016-10-21T19:31:42Z", / SID = 2455, expires-on /
-       +1 : 0,                      / SID = 2452, assertion "verified" /
-       +11: "JADA123456789",        / SID = 2462, serial-number /
-       +5 : h'E40393B4....68A3',    / SID = 2456, idevid-issuer /
-       +8 : h'30820275....C35F',    / SID = 2459, pinned-domain-cert/
-       +3 : true,                   / SID = 2454, domain-cert /
-                                    /               -revocation-checks /
-       +6 : "2017-10-07T19:31:42Z"  / SID = 2457, last-renewal-date /
-     }
+    2451: {            / SID = 2451, ietf-voucher-constrained:voucher /
+       1: 2,                      / SID = 2452, assertion "proximity" /
+       2: "2022-12-05T19:19:23Z", / SID = 2453, created-on            /
+       3: false,       / SID = 2454, domain-cert-revocation-checks    /
+       7: h'831D5198A6CA2C7F',    / SID = 2508, nonce                 /
+       8: h'308201F8....8CFF',    / SID = 2459, pinned-domain-cert    /
+      11: "JADA123456789"         / SID = 2462, serial-number         /
+    }
+   }
+
+   While the above example voucher includes the nonce from the PVR, the
+   next example is a nonce-less voucher.  Instead of a nonce, it
+   includes an expires-on field with the date and time on which the
+   voucher expires.  Because the MASA did not verify the proximity of
+   the Pledge and Registrar in this case, the assertion field contains a
+   weaker assertion of "verified" (0).  This indicates that the MASA
+   verified the domain's ownership of the Pledge via some other means.
+   The enum value of the assertion field for "verified" is calculated to
+   be 0 by following the algorithm described in section 9.6.4.2 of
+   [RFC7950].
+
+   {
+    2451: {            / SID = 2451, ietf-voucher-constrained:voucher /
+       1: 0,                      / SID = 2452, assertion "verified"  /
+       2: "2022-12-06T10:15:32Z", / SID = 2453, created-on            /
+       3: false,       / SID = 2454, domain-cert-revocation-checks    /
+       4: "2022-12-13T10:15:32Z", / SID = 2455, expires-on            /
+       8: h'308201F8....8CFF',    / SID = 2459, pinned-domain-cert    /
+      11: "JADA123456789"         / SID = 2462, serial-number         /
+    }
    }
 
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 36]
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 38]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
+
+   The voucher is valid for one week.  To verify the voucher's validity,
+   the Pledge would either need an internal real-time clock or some
+   external means of obtaining the current time, such as Network Time
+   Protocol (NTP) or a radio time signal receiver.
 
 9.3.  Signing voucher and voucher-request artifacts with COSE
 
@@ -2038,7 +2155,7 @@ Internet-Draft              Constrained BRSKI              December 2022
    Curve, which from Table 18.  The 'kty' field MUST be present, and it
    MUST be 'OKP'.  (Table 17)
 
-   A transition towards EdDSA is occuring in the industry.  Some
+   A transition towards EdDSA is occurring in the industry.  Some
    hardware can accelerate only some algorithms with specific curves,
    other hardware can accelerate any curve, and still other kinds of
    hardware provide a tool kit for acceleration of any eliptic curve
@@ -2049,83 +2166,134 @@ Internet-Draft              Constrained BRSKI              December 2022
    to support a wide variety of algorithms: both legacy ones and up-and-
    coming ones via regular software updates.
 
-   An example of the supported COSE_Sign1 object structure is shown in
-   Figure 3.
+   An example of the supported COSE_Sign1 object structure containing a
+   Pledge Voucher Request (PVR) is shown in Figure 3.
 
-   18( / COSE_Sign1 /
+   18(                  / tag for COSE_Sign1                       /
      [
-       h'A101382E',        / protected header encoding: {1: -47}     /
-       {                   /       which means { "alg": ES256K }     /
-         4 : h'7890A03F1234'  / 4 is the "kid" binary key identifier /
-       },
-       h'1234....5678', / voucher-request binary content (CBOR)      /
-       h'4567....1234'  / voucher-request binary public signature    /
+       h'A10126',       / protected COSE header encoding: {1: -7}  /
+                        /            which means { "alg": ES256 }  /
+       {},              / unprotected COSE header parameters       /
+       h'A119....3839', / voucher-request binary content (in CBOR) /
+       h'4567....1234'  / voucher-request binary Sign1 signature   /
      ]
    )
 
-          Figure 3: COSE_Sign1 example in CBOR diagnostic notation
 
 
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 37]
+Richardson, et al.        Expires 19 June 2023                 [Page 39]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
-   The [COSE-registry] specifies the integers/encoding for the "alg" and
-   "kid" fields in Figure 3.  The "alg" field restricts the key usage
-   for verification of this COSE object to a particular cryptographic
+        Figure 3: COSE_Sign1 PVR example in CBOR diagnostic notation
+
+   The [COSE-registry] specifies the integers/encoding for the "alg"
+   field in Figure 3.  The "alg" field restricts the key usage for
+   verification of this COSE object to a particular cryptographic
    algorithm.
 
-   The "kid" field is optionally present: it is an unprotected field
-   that identifies the public key of the key pair that was used to sign
-   this message.  The value of the key identifier "kid" parameter is an
-   example value.  Usually a hash of the public key is used to identify
-   the public key, but a device serial number may also be used.  The
-   choice of key identifier method is vendor-specific.  If "kid" is not
-   present, then a verifying party needs to use other context
-   information to retrieve the right public key to verify the COSE_Sign1
-   object against.  For example, this context information may be a
-   unique serial number encoded in the binary content (CBOR) field.
+9.3.1.  Signing of Registrar Voucher Request (RVR)
 
-9.3.1.  signing of Registrar Voucher Request (RVR)
+   A Registrar MUST include a COSE "x5bag" structure in the RVR as
+   explained in Section 8.1.  Figure 4 shows an example Registrar
+   Voucher Request (RVR) that includes the x5bag as an unprotected
+   header parameter (32).  The bag contains two certificates in this
+   case.
 
-   A Registrar MUST include a COSE "x5bag" structure as explained in
-   Section 8.1.
+   18(                  / tag for COSE_Sign1                       /
+     [
+       h'A10126',       / protected COSE header encoding: {1: -7}  /
+                        /            which means { "alg": ES256 }  /
+       {
+         32: [h'308202....9420AE', h'308201....E08CFF']  / x5bag   /
+       },
+       h'A178....7FED', / voucher-request binary content (in CBOR) /
+       h'E1B7....2925'  / voucher-request binary Sign1 signature   /
+     ]
+   )
 
-   By default, a Registrar does not include a "kid" parameter in its RVR
-   since the signing key is already identified by the included signing
-   certificates in the COSE "x5bag" structure.
+        Figure 4: COSE_Sign1 RVR example in CBOR diagnostic notation
 
-   A Registrar MAY use a "kid" parameter in its RVR to identify its
-   signing key as used to sign the RVR.  The method of generating this
-   "kid" is vendor-specific and SHOULD be configurable in the Registrar
-   to support commonly used methods.  In order to support future
-   business cases and supply chain integrations, a Registrar MUST be
-   configurable, on a per-manufacturer basis, to be able to configure
-   the "kid" to a particular value.  Both binary and string values are
-   to be supported, each being inserted using a CBOR bstr or tstr.
+   A "kid" (key ID) field is optionally present in the unprotected COSE
+   header parameters map of a COSE object.  If present, it identifies
+   the public key of the key pair that was used to sign the COSE
+   message.  The value of the key identifier "kid" parameter may be in
+   any format agreed between signer and verifier.  Usually a hash of the
+   public key is used to identify the public key; but the choice of key
+   identifier method is vendor-specific.  If "kid" is not present, then
+   a verifying party needs to use other context information to retrieve
+   the right public key to verify the COSE_Sign1 object against.
 
-9.3.2.  signing of Pledge Voucher Request (PVR)
+   By default, a Registrar does not include a "kid" parameter in the RVR
+   since the signing key is already identified by the signing
+   certificates included in the COSE "x5bag" structure.  A Registrar
+   nevertheless MAY use a "kid" parameter in its RVR to identify its
+   signing key/identity.
 
-   A Pledge SHOULD NOT use a "kid" parameter in its PVR, because its
-   signing key is already identified by the Pledge's unique serial
-   number that is included in the PVR.  Still, where needed the Pledge
-   MAY use a "kid" parameter in its PVR to help the MASA identify the
-   right public key to verify against.  This can occur for example if a
-   Pledge has multiple IDevID identities.  A Registrar normally SHOULD
-   ignore a "kid" parameter used in a received PVR, as this information
-   is intended for the MASA.  In other words, there is no need for the
-   Registrar to verify the contents of this field, but it may include it
-   in an audit log.
-
-
+   The method of generating such "kid" value is vendor-specific and
+   SHOULD be configurable in the Registrar to support commonly used
+   methods.  In order to support future business cases and supply chain
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 38]
+Richardson, et al.        Expires 19 June 2023                 [Page 40]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
+   integrations, a Registrar using the "kid" field MUST be configurable,
+   on a per-manufacturer basis, to select a particular method for
+   generating the "kid" value such that it is compatible with the method
+   that the manufacturer.  Both binary and string values MUST be
+   supported per [RFC9052], respectively encoded in the "kid" field
+   using a CBOR byte string (bstr) or text string (tstr).
+
+9.3.2.  Signing of Pledge Voucher Request (PVR)
+
+   Like in the RVR, a "kid" (key ID) field is also optionally present in
+   the PVR.  It can be used to identify the signing key/identity to the
+   MASA.
+
+   A Pledge by default SHOULD NOT use a "kid" parameter in its PVR,
+   because its signing key is already identified by the Pledge's unique
+   serial number that is included in the PVR and (by the Registrar) in
+   the RVR.  This achieves the smallest possible PVR data size while
+   still enabling the MASA to verify the PVR.  Still, when required the
+   Pledge MAY use a "kid" parameter in its PVR to help the MASA identify
+   the right public key to verify against.  This can occur for example
+   if a Pledge has multiple IDevID identities.  The "kid" parameter in
+   this case may be a simple integer identifying one out of N identities
+   present, or it may be a hash of the public key, or anything else the
+   Pledge vendor decides.  A Registrar normally SHOULD ignore a "kid"
+   parameter used in a received PVR, as this information is intended for
+   the MASA.  In other words, there is no need for the Registrar to
+   verify the contents of this field, but it may include it in an audit
+   log.
+
+   The example in Figure 5 shows a PVR with the "kid" parameter present.
+
+   18(                  / tag for COSE_Sign1                       /
+     [
+       h'A10126',       / protected COSE header encoding: {1: -7}  /
+                        /            which means { "alg": ES256 }  /
+       {
+          4: h'59AB3E'  / COSE "kid" header parameter              /
+       },
+       h'A119....3839', / voucher-request binary content (in CBOR) /
+       h'5678....7890'  / voucher-request binary Sign1 signature   /
+     ]
+   )
+
+         Figure 5: COSE_Sign1 PVR example with "kid" field present
+
+
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 41]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2140,23 +2308,51 @@ Internet-Draft              Constrained BRSKI              December 2022
    some vendor- specific situations involving outsourcing of MASA
    functionality, or rekeying of the IDevID certification authority.
 
-   In Appendix C a binary COSE_Sign1 object is shown based on the
-   voucher-request example of Section 9.1.4.
+   In Appendix C further examples of signed PVRs are shown.
 
-9.3.3.  signing of voucher by MASA
+9.3.3.  Signing of voucher by MASA
 
    The MASA SHOULD NOT use a "kid" parameter in the voucher response,
-   because its signing key is already identified by the Pledge.  Still,
-   where needed the MASA MAY use a "kid" parameter in the voucher
-   response to help the Pledge identify the right public key to verify
-   against.  This can occur for example if a Pledge has multiple IDevID
-   identities.
+   because the MASA's signing key is already known to the Pledge.
+   Still, where needed the MASA MAY use a "kid" parameter in the voucher
+   response to help the Pledge identify the right MASA public key to
+   verify against.  This can occur for example if a Pledge has multiple
+   IDevID identities.
 
    The MASA SHOULD NOT include an x5bag structure in the voucher
-   response - exception is if the MASA knows the Pledge doesn't pre-
-   store the signing public key/cert , and thus needs to provide a cert
-   or cert chain that links the signing identity/key to the pre-stored
-   Trust Anchor that is inside the Pledge.
+   response - the exception is if the MASA knows that the Pledge doesn't
+   pre-store the signing public key and certificate, and thus the MASA
+   needs to provide a cert or cert chain that will enable linking the
+   signing identity to the pre-stored Trust Anchor (CA) in the Pledge.
+
+   In Figure 6 an example is shown of a COSE-signed voucher.
+
+   18(                  / tag for COSE_Sign1                       /
+     [
+       h'A10126',       / protected COSE header encoding: {1: -7}  /
+                        /            which means { "alg": ES256 }  /
+       {},              / unprotected COSE header parameters       /
+       h'A119....3839', / voucher binary content (in CBOR)         /
+       h'2A2C....7FBF'  / voucher binary Sign1 signature by MASA   /
+     ]
+   )
+
+      Figure 6: COSE_Sign1 signed voucher in CBOR diagnostic notation
+
+
+
+
+
+
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 42]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
 10.  Extensions to Discovery
 
@@ -2171,20 +2367,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    Registrar, where one hop means the Registrar is a direct link-local
    neighbor of the Pledge.  The case of one hop away can be considered
    as a degenerate case, because a Join Proxy is not really needed then.
-
-
-
-
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 39]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    The degenerate case would be unusual in constrained wireless network
    deployments, because a Registrar would typically not have a wireless
@@ -2218,6 +2400,16 @@ Internet-Draft              Constrained BRSKI              December 2022
    of the remainder of this section.  Further details on both these
    topics are provided in [I-D.ietf-anima-constrained-join-proxy].
 
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 43]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
 10.1.  Discovery operations by Pledge
 
    The Pledge must discover the address/port and protocol with which to
@@ -2231,16 +2423,6 @@ Internet-Draft              Constrained BRSKI              December 2022
    Pledge that makes a voucher request to a Registrar that does not
    support that format will receive a CoAP 4.06 Not Acceptable status
    code and the bootstrap attempt will fail.
-
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 40]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
 10.1.1.  GRASP discovery
 
@@ -2268,12 +2450,21 @@ Internet-Draft              Constrained BRSKI              December 2022
         [O_IPv6_LOCATOR,
         h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]]
 
-            Figure 4: Example of Join Proxy announcement message
+            Figure 7: Example of Join Proxy announcement message
 
    Note that a Join Proxy that supports also supports RFC8995 onboarding
    using HTTPS may announce more than one objective.  Objectives with an
    empty objective-value (whether CBOR NULL or an empty string) refer to
    [RFC8995] defaults.
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 44]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    Here is an example of an announcement that offers both constrained
    and unconstrained onboarding:
@@ -2286,22 +2477,58 @@ Internet-Draft              Constrained BRSKI              December 2022
          [O_IPv6_LOCATOR,
           h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]
 
-      Figure 5: Example of Join Proxy announcing two bootstrap methods
+      Figure 8: Example of Join Proxy announcing two bootstrap methods
+
+10.1.2.  CoAP Discovery
+
+   The details on CoAP discovery of a Join Proxy by a Pledge are
+   provided in Section 5.2.1 of [I-D.ietf-anima-constrained-join-proxy].
+   In this section some examples of CoAP discovery interactions are
+   given.
+
+   Below, a typical example is provided showing the Pledge's CoAP
+   request and the Join Proxy's CoAP response.  The Join Proxy responds
+   with a link-local source address, which is the same address as
+   indicated in the URI-reference element ([RFC6690]) in the discovery
+   response payload.  The Join Proxy has a dedicated port 8485 opened
+   for DTLS connections of Pledges.
+
+     REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
+
+     RES: 2.05 Content
+     <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
+
+   The next example shows a Join Proxy that uses the default CoAPS port
+   5684 for DTLS connections of Pledges.  In this case, the Join Proxy
+   host is not using port 5684 for any other purposes.
+
+     REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
+
+     RES: 2.05 Content
+     <coaps://[fe80::c78:e3c4:58a0:a4ad]>;rt=brski.jp
+
+   In the following example, two Join Proxies respond to the multicast
+   query.  The Join Proxies use a slightly different CoRE Link Format
+   encoding.  While the first encoding is more compact, both encodings
+   are allowed per [RFC6690].  The Pledge may now select one of the two
+   Join Proxies for initiating its DTLS connection.
 
 
 
 
 
-
-Richardson, et al.        Expires 10 June 2023                 [Page 41]
+Richardson, et al.        Expires 19 June 2023                 [Page 45]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
-10.1.2.  CoAP Discovery
+     REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski*
 
-   Further details on CoAP discovery by a Pledge are provided in
-   Section 5.2.1 of [I-D.ietf-anima-constrained-join-proxy].
+     RES: 2.05 Content
+     <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
+
+     RES: 2.05 Content
+     <coaps://[fe80::d359:3813:f382:3b23]:63245>;rt="brski.jp"
 
 10.2.  Discovery operations by Join Proxy
 
@@ -2336,7 +2563,7 @@ Internet-Draft              Constrained BRSKI              December 2022
        [O_IPv6_LOCATOR,
         h'fda379a6f6ee00000200000064000001', IPPROTO_UDP, 5684]]]
 
-            Figure 6: Example of Registrar announcement message
+            Figure 9: Example of Registrar announcement message
 
    The Registrar uses a routable address that can be used by enrolled
    constrained Join Proxies.  The address will typically be a ULA (as it
@@ -2346,10 +2573,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 42]
+Richardson, et al.        Expires 19 June 2023                 [Page 46]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2405,7 +2629,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 43]
+Richardson, et al.        Expires 19 June 2023                 [Page 47]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2461,7 +2685,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 44]
+Richardson, et al.        Expires 19 June 2023                 [Page 48]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2517,7 +2741,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 45]
+Richardson, et al.        Expires 19 June 2023                 [Page 49]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2573,7 +2797,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 46]
+Richardson, et al.        Expires 19 June 2023                 [Page 50]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2629,7 +2853,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 47]
+Richardson, et al.        Expires 19 June 2023                 [Page 51]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2685,7 +2909,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 48]
+Richardson, et al.        Expires 19 June 2023                 [Page 52]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2741,7 +2965,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 49]
+Richardson, et al.        Expires 19 June 2023                 [Page 53]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2797,7 +3021,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 50]
+Richardson, et al.        Expires 19 June 2023                 [Page 54]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2853,7 +3077,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 51]
+Richardson, et al.        Expires 19 June 2023                 [Page 55]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2909,7 +3133,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 52]
+Richardson, et al.        Expires 19 June 2023                 [Page 56]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -2965,7 +3189,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 53]
+Richardson, et al.        Expires 19 June 2023                 [Page 57]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3021,7 +3245,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 54]
+Richardson, et al.        Expires 19 June 2023                 [Page 58]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3077,7 +3301,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 55]
+Richardson, et al.        Expires 19 June 2023                 [Page 59]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3089,6 +3313,13 @@ Internet-Draft              Constrained BRSKI              December 2022
               ietf-cose-x509-09, 13 October 2022,
               <https://www.ietf.org/archive/id/draft-ietf-cose-
               x509-09.txt>.
+
+   [I-D.ietf-uta-rfc6125bis]
+              Saint-Andre, P. and R. Salz, "Service Identity in TLS",
+              Work in Progress, Internet-Draft, draft-ietf-uta-
+              rfc6125bis-08, 12 October 2022,
+              <https://www.ietf.org/archive/id/draft-ietf-uta-
+              rfc6125bis-08.txt>.
 
    [ieee802-1AR]
               IEEE Standard, "IEEE 802.1AR Secure Device Identifier",
@@ -3124,31 +3355,26 @@ Internet-Draft              Constrained BRSKI              December 2022
               RFC 5652, DOI 10.17487/RFC5652, September 2009,
               <https://www.rfc-editor.org/info/rfc5652>.
 
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 60]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
+
    [RFC6020]  Bjorklund, M., Ed., "YANG - A Data Modeling Language for
               the Network Configuration Protocol (NETCONF)", RFC 6020,
               DOI 10.17487/RFC6020, October 2010,
               <https://www.rfc-editor.org/info/rfc6020>.
-
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 56]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
 
    [RFC6066]  Eastlake 3rd, D., "Transport Layer Security (TLS)
               Extensions: Extension Definitions", RFC 6066,
               DOI 10.17487/RFC6066, January 2011,
               <https://www.rfc-editor.org/info/rfc6066>.
 
-   [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
-              Verification of Domain-Based Application Service Identity
-              within Internet Public Key Infrastructure Using X.509
-              (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, DOI 10.17487/RFC6125, March
-              2011, <https://www.rfc-editor.org/info/rfc6125>.
+   [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
+              Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
+              January 2012, <https://www.rfc-editor.org/info/rfc6347>.
 
    [RFC7250]  Wouters, P., Ed., Tschofenig, H., Ed., Gilmore, J.,
               Weiler, S., and T. Kivinen, "Using Raw Public Keys in
@@ -3187,9 +3413,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 57]
+Richardson, et al.        Expires 19 June 2023                 [Page 61]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3245,7 +3469,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 58]
+Richardson, et al.        Expires 19 June 2023                 [Page 62]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3301,7 +3525,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 59]
+Richardson, et al.        Expires 19 June 2023                 [Page 63]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3357,7 +3581,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 60]
+Richardson, et al.        Expires 19 June 2023                 [Page 64]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3413,7 +3637,7 @@ A.1.  OpensSSL
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 61]
+Richardson, et al.        Expires 19 June 2023                 [Page 65]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3469,7 +3693,7 @@ A.2.  mbedTLS
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 62]
+Richardson, et al.        Expires 19 June 2023                 [Page 66]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3485,11 +3709,12 @@ B.1.  enrollstatus
    A coaps enrollstatus message from Pledge to Registrar can be as
    follows:
 
-       POST coaps://192.0.2.1:8085/b/es
-         Content-Format: 60
-         Payload: <binary CBOR enrollstatus document>
+     REQ: POST coaps://192.0.2.1:8085/b/es
+     Content-Format: 60
+     Payload: <binary CBOR encoding of an enrollstatus map>
 
-   The corresponding CoAP header fields are shown below.
+   The corresponding CoAP header fields for this request are shown
+   below.
 
      Ver = 1
      T = 0 (CON)
@@ -3524,8 +3749,7 @@ B.1.  enrollstatus
 
 
 
-
-Richardson, et al.        Expires 10 June 2023                 [Page 63]
+Richardson, et al.        Expires 19 June 2023                 [Page 67]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3540,7 +3764,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
      Payload = A36776657273696F6E0166737461747573F466726561736F6E782A3C
                496E666F726D61746976652068756D616E207265616461626C652065
-               72726F72206D6573736167653E
+               72726F72206D6573736167653E    (69 bytes binary)
 
      {
        "version": 1,
@@ -3551,9 +3775,10 @@ Internet-Draft              Constrained BRSKI              December 2022
    To indicate successful reception of the enrollmentstatus telemetry
    report, a response from the Registrar may then be:
 
-      2.04 Changed
+     2.04 Changed
 
-   With CoAP fields:
+   Which in case of a piggybacked response has the following CoAP header
+   fields:
 
      Ver=1
      T=2 (ACK)
@@ -3567,42 +3792,45 @@ B.2.  voucher_status
    A coaps voucher_status message from Pledge to Registrar can be as
    follows:
 
-       POST coaps://[2001:db8::2:1]/.well-known/brski/vs
-         Content-Format: 60 (application/cbor)
-         Payload:
-   a46776657273696f6e0166737461747573f466726561736f6e7828496e66
-   6f726d61746976652068756d616e2d7265616461626c65206572726f7220
-   6d6573736167656e726561736f6e2d636f6e74657874a100764164646974
-   696f6e616c20696e666f726d6174696f6e
+     REQ: POST coaps://[2001:db8::2:1]/.well-known/brski/vs
+     Content-Format: 60 (application/cbor)
+     Payload =
+       A46776657273696F6E0166737461747573F466726561736F6E7828496E66
+       6F726D61746976652068756D616E2D7265616461626C65206572726F7220
+       6D6573736167656E726561736F6E2D636F6E74657874A100764164646974
+       696F6E616C20696E666F726D6174696F6E
+
+
+
+
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 68]
+
+Internet-Draft              Constrained BRSKI              December 2022
+
 
    The request payload above is binary CBOR but represented here in
    hexadecimal for readability.  Below is the equivalent CBOR diagnostic
    format.
 
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 64]
-
-Internet-Draft              Constrained BRSKI              December 2022
-
-
-   {
-     "version": 1,
-     "status": false,
-     "reason": "Informative human-readable error message",
-     "reason-context": { 0: "Additional information" }
-   }
+     {
+       "version": 1,
+       "status": false,
+       "reason": "Informative human-readable error message",
+       "reason-context": { 0: "Additional information" }
+     }
 
    A success response without payload will then be sent by the Registrar
    back to the Pledge to indicate reception of the telemetry report:
 
-      2.04 Changed
+     2.04 Changed
 
 Appendix C.  COSE-signed Voucher (Request) Examples
 
    This appendix provides examples of COSE-signed voucher requests and
    vouchers.  First, the used test keys and certificates are described,
-   following by examples of a constrained PVR, RVR and voucher.
+   followed by examples of a constrained PVR, RVR and voucher.
 
 C.1.  Pledge, Registrar and MASA Keys
 
@@ -3633,11 +3861,7 @@ C.1.1.  Pledge IDevID private key
 
 
 
-
-
-
-
-Richardson, et al.        Expires 10 June 2023                 [Page 65]
+Richardson, et al.        Expires 19 June 2023                 [Page 69]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3693,7 +3917,7 @@ C.1.3.  MASA private key
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 66]
+Richardson, et al.        Expires 19 June 2023                 [Page 70]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3749,7 +3973,7 @@ C.2.1.  Pledge IDevID Certificate
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 67]
+Richardson, et al.        Expires 19 June 2023                 [Page 71]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3763,8 +3987,8 @@ Internet-Draft              Constrained BRSKI              December 2022
     Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond,
             C = NL
     Validity
-      Not Before: Dec  7 17:26:49 2022 GMT
-      Not After : Dec 31 17:26:49 9999 GMT
+      Not Before: Dec  9 12:50:47 2022 GMT
+      Not After : Dec 31 12:50:47 9999 GMT
     Subject: CN = Stok IoT sensor Y-42, serialNumber = JADA123456789
     Subject Public Key Info:
       Public Key Algorithm: id-ecPublicKey
@@ -3784,16 +4008,16 @@ Internet-Draft              Constrained BRSKI              December 2022
       X509v3 Basic Constraints:
         CA:FALSE
       X509v3 Authority Key Identifier:
-       keyid:CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
-
+        CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
       1.3.6.1.5.5.7.1.32:
          hl=2 l=  12 prim: IA5STRING     :masa.stok.nl
 
    Signature Algorithm: ecdsa-with-SHA256
-     30:45:02:20:0e:5f:c6:1d:c2:a4:b1:71:3e:17:b6:58:33:30:
-     fb:c9:74:eb:be:00:72:80:b3:d1:35:de:77:df:a0:88:e9:0a:
-     02:21:00:ba:8e:85:97:ff:c0:f9:a0:b2:7a:a5:6d:4d:62:31:
-     47:9a:a1:a8:53:94:a1:4c:e1:84:9b:4a:d0:f1:af:db:5f
+   Signature Value:
+    30:45:02:20:4d:89:90:7e:03:fb:52:56:42:0c:3f:c1:b1:f1:
+    47:b5:b3:93:65:45:2e:be:50:db:67:85:8f:23:89:a2:3f:9e:
+    02:21:00:95:33:69:d1:c6:db:f0:f1:f6:52:24:59:d3:0a:95:
+    4e:b2:f4:96:a1:31:3c:7b:d9:2f:28:b3:29:71:bb:60:df
 
    <CODE ENDS>
 
@@ -3805,7 +4029,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 68]
+Richardson, et al.        Expires 19 June 2023                 [Page 72]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3814,8 +4038,8 @@ Internet-Draft              Constrained BRSKI              December 2022
    308201CE30820174A00302010202027EAD300A06082A8648CE3D040302304B31
    15301306035504030C0C6D6173612E73746F6B2E6E6C31133011060355040A0C
    0A76616E64657273746F6B3110300E06035504070C0748656C6D6F6E64310B30
-   09060355040613024E4C3020170D3232313230373137323634395A180F393939
-   39313233313137323634395A3037311D301B06035504030C1453746F6B20496F
+   09060355040613024E4C3020170D3232313230393132353034375A180F393939
+   39313233313132353034375A3037311D301B06035504030C1453746F6B20496F
    542073656E736F7220592D3432311630140603550405130D4A41444131323334
    35363738393059301306072A8648CE3D020106082A8648CE3D03010703420004
    487E8E5226054617C8816978186F231E88FC6BEF2B7FAB79B35999FF849E3E52
@@ -3823,9 +4047,9 @@ Internet-Draft              Constrained BRSKI              December 2022
    A35A3058300E0603551D0F0101FF0404030204F030090603551D130402300030
    1F0603551D23041830168014CB8D98CA74C51B58DDE7ACEF869A9443A8D666A6
    301A06082B06010505070120040E160C6D6173612E73746F6B2E6E6C300A0608
-   2A8648CE3D040302034800304502200E5FC61DC2A4B1713E17B6583330FBC974
-   EBBE007280B3D135DE77DFA088E90A022100BA8E8597FFC0F9A0B27AA56D4D62
-   31479AA1A85394A14CE1849B4AD0F1AFDB5F
+   2A8648CE3D040302034800304502204D89907E03FB5256420C3FC1B1F147B5B3
+   9365452EBE50DB67858F2389A23F9E022100953369D1C6DBF0F1F6522459D30A
+   954EB2F496A1313C7BD92F28B32971BB60DF
 
    <CODE ENDS>
 
@@ -3861,7 +4085,7 @@ C.2.2.  Registrar Certificate
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 69]
+Richardson, et al.        Expires 19 June 2023                 [Page 73]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3876,8 +4100,8 @@ Internet-Draft              Constrained BRSKI              December 2022
     Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.",
             L = San Jose, ST = CA, C = US
     Validity
-      Not Before: Dec  7 17:26:50 2022 GMT
-      Not After : Dec  6 17:26:50 2025 GMT
+      Not Before: Dec  9 12:50:47 2022 GMT
+      Not After : Dec  8 12:50:47 2025 GMT
     Subject: CN = Custom-ER Registrar, OU = Office dept, O = "Custom-ER,
             Inc.", L = Ottowa, ST = ON, C = CA
     Subject Public Key Info:
@@ -3900,16 +4124,16 @@ Internet-Draft              Constrained BRSKI              December 2022
       X509v3 Subject Key Identifier:
         C9:08:0B:38:7D:8D:D8:5B:3A:59:E7:EC:10:0B:86:63:93:A9:CA:4C
       X509v3 Authority Key Identifier:
-       keyid:92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
-
+        92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
       X509v3 Extended Key Usage: critical
         CMC Registration Authority, TLS Web Server Authentication,
                 TLS Web Client Authentication
    Signature Algorithm: ecdsa-with-SHA256
-     30:44:02:20:1e:fa:e1:bc:48:c7:12:c2:57:91:8c:53:9f:6f:
-     e9:0d:8b:e4:9d:87:5f:57:8b:8d:f4:75:ec:0f:ee:c6:69:8f:
-     02:20:32:ed:85:f6:36:8d:7c:35:f6:3d:f6:31:dc:69:67:4a:
-     b0:1d:f1:c5:03:25:6c:1a:08:03:e2:34:4a:57:89:57
+   Signature Value:
+    30:45:02:21:00:d8:4a:7c:69:2f:f9:58:6e:82:22:87:18:f6:
+    3b:c3:05:f0:ae:b8:ae:ec:42:78:82:38:79:81:2a:5d:15:61:
+    64:02:20:08:f2:3c:13:69:13:b0:2c:e2:63:09:d5:99:4f:eb:
+    75:70:af:af:ed:98:cd:f1:12:11:c0:37:f7:18:4d:c1:9d
 
    <CODE ENDS>
 
@@ -3917,7 +4141,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 70]
+Richardson, et al.        Expires 19 June 2023                 [Page 74]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3926,12 +4150,12 @@ Internet-Draft              Constrained BRSKI              December 2022
    encoded certificate:
 
    <CODE BEGINS>
-   3082026C30820213A003020102020900C3F62149B2E30E3E300A06082A8648CE
+   3082026D30820213A003020102020900C3F62149B2E30E3E300A06082A8648CE
    3D0403023072311C301A06035504030C13437573746F6D2D455220476C6F6261
    6C204341310B3009060355040B0C02495431183016060355040A0C0F43757374
    6F6D2D45522C20496E632E3111300F06035504070C0853616E204A6F7365310B
    300906035504080C024341310B3009060355040613025553301E170D32323132
-   30373137323635305A170D3235313230363137323635305A3079311C301A0603
+   30393132353034375A170D3235313230383132353034375A3079311C301A0603
    5504030C13437573746F6D2D4552205265676973747261723114301206035504
    0B0C0B4F6666696365206465707431183016060355040A0C0F437573746F6D2D
    45522C20496E632E310F300D06035504070C064F74746F7761310B3009060355
@@ -3943,9 +4167,9 @@ Internet-Draft              Constrained BRSKI              December 2022
    D85B3A59E7EC100B866393A9CA4C301F0603551D2304183016801492EA764040
    4A8FAB4F270BF3BC379D86CD7280F8302A0603551D250101FF0420301E06082B
    0601050507031C06082B0601050507030106082B06010505070302300A06082A
-   8648CE3D040302034700304402201EFAE1BC48C712C257918C539F6FE90D8BE4
-   9D875F578B8DF475EC0FEEC6698F022032ED85F6368D7C35F63DF631DC69674A
-   B01DF1C503256C1A0803E2344A578957
+   8648CE3D0403020348003045022100D84A7C692FF9586E82228718F63BC305F0
+   AEB8AEEC4278823879812A5D156164022008F23C136913B02CE26309D5994FEB
+   7570AFAFED98CDF11211C037F7184DC19D
 
    <CODE ENDS>
 
@@ -3973,7 +4197,7 @@ C.2.3.  Domain CA Certificate
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 71]
+Richardson, et al.        Expires 19 June 2023                 [Page 75]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -3987,8 +4211,8 @@ Internet-Draft              Constrained BRSKI              December 2022
     Issuer: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.",
             L = San Jose, ST = CA, C = US
     Validity
-      Not Before: Dec  7 17:26:50 2022 GMT
-      Not After : Dec  4 17:26:50 2032 GMT
+      Not Before: Dec  9 12:50:47 2022 GMT
+      Not After : Dec  6 12:50:47 2032 GMT
     Subject: CN = Custom-ER Global CA, OU = IT, O = "Custom-ER, Inc.",
             L = San Jose, ST = CA, C = US
     Subject Public Key Info:
@@ -4012,10 +4236,11 @@ Internet-Draft              Constrained BRSKI              December 2022
       X509v3 Subject Key Identifier:
         92:EA:76:40:40:4A:8F:AB:4F:27:0B:F3:BC:37:9D:86:CD:72:80:F8
    Signature Algorithm: ecdsa-with-SHA256
-     30:44:02:20:19:43:dc:a3:27:46:e6:13:5f:52:37:61:aa:78:
-     6d:52:5b:5a:da:63:0f:f4:1d:ab:b6:a6:10:35:9b:31:f3:18:
-     02:20:71:c8:fc:8c:1a:ef:bc:f2:81:7d:6a:ac:9e:ae:22:27:
-     81:01:3c:ae:40:71:52:2d:89:1a:14:3e:e2:e8:4c:dd
+   Signature Value:
+    30:44:02:20:66:15:df:c3:70:11:f6:73:78:d8:fd:1c:2a:3f:
+    bd:d1:3f:51:f6:b6:6f:2d:7c:e2:7a:13:18:21:bb:70:f0:c0:
+    02:20:69:86:d8:d2:28:b2:92:6e:23:9e:19:0b:8f:18:25:c9:
+    c1:4c:67:95:ff:a0:b3:24:bd:4d:ac:2e:cb:68:d7:13
 
    <CODE ENDS>
 
@@ -4028,8 +4253,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-
-Richardson, et al.        Expires 10 June 2023                 [Page 72]
+Richardson, et al.        Expires 19 June 2023                 [Page 76]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4040,7 +4264,7 @@ Internet-Draft              Constrained BRSKI              December 2022
    204341310B3009060355040B0C02495431183016060355040A0C0F437573746F
    6D2D45522C20496E632E3111300F06035504070C0853616E204A6F7365310B30
    0906035504080C024341310B3009060355040613025553301E170D3232313230
-   373137323635305A170D3332313230343137323635305A3072311C301A060355
+   393132353034375A170D3332313230363132353034375A3072311C301A060355
    04030C13437573746F6D2D455220476C6F62616C204341310B3009060355040B
    0C02495431183016060355040A0C0F437573746F6D2D45522C20496E632E3111
    300F06035504070C0853616E204A6F7365310B300906035504080C024341310B
@@ -4051,9 +4275,9 @@ Internet-Draft              Constrained BRSKI              December 2022
    6F6D2D65722E6578616D706C652E636F6D300E0603551D0F0101FF0404030201
    86300F0603551D130101FF040530030101FF301D0603551D0E0416041492EA76
    40404A8FAB4F270BF3BC379D86CD7280F8300A06082A8648CE3D040302034700
-   304402201943DCA32746E6135F523761AA786D525B5ADA630FF41DABB6A61035
-   9B31F318022071C8FC8C1AEFBCF2817D6AAC9EAE222781013CAE4071522D891A
-   143EE2E84CDD
+   304402206615DFC37011F67378D8FD1C2A3FBDD13F51F6B66F2D7CE27A131821
+   BB70F0C002206986D8D228B2926E239E190B8F1825C9C14C6795FFA0B324BD4D
+   AC2ECB68D713
 
    <CODE ENDS>
 
@@ -4085,7 +4309,7 @@ C.2.4.  MASA Certificate
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 73]
+Richardson, et al.        Expires 19 June 2023                 [Page 77]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4100,8 +4324,8 @@ Internet-Draft              Constrained BRSKI              December 2022
     Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond,
             C = NL
     Validity
-      Not Before: Dec  7 17:26:49 2022 GMT
-      Not After : Dec  4 17:26:49 2032 GMT
+      Not Before: Dec  9 12:50:47 2022 GMT
+      Not After : Dec  6 12:50:47 2032 GMT
     Subject: CN = masa.stok.nl, O = vanderstok, L = Helmond,
             C = NL
     Subject Public Key Info:
@@ -4124,14 +4348,12 @@ Internet-Draft              Constrained BRSKI              December 2022
         CA:TRUE, pathlen:3
       X509v3 Subject Key Identifier:
         CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
-      X509v3 Authority Key Identifier:
-       keyid:CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
-
    Signature Algorithm: ecdsa-with-SHA256
-     30:44:02:20:3d:10:6d:2b:cf:a7:11:77:c0:0d:e9:04:69:cf:
-     81:67:3f:5f:d6:34:1c:af:5c:9b:32:e2:38:49:98:10:50:c7:
-     02:20:7c:4d:18:83:20:ec:34:9a:e0:b4:2d:96:41:18:6a:59:
-     22:a1:65:1f:70:bd:ad:e7:1a:d6:8c:2b:f9:fa:c9:1c
+   Signature Value:
+    30:46:02:21:00:94:3f:a5:26:51:68:16:38:5b:78:9a:d8:c3:
+    af:8e:49:28:22:60:56:26:43:4a:14:98:3e:e1:e4:81:ad:ca:
+    1b:02:21:00:ba:4d:aa:fd:fa:68:42:74:03:2b:a8:41:6b:e2:
+    90:0c:9e:7b:b8:c0:9c:f7:0e:3f:b4:36:8a:b3:9c:3e:31:0e
 
    <CODE ENDS>
 
@@ -4141,29 +4363,30 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 74]
+
+
+Richardson, et al.        Expires 19 June 2023                 [Page 78]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
 
    <CODE BEGINS>
-   30820212308201B9A003020102020900E39CDA17E1386A0A300A06082A8648CE
+   308201F130820196A003020102020900E39CDA17E1386A0A300A06082A8648CE
    3D040302304B3115301306035504030C0C6D6173612E73746F6B2E6E6C311330
    11060355040A0C0A76616E64657273746F6B3110300E06035504070C0748656C
-   6D6F6E64310B3009060355040613024E4C301E170D3232313230373137323634
-   395A170D3332313230343137323634395A304B3115301306035504030C0C6D61
+   6D6F6E64310B3009060355040613024E4C301E170D3232313230393132353034
+   375A170D3332313230363132353034375A304B3115301306035504030C0C6D61
    73612E73746F6B2E6E6C31133011060355040A0C0A76616E64657273746F6B31
    10300E06035504070C0748656C6D6F6E64310B3009060355040613024E4C3059
    301306072A8648CE3D020106082A8648CE3D0301070342000492F4D565589773
    B70358F35C8F947D9438361686560065FB2A9C43D21592A7ABC9AAF2017BF195
-   5B622EAAD85120F2490E458FEBA4853F5FB490B11B83FB0316A3818530818230
-   1C0603551D11041530138111696E666F406D6173612E73746F6B2E6E6C300E06
-   03551D0F0101FF04040302018630120603551D130101FF040830060101FF0201
-   03301D0603551D0E04160414CB8D98CA74C51B58DDE7ACEF869A9443A8D666A6
-   301F0603551D23041830168014CB8D98CA74C51B58DDE7ACEF869A9443A8D666
-   A6300A06082A8648CE3D040302034700304402203D106D2BCFA71177C00DE904
-   69CF81673F5FD6341CAF5C9B32E23849981050C702207C4D188320EC349AE0B4
-   2D9641186A5922A1651F70BDADE71AD68C2BF9FAC91C
+   5B622EAAD85120F2490E458FEBA4853F5FB490B11B83FB0316A3633061301C06
+   03551D11041530138111696E666F406D6173612E73746F6B2E6E6C300E060355
+   1D0F0101FF04040302018630120603551D130101FF040830060101FF02010330
+   1D0603551D0E04160414CB8D98CA74C51B58DDE7ACEF869A9443A8D666A6300A
+   06082A8648CE3D0403020349003046022100943FA526516816385B789AD8C3AF
+   8E492822605626434A14983EE1E481ADCA1B022100BA4DAAFDFA684274032BA8
+   416BE2900C9E7BB8C09CF70E3FB4368AB39C3E310E
 
    <CODE ENDS>
 
@@ -4197,7 +4420,8 @@ C.3.  COSE-signed Pledge Voucher Request (PVR)
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 75]
+
+Richardson, et al.        Expires 19 June 2023                 [Page 79]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4253,7 +4477,7 @@ C.4.  COSE-signed Registrar Voucher Request (RVR)
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 76]
+Richardson, et al.        Expires 19 June 2023                 [Page 80]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4309,7 +4533,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 77]
+Richardson, et al.        Expires 19 June 2023                 [Page 81]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4365,7 +4589,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 78]
+Richardson, et al.        Expires 19 June 2023                 [Page 82]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4421,7 +4645,7 @@ C.5.  COSE-signed Voucher from MASA
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 79]
+Richardson, et al.        Expires 19 June 2023                 [Page 83]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4477,7 +4701,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 80]
+Richardson, et al.        Expires 19 June 2023                 [Page 84]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4533,7 +4757,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 81]
+Richardson, et al.        Expires 19 June 2023                 [Page 85]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4589,7 +4813,7 @@ Appendix D.  Generating Certificates with OpenSSL
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 82]
+Richardson, et al.        Expires 19 June 2023                 [Page 86]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4645,7 +4869,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 83]
+Richardson, et al.        Expires 19 June 2023                 [Page 87]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4701,7 +4925,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 84]
+Richardson, et al.        Expires 19 June 2023                 [Page 88]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4757,7 +4981,7 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 85]
+Richardson, et al.        Expires 19 June 2023                 [Page 89]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4813,7 +5037,7 @@ E.1.  Minimal Pledge
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 86]
+Richardson, et al.        Expires 19 June 2023                 [Page 90]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4869,7 +5093,7 @@ E.4.  Comparison Chart of Pledge Classes
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 87]
+Richardson, et al.        Expires 19 June 2023                 [Page 91]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4925,7 +5149,7 @@ Authors' Addresses
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 88]
+Richardson, et al.        Expires 19 June 2023                 [Page 92]
 
 Internet-Draft              Constrained BRSKI              December 2022
 
@@ -4981,4 +5205,4 @@ Internet-Draft              Constrained BRSKI              December 2022
 
 
 
-Richardson, et al.        Expires 10 June 2023                 [Page 89]
+Richardson, et al.        Expires 19 June 2023                 [Page 93]
