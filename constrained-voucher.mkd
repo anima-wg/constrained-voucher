@@ -200,8 +200,9 @@ They are presented in the order "voucher-request", followed by a "voucher" respo
 the order that they occur in the protocol.
 
 The constrained voucher request MUST be signed by the Pledge.
-It signs using the private key associated with its IDevID certificate, or if an IDevID is not available, then the private key associated with its manufacturer-installed raw public key (RPK).
-{{rpk-considerations}} provides additional details on PKIX-less operations.
+It signs using the private key associated with its IDevID certificate. This also holds for the most constrained types of Pledges that 
+are unable to perform certain PKIX operations (such as certificate chain validation). These types of Pledge still contain an IDevID 
+identity that is used for authentication. See {{rpk-considerations}} for additional details on PKIX-less operations.
 
 The constrained voucher MUST be signed by the MASA.
 
