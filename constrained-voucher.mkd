@@ -53,7 +53,6 @@ normative:
   RFC5652:
   RFC6020:
   RFC6066:
-  RFC6125:
   RFC6347:
   RFC7250:
   RFC7950:
@@ -69,10 +68,9 @@ normative:
   RFC9147:
   RFC9148:
   RFC9254:
-#  I-D.ietf-core-object-security:
-#  I-D.ietf-ace-cbor-web-token:  
   I-D.ietf-core-sid:  
   I-D.ietf-cose-x509:
+  I-D.ietf-uta-rfc6125bis:
   ieee802-1AR:
     target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
     title: "IEEE 802.1AR Secure Device Identifier"
@@ -296,7 +294,7 @@ A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragmen
 The SNI issue described below affects {{RFC8995}} as well, and is reported in errata: https://www.rfc-editor.org/errata/eid6648
 
 As the Registrar is discovered by IP address, and typically connected via a Join Proxy, the name of the Registrar is not known to the Pledge.
-The Pledge will not know what the hostname for the Registrar is, so it cannot do DNS-ID validation ({{I-D.uta-rfc6125bis}}) on the Registrar's certificate.
+The Pledge will not know what the hostname for the Registrar is, so it cannot do DNS-ID validation ({{I-D.ietf-uta-rfc6125bis}}) on the Registrar's certificate.
 Instead, it must do validation using the voucher.
 
 As the Pledge does not know the name of the Registrar, the Pledge cannot put any reasonable value into the {{RFC6066}} Server Name Indicator (SNI).
@@ -643,7 +641,7 @@ A MASA that supports the unconstrained voucher formats should be able to support
 
 There is no requirement that a single MASA be used for both constrained and unconstrained voucher requests: the choice of MASA is determined by the id-mod-MASAURLExtn2016 extension contained in the IDevID.
 
-The Registrar MUST do {{RFC6125}} DNS-ID checks on the contents of the certificate provided by the MASA.
+The Registrar MUST do DNS-ID checks ({{I-D.ietf-uta-rfc6125bis}}) on the contents of the certificate provided by the MASA.
 
 In constrast to the Pledge/Registrar situation, the Registrar always knows the name of the MASA, and MUST always include an {{RFC6066}} Server Name Indicator.
 The SNI is optional in TLS1.2, but common.
