@@ -160,7 +160,7 @@ artifact, domain, imprint, Join Registrar/Coordinator (JRC), Manufacturer Author
 The following terms from {{RFC8995}} are used identically as in that document:
 Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, nonceless, PKIX.
 
-The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the voucher request between the pledge and the Registrar.
+The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the voucher request between the Pledge and the Registrar.
 
 The term Registrar Voucher Request, or acronym RVR, is introduced to refer to the voucher request between the Registrar and the MASA.
 
@@ -175,17 +175,22 @@ Four dots ("....") in a CBOR diagnostic notation byte string denotes a further s
 
 # Overview of Protocol {#survey}
 
-{{RFC8366}} provides for vouchers that assert proximity, authenticate the Registrar, and can offer varying levels of anti-replay protection.
+{{RFC8366}} defines a voucher that can assert proximity, authenticates the Registrar, and can offer varying levels of anti-replay protection.
+The proximity proof provided by a voucher is an assertion that the Pledge and the Registrar are believed to be close together, from a network topology point of view.
+Similar to BRSKI {{RFC8995}}, proximity is proven by making a DTLS connection between a Pledge and a Registrar. 
+The Pledge initiates this connection using a link-local source address.
 
-The proximity proof provided for in {{RFC8366}}, is an assertion that the Pledge and the Registrar are believed to be close together, from a network topology point of view.
-Like in {{RFC8995}}, proximity is shown by making TLS connections between the Pledge and Registrar using IPv6 Link-Local addresses.
-
-The TLS connection is used to make a Voucher Request.
-This request is verified by an agent of the Pledge's manufacturer, which then issues a voucher.
-The voucher provides an authorization statement from the manufacturer indicating that the Registrar is the intended owner of the device.
+The secure DTLS connection is then used by the Pledge to make a Pledge Voucher Request (PVR). The Registrar then includes the PVR into its own 
+Registrar Voucher Request (RVR), sent to an agent (MASA) of the Pledge's manufacturer. The MASA verifies the PVR and RVR and issues a signed voucher.
+The voucher provides an authorization statement from the manufacturer indicating that the Registrar is the intended owner of the Pledge.
 The voucher refers to the Registrar through pinning of the Registrar's identity.
 
+After verification of the voucher, the Pledge enrolls into the Registrar's domain by obtaining a certificate using the EST-coaps {{RFC9148}} protocol, suitable for 
+constrained devices. Once the Pledge has obtained its domain identity (LDevID) in this manner, it can use this identity to obtain network access credentials,  
+to join the local IP network. The method to obtain such credentials depends on the particular network technology used and is outside the scope of this document. 
+
 This document does not make any extensions to the semantic meaning of vouchers, only the encoding has been changed to optimize for constrained devices and networks.
+
 The two main parts of the BRSKI protocol are named separately in this document: BRSKI-EST for the protocol between Pledge and Registrar, and BRSKI-MASA for the
 protocol between the Registrar and the MASA.
 
@@ -204,23 +209,26 @@ identity that is used for authentication. See {{rpk-considerations}} for additio
 
 The constrained voucher MUST be signed by the MASA.
 
-For the constrained voucher request this document defines two distinct methods for the Pledge to identify the Registrar: using either the Registrar's PKIX certificate, or using a raw public key (RPK) of the Registrar.
+For the constrained voucher request (PVR) this document defines two distinct methods for the Pledge to identify the Registrar: using either the 
+Registrar's full PKIX certificate, or using a Raw Public Key (RPK). The method depends on which type of Registrar identity is 
+obtained by the Pledge during the DTLS handshake process. Normally, the Pledge obtains the PKIX certificate. But when operating PKIX-less 
+as described in {{rpk-considerations}}, the Registrar's RPK is obtained.
 
-For the constrained voucher both methods are supported to indicate (pin) a trusted domain identity: using either a pinned domain PKIX certificate, or a pinned raw public key (RPK).
+For the constrained voucher also both methods are supported to indicate (pin) a trusted domain identity: using either a pinned domain PKIX certificate, 
+or a pinned RPK.
 
-The BRSKI architectures mandates that the MASA be aware of the capabilities of the pledge.
-This is not a drawback as the pledges are constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
-
-The MASA therefore knows if the pledge supports PKIX operations, PKIX format certificates, or if the pledge is limited to Raw Public Keys (RPK).
+The BRSKI architectures mandates that the MASA be aware of the capabilities of the Pledge.
+This is not a drawback as a Pledges is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
+The MASA therefore knows if the Pledge supports PKIX operations, or if it is limited to Raw Public Key (RPK) operations only.
 Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar identity.
-This is described in more detail in {{yang-voucher}}, {{pinning}} and {{pinned-with-rpk}} (for RPK specifically).
+
 
 # Updates to RFC8366 and RFC8995
 
 This section details the ways in which this document updates other RFCs.
 The terminology for Updates is taken from {{I-D.kuehlewind-update-tag}}.
 
-This document Updates {{RFC8366}}. It Extends {{RFC8366}} by creating a new serialization format, and creates a mechanism to pin Raw Public Key (RPK).
+This document Updates {{RFC8366}}. It Extends {{RFC8366}} by creating a new serialization format, and creates a mechanism to pin a Raw Public Key (RPK).
 
 This document Updates {{RFC8995}}. It Amends {{RFC8995}}
 
@@ -1161,7 +1169,7 @@ Here is an example M\_FLOOD announcing the Registrar on example port 5684, which
 {: #fig-grasp-rgj title='Example of Registrar announcement message' align="left"}
 
 The Registrar uses a routable address that can be used by enrolled constrained Join Proxies.
-The address will typically be a ULA (as it is in the example), but could also be a GUA.
+The address will typically be a Unique Local Address (ULA) as in the example, but could also be a Global Unicast Address (GUA).
 
 ### CoAP discovery {#coap-disc}
 Further details on CoAP discovery of the Registrar by a Join Proxy are provided in {{Section 5.1.1 of I-D.ietf-anima-constrained-join-proxy}}. 
@@ -1240,7 +1248,7 @@ As the format of the pubk field is identical to the TLS Certificate RawPublicKey
 
 ## The Voucher Response
 
-A returned voucher will have a pinned-domain-subk field with the identical key as was found in the proximity-registrar-pubk field above, as well as in the TLS connection.
+A returned voucher will have a pinned-domain-pubk field with the identical key as was found in the proximity-registrar-pubk field above, as well as in the TLS connection.
 
 Validation of this key by the pledge is what takes the DTLS connection out of the provisional state see {{Section 5.6.2 of RFC8995}}.
 
