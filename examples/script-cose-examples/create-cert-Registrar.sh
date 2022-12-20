@@ -11,7 +11,7 @@ NAME=registrar
 # create csr
 openssl req -new -key keys/privkey_registrar.pem -out $NAME.csr \
  -subj "/CN=Custom-ER Registrar/OU=Office dept/O=Custom-ER, Inc./\
- L=Ottowa/ST=ON/C=CA"
+L=Ottowa/ST=ON/C=CA"
 
 # sign csr
 openssl x509 -set_serial 0xC3F62149B2E30E3E -CAform PEM -CA \
