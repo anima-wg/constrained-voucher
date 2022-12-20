@@ -1,6 +1,7 @@
-#
-# This file contains all X509v3 extension definitions for OpenSSL certificate generation.
-# Each certificate has its own _ext section below.
+# File: x509v3.ext
+# This file contains all X509v3 extension definitions for OpenSSL
+# certificate generation. Each certificate has its own _ext 
+# section below.
 
 [ req ]
 prompt = no
@@ -13,8 +14,10 @@ subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid
 
 [ pledge_ext ]
-keyUsage = critical,digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
-# basicConstraints for a non-CA cert MAY be marked either non-critical or critical.
+keyUsage = critical,digitalSignature, nonRepudiation, \
+           keyEncipherment, dataEncipherment
+# basicConstraints for a non-CA cert MAY be marked either 
+# non-critical or critical.
 basicConstraints = CA:FALSE
 # Don't include subjectKeyIdentifier (SKI) - see 802.1AR-2018
 subjectKeyIdentifier = none
@@ -26,16 +29,19 @@ authorityKeyIdentifier=keyid
 subjectAltName=email:help@custom-er.example.com
 keyUsage = critical, keyCertSign, digitalSignature, cRLSign
 basicConstraints=critical,CA:TRUE
-# RFC 5280 4.2.1.1 : AKI MAY be omitted, and MUST be non-critical ; SKI MUST be non-critical
+# RFC 5280 4.2.1.1 : AKI MAY be omitted, and MUST be non-critical; 
+# SKI MUST be non-critical
 subjectKeyIdentifier=hash
 
 [ registrar_ext ]
-keyUsage = critical, digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+keyUsage = critical, digitalSignature, nonRepudiation, \
+           keyEncipherment, dataEncipherment
 basicConstraints=CA:FALSE
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid
 # Set Registrar 'RA' flag along with TLS client/server usage
-#  see https://datatracker.ietf.org/doc/html/draft-ietf-anima-constrained-voucher#section-7.3
-#  see https://tools.ietf.org/html/rfc6402#section-2.10
-#  see https://www.openssl.org/docs/man1.1.1/man5/x509v3_config.html
-extendedKeyUsage = critical,1.3.6.1.5.5.7.3.28, serverAuth, clientAuth
+#  see draft-ietf-anima-constrained-voucher#section-7.3
+#  see tools.ietf.org/html/rfc6402#section-2.10
+#  see www.openssl.org/docs/man1.1.1/man5/x509v3_config.html
+extendedKeyUsage = critical,1.3.6.1.5.5.7.3.28, serverAuth, \
+                   clientAuth

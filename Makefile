@@ -7,14 +7,17 @@ CWTSIDLIST1=ietf-voucher-constrained-sid.txt
 CWTDATE2=yang/ietf-voucher-request-constrained@${YANGDATE}.yang
 CWTSIDLIST2=ietf-voucher-request-constrained-sid.txt
 CWTSIDDATE2=ietf-voucher-request-constrained@${YANGDATE}.sid
-EXAMPLES=examples/cms-parboiled-request.b64
-EXAMPLES+=examples/voucher-example1.txt
-EXAMPLES+=examples/voucher-request-example1.txt
+EXAMPLES=two-ca-chain.txt
+EXAMPLES+=pinning-options.txt
+EXAMPLES+=$(wildcard examples/voucher-example*.txt)
+EXAMPLES+=$(wildcard examples/voucher-request-example*.txt)
 EXAMPLES+=examples/voucher-status.hex
 EXAMPLES+=examples/voucher-statusdiag.txt
-EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.b64
-EXAMPLES+=examples/vr_00-D0-E5-F2-00-03.diag
-EXAMPLES+=examples/cose-examples/*.*
+EXAMPLES+=$(wildcard examples/cose-examples/*.txt)
+EXAMPLES+=$(wildcard examples/cose-examples/*.hex)
+EXAMPLES+=$(wildcard examples/script-cose-examples/*.sh)
+EXAMPLES+=$(wildcard examples/script-cose-examples/*.ext)
+EXAMPLES+=$(wildcard examples/cose-examples/keys/*.pem)
 PYANG=./pyang.sh
 PYANGPATH=--path=../../anima/bootstrap/yang --path ${HOME}/.local/share/yang/modules/ietf
 
