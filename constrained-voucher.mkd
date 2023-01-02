@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (BRSKI)
 abbrev: Constrained BRSKI
-docname: draft-ietf-anima-constrained-voucher-19
+docname: draft-ietf-anima-constrained-voucher-20
 
 stand_alone: true
 
@@ -1533,7 +1533,7 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
     
 # Changelog
 
--11 to -19
+-11 to -20
     (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues and related Pull Requests.)
 
 -10
