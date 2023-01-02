@@ -117,6 +117,7 @@ While the BRSKI voucher is typically encoded in JSON, Constrained BRSKI defines 
 The BRSKI voucher is extended with new data types that allow for smaller voucher sizes.
 The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS;
 and HTTPS used in BRSKI is replaced with CoAPS.
+This document Updates RFC 8366 and RFC 8995.
 
 --- middle
 
