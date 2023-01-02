@@ -61,7 +61,6 @@ normative:
   RFC9031: minimal-security
   RFC9032:
   RFC9052:
-  RFC9053:
   RFC9147:
   RFC9148:
   RFC9254:
@@ -83,6 +82,7 @@ informative:
   RFC7228:
   RFC8340: yang-tree
   RFC8990:
+  RFC9053:
   I-D.ietf-6lo-mesh-link-establishment:
   I-D.kuehlewind-update-tag:
   I-D.richardson-anima-masa-considerations:
