@@ -42,10 +42,12 @@ author:
 
 
 normative:
+  RFC2045:
 #  RFC2119:
   RFC3688:
   RFC4193:
   RFC4210:
+  RFC5272:
   RFC5280:
   RFC5652:
   RFC6020:
@@ -281,6 +283,11 @@ This is the Pledge's IDevID certificate.
 
 Subsequently the Pledge will send a Pledge Voucher Request (PVR). Further elements of Pledge authentication may be present in the PVR, 
 as detailed in {{VR-COSE}}.
+
+By default the Pledge will send a complete client certificate chain to the Registrar, up to and including the root CA certificate.
+This document defines an optional optimization that a Pledge may use: it MAY omit the root CA certificate from its DTLS client certificate message, 
+but only if the MASA server implements the resource "/cacerts" that is described in {{brski-masa-extensions}}. This optimization reduces the data volume 
+of the DTLS handshake, which is beneficial on constrained networks.
 
 ### DTLS Handshake Fragmentation Considerations {#dtls-fragments}
 
@@ -661,6 +668,38 @@ If the certificate that the Registrar uses is marked as a id-kp-cmcRA certificat
 ### Registrar Certificate Requirement {#registrar-certificate-requirement}
 
 In summary for typical Registrar use, where a single Registrar certificate is used, then the certificate MUST have EKU of: id-kp-cmcRA, id-kp-serverAuth, id-kp-clientAuth.
+
+## MASA Extensions {#brski-masa-extensions}
+
+This document supports efficient operation of Pledges in constrained networks, by letting a Pledge optionally omit the sending of its root CA certificate in the DTLS handshake with the Registrar.
+This optimization requires a Registrar to have an alternative method to obtain this root CA certificate, which it may need for validation and logging purposes. The alternative method defined here is 
+that the Registrar can request the relevant root CA certificate(s) directly from the MASA. Although the operator of a Registrar may have already obtained such CA certificate(s) via a vendor-specific method 
+(e.g. part of sales integration), a standardized method is still needed for cases where such vendor-specific methods do not exist or are not known to the operator.
+
+### Pledge CA Certificates Request
+A Registrar, after having established a TLS connection to the MASA, MAY request the full set of root CA certificates for all Pledges that are managed in scope of this MASA, by sending a Pledge CA 
+Certificates Request. This uses a HTTPS GET with the operation MASA URI path of "/.well-known/brski/cacerts".
+
+### Pledge CA Certificates Response
+A MASA server MUST support the HTTPS resource "/.well-known/brski/cacerts" for the GET method over the TLS connection where the client is a Registrar.
+
+If the request is processed successfully, the server response MUST have an HTTP 200 response code.  Any other response code indicates an error and the client MAY either retry the operation 
+or (eventually) abort the protocol.
+
+A successful response MUST be a certs-only CMC Simple PKI Response,
+as defined in {{RFC5272}}, containing the certificates described in the
+following paragraph.  The HTTP content-type of "application/pkcs7-mime" is used. The Simple PKI Response is sent
+with a Content-Transfer-Encoding of "base64" {{RFC2045}}.
+
+The MASA MUST include at least the root CA certificate(s) of the IDevID certificate chain(s) of any Pledge that the Registrar may potentially require.
+To determine what the Registrar may potentially require, without knowing yet the exact identity of the Pledge, the MASA may use one or more of the following context information:
+
+  * The set of root CA certificates for all Pledges that are managed by the current MASA server;
+  * The authentication method and credentials the Registrar used to connect to the MASA;
+  * The MASA URI that the Registrar used to connect to the MASA.
+
+As an example, a MASA server that is connected to by using the Server Name Indicator (SNI) of "ca1.masa.example.com" may infer from this server URI that the Registrar is going to onboard 
+a Pledge that uses "ca1" as the root CA of the Pledge IDevID certificate chain.
 
 <!-- ******************************************************************** -->
 
