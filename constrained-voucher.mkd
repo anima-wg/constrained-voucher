@@ -54,6 +54,7 @@ normative:
   RFC7250:
   RFC7950:
   RFC8366:
+  RFC8366bis: I-D.ietf-anima-rfc8366bis
   RFC8446:
   RFC8610:
   RFC8949:
@@ -720,7 +721,8 @@ If an RPK is pinned it MUST be the RPK of the Registrar.
 
 When the Pledge is known by MASA to support RPK but not PKIX certificate operations, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
 or "pinned-domain-pubk-sha256" field of a voucher.
-This is described in more detail in {{yang-voucher}} and {{rpk-considerations}}. A Pledge that does not support PKIX certificates cannot use EST to enroll; it has to use
+This is described in more detail in {{RFC8366bis}} and {{rpk-considerations}}.
+A Pledge that does not support PKIX certificates cannot use EST to enroll; it has to use
 another method for enrollment without certificates and the Registrar has to support this method also.
 It is possible that the Pledge will not enroll, but instead only a network join operation will occur (See {{RFC9031}}).
 How the Pledge discovers this method and details of the enrollment method are out of scope of this document.
@@ -762,56 +764,24 @@ Concerning the Authority Key Identifier, {{RFC8366}} specifies that the entire o
 
 # Artifacts
 
-This section describes for both the voucher request and
-the voucher first the abstract (tree) definition as explained
-in {{-yang-tree}}.  This provides a high-level
-view of the contents of each artifact.
+There are significant changes from {{RFC8366}} which are required for this specification.
+The YANG module changes are described in {{RFC8366bis}}.
+That document also assigns SID values in accordance with {{I-D.ietf-core-sid}}.
 
-Then the assigned SID values are presented. These have been assigned using
-the rules in {{I-D.ietf-core-sid}}.
-
-## Voucher Request artifact {#voucher-request-artifact}
-
-### Tree Diagram
-
-The following diagram is largely a duplicate of the contents of {{RFC8366}},
-with the addition of the fields proximity-registrar-pubk, proximity-registrar-pubk-sha256,
+The constrained voucher request adds the following fields: proximity-registrar-pubk, proximity-registrar-pubk-sha256,
 proximity-registrar-cert, and prior-signed-voucher-request.
 
 prior-signed-voucher-request is only used between the Registrar and the MASA.
 proximity-registrar-pubk or proximity-registrar-pubk-sha256 optionally replaces proximity-registrar-cert
 for the most constrained cases where RPK is used by the Pledge.
 
-INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-tree.txt END
-
-### SID values {#request-sid-values}
-
-INSERT_FIG_FROM_FILE ietf-voucher-request-constrained-sid.txt END
-
-The "assertion" attribute is an enumerated type {{RFC8366}}, and the current PYANG tooling does not document the valid values for this attribute.
-In the JSON serialization, the literal strings from the enumerated types are used so there is no ambiguity.
-In the CBOR serialization, a small integer is used.
-This following values are documented here, but the YANG module should be considered authoritative. No IANA registry is provided or necessary because the YANG module provides for extensions.
-
-Integer  | Assertion Type
-|-|-|
-0        | verified
-1        | logged
-2        | proximity
-{: #assertion-enums title='CBOR integers for the "assertion" attribute enum'}
-
-### YANG Module {#yang-voucher-request}
-
-In the voucher-request-constrained YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the voucher-request-constrained module name, all voucher attributes, and the voucher-request-constrained attributes. Two attributes of the voucher are "refined" to be optional.
-
-INSERT_FIG_FROM_FILE ietf-voucher-request-constrained@DATE.yang END
+The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256.
 
 ### Example Pledge voucher request (PVR) artifact {#example-pvr}
 
 Below, an example constrained voucher request (PVR) from a Pledge to a Registrar is shown in CBOR diagnostic notation.
 Long CBOR byte strings have been shortened (with "....") for readability. The enum value of the assertion field is calculated
-to be 2 for the "proximity" assertion by following the algorithm described in section 9.6.4.2 of {{RFC7950}}. For reference, {{request-sid-values}} shows a
-table with all currently defined assertion values.
+to be 2 for the "proximity" assertion by following the algorithm described in section 9.6.4.2 of {{RFC7950}}.
 
 INSERT_FIG_FROM_FILE examples/voucher-request-example1.txt END
 
@@ -830,33 +800,6 @@ INSERT_FIG_FROM_FILE examples/voucher-request-example2.txt END
 Note that the Registrar uses here the string data type for all key names, instead of the more compact SID integer keys. This is fine for any use cases where the
 network between Registrar and MASA is an unconstrained network where data size is not critical. The constrained voucher request format supports both the
 string and SID key types.
-
-
-## Voucher artifact
-
-The voucher's primary purpose is to securely assign a Pledge to an
-owner.  The voucher informs the Pledge which entity it should
-consider to be its owner.
-
-### Tree Diagram
-
-The following diagram is largely a duplicate of the contents of {{RFC8366}},
-with only the addition of the fields pinned-domain-pubk and pinned-domain-pubk-sha256.
-
-INSERT_FIG_FROM_FILE ietf-voucher-constrained-tree.txt END
-
-### SID values
-
-INSERT_FIG_FROM_FILE ietf-voucher-constrained-sid.txt END
-
-The "assertion" enumerated attribute is numbered as per {{request-sid-values}}.
-
-### YANG Module {#yang-voucher}
-
-In the voucher-constrained YANG module, the voucher is "augmented" within the "used" grouping statement such that one continuous set of SID values is generated for the voucher-constrained module name, all voucher attributes, and the voucher-constrained attributes.
-Two attributes of the voucher are "refined" to be optional.
-
-INSERT_FIG_FROM_FILE ietf-voucher-constrained@DATE.yang END
 
 ### Example voucher artifacts {#example-voucher}
 
@@ -1371,7 +1314,7 @@ The only restrictions on the certificate is that it MUST have EKU bits set as de
 
 ## Use of RPK alternatives to proximity-registrar-cert
 
-In {{voucher-request-artifact}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256.
+In {{RFC8366bis, Section voucher-request-artifact}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256.
 The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields
 by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate.
 The MASA will not be able to detect such act by the Registrar. But since any 'other' certificate the Registrar could insert in this way still encodes its identity the additional risk
