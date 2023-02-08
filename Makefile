@@ -34,6 +34,6 @@ version:
 	echo Version: ${VERSION}
 
 clean:
-	-rm -f ${DRAFT}.xml ${CWTDATE1} ${CWTDATE2}
+	-rm -f ${DRAFT}.xml
 
 .PRECIOUS: ${DRAFT}.xml
