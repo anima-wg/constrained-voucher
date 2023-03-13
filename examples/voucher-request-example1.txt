@@ -1,5 +1,5 @@
 { 
- 2501: {      / SID=2501, ietf-voucher-request-constrained:voucher /
+ 2501: {          / SID=2501, ietf-voucher-request:voucher|voucher /
     1: 2,                     / SID=2502, assertion 2 = "proximity"/
     7: h'831D5198A6CA2C7F',   / SID=2508, nonce                    /
    12: h'30593013....D29A54', / SID=2513, proximity-registrar-pubk /    

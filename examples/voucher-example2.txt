@@ -1,5 +1,5 @@
 {
- 2451: {            / SID = 2451, ietf-voucher-constrained:voucher /
+ 2451: {                / SID = 2451, ietf-voucher:voucher|voucher /
     1: 0,                      / SID = 2452, assertion "verified"  /
     2: "2022-12-06T10:15:32Z", / SID = 2453, created-on            /
     3: false,       / SID = 2454, domain-cert-revocation-checks    /
