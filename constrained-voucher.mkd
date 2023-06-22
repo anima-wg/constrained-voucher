@@ -256,7 +256,7 @@ The Constrained BRSKI and EST-coaps requests and responses for bootstrapping are
 ### DTLS Version {#dtls-version}
 
 DTLS version 1.3 {{RFC9147}} SHOULD be used in any implementation of this specification. An exception case where DTLS 1.2 {{RFC6347}} MAY
-be used is in a Pledge that uses a software platform where DTLS 1.3 is not available (yet). This may occur for example if a legacy
+be used is in a Pledge that uses a software platform where a DTLS 1.3 client is not available (yet). This may occur for example if a legacy
 device gets software-upgraded to support Constrained BRSKI. For this reason, a Registrar MUST by default support both DTLS 1.3 and DTLS 1.2
 client connections. However, for security reasons the Registrar MAY be administratively configured to support only a particular DTLS version or higher.
 
