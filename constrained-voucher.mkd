@@ -205,7 +205,7 @@ For the constrained voucher also both methods are supported to indicate (pin) a 
 or a pinned RPK.
 
 The BRSKI architectures mandates that the MASA be aware of the capabilities of the Pledge.
-This is not a drawback as a Pledges is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
+This is not a drawback as a Pledge is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
 The MASA therefore knows if the Pledge supports PKIX operations, or if it is limited to Raw Public Key (RPK) operations only.
 Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar identity.
 
