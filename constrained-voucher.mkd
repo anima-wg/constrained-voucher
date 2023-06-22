@@ -883,8 +883,7 @@ The method of generating such "kid" value is vendor-specific and SHOULD be confi
 support commonly used methods. In order to support future business cases and supply chain integrations,
 a Registrar using the "kid" field MUST be configurable, on a per-manufacturer basis,
 to select a particular method for generating the "kid" value such that it is compatible with the method that
-the manufacturer. Both binary and string values MUST be supported per {{RFC9052}}, respectively encoded
-in the "kid" field using a CBOR byte string (bstr) or text string (tstr).
+the manufacturer expects. Note that the "kid" field always has a CBOR byte string (bstr) format.
 
 ### Signing of Pledge Voucher Request (PVR)
 
@@ -895,7 +894,7 @@ A Pledge by default SHOULD NOT use a "kid" parameter in its PVR, because its sig
 by the Pledge's unique serial number that is included in the PVR and (by the Registrar) in the RVR. This achieves the smallest possible
 PVR data size while still enabling the MASA to verify the PVR.
 Still, when required the Pledge MAY use a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur
-for example if a Pledge has multiple IDevID identities. The "kid" parameter in this case may be a simple integer identifying one out of N identities
+for example if a Pledge has multiple IDevID identities. The "kid" parameter in this case may be an integer byte identifying one out of N identities
 present, or it may be a hash of the public key, or anything else the Pledge vendor decides.
 A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA.
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
