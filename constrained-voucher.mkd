@@ -757,14 +757,11 @@ The YANG ({{RFC7950}}) module changes and CBOR serialization changes are describ
 That document also assigns SID values to YANG elements in accordance with {{I-D.ietf-core-sid}}.
 The present section provides some examples of these artifacts and defines a new signature format for these, using COSE.
 
-The constrained voucher request adds the following fields: proximity-registrar-pubk, proximity-registrar-pubk-sha256,
-proximity-registrar-cert, and prior-signed-voucher-request.
+The constrained voucher request adds the fields proximity-registrar-pubk and proximity-registrar-pubk-sha256. One of these is optionally 
+used to replace the proximity-registrar-cert field, for a smaller voucher request - useful for the most constrained cases.
 
-prior-signed-voucher-request is only used between the Registrar and the MASA.
-proximity-registrar-pubk or proximity-registrar-pubk-sha256 optionally replaces proximity-registrar-cert
-for the most constrained cases where RPK is used by the Pledge.
-
-The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256.
+The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256. One of these is optionally 
+used instead of the pinned-domain-cert field, for a smaller voucher object.
 
 ## Example Artifacts
 
