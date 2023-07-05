@@ -151,7 +151,7 @@ The HTTP connection (between Registrar and MASA) is to be protected using TLS (H
 {{discovery-considerations}} considers some variations of the protocol, specific to particular deployments or IoT networking technologies.
 Next in {{design-considerations}}, some considerations for the design and implementation of Constrained BRSKI components are provided.
 
-{{rpk-considerations}} introduces a major variant of Constrained BRSKI for the most-constrained Pledges: the use of Raw Public Keys (RPK).
+{{rpk-considerations}} introduces a variant of Constrained BRSKI for the most-constrained Pledges: the use of Raw Public Keys (RPK).
 This variant achieves smaller sizes of data objects and avoids doing certain costly PKIX verification operations on the Pledge.
 
 # Terminology          {#Terminology}
@@ -216,7 +216,7 @@ but when operating PKIX-less instead the RPK of the Registrar is pinned.
 
 The BRSKI architectures mandates that the MASA be aware of the capabilities of the Pledge.
 This is not a drawback as a Pledge is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
-The MASA therefore knows if the Pledge supports PKIX operations, or if it is limited to Raw Public Key (RPK) operations only.
+The MASA therefore knows if the Pledge supports PKIX operations, or if it is limited to RPK operations only.
 Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar or domain identity.
 
 
@@ -645,20 +645,19 @@ customer to obtain flexible long-lived vouchers).
 
 ## Pinning of Raw Public Keys {#pinned-with-rpk}
 
-Specifically for constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of a PKIX certificate.
-If an RPK is pinned it MUST be the RPK of the Registrar.
+Specifically for the most-constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of a PKIX certificate.
+This is used by the RPK variant of Constrained BRSKI described in {{rpk-considerations}}, but it can also be used in the default Constrained BRSKI flow as a means to reduce voucher size.
 
-When the Pledge is known by MASA to support RPK but not PKIX certificate operations, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
+For both cases, if an RPK is pinned, it MUST be the RPK of the Registrar.
+
+When the Pledge is known by MASA to support the RPK variant only, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
 or "pinned-domain-pubk-sha256" field of a voucher.
 This is described in more detail in {{RFC8366bis}} and {{rpk-considerations}}.
-A Pledge that does not support PKIX certificates cannot use EST to enroll; it has to use
-another method for enrollment without certificates and the Registrar has to support this method also.
-It is possible that the Pledge will not enroll, but instead only a network join operation will occur (See {{RFC9031}}).
-How the Pledge discovers this method and details of the enrollment method are out of scope of this document.
 
-When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher typically pins a domain certificate.
+When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher normally pins a domain certificate.
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain as specified in {{masa-pinning-policy}}.
-However, if the Pledge is known to also support RPK pinning and the MASA intends to identify the Registrar in the voucher (not the CA), then MASA MUST pin the RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
+However, if the Pledge is known by MASA to also support RPK pinning and the MASA intends to pin the Registrar in the voucher (and not the CA), then MASA SHOULD pin the 
+RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
 
 ~~~~
 {::include pinning-options.txt}
@@ -1129,11 +1128,16 @@ There will be cases where a Registrar does not support a new format that a new P
 The responsability for supporting new formats is on the Registrar.
 
 
-# Raw Public Key Use Considerations {#rpk-considerations}
+# Raw Public Key Variant {#rpk-considerations}
 
-This section explains techniques to reduce the data volume and complexity of the BRSKI bootstrap.
-The use of a raw public key (RPK) in the pinning process can significantly reduce the number of bytes sent over the wire and round trips, and reduce the code footprint in a Pledge,
-but it comes with a few significant operational limitations.
+
+## Introduction and Scope
+
+This section introduces a Constrained BRSKI variant to reduce the data volume and complexity of the BRSKI bootstrap.
+The use of a raw public key (RPK) in the pinning process can significantly reduce the number of bytes sent over the wire and the number of round trips, and reduce the code footprint in a Pledge.
+But it comes with a few significant operational limitations.
+
+One simplification that comes with RPK use is that a Pledge can avoid doing PKIX certificate operations, such as certificate chain validation.
 
 ## The Registrar Trust Anchor
 
@@ -1148,28 +1152,38 @@ a RawPublicKey object (as defined by {{RFC7250}}) is used.
 A Registrar operating in a mixed environment can determine whether to send a Certificate or a Raw Public Key to the Pledge: this is signaled by the Pledge. In the case it needs an RPK, it
 includes the server\_certificate\_type of RawPublicKey. This is shown in section 5 of {{RFC7250}}.
 
-The Pledge always sends a client\_certificate\_type of X509 (not an RPK), so that the Registrar can properly identify the Pledge and distill the MASA URI information from its IDevID certificate.
+The Pledge MUST send a client\_certificate\_type of X509 (not an RPK), so that the Registrar can properly identify the Pledge and distill the MASA URI information from its IDevID certificate.
 
 ## The Pledge Voucher Request
 
 The Pledge puts the Registrar's public key into the proximity-registrar-pubk field of the Pledge Voucher Request (PVR).
-(The proximity-registrar-pubk-sha256 can also be used for efficiency, if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.)
+(The proximity-registrar-pubk-sha256 can alternatively be used for efficiency, if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.)
 
-As the format of this pubk field is identical to the TLS RawPublicKey data object, no manipulation at all is needed to insert this into the PVR.
+As the format of this pubk field is identical to the TLS RawPublicKey data object, no manipulation at all is needed to insert this field into the PVR.
+This approach reduces the size of the PVR significantly.
 
 ## The Voucher Response
 
 A returned voucher will have a pinned-domain-pubk field with the identical key as was found in the proximity-registrar-pubk field above, as well as being identical to the
 Registrar's RPK in the currently active DTLS connection.
+(Or alternatively the MASA may include the "pinned-domain-pubk-sha256" field if it knows the Pledge supports this field.)
 
 Validation of this key by the Pledge is what takes the DTLS connection out of the provisional state; see {{Section 5.6.2 of RFC8995}} for more details.
 
-The voucher needs to be validated first by the Pledge.
+The received voucher needs to be validated first by the Pledge.
 The Pledge needs to have a public key to validate the signature from the MASA on the voucher.
 
 The MASA's public key counterpart of the (private) MASA signing key MUST be already installed in the Pledge at manufacturing time. Otherwise, the Pledge
 cannot validate the voucher's signature.
 
+## The Enrollment Phase
+
+A Pledge that does not support PKIX operations cannot use EST to enroll; it has to use
+another method for enrollment without certificates and the Registrar has to support this method also. For example, an enrollment process that 
+records an RPK owned by the Pledge as a legitimate entity that is part of the domain.
+
+It is possible that the Pledge will not enroll after obtaining a valid voucher, but instead will do only a network join operation (see for example {{RFC9031}}).
+How the Pledge discovers this method and details of such enrollment methods are out of scope of this document.
 
 
 # Pledge Discovery of Bootstrap and Enrollment Options {#pledge-discovery-on-registrar}
@@ -1307,12 +1321,12 @@ The below example shows a Pledge that wants to identify EST-coaps enrollment opt
   RES: 2.05 Content
   Content-Format: 40
   Payload:
-  </e/crts>;rt="ace.est.crts";ct="281 287",
-  </e/sen>;rt="ace.est.sen";ct="281 287",
-  </e/sren>;rt="ace.est.sren";ct="281 287",
-  </e/att>;rt="ace.est.att",
-  </e/skg>;rt="ace.est.skg",
-  </e/skc>;rt="ace.est.skc"
+  </e/crts>;rt=ace.est.crts;ct="281 287",
+  </e/sen>;rt=ace.est.sen;ct="281 287",
+  </e/sren>;rt=ace.est.sren;ct="281 287",
+  </e/att>;rt=ace.est.att,
+  </e/skg>;rt=ace.est.skg,
+  </e/skc>;rt=ace.est.skc
 ~~~~
 
 The response indicates that EST-coaps enrollment (/sen) and re-enrollment (/sren) is supported, with a choice of two Content-Formats for the return payload:
