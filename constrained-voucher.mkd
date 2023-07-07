@@ -10,6 +10,7 @@ area: Internet
 wg: anima Working Group
 kw: Internet-Draft
 cat: std
+stream: IETF
 consensus: true
 updates: 8366, 8995
 
@@ -1424,8 +1425,8 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 
 # Changelog
 
--11 to -20
-    (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues and related Pull Requests.)
+-11 to -21
+    (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues , related Pull Requests and commits.)
 
 -10
     Design considerations extended
