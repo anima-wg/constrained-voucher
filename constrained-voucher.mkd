@@ -758,10 +758,10 @@ The YANG ({{RFC7950}}) module changes and CBOR serialization changes are describ
 That document also assigns SID values to YANG elements in accordance with {{I-D.ietf-core-sid}}.
 The present section provides some examples of these artifacts and defines a new signature format for these, using COSE.
 
-The constrained voucher request adds the fields proximity-registrar-pubk and proximity-registrar-pubk-sha256. One of these is optionally 
+The constrained voucher request adds the fields proximity-registrar-pubk and proximity-registrar-pubk-sha256. One of these is optionally
 used to replace the proximity-registrar-cert field, for a smaller voucher request - useful for the most constrained cases.
 
-The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256. One of these is optionally 
+The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256. One of these is optionally
 used instead of the pinned-domain-cert field, for a smaller voucher object.
 
 ## Example Artifacts
@@ -769,7 +769,7 @@ used instead of the pinned-domain-cert field, for a smaller voucher object.
 ### Example Pledge voucher request (PVR) artifact {#example-pvr}
 
 Below, an example constrained voucher request (PVR) from a Pledge to a Registrar is shown in CBOR diagnostic notation.
-Long CBOR byte strings have been shortened (with "....") for readability. The enum value of the assertion field is 
+Long CBOR byte strings have been shortened (with "....") for readability. The enum value of the assertion field is
 2 for the "proximity" assertion as defined in {{Section 6.3 of RFC8366bis}}.
 
 INSERT_FIG_FROM_FILE examples/voucher-request-example1.txt END
@@ -1153,10 +1153,10 @@ The Thread router acts here as a Join Proxy. The MLE discovery response message 
 
 # Design Considerations
 
-The design considerations for vouchers from {{Section 8 of RFC8366bis}} apply. Specifically for CBOR encoding of vouchers, 
+The design considerations for vouchers from {{Section 8 of RFC8366bis}} apply. Specifically for CBOR encoding of vouchers,
 one key difference with JSON encoding is that the names of the leaves in the YANG definition do not affect the size of the resulting CBOR, as the SID ({{I-D.ietf-core-sid}}) translation process assigns integers to the names.
 
-To obtain the lowest code size and RAM use on the Pledge, it is recommended that a Pledge is designed to only process/generate these SID integers and not the lengthy strings. The MASA in that case 
+To obtain the lowest code size and RAM use on the Pledge, it is recommended that a Pledge is designed to only process/generate these SID integers and not the lengthy strings. The MASA in that case
 is required to generate the voucher for that Pledge using only SID integers. Yet, this MASA implementation MUST still support both SID integers and strings, to be able to process the field names in the RVR.
 
 Any POST request to the Registrar with resource /vs or /es returns a 2.04 Changed response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.04) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.04) response in a separate CoAP message. See [RFC7252] for details.
