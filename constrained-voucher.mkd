@@ -1327,13 +1327,40 @@ The following security considerations have led to this choice of scope:
 
 # IANA Considerations
 
-## GRASP Discovery Registry
+## GRASP Objective Value Registries
+
+IANA is asked to create a new registry entitles the "BRSKI AN\_Proxy Objective Value" table.
+This registry should be grouped with the "Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters" category.
 
 IANA is asked to extend the registration of the "AN\_Proxy" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for this existing registration, because {{grasppledgediscovery}} defines the new protocol value IPPROTO_UDP for the objective.
+The above created AN\_Proxy Objective Value table should also be cited.
+
+IANA is asked to create a new registry entitles the "BRSKI AN\_join\_registrar Objective Value" table.
+This registry should be grouped with the "Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters" category.
 
 IANA is asked to extend the registration of the "AN\_join\_registrar" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for this existing registration, because {{graspregistrardiscovery}} adds the objective value "BRSKI_JP" to the objective.
+The above created AN\_join\_registrar Objective Value table should also be cited.
+
+
+### Rules and Initial values for BRSKI AN\_Proxy registry
+
+The initial values for AN\_Proxy registry are as follows:
+
+|-|-|-|
+| string           | RFC defined   |
+| ""               | RFC8995       |
+| DTLS-EST         | THIS-DOCUMENT |
+
+In addition, {{grasppledgediscovery}} uses a different protocol value IPPROTO_UDP for the objective.
+
+### Rules and Initial values for BRSKI AN\_join_registrar registry
+
+The initial values for AN\_join\_registrar registry are as follows:
+
+|-|-|-|
+| string           | RFC defined |
+| EST-TLS          | RFC8995 |
+| BRSKI_JP         | THIS-DOCUMENT |
 
 ## Resource Type Registry
 
