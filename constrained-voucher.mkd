@@ -1332,11 +1332,15 @@ The following security considerations have led to this choice of scope:
 IANA is asked to create a new registry entitles the "BRSKI AN\_Proxy Objective Value" table.
 This registry should be grouped with the "Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters" category.
 
+This Registry can be extended using _Specification Required_
+
 IANA is asked to extend the registration of the "AN\_Proxy" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
 The above created AN\_Proxy Objective Value table should also be cited.
 
 IANA is asked to create a new registry entitles the "BRSKI AN\_join\_registrar Objective Value" table.
 This registry should be grouped with the "Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters" category.
+
+This Registry can be extended using _Specification Required_
 
 IANA is asked to extend the registration of the "AN\_join\_registrar" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
 The above created AN\_join\_registrar Objective Value table should also be cited.
