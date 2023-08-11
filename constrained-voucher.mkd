@@ -1345,24 +1345,27 @@ This Registry can be extended using _Specification Required_
 IANA is asked to extend the registration of the "AN\_join\_registrar" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
 The above created AN\_join\_registrar Objective Value table should also be cited.
 
+Objective values may be any CBOR type in GRASP, these registries prefers that they be US-ASCII (printable) strings.
+The use of CBOR positive and negative integers is also permitted in cases where space really is at a premium.
 
 ### Rules and Initial values for BRSKI AN\_Proxy registry
 
 The initial values for AN\_Proxy registry are as follows:
 
 |-|-|-|
-| string           | RFC defined   |
+| string           | defined in  |
 | ""               | RFC8995       |
 | DTLS-EST         | THIS-DOCUMENT |
 
 In addition, {{grasppledgediscovery}} uses a different protocol value IPPROTO_UDP for the objective.
+Note that {{RFC8995}} did not set a clear value for this objective, and the empty string has been assumed.
 
 ### Rules and Initial values for BRSKI AN\_join_registrar registry
 
 The initial values for AN\_join\_registrar registry are as follows:
 
 |-|-|-|
-| string           | RFC defined |
+| string           | defined in |
 | EST-TLS          | RFC8995 |
 | BRSKI_JP         | THIS-DOCUMENT |
 
