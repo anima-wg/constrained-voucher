@@ -109,12 +109,12 @@ venue:
 --- abstract
 
 This document defines the Constrained Bootstrapping Remote Secure Key Infrastructure (Constrained BRSKI) protocol,
-which provides a solution for secure zero-touch bootstrapping of resource-constrained (IoT) devices into the network
+which provides a solution for secure zero-touch onboarding of resource-constrained (IoT) devices into the network
 of a domain owner. This protocol is designed for constrained networks, which may have limited data throughput or may
 experience frequent packet loss. Constrained BRSKI is a variant of the BRSKI protocol, which uses an artifact signed by the
 device manufacturer called the "voucher" which enables a new device and the owner's network to mutually authenticate.
-While the BRSKI voucher is typically encoded in JSON, Constrained BRSKI uses a compact CBOR-encoded voucher.
-The BRSKI voucher definition is extended with new data types that allow for smaller voucher sizes.
+While the BRSKI voucher data is encoded in JSON, Constrained BRSKI uses a compact CBOR-encoded voucher.
+The BRSKI voucher data definition is extended with new data types that allow for smaller voucher sizes.
 The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS;
 and HTTPS used in BRSKI is replaced with DTLS-secured CoAP (CoAPS).
 This document Updates RFC 8366 and RFC 8995.
@@ -128,19 +128,19 @@ As explained in {{RFC7228}}, such networks may have limited data throughput or m
 experience frequent packet loss. In addition, its nodes may be constrained by energy availability, memory space, and code size.
 
 The Bootstrapping Remote Secure Key Infrastructure (BRSKI) protocol described in {{RFC8995}}
-provides a solution for secure zero-touch (automated) bootstrap of new (unconfigured) devices.
+provides a solution for secure zero-touch (automated) onboarding of new (unconfigured) devices.
 In it, these new devices are called "pledges", equipped with a factory-installed Initial Device Identifier (IDevID) (see {{ieee802-1AR}}).
 Using the IDevID the pledges are securely enrolled into a network.
 
 The BRSKI solution described in {{RFC8995}} was designed to be modular, and this document describes a version scaled to the constraints of IoT deployments.
 
-Therefore, this document uses the constrained version of the voucher and voucher request artifacts as described in {{RFC8366bis}}, along with a constrained 
+Therefore, this document uses constrained versions of the voucher artifact and voucher request artifact as described in {{RFC8366bis}}, along with a constrained 
 version of the BRSKI protocol.
 This Constrained BRSKI protocol makes use of the CoAP-based version of EST (EST-coaps from {{RFC9148}}) rather than the EST over HTTPS {{RFC7030}}.
 Constrained BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this.
 
-In BRSKI, the {{RFC8366}} voucher is by default serialized to JSON with a signature in CMS {{RFC5652}}.
-This document uses the new CBOR {{RFC8949}} voucher serialization, as defined by {{RFC8366bis}}, and applies a new COSE {{RFC9052}} signature format as 
+In BRSKI, the {{RFC8366}} voucher data is by default serialized to JSON with a signature in CMS {{RFC5652}}.
+This document uses the new CBOR {{RFC8949}} voucher data serialization, as defined by {{RFC8366bis}}, and applies a new COSE {{RFC9052}} signature format as 
 defined in {{artifacts}}.
 
 This COSE-signed CBOR-encoded voucher is transported using both secured CoAP and HTTPS.
@@ -157,8 +157,8 @@ This variant achieves smaller sizes of data objects and avoids doing certain cos
 # Terminology          {#Terminology}
 
 The following terms are defined in {{RFC8366bis}}, and are used identically as in that document:
-artifact, domain, imprint, Join Registrar/Coordinator (JRC), Manufacturer Authorized Signing Authority
-(MASA), Pledge, Registrar, Trust of First Use (TOFU), and Voucher.
+artifact, domain, Join Registrar/Coordinator (JRC), malicious Registrar, Manufacturer Authorized Signing Authority
+(MASA), Pledge, Registrar, Onboarding, Owner, Voucher Data and Voucher.
 
 The following terms from {{RFC8995}} are used identically as in that document:
 Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, nonceless, PKIX.
@@ -200,7 +200,7 @@ protocol between the Registrar and the MASA.
 Time-based vouchers are supported, but given that constrained devices are unlikely to have accurate time, their use will be uncommon.
 Most Pledges using constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection rather than expiry times.
 
-{{RFC8366bis}} defines the two CBOR-encoded artifacts of a constrained voucher and a constrained voucher request, which are used by Constrained BRSKI.
+{{RFC8366bis}} defines the CBOR voucher data encoding for the constrained voucher and the constrained voucher request, which are used by Constrained BRSKI.
 
 The constrained voucher request MUST be signed by the Pledge. COSE {{RFC9052}} is used for signing as defined in {{VR-COSE}}.
 It signs using the private key associated with its IDevID certificate. 
@@ -217,7 +217,7 @@ but when operating PKIX-less instead the RPK of the Registrar is pinned.
 The BRSKI architectures mandates that the MASA be aware of the capabilities of the Pledge.
 This is not a drawback as a Pledge is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
 The MASA therefore knows if the Pledge supports PKIX operations, or if it is limited to RPK operations only.
-Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar or domain identity.
+Based upon this, the MASA can select which attributes to use in the voucher data for certain operations, like the pinning of the Registrar or domain identity.
 
 
 # Updates to {{RFC8366bis}} and RFC8995
@@ -260,7 +260,7 @@ The extensions are targeting low-resource networks with small packets, based on 
 A DTLS connection is established between the Pledge and the Registrar, similar to the TLS connection
 described in {{Section 5.1 of RFC8995}}. This may occur via a Join Proxy as described in {{joinproxy}}.
 Regardless of the Join Proxy presence or particular mechanism used, the DTLS connection should operate identically.
-The Constrained BRSKI and EST-coaps requests and responses for bootstrapping are carried over this DTLS connection.
+The Constrained BRSKI and EST-coaps requests and responses for onboarding are carried over this DTLS connection.
 
 ### DTLS Version {#dtls-version}
 
@@ -339,7 +339,7 @@ See {{registrar-certificate-requirement-server}} for Registrar client certificat
 Constrained BRSKI operates using CoAP over DTLS, with request URIs using the coaps scheme. The Pledge operates in CoAP client role.
 To keep the protocol messages small the EST-coaps and Constrained BRSKI request URIs are shorter than the respective EST and BRSKI URIs.
 
-During the BRSKI bootstrap on an IPv6 network these request URIs have the following form:
+During the BRSKI onboarding on an IPv6 network these request URIs have the following form:
 
 ~~~~
   coaps://[<link-local-ipv6>]:<port>/.well-known/brski/<short-name>
@@ -360,7 +360,7 @@ For Constrained BRSKI, {{brski-short-uri}} defines the CoAP \<short-name\> resou
 
 {{discovery-considerations}} details how the Pledge discovers a Join Proxy link-local address and port in different deployment scenarios.
 
-The request URI formats defined above enable the Pledge to perform bootstrap and enrollment without requiring to perform any discovery of the available bootstrap options, voucher formats, 
+The request URI formats defined above enable the Pledge to perform onboarding/enrollment without requiring to perform any discovery of the available onboarding options, voucher formats, 
 BRSKI/EST resources, enrollment protocols, and so on. This is helpful for a majority of constrained Pledges that would support only a single set of options. However, for Pledges that do support multiple options, 
 sending CoAP discovery queries to the Registrar is supported as defined in {{pledge-discovery-on-registrar}}.
 
@@ -452,7 +452,7 @@ A Pledge SHOULD NOT perform the optional EST-coaps "CSR attributes request" (/at
 
 One or more Subject Distinguished Name fields MUST be included.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, which is the common case, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
-Note that a Pledge may optionally receive such specific information via the voucher (encoded in a vendor-specific way) or via some other, out-of-band means.
+Note that a Pledge may optionally receive such specific information via the voucher data (encoded in a vendor-specific way) or via some other, out-of-band means.
 
 A Pledge uses the following optimized EST-coaps procedure:
 
@@ -469,11 +469,11 @@ A constrained Pledge MAY support only this format in a /crts response, per {{Sec
 
 7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID certificate, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
-Note that even though the Pledge can avoid performing any /crts request using the above EST-coaps procedure during bootstrap, it SHOULD support retrieval of the trust anchor CA periodically as detailed in the next section.
+Note that even though the Pledge can avoid performing any /crts request using the above EST-coaps procedure during BRSKI onboarding, it SHOULD support retrieval of the trust anchor CA periodically as detailed in the next section.
 
 ### EST-client Extensions {#brski-est-extensions-estclient}
 
-This section defines extensions to EST-coaps clients, used after the BRSKI bootstrap procedure is completed.
+This section defines extensions to EST-coaps clients, used after the BRSKI onboarding procedure is completed.
 (Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain. It has become an EST-coaps client.)
 A constrained EST-coaps client MAY support only the Content-Format 287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of RFC9148}}.
 In this case, it can only store one trust anchor of the domain.
@@ -651,7 +651,7 @@ This is used by the RPK variant of Constrained BRSKI described in {{rpk-consider
 For both cases, if an RPK is pinned, it MUST be the RPK of the Registrar.
 
 When the Pledge is known by MASA to support the RPK variant only, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
-or "pinned-domain-pubk-sha256" field of a voucher.
+or "pinned-domain-pubk-sha256" field of the voucher data.
 This is described in more detail in {{RFC8366bis}} and {{rpk-considerations}}.
 
 When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher normally pins a domain certificate.
@@ -670,7 +670,7 @@ RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-En
 
 The use of idevid-issuer is provided so that the serial-number to which the issued voucher pertains can be relative to the entity that issued the devices' IDevID.
 In most cases there is a one to one relationship between the trust anchor that signs vouchers (and is trusted by the pledge), and the Certification Authority that signs the IDevID.
-In that case, the serial-number in the voucher must refer to the same device as the serial-number that is in the IDevID certificate.
+In that case, the serial-number in the voucher data must refer to the same device as the serial-number that is in the IDevID certificate.
 
 However, there situations where the one to one relationship may be broken.
 This occurs whenever a manufacturer has a common MASA, but different products (on different assembly lines) are produced with identical serial numbers.
@@ -697,16 +697,16 @@ That document also assigns SID values to YANG elements in accordance with {{I-D.
 The present section provides some examples of these artifacts and defines a new signature format for these, using COSE.
 
 Compared to the first voucher request definition done in {{RFC8995}}, the constrained voucher request adds the fields proximity-registrar-pubk and proximity-registrar-pubk-sha256. One of these is optionally 
-used to replace the proximity-registrar-cert field, for a smaller voucher request - useful for the most constrained cases.
+used to replace the proximity-registrar-cert field, for a smaller voucher data size - useful for the most constrained cases.
 
 The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256. One of these is optionally
-used instead of the pinned-domain-cert field, for a smaller voucher object.
+used instead of the pinned-domain-cert field, for a smaller voucher data size.
 
 ## Example Artifacts
 
 ### Example Pledge voucher request (PVR) artifact {#example-pvr}
 
-Below, an example constrained voucher request (PVR) from a Pledge to a Registrar is shown in CBOR diagnostic notation.
+Below, example voucher data from a constrained voucher request (PVR) from a Pledge to a Registrar is shown in CBOR diagnostic notation.
 Long CBOR byte strings have been shortened (with "....") for readability. The enum value of the assertion field is
 2 for the "proximity" assertion as defined in {{Section 6.3 of RFC8366bis}}.
 
@@ -714,11 +714,11 @@ INSERT_FIG_FROM_FILE examples/voucher-request-example1.txt END
 
 The Pledge has included the item proximity-registrar-pubk which carries the public key of the Registrar, instead of including the full Registrar certificate in
 a proximity-registrar-cert item. This is done to reduce the size of the PVR. Also note that the Pledge did not include the created-on field since it lacks an
-internal real-time clock and has no knowledge of the current time at the moment of performing the bootstrapping.
+internal real-time clock and has no knowledge of the current time at the moment of performing the onboarding.
 
 ### Example Registrar voucher request (RVR) artifact {#example-rvr}
 
-Next, an example constrained voucher request (RVR) from a Registrar to a MASA is shown in CBOR diagnostic notation.
+Next, example voucher data from a constrained voucher request (RVR) from a Registrar to a MASA is shown in CBOR diagnostic notation.
 The Registrar has created this request triggered by the reception of the Pledge voucher request (PVR) of the previous example.
 Again, long CBOR byte strings have been shortened for readability.
 
@@ -730,13 +730,13 @@ string and SID key types.
 
 ### Example voucher artifacts {#example-voucher}
 
-Below, an example constrained voucher is shown in CBOR diagnostic notation. It was created by a MASA in response to
+Below, an example of constrained voucher data is shown in CBOR diagnostic notation. It was created by a MASA in response to
 receiving the Registrar Voucher Request (RVR) shown in {{example-rvr}}. The enum value of the assertion field is set to 2,
 to acknowledge to both the Pledge and the Registrar that the proximity of the Pledge to the Registrar is considered proven.
 
 INSERT_FIG_FROM_FILE examples/voucher-example1.txt END
 
-While the above example voucher includes the nonce from the PVR, the next example is a nonce-less voucher. Instead of a nonce, it
+While the above example voucher data includes the nonce from the PVR, the next example is for a nonce-less voucher. Instead of a nonce, it
 includes an expires-on field with the date and time on which the voucher expires. Because the MASA did not verify the proximity of
 the Pledge and Registrar in this case, the assertion field contains a weaker assertion of "verified" (0). This indicates that the
 MASA verified the domain's ownership of the Pledge via some other means. The enum value of the assertion field for "verified" is
@@ -898,7 +898,7 @@ In {{fig-cose-voucher}} an example is shown of a COSE-signed voucher. This examp
     h'A10126',       / protected COSE header encoding: {1: -7}  /
                      /            which means { "alg": ES256 }  /
     {},              / unprotected COSE header parameters       /
-    h'A119....3839', / voucher binary content (in CBOR)         /
+    h'A119....3839', / voucher data (binary CBOR)               /
     h'2A2C....7FBF'  / voucher binary Sign1 signature by MASA   /
   ]
 )
@@ -936,7 +936,7 @@ The Pledge must discover the address/port and optionally the protocol with which
 
 Note that the identifying the format of the voucher request and the voucher is not a required part of the Pledge's discovery operation.
 It is assumed that all Registrars support all relevant voucher(-request) formats, while the Pledge only supports a single format.
-A Pledge that makes a voucher request to a Registrar that does not support that format will receive a CoAP 4.06 Not Acceptable status code and the bootstrap attempt will fail.
+A Pledge that makes a voucher request to a Registrar that does not support that format will receive a CoAP 4.06 Not Acceptable status code and the onboarding attempt will fail.
 
 ### GRASP discovery {#grasppledgediscovery}
 
@@ -976,7 +976,7 @@ Here is an example of an announcement that offers both constrained and unconstra
       [O_IPv6_LOCATOR,
        h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]
 ~~~
-{: #fig-grasp-duo title='Example of Join Proxy announcing two bootstrap methods' align="left"}
+{: #fig-grasp-duo title='Example of Join Proxy announcing two onboarding methods' align="left"}
 
 ### CoAP Discovery
 The details on CoAP discovery of a Join Proxy by a Pledge are provided in {{Section 5.2.1 of I-D.ietf-anima-constrained-join-proxy}}.
@@ -1094,11 +1094,11 @@ The IPv6 source address of the MLE response message indicates the address of the
 
 ## Voucher Format and Encoding
 
-The design considerations for vouchers from {{Section 8 of RFC8366bis}} apply. Specifically for CBOR encoding of vouchers,
+The design considerations for vouchers from {{Section 8 of RFC8366bis}} apply. Specifically for CBOR encoding of voucher data,
 one key difference with JSON encoding is that the names of the leaves in the YANG definition do not affect the size of the resulting CBOR, as the SID ({{I-D.ietf-core-sid}}) translation process assigns integers to the names.
 
 To obtain the lowest code size and RAM use on the Pledge, it is recommended that a Pledge is designed to only process/generate these SID integers and not the lengthy strings. The MASA in that case
-is required to generate the voucher for that Pledge using only SID integers. Yet, this MASA implementation MUST still support both SID integers and strings, to be able to process the field names in the RVR.
+is required to generate the voucher data for that Pledge using only SID integers. Yet, this MASA implementation MUST still support both SID integers and strings, to be able to process the field names in the RVR.
 
 Any POST request to the Registrar with resource /vs or /es returns a 2.04 Changed response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.04) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.04) response in a separate CoAP message. See {{RFC7252}} for details.
 
@@ -1134,7 +1134,7 @@ The responsability for supporting new formats is on the Registrar.
 
 ## Introduction and Scope
 
-This section introduces a Constrained BRSKI variant to reduce the data volume and complexity of the BRSKI bootstrap.
+This section introduces a Constrained BRSKI variant to reduce the data volume and complexity of the BRSKI onboarding.
 The use of a raw public key (RPK) in the pinning process can significantly reduce the number of bytes sent over the wire and the number of round trips, and reduce the code footprint in a Pledge.
 But it comes with a few significant operational limitations.
 
@@ -1187,14 +1187,14 @@ It is possible that the Pledge will not enroll after obtaining a valid voucher, 
 How the Pledge discovers this method and details of such enrollment methods are out of scope of this document.
 
 
-# Pledge Discovery of Bootstrap and Enrollment Options {#pledge-discovery-on-registrar}
+# Pledge Discovery of Onboarding and Enrollment Options {#pledge-discovery-on-registrar}
 
-The functionality in this section is optional for a Pledge to implement. In typical cases, for a constrained Pledge that only supports a single bootstrap and 
+The functionality in this section is optional for a Pledge to implement. In typical cases, for a constrained Pledge that only supports a single onboarding and 
 enrollment method, this functionality is not needed.
 
 ## Pledge Discovery Query for All BRSKI Resources
 
-A Pledge that wishes to discover the available BRSKI bootstrap options/formats can do a discovery
+A Pledge that wishes to discover the available BRSKI onboarding options/formats can do a discovery
 operation using the CoAP resource discovery method of {{Section 4 of RFC6690}}, by sending a discovery query to the Registrar over the secured DTLS connection.
 
 For example, if the Registrar supports a short BRSKI URL (/b) instead of just the longer "/.well-known" resources, and supports only the voucher format 
@@ -1256,7 +1256,7 @@ other than the mandatory default formats -- are supported. The compact response 
 The Pledge can now start using any of the BRSKI resources /b/\<short-name\>. 
 In above example, the well-known resource present under /.well-known/brski is not returned because this is assumed to be well-known to the Pledge and would not require discovery anyway.
 
-As a follow-up example, the Pledge can now start the bootstrap by sending its PVR:
+As a follow-up example, the Pledge can now start the onboarding by sending its PVR:
 
 ~~~~
   REQ: POST /b/rv
@@ -1766,7 +1766,7 @@ INSERT_CODE_FROM_FILE examples/cose-examples/registrar.hex END
 
 ### Domain CA Certificate {#cose-example-domain-ca-cert}
 
-The Domain CA certificate is the CA of the customer's domain. It has signed the Registrar (RA) certificate.
+The Domain CA certificate is the CA of the owner's domain. It has signed the Registrar (RA) certificate.
 
 INSERT_CODE_FROM_FILE examples/cose-examples/domain_ca.txt END
 
@@ -1805,7 +1805,7 @@ The representiation of signed_pvr in CBOR diagnostic format (with lf added) is:
 
 INSERT_CODE_FROM_FILE examples/cose-examples/pvr.txt END
 
-The COSE payload is the PVR, encoded as a CBOR byte string. The diagnostic representation of it is shown below:
+The COSE payload is the PVR voucher data, encoded as a CBOR byte string. The diagnostic representation of it is shown below:
 
 INSERT_CODE_FROM_FILE examples/cose-examples/pvr-nonsigned.txt END
 
@@ -1831,7 +1831,7 @@ The payload signed_rvr is shown as hexadecimal dump (with lf added):
 
 INSERT_CODE_FROM_FILE examples/cose-examples/rvr.hex END
 
-The representiation of signed_rvr in CBOR diagnostic format (with lf added) is:
+The representation of signed_rvr in CBOR diagnostic format (with lf added) is:
 
 INSERT_CODE_FROM_FILE examples/cose-examples/rvr.txt END
 
@@ -1865,7 +1865,7 @@ The representiation of signed_voucher in CBOR diagnostic format (with lf added) 
 
 INSERT_CODE_FROM_FILE examples/cose-examples/voucher.txt END
 
-In the above, the third element in the array is the plain CBOR voucher encoded as a CBOR byte string.
+In the above, the third element in the array is the voucher data encoded as a CBOR byte string.
 When decoded, it can be represented by the following CBOR diagnostic notation:
 
 INSERT_CODE_FROM_FILE examples/cose-examples/voucher-nonsigned.txt END
@@ -1900,8 +1900,8 @@ subsections, these profiles are defined and a comparison is provided.
 ## Minimal Pledge
 The Minimal Pledge profile (Min) aims to reduce code size and hardware cost to a minimum. This comes with some severe functional restrictions, in particular:
 
-* No support for EST re-enrollment: whenever this would be needed, a factory reset followed by a new bootstrap process is required.
-* No support for change of Registrar: for this case, a factory reset followed by a new bootstrap process is required.
+* No support for EST re-enrollment: whenever this would be needed, a factory reset followed by a new onboarding process is required.
+* No support for change of Registrar: for this case, a factory reset followed by a new onboarding process is required.
 
 This profile would be appropriate for single-use devices which must be replaced rather than re-deployed.
 That might  include medical devices, but also sensors used during construction, such as concrete temperature  sensors.
@@ -1910,7 +1910,7 @@ That might  include medical devices, but also sensors used during construction, 
 The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI feature set including EST re-enrollment support and Registrar changes.
 
 ## Full-featured Pledge
-The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple bootstrap methods, hardware real-time clock, BRSKI/EST resource discovery, and
+The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple onboarding methods, hardware real-time clock, BRSKI/EST resource discovery, and
 CSR Attributes request/response. It also supports most of the optional features defined in this specification.
 
 ## Comparison Chart of Pledge Classes
@@ -1919,8 +1919,8 @@ The below table specifies the functions implemented in the three example Pledge 
 |Function \|====================\| Profiles -> |Min|Typ|Full
 |-|:-:|:-:|:-:
 |**General** |===|===|====
-|Support Constrained BRSKI bootstrap| Y | Y | Y
-|Support other bootstrap method(s)| - | - | Y
+|Support Constrained BRSKI onboarding| Y | Y | Y
+|Support other onboarding method(s)| - | - | Y
 |Real-time clock and cert time checks| - | - | Y
 |**Constrained BRSKI** |===|===|====
 |Discovery for rt=brski* | - | - | Y
@@ -1939,6 +1939,6 @@ The below table specifies the functions implemented in the three example Pledge 
 |Periodic trust anchor retrieval GET /crts | - (1) | Y | Y
 |Supports change of Registrar identity | - (1) | Y | Y
 
-Notes: (1) is possible only by doing a factory-reset followed by a new bootstrap procedure.
+Notes: (1) is possible only by doing a factory-reset followed by a new onboarding procedure.
 
 
