@@ -44,12 +44,15 @@ author:
 
 normative:
 #  RFC2119:
+  RFC2782:
   RFC4193:
   RFC4210:
   RFC5280:
   RFC5652:
   RFC6066:
   RFC6347:
+  RFC6762:
+  RFC6763:
   RFC7250:
   RFC7252:
   RFC7950:
@@ -89,6 +92,7 @@ informative:
   I-D.ietf-anima-constrained-join-proxy:
   I-D.ietf-lake-edhoc: EDHOC
   I-D.ietf-anima-jws-voucher:
+  I-D.ietf-dnssd-srp:
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
@@ -909,7 +913,7 @@ In {{fig-cose-voucher}} an example is shown of a COSE-signed voucher. This examp
 
 # Extensions to Discovery {#discovery}
 
-It is assumed that a Join Proxy {{joinproxy}} seamlessly provides a (relayed) DTLS connection between the Pledge and the Registrar.
+It is assumed that a Join Proxy ({{joinproxy}}) seamlessly provides a relayed DTLS connection between the Pledge and the Registrar.
 To use a Join Proxy, a Pledge needs to discover it. For Pledge discovery of a Join Proxy, this section extends Section 4.1 of {{RFC8995}} for the constrained BRSKI case.
 
 In general, the Pledge may be one or more hops away from the Registrar, where one hop means the Registrar is a direct link-local neighbor of the Pledge.
@@ -932,13 +936,15 @@ Further details on both these topics are provided in {{I-D.ietf-anima-constraine
 
 ## Discovery operations by Pledge
 
-The Pledge must discover the address/port and optionally the protocol with which to communicate. The present document only defines coaps (CoAP over DTLS) as a protocol.
+The Pledge must discover the address/port and optionally the protocol with which to communicate. The present document only defines coaps (CoAP over DTLS) as the default protocol.
 
-Note that the identifying the format of the voucher request and the voucher is not a required part of the Pledge's discovery operation.
+Note that identifying the format of the voucher request and the voucher is not a required part of the Pledge's discovery operation.
 It is assumed that all Registrars support all relevant voucher(-request) formats, while the Pledge only supports a single format.
 A Pledge that makes a voucher request to a Registrar that does not support that format will receive a CoAP 4.06 Not Acceptable status code and the bootstrap attempt will fail.
 
-### GRASP discovery {#grasppledgediscovery}
+The next subsections define GRASP discovery, CoAP discovery, and multicast DNS (mDNS) discovery respectively.
+
+### GRASP discovery {#grasp-pledge-discovery}
 
 This section is normative for uses with an ANIMA ACP.
 In the context of autonomic networks, the Join Proxy uses the DULL GRASP M_FLOOD mechanism to announce itself.
@@ -949,8 +955,8 @@ The following changes are necessary with respect to figure 10 of {{RFC8995}}:
 * The transport-proto is IPPROTO_UDP
 * the objective is AN_Proxy
 
-The Registrar announces itself using ACP instance of GRASP using M_FLOOD messages.
-Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}} .
+The Registrar announces itself in the ACP instance of GRASP using M_FLOOD messages.
+Autonomic Network Join Proxies MUST support GRASP discovery of a Registrar as described in section 4.3 of {{RFC8995}} .
 
 Here is an example M_FLOOD announcing the Join Proxy at fe80::1, on standard coaps port 5684, using DTLS.
 
@@ -978,7 +984,7 @@ Here is an example of an announcement that offers both constrained and unconstra
 ~~~
 {: #fig-grasp-duo title='Example of Join Proxy announcing two bootstrap methods' align="left"}
 
-### CoAP Discovery
+### CoAP Discovery {#coap-pledge-discovery}
 The details on CoAP discovery of a Join Proxy by a Pledge are provided in {{Section 5.2.1 of I-D.ietf-anima-constrained-join-proxy}}.
 In this section some examples of CoAP discovery interactions are given.
 
@@ -1004,7 +1010,7 @@ is not using port 5684 for any other purposes.
 ~~~~
 
 In the following example, two Join Proxies respond to the multicast query. The Join Proxies each use a slightly different CoRE Link Format
-encoding. While the first encoding is more compact, both encodings are allowed per {{RFC6690}}. The Pledge may now select one of the
+'rt' value encoding. While the first encoding is more compact, both encodings are allowed per {{RFC6690}}. The Pledge may now select one of the
 two Join Proxies for initiating its DTLS connection.
 
 ~~~~
@@ -1018,13 +1024,36 @@ two Join Proxies for initiating its DTLS connection.
 ~~~~
 
 
+### DNS-SD / mDNS Discovery {#dnssd-pledge-discovery}
+Link-local discovery using mDNS {{RFC6762}}, querying for a local Join Proxy service, is also an option for discovery. In this case the Pledge sends a link-local IP  
+multicast to an mDNS multicast IP address, querying for a service name "brski-jp". This service name is defined by {{I-D.ietf-anima-constrained-join-proxy}}.
+
+The query type (QType) is set to PTR, query class (QClass) is IN, and query name (QName) is set to "_brski-jp._udp.local.".
+
+A Join Proxy that is currently active responds with an mDNS response with answer Type PTR, containing the following records:
+
+* PTR record pointing to the service instance (in the Answer RR section)
+* SRV record for the service instance (in the Additional RR section)
+* OPTIONAL TXT record with further parameters of the Join Proxy service (in the Additional RR section). Currenty, no TXT keys are defined for the service, but future specifications may add these.
+* A and/or AAAA record (in the Additional RR section) with the link-local address of the Join Proxy.
+
+Note that the Join Proxy MUST use the DNS additional record generation for PTR record answers as defined in Section 12.1 of {{RFC6763}}.
+This has the benefit that only a single round-trip of mDNS query/response messages is required for the Pledge to learn all relevant details of nearby Join Proxy services.
+
+The Pledge MUST consider the Priority and Weight fields of the SRV record, as specified in {{RFC2782}}, in making a selection of Join Proxy. In addition to this the Pledge MAY consider essential  
+connectivity-related criteria, such as a radio link quality to each Join Proxy. The latter is to for example avoid selecting a Join Proxy for which the communication link 
+is of such low quality that the BRSKI bootstrap process will likely fail over this link.
 
 ## Discovery operations by Join Proxy
-The Join Proxy needs to discover a Registrar, at the moment it needs to relay data (of a Pledge) towards the Registrar or prior to that moment.
+The Join Proxy needs to discover a Registrar, at the moment it needs to relay data (of a Pledge) towards the Registrar, or prior to that moment. For example, it may start Registrar 
+discovery as soon as it is requested to be enabled as a Join Proxy.
 
-### GRASP Discovery {#graspregistrardiscovery}
+The next subsections define GRASP discovery, CoAP discovery, and mDNS discovery, respectively.
 
-This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateful Join Proxy using ACP instance of GRASP using M_FLOOD messages.
+
+### GRASP Discovery {#grasp-registrar-discovery}
+
+This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateful Join Proxy using the ACP instance of GRASP using M_FLOOD messages.
 Section 4.3 of {{RFC8995}} discusses this in more detail.
 
 The following changes are necessary with respect to figure 10 of {{RFC8995}}:
@@ -1033,7 +1062,7 @@ The following changes are necessary with respect to figure 10 of {{RFC8995}}:
 * the objective is AN_join_registrar, identical to {{RFC8995}}.
 * the objective name is "BRSKI_JP".
 
-The Registrar announces itself using ACP instance of GRASP using M\_FLOOD messages.
+The Registrar announces itself using the ACP instance of GRASP using M\_FLOOD messages.
 Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}}.
 
 Here is an example M\_FLOOD announcing the Registrar on example port 5684, which is the standard CoAPS port number.
@@ -1052,30 +1081,67 @@ The address will typically be a Unique Local Address (ULA) as in the example, bu
 ### CoAP discovery {#coap-disc}
 Further details on CoAP discovery of the Registrar by a Join Proxy are provided in {{Section 5.1.1 of I-D.ietf-anima-constrained-join-proxy}}.
 
+### mDNS / DNS-SD discovery {#mdns-disc}
+Link-local discovery using mDNS {{RFC6762}} as a means for a Join Proxy to discover a Registrar can work in cases where the Registrar is always reachable link-locally from each Join Proxy.
+However, for many network topologies such as 6LoWPAN mesh networks this link-local proximity is not guaranteed and often the Registrar will be multiple IP hops away.
+Furthermore, if the number of IP hosts on the link grows then using multicast for discovery becomes increasingly inefficient.
+
+For these reasons, DNS-SD {{RFC6763}} based service discovery over DNS unicast communication is defined in this section. This method assumes that the Registrar has been added to the DNS system in some way, e.g. 
+by an administrator or by automatic self-registration via a suitable protocol (for example Service Registration Protocol, SRP {{I-D.ietf-dnssd-srp}})).
+
+First, the Join Proxy sends a DNS unicast query to the known IP address of the local DNS resolver. This address may be configured in a network-specific way for a 6LoWPAN mesh network technology, 
+or may be configured using an IETF standard. The method of finding the address of the local DNS resolver to use, is out of scope of this specification.
+
+For a stateful Join Proxy, the query type (QType) is set to PTR, query class (QClass) is IN, and query name (QName) set to "_brski-registrar._udp.\<domain\>.". 
+For a stateless Join Proxy, the query type (QType) is set to PTR, query class (QClass) is IN, and query name (QName) set to "_brski-rjp._udp.\<domain\>.". 
+The \<domain\> is a selected DNS-SD browsing domain. Section 11 of {{RFC6763}} explains how the browsing domain can be selected/discovered. In some deployments, also a default browsing domain may be used. 
+For example {{Section 3.1.2 of I-D.ietf-dnssd-srp}} defines the special-use domain name "default.service.arpa" which can be used as a default browsing domain if the DNS resolver is a-priori known to support it.
+
+Note that the use of "brski-registrar" in combination with "udp" transport protocol is defined by the present document; see {{iana-service-name-registry}}.
+The service name "brski-rjp" is defined in {{I-D.ietf-anima-constrained-join-proxy}}.
+
+If one Registrar is found, the DNS resolver responds with an mDNS response with Type PTR, containing the following records:
+
+* PTR record pointing to the service instance (in the Answer RR section)
+
+Optionally the DNS resolver also includes one or more of the following in the Additional RR section:
+
+* SRV record for the service instance
+* TXT record with further parameters of the Registrar service. Currenty, no TXT keys are defined for the service, but future specifications may add these.
+* A and/or AAAA records with IPv4/IPv6 address(es) of the Registrar.
+
+The DNS resolver is not required to include the additional records, however. If not included, then the Join Proxy MUST query individually for the missing records (SRV, TXT, and at least one of A/AAAA).
+See for more details on the DNS additional record generation for PTR record answers, {{Section 12.1 of RFC6763}}.
+
+In case the query returns multiple Registrar services, multiple PTR records are returned in the Answer RR section. In this case the Join Proxy MUST consider the Priority and Weight fields of the corresponding SRV records, in the way specified in {{RFC2782}}, to make a selection between Registrar services. It MAY also employ other criteria, such as information encoded in the TXT record - for example to select the Registrar service that fits best with the type of service that the Pledge is trying to discover.
+
+Author's Note: the above text may be moved to draft-ietf-anima-constrained-join-proxy. Also one open issue is on the selection of Registrar services by the JP.
+https://github.com/anima-wg/constrained-join-proxy/issues/45
+Also a requirement needs to be added that the JP MUST propagate the semantic information (e.g. TXT record data, weight, priority) from the Registrar to the discovery response it sends to the Pledge, maybe.
 
 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
 
-This section details how discovery is done in specific deployment scenarios.
+This section details how discovery of a Join Proxy is done by the Pledge in specific deployment scenarios.
 
 ## 6TSCH Deployments
 
 In 6TISCH networks, the Constrained Join Proxy (CoJP) mechanism is described in {{RFC9031}}.
-Such networks are expected to use a {{-EDHOC}} to do key management.
+Such networks are expected to use {{-EDHOC}} for key management.
 This is the subject of future work.
 The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of the Join Proxy.
 
 ## Generic networks using GRASP
 
-{{RFC8995}} defines a mechanism for the Pledge to discover a Join Proxy by listening for {{RFC8990}} GRASP messages.
+{{grasp-pledge-discovery}} defines a mechanism for the Pledge to discover a Join Proxy by listening for {{RFC8990}} GRASP messages.
 This mechanism can be used on any network which does not have another more specific mechanism.
-This mechanism supports mesh networks, and can also be used over unencrypted WIFI.
+This mechanism supports mesh networks, and can also be used over unencrypted Wi-Fi.
 
 ## Generic networks using mDNS
 
-{{RFC8995}} also defines a non-normative mechanism for the Pledge to discover a Join Proxy by doing mDNS queries.
+{{dnssd-pledge-discovery}} defines a mechanism for the Pledge to discover a Join Proxy by sending mDNS {{RFC6762}} queries.
 This mechanism can be used on any network which does not have another recommended mechanism.
-This mechanism does not easily support mesh networks.  It can be used over unencrypted WIFI.
+This mechanism does not easily support mesh networks.  It can be used over unencrypted Wi-Fi.
 
 ## Thread networks using Mesh Link Establishment (MLE)
 
@@ -1435,15 +1501,18 @@ The following security considerations have led to this choice of scope:
 
 * reducing the complexity of MASA (i.e. less protocols supported) would also reduce its potential attack surface, which is relevant since the MASA is 24/7 exposed on the Internet and accepting (untrusted) incoming connections.
 
-# IANA Considerations
+# IANA Considerations {#iana}
 
 ## GRASP Discovery Registry
 
 IANA is asked to extend the registration of the "AN\_Proxy" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for this existing registration, because {{grasppledgediscovery}} defines the new protocol value IPPROTO_UDP for the objective.
+This document should also be cited for this existing registration, because {{grasp-pledge-discovery}} defines the new protocol value IPPROTO_UDP for the objective.
 
 IANA is asked to extend the registration of the "AN\_join\_registrar" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for this existing registration, because {{graspregistrardiscovery}} adds the objective value "BRSKI_JP" to the objective.
+This document should also be cited for this existing registration, because {{grasp-registrar-discovery}} adds the objective value "BRSKI_JP" to the objective.
+
+Author's Note: there is an ongoing discussion if we should set the objective value to the empty string "", or a set of labels to indicate BRSKI options.
+See https://github.com/anima-wg/brski-discovery/blob/main/draft-eckert-anima-brski-discovery.md
 
 ## Resource Type Registry
 
@@ -1505,7 +1574,7 @@ IANA has allocated ID 836 from the sub-registry "CoAP Content-Formats".
     -----------------------------  --------- ----  ----------
     application/voucher-cose+cbor  -          836  [This RFC]
 
-## Update to BRSKI Parameters Registry
+## Update to BRSKI Parameters Registry {#iana-brski-param-registry}
 
 This section updates the BRSKI Well-Known URIs sub-registry of the IANA Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters Registry
 by adding a new column "Short URI". The contents of this field MUST be specified for any newly registered URI as follows:
@@ -1520,6 +1589,22 @@ voucher_status | vs | Voucher status telemetry: Pledge to Registrar             
 requestauditlog| -- | Request audit log: Registrar to MASA                             | [RFC8995]
 enrollstatus   | es | Enrollment status telemetry: Pledge to Registrar                 | [RFC8995], \[This RFC\]
 {: #brski-wellknown-uri title='Update of the BRSKI Well-Known URI Sub-Registry'}
+
+## Update to Service Name and Transport Protocol Port Number Registry  {#iana-service-name-registry}
+
+This document updates the "brski-registrar" registration made by {{RFC8995}} to include the "udp" transport protocol, as follows:
+
+    Service Name:          brski-registrar
+    Transport Protocol(s): udp
+    Assignee:              [IESG]
+    Contact:               [IETF_Chair]
+    Description: The Bootstrapping Remote Secure Key
+                 Infrastructure Registrar (CoAPS)
+    Reference:   [This RFC]
+
+This service defines the BRSKI Registrar accessible over CoAP-over-DTLS. It can be used by a stateful Join Proxy to relay DTLS traffic to, or for directly connecting to a Registrar.
+
+Author's Note: consider to keep here or move to draft-ietf-anima-constrained-join-proxy.
 
 
 # Acknowledgements
