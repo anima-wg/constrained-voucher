@@ -18,7 +18,8 @@ NAME=pledge
 openssl req -new -key keys/privkey_pledge.pem -out $NAME.csr -subj \
              "/CN=Stok IoT sensor Y-42/serialNumber=JADA123456789"
 
-# sign csr
+# sign csr - it uses faketime only to get endtime to 23:59:59Z
+faketime '23:59:59Z' \
 openssl x509 -set_serial 32429 -CAform PEM -CA output/masa_ca.pem \
   -CAkey keys/privkey_masa_ca.pem -extfile x509v3.ext -extensions \
   pledge_ext -req -in $NAME.csr -out output/$NAME.pem \
