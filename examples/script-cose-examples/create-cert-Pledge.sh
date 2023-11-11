@@ -24,6 +24,13 @@ openssl x509 -set_serial 32429 -CAform PEM -CA output/masa_ca.pem \
   pledge_ext -req -in $NAME.csr -out output/$NAME.pem \
   -days $VALIDITY -sha256
 
+# Note: alternative method using 'ca' command. Currently 
+# doesn't work without 'country' subject field.
+# openssl ca -rand_serial -enddate 99991231235959Z -certform PEM \
+#  -cert output/masa_ca.pem -keyfile keys/privkey_masa_ca.pem \
+#  -extfile x509v3.ext -extensions pledge_ext -in $NAME.csr \ 
+#  -out $NAME.pem -outdir output
+
 # delete temp files
 rm -f $NAME.csr
 
