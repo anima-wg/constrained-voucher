@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (BRSKI)
 abbrev: Constrained BRSKI
-docname: draft-ietf-anima-constrained-voucher-21
+docname: draft-ietf-anima-constrained-voucher-22
 
 stand_alone: true
 
@@ -655,7 +655,7 @@ When the Pledge is known by MASA to support the RPK variant only, the voucher pr
 or "pinned-domain-pubk-sha256" field of a voucher.
 This is described in more detail in {{RFC8366bis}} and {{rpk-considerations}}.
 
-When the Pledge is known by MASA to support PKIX format certificates, the "pinned-domain-cert" field present in a voucher normally pins a domain certificate.
+When the Pledge is known by MASA to support PKIX certificates, the "pinned-domain-cert" field present in a voucher normally pins a domain certificate.
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain as specified in {{masa-pinning-policy}}.
 However, if the Pledge is known by MASA to also support RPK pinning and the MASA intends to pin the Registrar in the voucher (and not the CA), then MASA SHOULD pin the 
 RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
@@ -1573,7 +1573,7 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 
 #Library Support for BRSKI {#libsup}
 
-For the implementation of BRSKI, the use of a software library to manipulate certificates and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
+For the implementation of BRSKI, the use of a software library to manipulate PKIX certificates and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
 
 Libraries do not support all known crypto algorithms. Before deciding on a library, it is important to look at their supported crypto algorithms and the roadmap for future support. Apart from availability, the library footprint, and the required execution cycles should be investigated beforehand.
 
@@ -1710,7 +1710,7 @@ A success response without payload will then be sent by the Registrar back to th
 
 # COSE-signed Voucher (Request) Examples {#cosesign}
 
-This appendix provides examples of COSE-signed voucher requests and vouchers. First, the used test keys and certificates are described, followed by examples of
+This appendix provides examples of COSE-signed voucher requests and vouchers. First, the used test keys and PKIX certificates are described, followed by examples of
 a constrained PVR, RVR and voucher.
 
 
@@ -1742,7 +1742,7 @@ INSERT_CODE_FROM_FILE examples/cose-examples/privkey_masa_ca.txt END
 
 ## Pledge, Registrar, Domain CA and MASA Certificates
 
-All keys and certificates used for the examples have been generated with OpenSSL - see {{appendix-gencerts}} for more details on certificate generation.
+All keys and PKIX certificates used for the examples have been generated with OpenSSL - see {{appendix-gencerts}} for more details on certificate generation.
 Below the certificates are listed that accompany the keys shown above. Each certificate description is followed by the hexadecimal representation of the X.509 ASN.1 DER encoded certificate.
 This representation can be for example decoded using an online ASN.1 decoder.
 
@@ -1874,7 +1874,7 @@ shown in {{cose-example-domain-ca-cert}}.
 
 # Generating Certificates with OpenSSL {#appendix-gencerts}
 
-This informative appendix shows example Bash shell scripts to generate test certificates for the Pledge IDevID, the Registrar and the MASA.
+This informative appendix shows example Bash shell scripts to generate test PKIX certificates for the Pledge IDevID, the Registrar and the MASA.
 The shell scripts cannot be run stand-alone because they depend on input files which are not all included in this appendix. Nevertheless,
 these scripts may provide guidance on how OpenSSL can be configured for generating Constrained BRSKI certificates.
 
