@@ -67,7 +67,7 @@ normative:
   RFC9147:
   RFC9148:
   RFC9360:
-  I-D.ietf-uta-rfc6125bis:
+  RFC9525:
   ieee802-1AR:
     target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
     title: "IEEE 802.1AR Secure Device Identifier"
@@ -302,7 +302,7 @@ A Pledge/EST-client operating as DTLS 1.3 client, MUST use the (D)TLS record siz
 The SNI issue described below affects {{RFC8995}} as well, and is reported in errata: https://www.rfc-editor.org/errata/eid6648
 
 As the Registrar is discovered by IP address, and typically connected via a Join Proxy, the name of the Registrar is not known to the Pledge.
-The Pledge will not know what the hostname for the Registrar is, so it cannot do DNS-ID validation ({{I-D.ietf-uta-rfc6125bis}}) on the Registrar's certificate.
+The Pledge will not know what the hostname for the Registrar is, so it cannot do DNS-ID validation ({{RFC9525}}) on the Registrar's certificate.
 Instead, it must do validation using the voucher.
 
 As the Pledge does not know the name of the Registrar, the Pledge cannot put any reasonable value into the {{RFC6066}} Server Name Indicator (SNI).
@@ -578,7 +578,7 @@ A MASA that supports the unconstrained voucher formats should be able to support
 
 There is no requirement that a single MASA be used for both constrained and unconstrained voucher requests: the choice of MASA is determined by the id-mod-MASAURLExtn2016 extension contained in the IDevID.
 
-The Registrar MUST do DNS-ID checks ({{I-D.ietf-uta-rfc6125bis}}) on the contents of the certificate provided by the MASA.
+The Registrar MUST do DNS-ID checks ({{RFC9525}}) on the contents of the certificate provided by the MASA.
 
 In constrast to the Pledge/Registrar situation, the Registrar always knows the name of the MASA, and MUST always include an {{RFC6066}} Server Name Indicator.
 The SNI is optional in TLS1.2, but common.
@@ -1533,42 +1533,45 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 
 # Changelog
 
--11 to -22
+-22:    
+    Streamlined text to focus mostly on the default flow, with optional functions moved to their own sections (#273). 
+    Editorial updates. Reference rfc6125bis updated to RFC 9525.
+    
+-11 to -21:   
     (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues , related Pull Requests and commits.)
 
--10
-    Design considerations extended
-    Examples made consistent
+-10:   
+    Design considerations extended; Examples made consistent
 
--08
+-08:   
     Examples for cose_sign1 are completed and improved.
 
--06
+-06:   
     New SID values assigned; regenerated examples
 
--04
-    voucher and request-voucher MUST be signed
-    examples for signed request are added in appendix
-    IANA SID registration is updated
-    SID values in examples are aligned
-    signed cms examples aligned with new SIDs
+-04:   
+    voucher and request-voucher MUST be signed; 
+    examples for signed request are added in appendix; 
+    IANA SID registration is updated; 
+    SID values in examples are aligned; 
+    signed cms examples aligned with new SIDs.
 
--03
-
+-03:   
     Examples are inverted.
 
--02
+-02:   
+    Example of requestvoucher with unsigned appllication/cbor is added; 
+    attributes of voucher "refined" to optional; 
+    CBOR serialization of vouchers improved; 
+    Discovery port numbers are specified.
 
-    Example of requestvoucher with unsigned appllication/cbor is added
-    attributes of voucher "refined" to optional
-    CBOR serialization of vouchers improved
-    Discovery port numbers are specified
+-01:      
+    application/json is optional, application/cbor is compulsory; 
+    Cms and cose mediatypes are introduced.
 
--01
-
-    application/json is optional, application/cbor is compulsory
-    Cms and cose mediatypes are introduced
-
+-00:   
+    initial version
+    
 --- back
 
 #Library Support for BRSKI {#libsup}
