@@ -1,6 +1,6 @@
 ---
-title: Constrained Bootstrapping Remote Secure Key Infrastructure (BRSKI)
-abbrev: Constrained BRSKI
+title: Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI)
+abbrev: Constrained BRSKI (cBRSKI)
 docname: draft-ietf-anima-constrained-voucher-22
 
 stand_alone: true
@@ -110,12 +110,12 @@ venue:
 
 --- abstract
 
-This document defines the Constrained Bootstrapping Remote Secure Key Infrastructure (Constrained BRSKI) protocol,
+This document defines the Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI) protocol,
 which provides a solution for secure zero-touch onboarding of resource-constrained (IoT) devices into the network
 of a domain owner. This protocol is designed for constrained networks, which may have limited data throughput or may
-experience frequent packet loss. Constrained BRSKI is a variant of the BRSKI protocol, which uses an artifact signed by the
+experience frequent packet loss. cBRSKI is a variant of the BRSKI protocol, which uses an artifact signed by the
 device manufacturer called the "voucher" which enables a new device and the owner's network to mutually authenticate.
-While the BRSKI voucher data is encoded in JSON, Constrained BRSKI uses a compact CBOR-encoded voucher.
+While the BRSKI voucher data is encoded in JSON, cBRSKI uses a compact CBOR-encoded voucher.
 The BRSKI voucher data definition is extended with new data types that allow for smaller voucher sizes.
 The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS;
 and HTTPS used in BRSKI is replaced with DTLS-secured CoAP (CoAPS).
@@ -138,8 +138,8 @@ The BRSKI solution described in {{RFC8995}} was designed to be modular, and this
 
 Therefore, this document uses constrained versions of the voucher artifact and voucher request artifact as described in {{RFC8366bis}}, along with a constrained 
 version of the BRSKI protocol.
-This Constrained BRSKI protocol makes use of the CoAP-based version of EST (EST-coaps from {{RFC9148}}) rather than the EST over HTTPS {{RFC7030}}.
-Constrained BRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this.
+This cBRSKI protocol makes use of the CoAP-based version of EST (EST-coaps from {{RFC9148}}) rather than the EST over HTTPS {{RFC7030}}. 
+cBRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this.
 
 In BRSKI, the {{RFC8366}} voucher data is by default serialized to JSON with a signature in CMS {{RFC5652}}.
 This document uses the new CBOR {{RFC8949}} voucher data serialization, as defined by {{RFC8366bis}}, and applies a new COSE {{RFC9052}} signature format as 
@@ -149,11 +149,11 @@ This COSE-signed CBOR-encoded voucher is transported using both secured CoAP and
 The CoAP connection (between Pledge and Registrar) is to be protected by DTLS (CoAPS).
 The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
-{{overview}} to {{discovery}} define the default Constrained BRSKI protocol, by means of additions to and modifications of regular BRSKI.
+{{overview}} to {{discovery}} define the default cBRSKI protocol, by means of additions to and modifications of regular BRSKI.
 {{discovery-considerations}} considers some variations of the protocol, specific to particular deployments or IoT networking technologies.
-Next in {{design-considerations}}, some considerations for the design and implementation of Constrained BRSKI components are provided.
+Next in {{design-considerations}}, some considerations for the design and implementation of cBRSKI components are provided.
 
-{{rpk-considerations}} introduces a variant of Constrained BRSKI for the most-constrained Pledges: the use of Raw Public Keys (RPK).
+{{rpk-considerations}} introduces a variant of cBRSKI for the most-constrained Pledges: the use of Raw Public Keys (RPK).
 This variant achieves smaller sizes of data objects and avoids doing certain costly PKIX verification operations on the Pledge.
 
 # Terminology          {#Terminology}
@@ -202,7 +202,7 @@ protocol between the Registrar and the MASA.
 Time-based vouchers are supported, but given that constrained devices are unlikely to have accurate time, their use will be uncommon.
 Most Pledges using constrained vouchers will be online during enrollment and will use live nonces to provide anti-replay protection rather than expiry times.
 
-{{RFC8366bis}} defines the CBOR voucher data encoding for the constrained voucher and the constrained voucher request, which are used by Constrained BRSKI.
+{{RFC8366bis}} defines the CBOR voucher data encoding for the constrained voucher and the constrained voucher request, which are used by cBRSKI.
 
 The constrained voucher request MUST be signed by the Pledge. COSE {{RFC9052}} is used for signing as defined in {{VR-COSE}}.
 It signs using the private key associated with its IDevID certificate. 
@@ -262,13 +262,13 @@ The extensions are targeting low-resource networks with small packets, based on 
 A DTLS connection is established between the Pledge and the Registrar, similar to the TLS connection
 described in {{Section 5.1 of RFC8995}}. This may occur via a Join Proxy as described in {{joinproxy}}.
 Regardless of the Join Proxy presence or particular mechanism used, the DTLS connection should operate identically.
-The Constrained BRSKI and EST-coaps requests and responses for onboarding are carried over this DTLS connection.
+The cBRSKI and EST-coaps requests and responses for onboarding are carried over this DTLS connection.
 
 ### DTLS Version {#dtls-version}
 
 DTLS version 1.3 {{RFC9147}} SHOULD be used in any implementation of this specification. An exception case where DTLS 1.2 {{RFC6347}} MAY
 be used is in a Pledge that uses a software platform where a DTLS 1.3 client is not available (yet). This may occur for example if a legacy
-device gets software-upgraded to support Constrained BRSKI. For this reason, a Registrar MUST by default support both DTLS 1.3 and DTLS 1.2
+device gets software-upgraded to support cBRSKI. For this reason, a Registrar MUST by default support both DTLS 1.3 and DTLS 1.2
 client connections. However, for security reasons the Registrar MAY be administratively configured to support only a particular DTLS version or higher.
 
 An EST-coaps server {{RFC9148}} (as a separate entity from above Registrar) that implements this specification also MUST support both DTLS 1.3 and DTLS 1.2 client connections by default.
@@ -285,7 +285,7 @@ as detailed in {{VR-COSE}}.
 ### DTLS Handshake Fragmentation Considerations {#dtls-fragments}
 
 DTLS includes a mechanism to fragment handshake messages. This is described in {{Section 4.4 of RFC9147}}.
-Constrained BRSKI will often be used with a Join Proxy, described in {{joinproxy}}, which relays each DTLS message to the Registrar.
+cBRSKI will often be used with a Join Proxy, described in {{joinproxy}}, which relays each DTLS message to the Registrar.
 A stateless Join Proxy will need some additional space to wrap each DTLS message inside a CoAP request, while the wrapped result needs to fit in the maximum IPv6 
 MTU guaranteed on 6LoWPAN networks, which is 1280 bytes.
 
@@ -338,8 +338,8 @@ See {{registrar-certificate-requirement-server}} for Registrar client certificat
 
 ## Request URIs, Resource Discovery and Content Formats {#resource-discovery}
 
-Constrained BRSKI operates using CoAP over DTLS, with request URIs using the coaps scheme. The Pledge operates in CoAP client role.
-To keep the protocol messages small the EST-coaps and Constrained BRSKI request URIs are shorter than the respective EST and BRSKI URIs.
+cBRSKI operates using CoAP over DTLS, with request URIs using the coaps scheme. The Pledge operates in CoAP client role.
+To keep the protocol messages small the EST-coaps and cBRSKI request URIs are shorter than the respective EST and BRSKI URIs.
 
 During the BRSKI onboarding on an IPv6 network these request URIs have the following form:
 
@@ -351,14 +351,14 @@ During the BRSKI onboarding on an IPv6 network these request URIs have the follo
 where \<link-local-ipv6\> is the discovered link-local IPv6 address of a Join Proxy, and \<port\> is the discovered port of the Join Proxy that is
 used to offer the BRSKI proxy functionality. 
 
-\<short-name\> is the short resource name for the Constrained BRSKI and EST-coaps resources. For EST-coaps, Table 1 in {{Section 5.1 of RFC9148}} defines the CoAP \<short-name\> resource names. 
-For Constrained BRSKI, {{brski-short-uri}} defines the CoAP \<short-name\> resource names based on the {{RFC8995}} long HTTP resource names.
+\<short-name\> is the short resource name for the cBRSKI and EST-coaps resources. For EST-coaps, Table 1 in {{Section 5.1 of RFC9148}} defines the CoAP \<short-name\> resource names. 
+For cBRSKI, {{brski-short-uri}} defines the CoAP \<short-name\> resource names based on the {{RFC8995}} long HTTP resource names.
 
-| BRSKI resource | Constrained BRSKI resource \<short-name\> |
+| BRSKI resource | cBRSKI resource \<short-name\> |
 | /requestvoucher| /rv |
 | /voucher_status | /vs |
 | /enrollstatus | /es  |
-{: #brski-short-uri title='BRSKI URI paths mapping to Constrained BRSKI URI paths'}
+{: #brski-short-uri title='BRSKI URI paths mapping to cBRSKI URI paths'}
 
 {{discovery-considerations}} details how the Pledge discovers a Join Proxy link-local address and port in different deployment scenarios.
 
@@ -424,7 +424,7 @@ for the commonly used resources:
 <!-- Table order can be changed -->
 
 |-|-|-|
-| BRSKI + EST      | Constrained BRSKI + EST | Well-known URI namespace |
+| BRSKI + EST      | cBRSKI + EST-coaps | Well-known URI namespace |
 | /enrollstatus    | /es     | brski  |
 | /requestvoucher  | /rv     | brski  |
 | /voucher_status  | /vs     | brski  |
@@ -432,7 +432,7 @@ for the commonly used resources:
 | /csrattrs        | /att    | est    |
 | /simpleenroll    | /sen    | est    |
 | /simplereenroll  | /sren   | est    |
-{: #brski-est-short-uri title='BRSKI/EST resource name mapping to Constrained BRSKI/EST short resource name'}
+{: #brski-est-short-uri title='BRSKI/EST resource name mapping to cBRSKI/EST-coaps short resource name'}
 
 
 ## CoAP Responses {#brski-coap-responses}
@@ -648,7 +648,7 @@ customer to obtain flexible long-lived vouchers).
 ## Pinning of Raw Public Keys {#pinned-with-rpk}
 
 Specifically for the most-constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of a PKIX certificate.
-This is used by the RPK variant of Constrained BRSKI described in {{rpk-considerations}}, but it can also be used in the default Constrained BRSKI flow as a means to reduce voucher size.
+This is used by the RPK variant of cBRSKI described in {{rpk-considerations}}, but it can also be used in the default cBRSKI flow as a means to reduce voucher size.
 
 For both cases, if an RPK is pinned, it MUST be the RPK of the Registrar.
 
@@ -694,7 +694,7 @@ Concerning the Authority Key Identifier, {{RFC8366bis}} specifies that the entir
 
 # Artifacts {#artifacts}
 
-The YANG ({{RFC7950}}) module and CBOR serialization for the constrained voucher as used by Constrained BRSKI are described in {{RFC8366bis}}.
+The YANG ({{RFC7950}}) module and CBOR serialization for the constrained voucher as used by cBRSKI are described in {{RFC8366bis}}.
 That document also assigns SID values to YANG elements in accordance with {{I-D.ietf-core-sid}}.
 The present section provides some examples of these artifacts and defines a new signature format for these, using COSE.
 
@@ -912,7 +912,7 @@ In {{fig-cose-voucher}} an example is shown of a COSE-signed voucher. This examp
 # Extensions to Discovery {#discovery}
 
 It is assumed that a Join Proxy ({{joinproxy}}) seamlessly provides a relayed DTLS connection between the Pledge and the Registrar.
-To use a Join Proxy, a Pledge needs to discover it. For Pledge discovery of a Join Proxy, this section extends Section 4.1 of {{RFC8995}} for the constrained BRSKI case.
+To use a Join Proxy, a Pledge needs to discover it. For Pledge discovery of a Join Proxy, this section extends Section 4.1 of {{RFC8995}} for the cBRSKI case.
 
 In general, the Pledge may be one or more hops away from the Registrar, where one hop means the Registrar is a direct link-local neighbor of the Pledge.
 The case of one hop away can be considered as a degenerate case, because a Join Proxy is not really needed then.
@@ -923,7 +923,7 @@ Nevertheless, the situation where the Registrar is one hop away from the Pledge 
 In order to support the degenerate case, the Registrar SHOULD announce itself as if it were a Join Proxy -- though it would actually announce its real (stateful) Registrar CoAPS endpoint.
 No actual Join Proxy functionality is then required on the Registrar.
 
-So, a Pledge only needs to discover a Join Proxy, regardless of whether it is one or more than one hop away from a relevant Registrar. It first discovers the link-local address and the join-port of a Join Proxy. The Pledge then follows the constrained BRSKI procedure of initiating a DTLS connection using the link-local address and join-port of the Join Proxy.
+So, a Pledge only needs to discover a Join Proxy, regardless of whether it is one or more than one hop away from a relevant Registrar. It first discovers the link-local address and the join-port of a Join Proxy. The Pledge then follows the cBRSKI procedure of initiating a DTLS connection using the link-local address and join-port of the Join Proxy.
 
 Once enrolled, a Pledge itself may function as a Join Proxy.
 The decision whether or not to provide this functionality depends upon many factors and is out of scope for this document.
@@ -1102,7 +1102,7 @@ is required to generate the voucher data for that Pledge using only SID integers
 
 Any POST request to the Registrar with resource /vs or /es returns a 2.04 Changed response with empty payload. The client should be aware that the server may use a piggybacked CoAP response (ACK, 2.04) but may also respond with a separate CoAP response, i.e. first an (ACK, 0.0) that is an acknowledgement of the request reception followed by a (CON, 2.04) response in a separate CoAP message. See {{RFC7252}} for details.
 
-## Use of Constrained BRSKI with HTTPS
+## Use of cBRSKI with HTTPS
 
 This specification contains two extensions to {{RFC8995}}: a constrained voucher format (COSE), and a constrained transfer protocol (CoAP).
 
@@ -1134,7 +1134,7 @@ The responsability for supporting new formats is on the Registrar.
 
 ## Introduction and Scope
 
-This section introduces a Constrained BRSKI variant to reduce the data volume and complexity of the BRSKI onboarding.
+This section introduces a cBRSKI variant to further reduce the data volume and complexity of the cBRSKI onboarding.
 The use of a raw public key (RPK) in the pinning process can significantly reduce the number of bytes sent over the wire and the number of round trips, and reduce the code footprint in a Pledge.
 But it comes with a few significant operational limitations.
 
@@ -1508,7 +1508,7 @@ IANA Note (to be removed by RFC editor): the TEMPORARY registration of 836 is ma
 This section updates the BRSKI Well-Known URIs sub-registry of the IANA Bootstrapping Remote Secure Key Infrastructures (BRSKI) Parameters Registry
 by adding a new column "Short URI". The contents of this field MUST be specified for any newly registered URI as follows:
 
-Short URI: A short name for the "URI" resource that can be used by a Constrained BRSKI Pledge in a CoAP request to the Registrar. In case the "URI" resource is only used between Registrar and MASA, the value "--" is registered denoting that a short name is not applicable.
+Short URI: A short name for the "URI" resource that can be used by a cBRSKI Pledge in a CoAP request to the Registrar. In case the "URI" resource is only used between Registrar and MASA, the value "--" is registered denoting that a short name is not applicable.
 
 The initial contents of the sub-registry including the new column are as follows:
 
@@ -1637,9 +1637,9 @@ int result = mbedtls_x509_crt_verify(&cert, &caCert, NULL, NULL,
 <CODE ENDS>
 ~~~~
 
-#Constrained BRSKI-EST Message Examples
+#cBRSKI Message Examples
 
-This appendix extends the message examples from Appendix A of {{RFC9148}} with constrained BRSKI messages.
+This appendix extends the EST-coaps message examples from Appendix A of {{RFC9148}} with cBRSKI messages.
 The CoAP headers are only fully worked out for the first example, enrollstatus.
 
 ##enrollstatus {#es}
@@ -1912,7 +1912,7 @@ shown in {{cose-example-domain-ca-cert}}.
 
 This informative appendix shows example Bash shell scripts to generate test PKIX certificates for the Pledge IDevID, the Registrar and the MASA.
 The shell scripts cannot be run stand-alone because they depend on input files which are not all included in this appendix. Nevertheless,
-these scripts may provide guidance on how OpenSSL can be configured for generating Constrained BRSKI certificates.
+these scripts may provide guidance on how OpenSSL can be configured for generating cBRSKI certificates.
 
 The scripts were tested with OpenSSL 3.0.2. Older versions may not work -- OpenSSL 1.1.1 for example does not support all extensions used.
 
@@ -1941,7 +1941,7 @@ This profile would be appropriate for single-use devices which must be replaced 
 That might  include medical devices, but also sensors used during construction, such as concrete temperature  sensors.
 
 ## Typical Pledge
-The Typical Pledge profile (Typ) aims to support a typical Constrained BRSKI feature set including EST re-enrollment support and Registrar changes.
+The Typical Pledge profile (Typ) aims to support a typical cBRSKI feature set including EST re-enrollment support and Registrar changes.
 
 ## Full-featured Pledge
 The Full-featured Pledge profile (Full) illustrates a Pledge category that supports multiple onboarding methods, hardware real-time clock, BRSKI/EST resource discovery, and
@@ -1953,15 +1953,15 @@ The below table specifies the functions implemented in the three example Pledge 
 |Function \|====================\| Profiles -> |Min|Typ|Full
 |-|:-:|:-:|:-:
 |**General** |===|===|====
-|Support Constrained BRSKI onboarding| Y | Y | Y
+|Support cBRSKI onboarding| Y | Y | Y
 |Support other onboarding method(s)| - | - | Y
 |Real-time clock and cert time checks| - | - | Y
-|**Constrained BRSKI** |===|===|====
+|**cBRSKI** |===|===|====
 |Discovery for rt=brski* | - | - | Y
 |Support pinned Registrar public key (RPK) | Y | - | Y
 |Support pinned Registrar certificate | - | Y | Y
 |Support pinned Domain CA | - | Y | Y
-|**Constrained EST**|===|===|====
+|**EST-coaps**|===|===|====
 |Discovery for rt=ace.est* | - | - | Y
 |GET /att and response parsing | - | - | Y
 |GET /crts format 281 (multiple CA certs) | - | - | Y
