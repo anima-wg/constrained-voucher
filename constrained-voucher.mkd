@@ -79,6 +79,7 @@ informative:
   RFC4443:
   RFC6282:
   RFC6690:
+  RFC6838:
   RFC7030:
   RFC7228:
   RFC8990:
@@ -246,7 +247,7 @@ It Extends {{RFC8995}} as follows:
 
 * provides the option to return trust anchors in a simpler format ({{brski-est-extensions-registrar}}),
 
-* extends the BRSKI-MASA protocol ({{brski-masa}}) to carry the new voucher-cose+cbor format.
+* extends the BRSKI-MASA protocol ({{brski-masa}}) to carry the new application/voucher+cose format.
 
 
 
@@ -377,7 +378,7 @@ Although the request URI templates include IP address, scheme and port, in pract
     Payload       : (COSE-signed Pledge Voucher Request, PVR)
 ~~~~
 
-Note that only Content-Format 836 ("application/voucher-cose+cbor") is defined in this document for the voucher request resource (/rv).
+Note that only Content-Format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv).
 Content-Format 836 MUST be supported by the Registrar for the /rv resource and it MAY support additional formats.
 The Pledge MAY also indicate in the request the desired format of the (voucher) response, using the Accept Option. An example of using this option in the request is as follows:
 
@@ -390,7 +391,7 @@ The Pledge MAY also indicate in the request the desired format of the (voucher) 
 
 If the Accept Option is omitted in the request, the response format follows from the request payload format (which is 836).
 
-Note that this specification allows for voucher-cose+cbor format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
+Note that this specification allows for voucher+cose format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
 The burden for this flexibility is placed upon the Registrar.
 A Pledge on constrained hardware is expected to support a single format only.
 
@@ -542,7 +543,7 @@ This section describes extensions to and clarifications of the BRSKI-MASA protoc
 ## Protocol and Formats {#brski-masa-protocol-format}
 
 {{Section 5.4 of RFC8995}} describes a connection between the Registrar and the MASA as being a normal TLS connection using HTTPS.
-This document does not change that. The Registrar MUST use the format "application/voucher-cose+cbor" in its voucher request to MASA, when the Pledge uses this format in its request to the Registrar.
+This document does not change that. The Registrar MUST use the format "application/voucher+cose" in its voucher request to MASA, when the Pledge uses this format in its request to the Registrar.
 
 The MASA only needs to support formats for which it has constructed Pledges that use that format.
 
@@ -1113,7 +1114,7 @@ having only an IEEE 802.11 (Wi-Fi) radio, or a model having both these radios.
 A manufacturer of such device models may wish to have code only for the use of the constrained voucher format (COSE), and use it on all supported radios
 including the IEEE 802.11 radio. For this radio, the software stack to support HTTP/TLS may be already integrated into the radio module hence it is
 attractive for the manufacturer to reuse this. This type of approach is supported by this document.
-In the case that HTTPS is used, the regular long {{RFC8995}} resource names are used, together with the new "application/voucher-cose+cbor" media type described in this document.
+In the case that HTTPS is used, the regular long {{RFC8995}} resource names are used, together with the new "application/voucher+cose" media type described in this document.
 For status telemetry requests, the Pledge may use either one or both of the formats defined in {{telemetry}}. A Registrar MUST support both formats.
 
 Other combinations are possible, but they are not enumerated here.
@@ -1197,7 +1198,7 @@ A Pledge that wishes to discover the available BRSKI onboarding options/formats 
 operation using the CoAP resource discovery method of {{Section 4 of RFC6690}}, by sending a discovery query to the Registrar over the secured DTLS connection.
 
 For example, if the Registrar supports a short BRSKI URL (/b) instead of just the longer "/.well-known" resources, and supports only the voucher format 
-"application/voucher-cose+cbor" (836), and status reporting in both CBOR and JSON formats,
+"application/voucher+cose" (836), and status reporting in both CBOR and JSON formats,
 a CoAP resource discovery request and response may look as follows:
 
 ~~~~
@@ -1268,12 +1269,12 @@ As a follow-up example, the Pledge can now start the onboarding by sending its P
 ## Usage of ct Attribute
 
 The return of multiple content-types in the "ct" attribute by the Registrar allows the Pledge to choose the most appropriate one for a particular operation, and allows extension with new voucher formats.
-Note that only Content-Format 836 ("application/voucher-cose+cbor") is defined in this document for the voucher request resource (/rv), both as request payload and as response payload.
+Note that only Content-Format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv), both as request payload and as response payload.
 
 Content-Format 836 MUST be supported by the Registrar for the /rv resource.
 If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least format 836 is supported.
 
-Note that this specification allows for voucher-cose+cbor format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
+Note that this specification allows for voucher+cose format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
 The burden for this flexibility is placed upon the Registrar.
 A Pledge on constrained hardware is expected to support a single format only.
 
@@ -1291,7 +1292,7 @@ In the below example, a Pledge queries specifically for the brski.rv resource ty
   </b/rv>;rt=brski.rv;ct="836 65123 65124"
 ~~~~
 
-The Registrar returns 3 supported voucher formats: 836, 65123, and 65124. The first is the mandatory "application/voucher-cose+cbor". The other two are numbers from the Experimental Use number range 
+The Registrar returns 3 supported voucher formats: 836, 65123, and 65124. The first is the mandatory "application/voucher+cose". The other two are numbers from the Experimental Use number range 
 of the CoAP Content-Formats sub-registry, which are used as mere examples. The Pledge can now make a selection between the supported formats.
 
 Note that if the Registrar only supports the default Content-Formats for each BRSKI resource as specified by this document, it may also omit the ct attributes in the discovery query response.
@@ -1460,14 +1461,14 @@ brski.es | BRSKI enrollment status telemetry resource
 
 ## Media Types Registry
 
-This section registers the 'application/voucher-cose+cbor' in the IANA "Media Types" registry.
+This section registers the 'application/voucher+cose' in the IANA "Media Types" registry.
 This media type is used to indicate that the content is a CBOR voucher or voucher request
 signed with a COSE_Sign1 structure {{RFC9052}}.
 
-### application/voucher-cose+cbor
+### application/voucher+cose
 
     Type name:  application
-    Subtype name:  voucher-cose+cbor
+    Subtype name:  voucher+cose
     Required parameters:  N/A
     Optional parameters:  N/A
     Encoding considerations:  binary (CBOR)
@@ -1477,11 +1478,7 @@ signed with a COSE_Sign1 structure {{RFC9052}}.
     Published specification:  [This RFC]
     Applications that use this media type:  ANIMA, 6tisch, and other
       zero-touch onboarding systems
-    Fragment identifier considerations:  The syntax and semantics of
-      fragment identifiers specified for application/voucher-cose+cbor
-      are as specified for application/cbor.  (At publication of this
-      document, there is no fragment identification syntax defined for
-      application/cbor.)
+    Fragment identifier considerations: N/A
     Additional information:
       Deprecated alias names for this type: N/A
       Magic number(s):  N/A
@@ -1502,7 +1499,9 @@ IANA has allocated ID 836 from the sub-registry "CoAP Content-Formats".
 
     Media type                     Encoding   ID   Reference
     -----------------------------  --------- ----  ----------
-    application/voucher-cose+cbor  -          836  [This RFC]
+    application/voucher+cose       -          836  [This RFC]
+
+IANA Note (to be removed by RFC editor): the TEMPORARY registration of 836 is made under the old name of 'application/voucher-cose+cbor'.
 
 ## Update to BRSKI Parameters Registry {#iana-brski-param-registry}
 
@@ -1519,6 +1518,40 @@ voucher_status | vs | Voucher status telemetry: Pledge to Registrar             
 requestauditlog| -- | Request audit log: Registrar to MASA                             | [RFC8995]
 enrollstatus   | es | Enrollment status telemetry: Pledge to Registrar                 | [RFC8995], \[This RFC\]
 {: #brski-wellknown-uri title='Update of the BRSKI Well-Known URI Sub-Registry'}
+
+## Structured Syntax Suffixes Registry
+
+This section registers the "+cose" suffix in the IANA Structured Syntax Suffixes Registry based on the [RFC6838] procedure.
+
+    Name:       CBOR Object Signing and Encryption (COSE) object   
+    +suffix:    +cose
+    References: the "application/cose" media type [RFC9052]
+    Encoding considerations: binary (CBOR)
+    Interoperability considerations:
+      the "application/cose" media type has an optional parameter 
+      "cose-type". Any new media type that uses the +cose suffix
+      and allows use of this parameter MUST specify this 
+      explicitly, per Section 4.3 of [RFC6838]. If the parameter 
+      "cose-type" is allowed, its usage MUST be identical to the 
+      usage defined for the "application/cose" media type in 
+      Section 2 of [RFC9052]. 
+      A COSE processor handling a media type "foo+cose" and which
+      does not know the specific type "foo" SHOULD use the 
+      cose-type tag, if present, or cose-type parameter, if 
+      present, to determine the specific COSE object type during  
+      processing. If the specific type cannot be determined, 
+      it MUST assume only the generic COSE object structure and 
+      it MUST NOT perform security-critical operations using the 
+      COSE object.
+    Fragment identifier considerations: N/A
+    Security considerations: see [RFC9052]
+    Contact:   
+      IETF COSE Working Group (cose@ietf.org) or IESG 
+      (iesg@ietf.org)
+    Author/Change controller: 
+      IETF ANIMA Working Group (anima@ietf.org).
+      IESG has change control over this registration.
+
 
 # Acknowledgements
 
@@ -1823,8 +1856,8 @@ Because the Pledge used this format in the PVR, the JRC must also use this forma
 
 ~~~
   REQ: POST https://masa.stok.nl/.well-known/brski/requestvoucher
-  Content-Type: application/voucher-cose+cbor
-  Accept: application/voucher-cose+cbor
+  Content-Type: application/voucher+cose
+  Accept: application/voucher+cose
   Body: <signed_rvr>
 ~~~
 
@@ -1843,7 +1876,7 @@ The resulting voucher is created by the MASA and returned to the Registrar:
 
 ~~~
   RES: 200 OK
-  Content-Type: application/voucher-cose+cbor
+  Content-Type: application/voucher+cose
   Body: <signed_voucher>
 ~~~
 
