@@ -6,6 +6,7 @@ EXAMPLES+=$(wildcard examples/voucher-example*.txt)
 EXAMPLES+=$(wildcard examples/voucher-request-example*.txt)
 EXAMPLES+=examples/voucher-status.hex
 EXAMPLES+=examples/voucher-statusdiag.txt
+EXAMPLES+=$(wildcard examples/*.c)
 EXAMPLES+=$(wildcard examples/cose-examples/*.txt)
 EXAMPLES+=$(wildcard examples/cose-examples/*.hex)
 EXAMPLES+=$(wildcard examples/script-cose-examples/*.sh)
@@ -16,7 +17,7 @@ ${DRAFT}-${VERSION}.txt: ${DRAFT}.txt
 	cp ${DRAFT}.txt ${DRAFT}-${VERSION}.txt
 	: git add ${DRAFT}-${VERSION}.txt ${DRAFT}.txt
 
-%.xml: %.mkd ${EXAMPLES}
+%.xml: %.mkd ${EXAMPLES} insert-figures
 	kramdown-rfc2629 -3 ${DRAFT}.mkd | perl insert-figures >${DRAFT}.xml
 	unset DISPLAY; XML_LIBRARY=$(XML_LIBRARY):./src xml2rfc --v2v3 ${DRAFT}.xml
 	mv ${DRAFT}.v2v3.xml ${DRAFT}.xml
@@ -35,5 +36,9 @@ version:
 
 clean:
 	-rm -f ${DRAFT}.xml
+
+html: ${DRAFT}.html
+
+xml: ${DRAFT}.xml
 
 .PRECIOUS: ${DRAFT}.xml

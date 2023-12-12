@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 sub insert {
-    local($file, $wrapped, $codewrapped) = @_;
+    local($file, $wrapped, $codewrapped, $codetype) = @_;
 
     my $file;
     my $basefile;
@@ -23,8 +23,8 @@ sub insert {
         print STDERR "Setting file=$file\n";
     }
     open(FILE, "<" . $file) || die "Can not open $file: $!\n";
-    print "<figure><artwork><![CDATA[\n" if $wrapped;
-    print "<sourcecode><![CDATA[\n" if !$wrapped && $codewrapped;
+    print "<figure><artwork><![CDATA[\n" if $wrapped && !$codetype;
+    print "<sourcecode type=\"$codetype\"><![CDATA[\n" if $wrapped && $codetype;
     if($file =~ /\.yang$/) {
         $codewrapped=1;
         print "<CODE BEGINS> file \"$basefile\"\n";
@@ -39,8 +39,8 @@ sub insert {
     $lastline=~ s/^\s+|\s+$//g;
     print "\n" if length($lastline)>0;    
     print "<CODE ENDS>\n" if $codewrapped;    
-    print "]]></artwork></figure>\n" if $wrapped;
-    print "]]></sourcecode>\n" if !$wrapped && $codewrapped;
+    print "]]></artwork></figure>\n" if $wrapped && !$codetype;
+    print "]]></sourcecode>\n" if $wrapped && $codetype;
 }
 
 while(<>) {
@@ -50,10 +50,27 @@ while(<>) {
     elsif(/INSERT_FIG_FROM_FILE (.*) END/) {
         insert($1, 1, 0);
     }
+    elsif(/INSERT_CBORDIAG_FROM_FILE (.*) END/) {
+        insert($1, 1, 0, "cbor-diag");
+    }
+    elsif(/INSERT_X509_FROM_FILE (.*) END/) {
+        insert($1, 1, 0, "x509");
+    }
+    elsif(/INSERT_HEX_FROM_FILE (.*) END/) {
+        insert($1, 1, 0, "pseudocode");
+    }
+    elsif(/INSERT_PEM_FROM_FILE (.*) END/) {
+        insert($1, 1, 0, "x509");
+    }
     elsif(/INSERT_CODE_FROM_FILE (.*) END/) {
-        insert($1, 0, 1);
+        insert($1, 1, 1, "pseudocode");
+    }
+    elsif(/INSERT_SH_FROM_FILE (.*) END/) {
+        insert($1, 1, 1, "bash");
+    }
+    elsif(/INSERT_C_FROM_FILE (.*) END/) {
+        insert($1, 1, 1, "c");
     } else {
         print;
     }
 }
-

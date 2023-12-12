@@ -1,10 +1,10 @@
 {
- 2451: {                / SID = 2451, ietf-voucher:voucher|voucher /
-    1: 2,                      / SID = 2452, assertion "proximity" /
-    2: "2022-12-05T19:19:23Z", / SID = 2453, created-on            /
-    3: false,       / SID = 2454, domain-cert-revocation-checks    /
-    7: h'831D5198A6CA2C7F',    / SID = 2508, nonce                 /
-    8: h'308201F8....8CFF',    / SID = 2459, pinned-domain-cert    /
-   11: "JADA123456789"         / SID = 2462, serial-number         /
+ 2451: {               / SID = 2451, ietf-voucher:voucher|voucher /
+   1: 2,                      / SID = 2452, assertion "proximity" /
+   2: "2022-12-05T19:19:23Z", / SID = 2453, created-on            /
+   3: false,       / SID = 2454, domain-cert-revocation-checks    /
+   7: h'831D5198A6CA2C7F',    / SID = 2508, nonce                 /
+   8: h'308201' ... '8CFF',   / SID = 2459, pinned-domain-cert    /
+  11: "JADA123456789"         / SID = 2462, serial-number         /
  }
 }
