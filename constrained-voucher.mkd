@@ -92,6 +92,7 @@ informative:
   I-D.ietf-lake-edhoc: EDHOC
   I-D.ietf-anima-jws-voucher:
   I-D.ietf-cbor-edn-literals:
+  I-D.eckert-anima-brski-discovery:
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
@@ -389,7 +390,7 @@ Although the request URI templates include IP address, scheme and port, in pract
     Payload       : (COSE-signed Pledge Voucher Request, PVR)
 ~~~~
 
-Note that only Content-Format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv).
+Note that only Content-Format 836 ("application/voucher+cose") is defined in this document for the payload sent to the voucher request resource (/rv).
 Content-Format 836 MUST be supported by the Registrar for the /rv resource and it MAY support additional formats.
 The Pledge MAY also indicate in the request the desired format of the (voucher) response, using the Accept Option. An example of using this option in the request is as follows:
 
@@ -935,7 +936,7 @@ Nevertheless, the situation where the Registrar is one hop away from the Pledge 
 In order to support the degenerate case, the Registrar SHOULD announce itself as if it were a Join Proxy -- though it would actually announce its real (stateful) Registrar CoAPS endpoint.
 No actual Join Proxy functionality is then required on the Registrar.
 
-So, a Pledge only needs to discover a Join Proxy, regardless of whether it is one or more than one hop away from a relevant Registrar. It first discovers the link-local address and the join-port of a Join Proxy. The Pledge then follows the cBRSKI procedure of initiating a DTLS connection using the link-local address and join-port of the Join Proxy.
+That way, a Pledge only needs to discover a Join Proxy, regardless of whether it is one or more than one hop away from a relevant Registrar. It first discovers the link-local address and the join-port of a Join Proxy. The Pledge then follows the cBRSKI procedure of initiating a DTLS connection using the link-local address and join-port of the Join Proxy.
 
 Once enrolled, a Pledge itself may function as a Join Proxy.
 The decision whether or not to provide this functionality depends upon many factors and is out of scope for this document.
@@ -946,59 +947,22 @@ Further details on both these topics are provided in {{I-D.ietf-anima-constraine
 
 ## Discovery operations by Pledge
 
-The Pledge must discover the address/port and optionally the protocol with which to communicate. The present document only defines coaps (CoAP over DTLS) as the default protocol.
+The Pledge must discover the address/port and optionally the protocol with which to communicate. The present document only defines coaps (CoAP over DTLS) as the default protocol for cBRSKI.
 
-Note that identifying the format of the voucher request and the voucher is not a required part of the Pledge's discovery operation.
+For the discovery method, only unsecured CoAP discovery per {{Section 7 of RFC7252}} is defined. This uses CoRE Link Format {{RFC6690}} payloads.
+Other methods, other payload formats, or more elaborate CoAP-based methods, may be defined in future documents such as {{I-D.eckert-anima-brski-discovery}}.
+The more elaborate methods for example may include discovering only Join Proxies that support a particular desired onboarding protocol, voucher format, or cBRSKI variant.
+
+Note that identifying the format of the voucher request and the voucher is currently not a required part of the Pledge's discovery operation.
 It is assumed that all Registrars support all relevant voucher(-request) formats, while the Pledge only supports a single format.
 A Pledge that makes a voucher request to a Registrar that does not support that format will receive a CoAP 4.06 Not Acceptable status code and the onboarding attempt will fail.
 
-### GRASP discovery {#grasp-pledge-discovery}
-
-This section is normative for uses with an ANIMA ACP.
-In the context of autonomic networks, the Join Proxy uses the DULL GRASP M_FLOOD mechanism to announce itself.
-Section 4.1.1 of {{RFC8995}} discusses this in more detail.
-
-The following changes are necessary with respect to figure 10 of {{RFC8995}}:
-
-* The transport-proto is IPPROTO_UDP
-* the objective is AN_Proxy
-
-The Registrar announces itself in the ACP instance of GRASP using M_FLOOD messages.
-Autonomic Network Join Proxies MUST support GRASP discovery of a Registrar as described in section 4.3 of {{RFC8995}} .
-
-Here is an example M_FLOOD announcing the Join Proxy at fe80::1, on standard coaps port 5684, using DTLS.
-
-~~~
-     [M_FLOOD, 12340815, h'fe800000000000000000000000000001', 180000,
-     [["AN_Proxy", 4, 1, "DTLS"],
-     [O_IPv6_LOCATOR,
-     h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]]
-~~~
-{: #fig-grasp-rg title='Example of Join Proxy announcement message' align="left"}
-
-Note that a Join Proxy that supports also supports RFC8995 onboarding using HTTPS may announce more than one objective.
-Objectives with an empty objective-value (whether CBOR NULL or an empty string) refer to {{RFC8995}} defaults.
-
-Here is an example of an announcement that offers both constrained and unconstrained onboarding:
-
-~~~
-     [M_FLOOD, 12340851, h'fe800000000000000000000000000001', 180000,
-     [["AN_Proxy", 4, 1, ""],
-      [O_IPv6_LOCATOR,
-       h'fe800000000000000000000000000001', IPPROTO_TCP, 4443],
-      ["AN_Proxy", 4, 1, "DTLS"],
-      [O_IPv6_LOCATOR,
-       h'fe800000000000000000000000000001', IPPROTO_UDP, 5684]]
-~~~
-{: #fig-grasp-duo title='Example of Join Proxy announcing two onboarding methods' align="left"}
-
-### CoAP Discovery {#coap-pledge-discovery}
 The details on CoAP discovery of a Join Proxy by a Pledge are provided in {{Section 5.2.1 of I-D.ietf-anima-constrained-join-proxy}}.
 In this section some examples of CoAP discovery interactions are given.
 
 Below, a typical example is provided showing the Pledge's CoAP request and the Join Proxy's CoAP response. The Join Proxy responds with a link-local
 source address, which is the same address as indicated in the URI-reference element ({{RFC6690}}) in the discovery response payload. The Join
-Proxy has a dedicated port 8485 opened for DTLS connections of Pledges.
+Proxy has a dedicated port 8485 open for DTLS connections of Pledges.
 
 ~~~~
   REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
@@ -1008,7 +972,7 @@ Proxy has a dedicated port 8485 opened for DTLS connections of Pledges.
 ~~~~
 
 The next example shows a Join Proxy that uses the default CoAPS port 5684 for DTLS connections of Pledges. In this case, the Join Proxy host
-is not using port 5684 for any other purposes.
+is not using port 5684 for any other purposes, so it has the port available for this purpose.
 
 ~~~~
   REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
@@ -1033,61 +997,37 @@ two Join Proxies for initiating its DTLS connection.
 
 
 ## Discovery operations by Join Proxy
-The Join Proxy needs to discover a Registrar, at the moment it needs to relay data (of a Pledge) towards the Registrar, or prior to that moment. For example, it may start Registrar 
-discovery as soon as it is requested to be enabled as a Join Proxy.
 
-### GRASP Discovery {#grasp-registrar-discovery}
+A Join Proxy needs to discover a Registrar, either at the moment it needs to relay data (of a Pledge) towards the Registrar, or prior to that moment. For example, it may start Registrar 
+discovery as soon as it is requested to be enabled in a Join Proxy role. It may periodically redo this discovery, or periodically or on-demand check that the Registrar is still available 
+in the network at the discovered IP address.
 
-This section is normative for uses with an ANIMA ACP. In the context of autonomic networks, the Registrar announces itself to a stateful Join Proxy using the ACP instance of GRASP using M_FLOOD messages.
-Section 4.3 of {{RFC8995}} discusses this in more detail.
-
-The following changes are necessary with respect to figure 10 of {{RFC8995}}:
-
-* The transport-proto is IPPROTO_UDP
-* the objective is AN_join_registrar, identical to {{RFC8995}}.
-* the objective name is "BRSKI_JP".
-
-The Registrar announces itself using the ACP instance of GRASP using M\_FLOOD messages.
-Autonomic Network Join Proxies MUST support GRASP discovery of Registrar as described in section 4.3 of {{RFC8995}}.
-
-Here is an example M\_FLOOD announcing the Registrar on example port 5684, which is the standard CoAPS port number.
-
-~~~
-   [M_FLOOD, 51804321, h'fda379a6f6ee00000200000064000001', 180000,
-   [["AN_join_registrar", 4, 255, "BRSKI_JP"],
-    [O_IPv6_LOCATOR,
-     h'fda379a6f6ee00000200000064000001', IPPROTO_UDP, 5684]]]
-~~~
-{: #fig-grasp-rgj title='Example of Registrar announcement message' align="left"}
-
-The Registrar uses a routable address that can be used by enrolled constrained Join Proxies.
-The address will typically be a Unique Local Address (ULA) as in the example, but could also be a Global Unicast Address (GUA).
-
-### CoAP discovery {#coap-disc}
 Further details on CoAP discovery of the Registrar by a Join Proxy are provided in {{Section 5.1.1 of I-D.ietf-anima-constrained-join-proxy}}.
+
 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
 
 This section details how discovery of a Join Proxy is done by the Pledge in specific deployment scenarios.
+Future work such as {{I-D.eckert-anima-brski-discovery}} may define more details on discovery operations in 
+specific deployments.
 
-## 6TSCH Deployments
+## 6TiSCH Deployments
 
-In 6TISCH networks, the Constrained Join Proxy (CoJP) mechanism is described in {{RFC9031}}.
+In 6TiSCH networks, the Constrained Join Proxy (CoJP) mechanism is used as described in {{RFC9031}}.
 Such networks are expected to use {{-EDHOC}} for key management.
 This is the subject of future work.
-The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of the Join Proxy.
+The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of a Join Proxy.
 
-## Generic networks using GRASP
+## IP networks using GRASP
 
-{{grasp-pledge-discovery}} defines a mechanism for the Pledge to discover a Join Proxy by listening for {{RFC8990}} GRASP messages.
-This mechanism can be used on any network which does not have another more specific mechanism.
-This mechanism supports mesh networks, and can also be used over unencrypted Wi-Fi.
+In IP networks that support GRASP {{RFC8990}}, a Pledge can discover a Join Proxy by listening for GRASP messages.
+GRASP supports mesh networks, and can also be used over unencrypted Wi-Fi.
 
-## Generic networks using mDNS
+## IP networks using mDNS
 
 {{RFC8995}} defines a mechanism for the Pledge to discover a Join Proxy by sending mDNS {{RFC6762}} queries.
-This mechanism can be used on any network which does not have another recommended mechanism.
-This mechanism does not easily support mesh networks.  It can be used over unencrypted Wi-Fi.
+This mechanism can be used on any IP network which does not have another recommended mechanism.
+This mechanism does not currently support mesh networks.  It can be used over unencrypted Wi-Fi.
 
 ## Thread networks using Mesh Link Establishment (MLE)
 
@@ -1099,7 +1039,7 @@ Thread router. This link is not yet secured at the radio level: link-layer secur
 network access credentials.
 
 The Thread router acts here as a Join Proxy. The MLE discovery response message contains UDP port information to signal the new device which port to use for its DTLS connection.
-The IPv6 source address of the MLE response message indicates the address of the Join Proxy.
+The link-local IPv6 source address of the MLE response message indicates the address of the Join Proxy.
 
 
 # Design and Implementation Considerations {#design-considerations}
@@ -1207,7 +1147,8 @@ enrollment method, this functionality is not needed.
 ## Pledge Discovery Query for All BRSKI Resources
 
 A Pledge that wishes to discover the available BRSKI onboarding options/formats can do a discovery
-operation using the CoAP resource discovery method of {{Section 4 of RFC6690}}, by sending a discovery query to the Registrar over the secured DTLS connection.
+operation using CoAP discovery per {{Section 7 of RFC7252}} and {{Section 4 of RFC6690}}. It first sends a CoAP discovery query to the Registrar over the secured DTLS connection.
+The Registrar then responds with a CoRE Link Format payload containing the requested resources, if any.
 
 For example, if the Registrar supports a short BRSKI URL (/b) instead of just the longer "/.well-known" resources, and supports only the voucher format 
 "application/voucher+cose" (836), and status reporting in both CBOR and JSON formats,
@@ -1240,7 +1181,7 @@ The Registrar is under no obligation to provide shorter URLs, and MAY respond to
   </.well-known/brski/es>;rt=brski.es;ct="50 60"
 ~~~~
 
-However, for efficiency reasons it would be better if the Registrar would return shorter URIs instead.
+However, for efficiency reasons it would be better if the Registrar would return shorter URLs instead.
 
 When responding to a discovery request for BRSKI resources, the Registrar MAY return 
 the full resource paths for all \<short-name\> resources and the content types which are supported by these resources (using ct attributes) as shown in the above examples.
@@ -1284,7 +1225,7 @@ The return of multiple content-types in the "ct" attribute by the Registrar allo
 Note that only Content-Format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv), both as request payload and as response payload.
 
 Content-Format 836 MUST be supported by the Registrar for the /rv resource.
-If the "ct" attribute is not indicated for the /rv resource in the link format description, this implies that at least format 836 is supported.
+If the "ct" attribute is not indicated for the /rv resource in the CoRE link format description, this implies that at least format 836 is supported and maybe more.
 
 Note that this specification allows for voucher+cose format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
 The burden for this flexibility is placed upon the Registrar.
@@ -1325,7 +1266,7 @@ For example as in the following interaction:
 
 ## EST-coaps Resource Discovery
 
-The Pledge can also use discovery to identify enrollment options, for example enrollment using EST-coaps or other methods.
+The Pledge can also use CoAP discovery to identify enrollment options, for example enrollment using EST-coaps or other methods.
 The below example shows a Pledge that wants to identify EST-coaps enrollment options by sending a discovery query:
 
 ~~~~
@@ -1449,14 +1390,6 @@ The following security considerations have led to this choice of scope:
 
 # IANA Considerations {#iana}
 
-## GRASP Discovery Registry
-
-IANA is asked to extend the registration of the "AN\_Proxy" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for this existing registration, because {{grasp-pledge-discovery}} defines the new protocol value IPPROTO_UDP for the objective.
-
-IANA is asked to extend the registration of the "AN\_join\_registrar" (without quotes) in the "GRASP Objective Names" table in the Grasp Parameter registry.
-This document should also be cited for this existing registration, because {{grasp-registrar-discovery}} adds the objective value "BRSKI_JP" to the objective.
-
 ## Resource Type Registry
 
 Additions to the sub-registry "Resource Type Link Target Attribute Values", within the "CoRE Parameters" IANA registry are specified below.
@@ -1488,7 +1421,7 @@ signed with a COSE_Sign1 structure {{RFC9052}}.
     Interoperability considerations:  The format is designed to be
       broadly interoperable.
     Published specification:  [This RFC]
-    Applications that use this media type:  ANIMA, 6tisch, and other
+    Applications that use this media type:  ANIMA, 6TiSCH, and other
       zero-touch onboarding systems
     Fragment identifier considerations: N/A
     Additional information:
