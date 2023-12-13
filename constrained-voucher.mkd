@@ -12,7 +12,7 @@ kw: Internet-Draft
 cat: std
 stream: IETF
 consensus: true
-updates: 8995
+updates: 8995, 9148
 
 pi:    # can use array (if all yes) or hash here
   toc: yes
@@ -120,7 +120,7 @@ While the BRSKI voucher data is encoded in JSON, cBRSKI uses a compact CBOR-enco
 The BRSKI voucher data definition is extended with new data types that allow for smaller voucher sizes.
 The Enrollment over Secure Transport (EST) protocol, used in BRSKI, is replaced with EST-over-CoAPS;
 and HTTPS used in BRSKI is replaced with DTLS-secured CoAP (CoAPS).
-This document Updates RFC 8995.
+This document Updates RFC 8995 and RFC 9148.
 
 --- middle
 
@@ -224,7 +224,7 @@ The MASA therefore knows if the Pledge supports PKIX operations, or if it is lim
 Based upon this, the MASA can select which attributes to use in the voucher data for certain operations, like the pinning of the Registrar or domain identity.
 
 
-# Updates to RFC 8995
+# Updates to RFC 8995 and RFC 9148
 
 This section details the ways in which this document updates other RFCs.
 The terminology for Updates, Amends and Extends is taken from {{I-D.kuehlewind-update-tag}}.
@@ -249,6 +249,17 @@ It Extends {{RFC8995}} as follows:
 
 * extends the BRSKI-MASA protocol ({{brski-masa}}) to carry the new application/voucher+cose format.
 
+This document Updates {{RFC9148}}. It Amends {{RFC9148}} because it:
+
+* defines stricter DTLS requirements ({{brski-est-dtls}})),
+
+* details how an EST-coaps client handles certificate renewal ({{brski-est-extensions-estclient}}),
+
+* details how an EST-coaps server processes a "CA certificates" request for content format 287 ("application/pkix-cert") ({{brski-est-extensions-registrar}}).
+
+It Extends {{RFC9148}} as follows:
+
+* adds enrollment status telemetry to the certificate renewal procedure ({{brski-est-extensions-estclient}}).
 
 
 # BRSKI-EST Protocol {#brski-est}
