@@ -7,4 +7,5 @@ ietf-cwt-voucher-request@*.yang
 ietf-cwt-voucher@*.yang
 yang
 constrained-voucher.xml
+constrained-voucher.html
 examples/script-cose-examples/output
