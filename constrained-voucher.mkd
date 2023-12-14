@@ -58,6 +58,7 @@ normative:
   RFC8446:
   RFC8449:
   RFC8610:
+  RFC8710:
   RFC8949:
   RFC8995:
   RFC9031: minimal-security
@@ -254,13 +255,13 @@ This document Updates {{RFC9148}}. It Amends {{RFC9148}} because it:
 
 * defines stricter DTLS requirements ({{brski-est-dtls}})),
 
-* details how an EST-coaps client handles certificate renewal ({{brski-est-extensions-estclient}}),
+* details how an EST-coaps client handles certificate renewal and re-enrollment ({{brski-est-extensions}}),
 
 * details how an EST-coaps server processes a "CA certificates" request for content format 287 ("application/pkix-cert") ({{brski-est-extensions-registrar}}).
 
 It Extends {{RFC9148}} as follows:
 
-* adds enrollment status telemetry to the certificate renewal procedure ({{brski-est-extensions-estclient}}).
+* adds enrollment status telemetry to the certificate renewal procedure ({{est-reenrollment}}).
 
 
 # BRSKI-EST Protocol {#brski-est}
@@ -343,10 +344,10 @@ See {{cosesign-registrar-cert}} for an example of a Registrar certificate with t
 See {{registrar-certificate-requirement-server}} for Registrar client certificate requirements.
 
 
-## Join Proxy {#joinproxy}
+## cBRSKI Join Proxy {#joinproxy}
 
 {{I-D.ietf-anima-constrained-join-proxy}} specifies the details for a stateful and stateless constrained Join Proxy which is equivalent to the Proxy defined in {{RFC8995, Section 4}}.
-
+See also {{discovery}} for more details on discovery of a Join Proxy by a Pledge, and discovery of a Registrar by a Join Proxy.
 
 ## Request URIs, Resource Discovery and Content Formats {#resource-discovery}
 
@@ -363,14 +364,9 @@ During the BRSKI onboarding on an IPv6 network these request URIs have the follo
 where \<link-local-ipv6\> is the discovered link-local IPv6 address of a Join Proxy, and \<port\> is the discovered port of the Join Proxy that is
 used to offer the BRSKI proxy functionality. 
 
-\<short-name\> is the short resource name for the cBRSKI and EST-coaps resources. For EST-coaps, Table 1 in {{Section 5.1 of RFC9148}} defines the CoAP \<short-name\> resource names. 
-For cBRSKI, {{brski-short-uri}} defines the CoAP \<short-name\> resource names based on the {{RFC8995}} long HTTP resource names.
-
-| BRSKI resource | cBRSKI resource \<short-name\> |
-| /requestvoucher| /rv |
-| /voucher_status | /vs |
-| /enrollstatus | /es  |
-{: #brski-short-uri title='BRSKI URI paths mapping to cBRSKI URI paths'}
+\<short-name\> is the short resource name for the cBRSKI and EST-coaps resources. For EST-coaps, {{Section 5.1 of RFC9148}} defines the CoAP \<short-name\> resource names. 
+For cBRSKI, this document defines the short resource names based on the {{RFC8995}} long HTTP resource names.
+See {{brski-est-short-uri}} for a summary of these resource names.
 
 {{discovery-considerations}} details how the Pledge discovers a Join Proxy link-local address and port in different deployment scenarios.
 
@@ -424,26 +420,28 @@ The existing JSON format has CoAP Content-Format 50 ("application/json") and als
 A Pledge MUST support at least the new CBOR format and it MAY support the JSON format.
 
 
-## CoAP Resources Overview
+### CoAP Resources Table
 
-This document extends {{RFC9148}}, and it inherits the functions described in that document:
+This document inherits EST-coaps {{RFC9148}} functions: 
 specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certification Authority certificates request (/crts).
-Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST server.
+Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST-coaps server.
 
-Collecting the resource definitions from both {{RFC8995}}, {{RFC7030}}, and {{RFC9148}} results in the following shorter forms of URI paths
-for the commonly used resources:
+{{brski-est-short-uri}} summarizes the resources used in cBRSKI. 
+It includes both the short-name BRSKI resources and the EST-coaps resources.
 
 <!-- Table order can be changed -->
 
-|-|-|-|
-| BRSKI + EST      | cBRSKI + EST-coaps | Well-known URI namespace |
-| /enrollstatus    | /es     | brski  |
-| /requestvoucher  | /rv     | brski  |
-| /voucher_status  | /vs     | brski  |
-| /cacerts         | /crts   | est    |
-| /csrattrs        | /att    | est    |
-| /simpleenroll    | /sen    | est    |
-| /simplereenroll  | /sren   | est    |
+|-|-|-|-|
+| BRSKI + EST      | cBRSKI + EST-coaps \<short-name\> | Well-known URI namespace | Required for Registrar?
+| /enrollstatus    | /es     | brski  | MUST
+| /requestvoucher  | /rv     | brski  | MUST
+| /voucher_status  | /vs     | brski  | MUST
+| /cacerts         | /crts   | est    | MUST
+| /csrattrs        | /att    | est    | MAY 
+| /simpleenroll    | /sen    | est    | MUST
+| /simplereenroll  | /sren   | est    | MUST
+| /serverkeygen    | /skg    | est    | MAY 
+| /serverkeygen    | /skc    | est    | MAY 
 {: #brski-est-short-uri title='BRSKI/EST resource name mapping to cBRSKI/EST-coaps short resource name'}
 
 
@@ -458,80 +456,74 @@ The 202 Retry process which occurs in the voucher request, is to be handled in t
 
 ## Extensions to EST-coaps {#brski-est-extensions}
 
-### Pledge Extensions {#brski-est-extensions-pledge}
+This section defines extensions to EST-coaps for Pledges (during initial onboarding), EST-coaps clients (after initial onboarding) and Registrars (that implement an EST-coaps server).
+Note that a device that is already onboarded is not called "Pledge" in this section: it now acts in the role of an EST-coaps client.
 
-This section defines optimizations for the EST-coaps protocol as used by Pledge. These aim to reduce payload sizes and the number of messages (round-trips) required for the initial EST enrollment.
+### Pledge enrollment procedure {#brski-est-extensions-pledge}
+
+This section defines optimizations for the EST-coaps protocol as used by a Pledge. These aim to reduce payload sizes and the number of messages (round-trips) required for the initial EST enrollment.
 
 A Pledge SHOULD NOT perform the optional EST-coaps "CSR attributes request" (/att). Instead, the Pledge selects the attributes to include in the CSR as specified below.
 
-One or more Subject Distinguished Name fields MUST be included.
+One or more Subject Distinguished Name fields MUST be included in the CSR.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, which is the common case, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
-Note that a Pledge may optionally receive such specific information via the voucher data (encoded in a vendor-specific way) or via some other, out-of-band means.
+Note that a Pledge MAY receive such specific information via the voucher data (encoded in a vendor-specific way) or via some other, out-of-band means.
 
 A Pledge uses the following optimized EST-coaps procedure:
 
-1. If the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, as if it were the result of "CA certificates request" (/crts) to the Registrar.
+1. If the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, as if it were the result of a "CA certificates request" (/crts) to the Registrar.
 
 2. Using this CA certificate as trust anchor it proceeds with EST simple enrollment (/sen) to obtain its provisionally trusted LDevID certificate.
 
-3. If the Pledge validates that the trust anchor CA was used to sign its LDevID certificate, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor CA for the Registrar's domain and accepts the associated LDevID certificate.
+3. If the Pledge determines that the trust anchor CA is a root CA certificate AND also the signer of its LDevID certificate, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor root CA for the Registrar's domain and accepts the associated LDevID certificate. And step 4 and 5 are skipped.
 
-4. If the trust anchor CA was NOT used to sign its LDevID certificate, the Pledge MUST perform a "CA certificates request" (/crts) to the EST server to obtain the EST CA trust anchor(s) since these can differ from the (temporary) pinned domain CA.
+4. Otherwise, if the step 3 condition was not met, the Pledge MUST perform a "CA certificates request" (/crts) to the EST server to obtain the full set of EST CA trust anchors. It then MUST attempt to chain the LDevID certificate to the root CA certificate via the intermediate CA certificates in the set.
 
-5. When doing this /crts request, the Pledge MAY use a CoAP Accept Option with value 287 ("application/pkix-cert") to limit the number of returned EST CA trust anchors to only one.
-A constrained Pledge MAY support only this format in a /crts response, per {{Section 5.3 of RFC9148}}. Implementing only this format reduces the code and memory requirements on the Pledge.
+5. If the Pledge cannot obtain the set of CA certificates, or is unable to chain the LDevID certificate as defined in step 4, the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
-7. If the Pledge cannot obtain the single CA certificate or the finally validated CA certificate cannot be chained to the LDevID certificate, then the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
 
-Note that even though the Pledge can avoid performing any /crts request using the above EST-coaps procedure during BRSKI onboarding, it SHOULD support retrieval of the trust anchor CA periodically as detailed in the next section.
-
-### EST-client Extensions {#brski-est-extensions-estclient}
-
-This section defines extensions to EST-coaps clients, used after the BRSKI onboarding procedure is completed.
-(Note that such client is not called "Pledge" in this section, since it is already enrolled into the domain. It has become an EST-coaps client.)
-A constrained EST-coaps client MAY support only the Content-Format 287 ("application/pkix-cert") in a /crts response, per {{Section 5.3 of RFC9148}}.
-In this case, it can only store one trust anchor of the domain.
-
-An EST-coaps client that has an idea of the current time (internally, or via NTP) SHOULD consider the validity time of the trust anchor CA, and MAY begin requesting a new trust anchor CA using the /crts request when the CA has 50% of it's validity time (notAfter - notBefore) left.
-A client without access to the current time cannot decide if the trust anchor CA has expired, and SHOULD poll periodically for a new trust anchor using the /crts request at an interval of approximately 1 month.
+### Renewal of CA certificates {#est-renewal-crts}
+An EST-coaps client that has an idea of the current time (internally, or via Network Time Protocol) SHOULD consider the validity time of the trust anchor CA(s), and MAY begin requesting new trust anchor certificates(s) using the /crts request when the CA has 50% of it's validity time (notAfter - notBefore) left.
+A client without access to the current time cannot decide if trust anchor CA(s) have expired, and SHOULD poll periodically for a new trust anchor certificate(s) using the /crts request at an interval of approximately 1 month.
 An EST-coaps server SHOULD include the CoAP ETag Option in every response to a /crts request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
 The EST-coaps client SHOULD store the ETag resulting from a /crts response in memory and SHOULD use this value in an ETag Option in its next GET /crts request.
 
-The above-mentioned limitation that an EST-coaps client may support only one trust anchor CA is not an issue in case the domain trust anchor remains stable. However, special consideration is
-needed for cases where the domain trust anchor can change over time. Such a change may happen due to relocation of the client device to a new domain, or due to a key update of
-the trust anchor as described in {{RFC4210, Section 4.4}}.
+### Change of domain trust anchor(s)
+The domain trust anchor(s) may change over time. Such a change may happen due to relocation of the client device to a new domain, a new subdomain, or due to a key update of 
+a trust anchor as described in {{RFC4210, Section 4.4}}.
 
-From the client's viewpoint, a trust anchor change typically happens during EST re-enrollment: since a change of domain CA requires all devices
-operating under the old domain CA to acquire a new LDevID issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as an instruction to re-enroll sent by a domain entity, or an imminent expiry of its LDevID certificate.
+From the client's viewpoint, a trust anchor change happens during EST-coaps re-enrollment: since a change of domain CA requires all devices 
+operating under the old domain CA to acquire a new LDevID certificate issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as an instruction to re-enroll sent by a domain entity, or an imminent expiry of its LDevID certificate, or other.
 How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification.
 
-The mechanism described in {{RFC4210, Section 4.4}} for Root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. The OldWithOld certificate is already
-stored in the EST client's trust store. The NewWithNew certificate will be distributed as the single certificate in a /crts response, during EST re-enrollment.
-Since the EST client can only accept a single certificate in a /crts response it implies that the EST client
-cannot obtain the certificates OldWithNew and NewWithOld in this way, to perform the complete verification of the new domain CA. Instead, the client only verifies the EST-coaps server using its
-old domain CA certificate in its trust store as detailed below, and based on this trust in the active and valid DTLS connection it automatically trusts the
-new (NewWithNew) domain CA certificate that the EST-coaps server provides in the /crts response.
+The mechanism described in {{RFC7030, Section 4.1.3}} and {{RFC4210, Section 4.4}} for Root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. Of these four, the OldWithOld certificate is already
+stored in the client's Explicit TA database. The other certificates will be provided to the client in a /crts response, during the EST-coaps re-enrollment procedure.
 
-In this manner, even during rollover of trust anchors, it is possible to have only a single trust anchor provided in a /crts response.
+### Re-enrollment procedure {#est-reenrollment}
+For re-enrollment, the EST-coaps client MUST support the following EST-coaps procedure. During this procedure the EST-coaps server MAY re-enroll the client into a new domain or into a new sub-CA within a domain. 
 
-During the period of the certificate renewal, it is not possible to create new communication channels between devices with NewCA certificates devices with OldCA certificates.
-One option is that devices should avoid restarting existing DTLS or OSCORE connections during the interval in which new certificates are being deployed.
-The recommended period for a certificate renewal procedure is 24 hours or less.
-For re-enrollment, the constrained EST-coaps client MUST support the following EST-coaps procedure, where optional re-enrollment to a new domain is under control of the EST-coaps server:
+1. The client connects with DTLS to the EST-coaps server, and authenticates with its present domain certificate (LDevID) as usual. The EST-coaps server authenticates itself with its domain RA certificate that
+is currently trusted by the client, i.e. it chains to a trust anchor CA that the client has stored in its Explicit TA database. This is the OldWithOld trust anchor. 
+The client checks that the server is a Registration Authority (RA) of the domain as required by {{Section 3.6.1 of RFC7030}} before proceeding.
 
-1. The client connects with DTLS to the EST-coaps server, and authenticates with its present domain certificate (LDevID certificate) as usual. The EST-coaps server authenticates itself with its domain certificate that
-is trusted by the client, i.e. it chains to the single trust anchor that the client has stored. This is the "old" trust anchor, the one that will be eventually replaced in case the server
-decides to re-enroll the client into a new domain. The client also checks that the server is a Registration Authority (RA) of the domain as required by {{Section 3.6.1 of RFC7030}}.
+2. The client performs the simple re-enrollment request (/sren) and upon success it obtains a new LDevID certificate.
 
-2. The client performs the simple re-enrollment request (/sren) and upon success it obtains a new LDevID.
+3. The client verifies the new LDevID certificate against its Explicit TA database. If the new LDevID chains successfully to a TA, this means trust anchors did not significantly change and the client MAY skip retrieving the current CA certificates using the "CA certificates request" (/crts). If it does not chain successfully, it means trust anchor(s) were changed significantly and the client MUST retrieve the new domain trust anchors using the "CA certificates request" (/crts).
 
-3. The client verifies the new LDevID against its (single) existing domain trust anchor. If it chains successfully, this means the trust anchor did not change and the client MAY skip retrieving the current CA certificate using the "CA certificates request" (/crts). If it does not chain successfully, this means the trust anchor was changed/updated and the client then MUST retrieve the new domain trust anchor using the "CA certificates request" (/crts).
+4. If the client retrieved new trust anchor(s) in step 3, then it MUST verify that the new LDevID certificate it obtained in step 2 chains with the new trust anchor(s). If it chains successfully, the client stores the new trust anchor(s) in its Explicit TA database, accepts the new LDevID certificate and stops using its prior LDevID certificate. If it does not chain successfully, the client MUST NOT update its LDevID certificate, and it MUST NOT update its Explicit TA database, and the client MUST abort the enrollment process and MUST attempt to report the error to the EST-coaps server using enrollment status telemetry (/es).
 
-4. If the client retrieved a new trust anchor in step 3, then it MUST verify that the new trust anchor chains with the new LDevID certificate it obtained in step 2. If it chains successfully, the client stores both, accepts the new LDevID certificate and stops using it prior LDevID certificate. If it does not chain successfully, the client MUST NOT update its LDevID certificate, it MUST NOT update its (single) domain trust anchor, and the client MUST abort the enrollment process and MUST attempt to report the error to the EST-coaps server using enrollment status telemetry (/es).
-
-Note that even though the EST-coaps client may skip the /crts request in step 3, it SHOULD support retrieval of the trust anchor CA periodically as detailed earlier in this section.
+Note that even though the EST-coaps client may skip the /crts request in step 3 at this time, it SHOULD still support retrieval of the trust anchors periodically as detailed in {{est-renewal-crts}}.
 
 Note that an EST-coaps server that is also a Registrar will already support the enrollment status telemetry resource (/es) in step 4, while an EST-coaps server that purely implements {{RFC9148}}, and not the present specification, will not support this resource.
+
+### Multipart Content Format for CA certificates (/crts) Resource
+In EST-coaps {{RFC9148}} the PKCS#7 container format is used for CA certificates distribution. Because the PKCS#7 format is only used as a certificate container and no additional signature is applied on the container, it 
+becomes attractive to replace this format by something simpler on a constrained Pledge: in this case the additional PKCS#7 code may be avoided. Therefore, this document defines a new container format based on the {{RFC8710}} 
+application/multipart-core media type (CoAP Content-Format 62). This is beneficial since a Pledge already supports CBOR parsing for the constrained voucher, so there is little additional code needed to support this format.
+
+A Registrar or EST-coaps server MUST support this new format for the /crts resource.
+
+The multipart payload for the /crts resource MUST TBD ...
 
 ## Registrar Extensions {#brski-est-extensions-registrar}
 
@@ -540,12 +532,9 @@ The Content-Format 60 (application/cbor) MUST be supported by the Registrar for 
 Content-Format 836 MUST be supported by the Registrar for the /rv resource for CoAP POST requests, both as request payload and as response payload.
 
 When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value 287 ("application/pkix-cert") it MUST return only the
-single CA certificate that is the envisioned or actual authority for the current, authenticated Pledge making the request.
-
-If the Pledge included in its request an Accept Option for only the 287 ("application/pkix-cert") Content Format, but the domain has been configured to operate with multiple CA trust anchors only, then the Registrar returns a 4.06 Not Acceptable error to signal that the Pledge needs to use the Content Format 281 ("application/pkcs7-mime; smime-type=certs-only") to retrieve all the certificates.
-
-If the current authenticated client is an EST-coaps client that was already enrolled in the domain, and the Registrar is configured to assign this client to a new domain CA trust anchor during the next EST re-enrollment procedure, then the Registrar MUST respond with the new domain CA certificate in case the client performs the "CA Certificates request" (/crts) with an Accept Option for 287 only. This signals the client that a new domain is assigned to it. The client follows the procedure as defined in {{brski-est-extensions-estclient}}.
-
+single CA certificate that is the envisioned or actual CA authority for the current, authenticated Pledge making the request. An exception to this rule is when 
+the domain has been configured to operate with multiple CA trust anchors only: then the Registrar returns a 4.06 Not Acceptable error to signal to the client that it 
+needs to request another Content Format that supports retrieval of multiple CA certificates.
 
 
 # BRSKI-MASA Protocol {#brski-masa}
@@ -676,7 +665,7 @@ RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-En
 ~~~~ ascii-art
 {::include pinning-options.txt}
 ~~~~
-{: #fig-pinning title='Raw Public Key (RPK) pinning'}
+{: #fig-pinning title='Raw Public Key (RPK) pinning examples'}
 
 ## Considerations for use of IDevID-Issuer {#registrar-idevid-issuer}
 
@@ -1167,7 +1156,7 @@ a CoAP resource discovery request and response may look as follows:
 ~~~~
 
 The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" resources for the short names as defined in
-{{brski-short-uri}}. This case is shown in the below interaction:
+{{brski-est-short-uri}}. This case is shown in the below interaction:
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
@@ -1387,6 +1376,7 @@ The following security considerations have led to this choice of scope:
 * in many enterprise networks, outgoing UDP connections are often treated as suspicious, which could effectively block CoAP connections for some firewall configurations.
 
 * reducing the complexity of MASA (i.e. less protocols supported) would also reduce its potential attack surface, which is relevant since the MASA is 24/7 exposed on the Internet and accepting (untrusted) incoming connections.
+
 
 # IANA Considerations {#iana}
 
@@ -1900,8 +1890,8 @@ The below table specifies the functions implemented in the three example Pledge 
 |**EST-coaps**|   |   |   
 |Discovery for rt=ace.est* | - | - | Y
 |GET /att and response parsing | - | - | Y
+|GET /crts format TBD1 (multiple CA certs) | - | Y | Y
 |GET /crts format 281 (multiple CA certs) | - | - | Y
-|GET /crts only format 287 (one CA cert only) | Y | Y | -
 |ETag handling support for GET /crts | - | Y | Y
 |Re-enrollment supported | - (1) | Y | Y
 |6.6.1 optimized procedure | Y | Y | -
