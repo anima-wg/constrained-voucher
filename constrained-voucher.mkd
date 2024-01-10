@@ -1540,7 +1540,7 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
     Added Update tag for RFC 9148 (#283, #289); 
     Keep CoAP discovery as only mechanism and refer to future discovery work (#279, #282, #290); 
     Introduce formal CBOR diagnostics ellipsis elision syntax (#281, #287); 
-    Support for multi-tier CAs by introducing multipart-core /crts format (#275); 
+    Support for multi-tier CAs by introducing multipart-core /crts format (#275, #291); 
     Terminology updated for consistency with RFC 8366-bis (#274, #280); 
     Rename voucher media type to application/voucher+cose and register +cose SSS (#264, #277); 
     Editorial changes including section restructuring.
