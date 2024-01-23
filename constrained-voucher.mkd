@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI)
 abbrev: Constrained BRSKI (cBRSKI)
-docname: draft-ietf-anima-constrained-voucher-23
+docname: draft-ietf-anima-constrained-voucher-24
 
 stand_alone: true
 
@@ -1207,8 +1207,8 @@ When responding to a discovery request for BRSKI resources, the Registrar MAY re
 the full resource paths for all \<short-name\> resources and the content types which are supported by these resources (using ct attributes) as shown in the above examples.
 This is useful when multiple content types are specified for a particular resource on the Registrar and the discovering Pledge also supports multiple.
 
-Registrars that have implemented shorter URLs MUST also respond in equivalent ways to a request on the corresponding "/.well-known/brski/\<short-name\>" URLs, and MUST NOT distinguish between them.
-In particular, a Pledge MAY use the longer (e.g. well-known) and shorter URLs in any combination.
+Registrars that have implemented (discoverable) shorter URLs MUST process a request on the corresponding "/.well-known/brski/\<short-name\>" URL identically.
+In particular, a Pledge MAY use the longer (well-known) and shorter (discoverable) URLs in any combination.
 
 ## Pledge Discovery Query for the Root BRSKI Resource
 
@@ -1533,6 +1533,9 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 </t>
 
 # Changelog
+
+-24:
+    Rephrased well-known URL requirement in 14.1 (#292).
 
 -23:     
     Removed Update tag for RFC 8366 (#285, #288); 
