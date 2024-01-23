@@ -1541,6 +1541,9 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 
 # Changelog
 
+-24:
+    Added paragraph on future certificate formats like C509 (#281, #294).
+    
 -23:     
     Removed Update tag for RFC 8366 (#285, #288); 
     Introduced cBRSKI acronym (#284, #286); 
