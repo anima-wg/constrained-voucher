@@ -1208,7 +1208,7 @@ the full resource paths for all \<short-name\> resources and the content types w
 This is useful when multiple content types are specified for a particular resource on the Registrar and the discovering Pledge also supports multiple.
 
 Registrars that have implemented shorter URLs MUST process a request on the corresponding "/.well-known/brski/\<short-name\>" URL identically.
-In particular, a Pledge MAY use the longer (well-known) and shorter (discoverable) URLs in any combination.
+In particular, a Pledge MAY use the longer (well-known) and shorter URLs in any combination.
 
 ## Pledge Discovery Query for the Root BRSKI Resource
 
