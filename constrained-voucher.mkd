@@ -95,6 +95,7 @@ informative:
   I-D.ietf-anima-jws-voucher:
   I-D.ietf-cbor-edn-literals:
   I-D.eckert-anima-brski-discovery:
+  I-D.ietf-cose-cbor-encoded-cert:
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
@@ -160,6 +161,9 @@ Next in {{design-considerations}}, some considerations for the design and implem
 {{rpk-considerations}} introduces a variant of cBRSKI for the most-constrained Pledges: the use of Raw Public Keys (RPK).
 This variant achieves smaller sizes of data objects and avoids doing certain costly PKIX verification operations on the Pledge.
 
+{{pledge-discovery-on-registrar}} provides more details on how a Pledge may discover the various onboarding/enrollment options that a 
+Registrar provides. Implementing these methods is optional for a Pledge.
+
 # Terminology          {#Terminology}
 
 The following terms are defined in {{RFC8366bis}}, and are used identically as in that document:
@@ -224,7 +228,10 @@ as described in {{rpk-considerations}}, the Registrar's Raw Public Key (RPK) is 
 For the constrained voucher the default method to indicate ("pin") a trusted domain identity is the domain's PKIX CA certificate,
 but when operating PKIX-less instead the RPK of the Registrar is pinned.
 
-The BRSKI architectures mandates that the MASA be aware of the capabilities of the Pledge.
+For certificates, cBRSKI currently uses the X.509 format, like BRSKI. The protocol and data formats are defined such that future extension to other certificate formats is enabled. For example, CBOR-encoded and COSE-signed 
+C509 certificates ({{I-D.ietf-cose-cbor-encoded-cert}}) may provide data size savings as well as code sharing benefits with CBOR/COSE libraries, when applied to cBRSKI.
+
+The BRSKI architecture mandates that the MASA be aware of the capabilities of the Pledge.
 This is not a drawback as a Pledge is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
 The MASA therefore knows if the Pledge supports PKIX operations, or if it is limited to RPK operations only.
 Based upon this, the MASA can select which attributes to use in the voucher data for certain operations, like the pinning of the Registrar or domain identity.
@@ -1535,8 +1542,9 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 # Changelog
 
 -24:
-    Rephrased well-known URL requirement in 14.1 (#292).
-
+    Rephrased well-known URL requirement in 14.1 (#292, #293).
+    Added paragraph on future certificate formats like C509 (#281, #294).
+    
 -23:     
     Removed Update tag for RFC 8366 (#285, #288); 
     Introduced cBRSKI acronym (#284, #286); 
