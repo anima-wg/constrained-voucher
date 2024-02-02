@@ -229,7 +229,7 @@ For the constrained voucher the default method to indicate ("pin") a trusted dom
 but when operating PKIX-less instead the RPK of the Registrar is pinned.
 
 For certificates, cBRSKI currently uses the X.509 format, like BRSKI. The protocol and data formats are defined such that future extension to other certificate formats is enabled. For example, CBOR-encoded and COSE-signed 
-C509 certificates ({{I-D.ietf-cose-cbor-encoded-cert}}) may provide data size savings as well as code size savings when applied to cBRSKI.
+C509 certificates ({{I-D.ietf-cose-cbor-encoded-cert}}) may provide data size savings as well as code sharing benefits with CBOR/COSE libraries, when applied to cBRSKI.
 
 The BRSKI architecture mandates that the MASA be aware of the capabilities of the Pledge.
 This is not a drawback as a Pledge is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
