@@ -258,9 +258,9 @@ It Extends {{RFC8995}} as follows:
 
 * makes some messages optional if the results can be inferred from other validations ({{brski-est-extensions}}),
 
-* extends the BRSKI-EST protocol ({{brski-est}}, {{VR-COSE}}) to carry the new application/voucher+cose format.
+* extends the BRSKI-EST protocol ({{brski-est}}, {{VR-COSE}}) to carry the new "application/voucher+cose" format.
 
-* extends the BRSKI-MASA protocol ({{brski-masa}}, {{VR-COSE}}) to carry the new application/voucher+cose format.
+* extends the BRSKI-MASA protocol ({{brski-masa}}, {{VR-COSE}}) to carry the new "application/voucher+cose" format.
 
 This document Updates {{RFC9148}}. It Amends {{RFC9148}} because it:
 
@@ -268,7 +268,7 @@ This document Updates {{RFC9148}}. It Amends {{RFC9148}} because it:
 
 * details how an EST-coaps client handles certificate renewal and re-enrollment ({{brski-est-extensions}}),
 
-* details how an EST-coaps server processes a "CA certificates" request for content format 287 ("application/pkix-cert") ({{brski-est-extensions-registrar}}).
+* details how an EST-coaps server processes a "CA certificates" request for content format 287 ("application/pkix-cert") ({{brski-extensions-registrar}}).
 
 It Extends {{RFC9148}} as follows:
 
@@ -532,11 +532,11 @@ Note that an EST-coaps server that is also a Registrar will already support the 
 ### Multipart Content Format for CA certificates (/crts) Resource {#multipart-core}
 In EST-coaps {{RFC9148}} the PKCS#7 container format is used for CA certificates distribution. Because the PKCS#7 format is only used as a certificate container and no additional security is applied on the container, it 
 becomes attractive to replace this format by something simpler, on a constrained Pledge: so that additional PKCS#7 code is avoided. Therefore, this document defines a container format using the {{RFC8710}} 
-application/multipart-core media type (CoAP Content-Format 62). This is beneficial since a Pledge necessarily already supports CBOR parsing, so there is little code overhear to support this CBOR-based 
+"application/multipart-core" media type (CoAP Content-Format 62). This is beneficial since a Pledge necessarily already supports CBOR parsing, so there is little code overhear to support this CBOR-based 
 container format.
 
 A Registrar or EST-coaps server MUST support Content-Format 62 for the /crts resource.
-The multipart collection MUST contain the individual CA certificates, each encoded as an application/pkix-cert (287) representation. Future documents may define other certificate formats: the multipart collection can handle any future types. 
+The multipart collection MUST contain the individual CA certificates, each encoded as an "application/pkix-cert" (287) representation. Future documents may define other certificate formats: the multipart collection can handle any future types. 
 The order of CA certificates MUST be in the CA hierarchy order starting from the issuer of the client's LDevID first, up to the highest-level domain CA, then optionally followed by any further CA certificates that are not part of this hierarchy.
 These further CA certificates may be Third-party TAs as defined in {{RFC7030}}. The highest-level domain CA may or may not be a root CA certificate.
 
@@ -546,7 +546,7 @@ As an example, for the two-level CA domain PKI of {{fig-twoca}} the multipart co
 [ <domain sub-CA cert (2)> , <domain CA cert (1)> ]
 ~~~~
 
-Encoded as an application/multipart-core CBOR array this is (shown in CBOR diagnostic notation):
+Encoded as an "application/multipart-core" CBOR array this is (shown in CBOR diagnostic notation):
 
 ~~~~
 [ 287, h'3082' ... 'd713', 287, h'3082' ... 'a034' ]
@@ -563,11 +563,13 @@ Furthermore, the length in bytes of the first CA certificate can be already dete
 A client that requires an estimate of the total resource size (to be returned as part of the first Block2 response from the server) can use a Size2 Option with value 0 in its request.
 Knowing the overall progress of the data transfer may be helpful in certain cases, e.g. when a Pledge provides visual progress information on the onboarding progress.
 
-## Registrar Extensions {#brski-est-extensions-registrar}
+## Registrar Extensions {#brski-extensions-registrar}
 
-The Content-Format 60 (application/cbor) MUST be supported by the Registrar for the /vs and /es resources.
+The Content-Format 60 ("application/cbor") MUST be supported by the Registrar for the /vs and /es resources.
 
-Content-Format 836 MUST be supported by the Registrar for the /rv resource for CoAP POST requests, both as request payload and as response payload.
+Content-Format 836 ("application/voucher+cose") MUST be supported by the Registrar for the /rv resource for CoAP POST requests, both as request payload and as response payload.
+
+Content-Format 287 ("application/pkix-cert") MUST be supported by the Registrar as a response payload for the /sen and /sren resources.
 
 When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value 287 ("application/pkix-cert") it MUST return only the
 single CA certificate that is the envisioned or actual CA authority for the current, authenticated Pledge making the request. An exception to this rule is when 
@@ -1311,7 +1313,7 @@ The below example shows a Pledge that wants to identify EST-coaps enrollment opt
 ~~~~
 
 The response indicates that EST-coaps enrollment (/sen) and re-enrollment (/sren) is supported, with a choice of two Content-Formats for the return payload:
-either a PKCS#7 container with a single LDevID certificate ("application/pkcs7-mime;smime-type=certs-only", type 281) or just a single LDevID certificate ("application/pkix-cert", type 287).
+either a PKCS#7 container with a single LDevID certificate ("application/pkcs7-mime;smime-type=certs-only", content-format 281) or just a single LDevID certificate ("application/pkix-cert", content-format 287).
 
 For the EST cacerts resources (/crts) there are three Content-Formats supported: a multipart-core container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (287), or a single (most relevant) CA certificate.
 
@@ -1434,7 +1436,7 @@ brski.es | BRSKI enrollment status telemetry resource
 
 ## Media Types Registry
 
-This section registers the 'application/voucher+cose' in the IANA "Media Types" registry.
+This section registers the media type "application/voucher+cose" in the IANA "Media Types" registry.
 This media type is used to indicate that the content is a CBOR voucher or voucher request
 signed with a COSE_Sign1 structure {{RFC9052}}.
 
@@ -1474,7 +1476,7 @@ IANA has allocated ID 836 from the sub-registry "CoAP Content-Formats".
     -----------------------------  --------- ----  ----------
     application/voucher+cose       -          836  [This RFC]
 
-IANA Note (to be removed by RFC editor): the TEMPORARY registration of 836 is made under the old name of 'application/voucher-cose+cbor'.
+IANA Note (to be removed by RFC editor): the TEMPORARY registration of 836 is made under the old name of "application/voucher-cose+cbor".
 
 ## Update to BRSKI Parameters Registry {#iana-brski-param-registry}
 
