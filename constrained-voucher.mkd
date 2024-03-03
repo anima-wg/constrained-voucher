@@ -972,20 +972,27 @@ Such a decision might depend upon the amount of energy available to the device, 
 The process by which a Pledge discovers the Join Proxy, and how a Join Proxy discovers the location of the Registrar, are the subject of the remainder of this section.
 Further details on both these topics are provided in {{I-D.ietf-anima-constrained-join-proxy}}.
 
-## Discovery operations by Pledge
+## Discovery Operations by a Pledge
 
-The Pledge must discover the address/port and optionally the protocol with which to communicate. The present document only defines coaps (CoAP over DTLS) as the default protocol for cBRSKI.
+The Pledge must discover the address/port and optionally the protocol with which to communicate. The present document only defines coaps (CoAP over DTLS) as the default protocol for cBRSKI, 
+therefore protocol discovery is out of scope.
 
-For the discovery method, only unsecured CoAP discovery per {{Section 7 of RFC7252}} is defined. This uses CoRE Link Format {{RFC6690}} payloads.
-Other methods, other payload formats, or more elaborate CoAP-based methods, may be defined in future documents such as {{I-D.eckert-anima-brski-discovery}}.
+For the discovery method, this section only defines unsecured CoAP discovery per {{Section 7 of RFC7252}} as the default method. This uses CoRE Link Format {{RFC6690}} payloads.
+
+{{discovery-considerations}} briefly mentions other methods that apply to specific deployment types or technologies.
+Details about these deployment-specific methods, or yet other methods, new payload formats, or more elaborate CoAP-based methods, may be defined in future documents such as {{I-D.eckert-anima-brski-discovery}}.
 The more elaborate methods for example may include discovering only Join Proxies that support a particular desired onboarding protocol, voucher format, or cBRSKI variant.
 
 Note that identifying the format of the voucher request and the voucher is currently not a required part of the Pledge's discovery operation.
 It is assumed that all Registrars support all relevant voucher(-request) formats, while the Pledge only supports a single format.
 A Pledge that makes a voucher request to a Registrar that does not support that format will receive a CoAP 4.06 Not Acceptable status code and the onboarding attempt will fail.
 
-The details on CoAP discovery of a Join Proxy by a Pledge are provided in {{Section 5.2.1 of I-D.ietf-anima-constrained-join-proxy}}.
-In this section some examples of CoAP discovery interactions are given.
+Using CoAP discovery, a Pledge can discover a Join Proxy by sending a link-local multicast discovery message to the All CoAP Nodes address FF02::FD. Zero, one, or multiple 
+Constrained Join Proxies may respond. The handling of multiple responses and absence of responses cases follow the guidelines of Section 4 of [RFC8995].
+The discovery message is a CoAP GET request on the URI path "/.well-known/core" using a URI query "rt=brski.jp". This resource type (rt) is defined 
+in {{Section 8.3 of I-D.ietf-anima-constrained-join-proxy}}. 
+
+### Examples
 
 Below, a typical example is provided showing the Pledge's CoAP request and the Join Proxy's CoAP response. The Join Proxy responds with a link-local
 source address, which is the same address as indicated in the URI-reference element ({{RFC6690}}) in the discovery response payload. The Join
@@ -1023,7 +1030,7 @@ two Join Proxies for initiating its DTLS connection.
 ~~~~
 
 
-## Discovery operations by Join Proxy
+## Discovery Operations by a Join Proxy
 
 A Join Proxy needs to discover a Registrar, either at the moment it needs to relay data (of a Pledge) towards the Registrar, or prior to that moment. For example, it may start Registrar 
 discovery as soon as it is requested to be enabled in a Join Proxy role. It may periodically redo this discovery, or periodically or on-demand check that the Registrar is still available 
@@ -1036,7 +1043,7 @@ Further details on CoAP discovery of the Registrar by a Join Proxy are provided 
 
 This section details how discovery of a Join Proxy is done by the Pledge in specific deployment scenarios.
 Future work such as {{I-D.eckert-anima-brski-discovery}} may define more details on discovery operations in 
-specific deployments.
+the specific deployments listed here.
 
 ## 6TiSCH Deployments
 
