@@ -1532,18 +1532,23 @@ This section registers the "+cose" suffix in the IANA Structured Syntax Suffixes
 </t><t>
 <contact initials="M." surname="Veillette" fullname="Michel Veillette"/> did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
 </t><t>
-<contact initials="R." surname="Housley" fullname="Russ Housley"/>, <contact initials="D." surname="Franke" fullname="Daniel Franke"/> and <contact initials="H." surname="Birkholtz" fullname="Henk Birkholtz"/> provided review feedback.
+<contact initials="R." surname="Housley" fullname="Russ Housley"/>, <contact initials="D." surname="Franke" fullname="Daniel Franke"/>, <contact initials="H." surname="Birkholtz" fullname="Henk Birkholtz"/>, 
+<contact initials="K." surname="Moriarty" fullname="Kathleen Moriarty"/>, <contact initials="X." surname="Liu" fullname="Xufeng Liu"/>
+and <contact initials="C." surname="Moberg" fullname="Karl Moberg"/> provided review feedback.
 </t><t>
 The BRSKI design team has met on many Tuesdays and Thursdays for document review. The team includes: <contact initials="A." surname="Schellenbaum" fullname="Aurelio Schellenbaum"/>, <contact initials="D." surname="von Oheimb" fullname="David von Oheimb"/>, <contact initials="S." surname="Fries" fullname="Steffen Fries"/>, <contact initials="T." surname="Werner" fullname="Thomas Werner"/> and <contact initials="T." surname="Eckert" fullname="Toerless Eckert"/>.
 </t><t>
-<contact initials="D." surname="Miller" fullname="Darrel Miller"/>, <contact initials="O." surname="Steele" fullname="Orie Steele"/> and <contact initials="M." surname="Sporny" fullname="Manu Sporny"/> provided initial review feedback on the registration of the +cose structured syntax suffix.
+<contact initials="D." surname="Miller" fullname="Darrel Miller"/>, <contact initials="O." surname="Steele" fullname="Orie Steele"/> and <contact initials="M." surname="Sporny" fullname="Manu Sporny"/> provided review feedback on the registration of the +cose structured syntax suffix.
 </t>
 
 # Changelog
 
 -24:
-    Rephrased well-known URL requirement in 14.1 (#292, #293).
-    Added paragraph on future certificate formats like C509 (#281, #294).
+    Rephrased well-known URL requirement in 14.1 (#292, #293);
+    Added paragraph on future certificate formats like C509 (#281, #294);
+    Add formal specification for CoAP discovery of Join Proxy by Pledge, instead of only showing examples (#296, #300);
+    Enable mDNS discovery of Join Proxy by Pledge (also in mesh networks) and list service name to use (#297, #299);
+    Add requirement to support Content-Format 287 in /sen and /sren response (#295, #298).
     
 -23:     
     Removed Update tag for RFC 8366 (#285, #288); 
