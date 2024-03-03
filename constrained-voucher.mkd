@@ -1050,18 +1050,29 @@ the specific deployments listed here.
 In 6TiSCH networks, the Constrained Join Proxy (CoJP) mechanism is used as described in {{RFC9031}}.
 Such networks are expected to use {{-EDHOC}} for key management.
 This is the subject of future work.
-The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of a Join Proxy.
+The Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of a 6TiSCH-compliant Join Proxy.
 
 ## IP networks using GRASP
 
 In IP networks that support GRASP {{RFC8990}}, a Pledge can discover a Join Proxy by listening for GRASP messages.
 GRASP supports mesh networks, and can also be used over unencrypted Wi-Fi.
 
+Details of GRASP discovery of Constrained Join Proxies are out of scope of this document and may be defined in 
+future work.
+
 ## IP networks using mDNS
 
 {{RFC8995}} defines a mechanism for the Pledge to discover a Join Proxy by sending mDNS {{RFC6762}} queries.
 This mechanism can be used on any IP network which does not have another recommended mechanism.
-This mechanism does not currently support mesh networks.  It can be used over unencrypted Wi-Fi.
+It can be used over unencrypted Wi-Fi.
+This mechanism does support link-local Join Proxy discovery in mesh networks. However, it does not support Registrar
+discovery by Join Proxies in mesh networks, because the Registrar is typically not reachable by link-local communication
+in that case. For this, another mechanism is needed, which is out of scope of this document and may be defined in 
+future work. 
+
+A Pledge uses an mDNS PTR query for the name "_brski-proxy._udp.local." to discover link-local Constrained Join Proxies.
+The label "_udp" here indicates a query for cBRSKI Constrained Join Proxies, as opposed to "_tcp" defined in {{RFC8995}} which is for discovering 
+BRSKI Join Proxies.
 
 ## Thread networks using Mesh Link Establishment (MLE)
 
@@ -1069,10 +1080,10 @@ Thread {{Thread}} is a wireless mesh network protocol based on 6LoWPAN {{RFC6282
 discovers potential Thread networks and Thread routers to join by using the Mesh Link Establishment (MLE) {{I-D.ietf-6lo-mesh-link-establishment}} protocol.
 MLE uses the UDP port number 19788. The new device sends discovery requests on different IEEE 802.15.4 radio channels, to which routers (if any present) respond with a discovery response containing information about
 their respective network. Once a suitable router is selected the new device initiates a DTLS transport-layer secured connection to the network's commissioning application, over a link-local single radio hop to the selected
-Thread router. This link is not yet secured at the radio level: link-layer security will be set up once the new device is approved by the commissioning application to join the Thread network, and it gets provisioned with
+Thread router. This link is not yet secured at the radio/MAC link layer: link-layer security will be set up once the new device is approved by the commissioning application to join the Thread network, and it gets provisioned with
 network access credentials.
 
-The Thread router acts here as a Join Proxy. The MLE discovery response message contains UDP port information to signal the new device which port to use for its DTLS connection.
+The Thread router acts here as a Join Proxy. The MLE discovery response message contains UDP port information to signal the new device which port to use for its DTLS connection to the Join Proxy function.
 The link-local IPv6 source address of the MLE response message indicates the address of the Join Proxy.
 
 
