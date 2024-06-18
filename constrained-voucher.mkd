@@ -88,7 +88,6 @@ informative:
   RFC9053:
   I-D.ietf-core-sid:
   I-D.ietf-6lo-mesh-link-establishment:
-  I-D.kuehlewind-update-tag:
   I-D.richardson-anima-masa-considerations:
   I-D.ietf-anima-constrained-join-proxy:
   I-D.ietf-lake-edhoc: EDHOC
@@ -150,7 +149,7 @@ In BRSKI, the {{RFC8366}} voucher data is by default serialized to JSON with a s
 This document uses the new CBOR {{RFC8949}} voucher data serialization, as defined by {{RFC8366bis}}, and applies a new COSE {{RFC9052}} signature format as 
 defined in {{artifacts}}.
 
-This COSE-signed CBOR-encoded voucher is transported using both secured CoAP and HTTPS.
+This COSE-signed CBOR-encoded voucher is transported using both secured CoAP {{RFC7252}} and HTTPS.
 The CoAP connection (between Pledge and Registrar) is to be protected by DTLS (CoAPS).
 The HTTP connection (between Registrar and MASA) is to be protected using TLS (HTTPS).
 
@@ -240,37 +239,32 @@ Based upon this, the MASA can select which attributes to use in the voucher data
 # Updates to RFC 8995 and RFC 9148
 
 This section details the ways in which this document updates other RFCs.
-The terminology for Updates, Amends and Extends is taken from {{I-D.kuehlewind-update-tag}}.
 
-This document Updates {{RFC8995}}. It Amends {{RFC8995}} because it:
+This document Updates {{RFC8995}} because it:
 
 * clarifies how pinning in vouchers is done ({{pinning}}),
 
-* adopts clearer explanation of the TLS Server Name Indicator (SNI) in {{sni}} and {{sni-masa}},
+* adopts clearer explanation of the use of TLS Server Name Indicator (SNI) ({{sni}}, {{sni-masa}}),
 
 * clarifies when new trust anchors should be retrieved by a Pledge ({{brski-est-extensions-pledge}}),
 
 * clarifies what kinds of Extended Key Usage attributes are appropriate for each certificate ({{registrar-certificate-requirement-server}}, {{registrar-certificate-requirement-client}}).
 
-It Extends {{RFC8995}} as follows:
+* extends BRSKI with the use of CoAP,
 
-* defines the use of CoAP for the BRSKI protocol,
-
-* makes some messages optional if the results can be inferred from other validations ({{brski-est-extensions}}),
+* makes some BRSKI messages optional if the results can be inferred from other validations ({{brski-est-extensions}}),
 
 * extends the BRSKI-EST protocol ({{brski-est}}, {{VR-COSE}}) to carry the new "application/voucher+cose" format.
 
 * extends the BRSKI-MASA protocol ({{brski-masa}}, {{VR-COSE}}) to carry the new "application/voucher+cose" format.
 
-This document Updates {{RFC9148}}. It Amends {{RFC9148}} because it:
+This document Updates {{RFC9148}} because it:
 
 * defines stricter DTLS requirements ({{brski-est-dtls}})),
 
 * details how an EST-coaps client handles certificate renewal and re-enrollment ({{brski-est-extensions}}),
 
 * details how an EST-coaps server processes a "CA certificates" request for content format 287 ("application/pkix-cert") ({{brski-extensions-registrar}}).
-
-It Extends {{RFC9148}} as follows:
 
 * adds enrollment status telemetry to the certificate renewal procedure ({{est-reenrollment}}),
 
