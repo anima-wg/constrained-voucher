@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI)
 abbrev: Constrained BRSKI (cBRSKI)
-docname: draft-ietf-anima-constrained-voucher-24
+docname: draft-ietf-anima-constrained-voucher-25
 
 stand_alone: true
 
@@ -1556,6 +1556,8 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 </t>
 
 # Changelog
+-25:
+    Removed use of formal Extends/Amends Update-tags (#303, #304);
 
 -24:
     Rephrased well-known URL requirement in 14.1 (#292, #293);
