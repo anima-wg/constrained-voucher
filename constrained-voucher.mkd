@@ -1494,7 +1494,6 @@ IANA has allocated ID 836 from the sub-registry "CoAP Content-Formats".
     -----------------------------  --------- ----  ----------
     application/voucher+cose       -          836  [This RFC]
 
-IANA Note (to be removed by RFC editor): the TEMPORARY registration of 836 is made under the old name of "application/voucher-cose+cbor".
 
 ## Update to BRSKI Parameters Registry {#iana-brski-param-registry}
 
