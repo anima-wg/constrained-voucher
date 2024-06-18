@@ -361,7 +361,7 @@ See also {{discovery}} for more details on discovery of a Join Proxy by a Pledge
 cBRSKI operates using CoAP over DTLS, with request URIs using the coaps scheme. The Pledge operates in CoAP client role.
 To keep the protocol messages small the EST-coaps and cBRSKI request URIs are shorter than the respective EST and BRSKI URIs.
 
-During the BRSKI onboarding on an IPv6 network these request URIs have the following form:
+During the cBRSKI onboarding on an IPv6 network these request URIs have the following form:
 
 ~~~~
   coaps://[<link-local-ipv6>]:<port>/.well-known/brski/<short-name>
@@ -369,7 +369,7 @@ During the BRSKI onboarding on an IPv6 network these request URIs have the follo
 ~~~~
 
 where \<link-local-ipv6\> is the discovered link-local IPv6 address of a Join Proxy, and \<port\> is the discovered port of the Join Proxy that is
-used to offer the BRSKI proxy functionality. 
+used to offer the cBRSKI proxy functionality. 
 
 \<short-name\> is the short resource name for the cBRSKI and EST-coaps resources. For EST-coaps, {{Section 5.1 of RFC9148}} defines the CoAP \<short-name\> resource names. 
 For cBRSKI, this document defines the short resource names based on the {{RFC8995}} long HTTP resource names.
@@ -377,11 +377,14 @@ See {{brski-est-short-uri}} for a summary of these resource names.
 
 {{discovery-considerations}} details how the Pledge discovers a Join Proxy link-local address and port in different deployment scenarios.
 
-The request URI formats defined above enable the Pledge to perform onboarding/enrollment without requiring to perform any discovery of the available onboarding options, voucher formats, 
-BRSKI/EST resources, enrollment protocols, and so on. This is helpful for a majority of constrained Pledges that would support only a single set of options. However, for Pledges that do support multiple options, 
-sending CoAP discovery queries to the Registrar is supported as defined in {{pledge-discovery-on-registrar}}.
+The request URI formats defined here enable the Pledge to perform onboarding/enrollment without requiring discovery of the available onboarding options, voucher formats, 
+BRSKI/EST resources, enrollment protocols, and so on. This is helpful for the majority of constrained Pledges that would support only a single set of these options. However, for Pledges that do support multiple options, 
+{{I-D.eckert-anima-brski-discovery}} will define discovery methods so that a Pledge can select the optimal set of options for the current onboarding operation. Alternatively, a Pledge 
+could also send CoAP discovery queries ({{Section 7 of RFC7252}}) to the Registrar to discover detailed options for onboarding and/or enrollment functions. Supporting these queries is 
+OPTIONAL for both the Pledge and the Registrar. To clarify which options in particular can be discovered, {{pledge-discovery-on-registrar}} provides an informative overview of what can be 
+discovered and how to discover it.
 
-Because a Pledge only has indirect access to the Registrar via a single port on the Join Proxy, the Registrar MUST host all BRSKI/EST-coaps resources on the same (UDP) server IP address and port.
+Because a Pledge only has indirect access to the Registrar via a single port on the Join Proxy, the Registrar MUST host all cBRSKI/EST-coaps resources on the same (UDP) server IP address and port.
 This is the address and port where a Join Proxy would relay DTLS records from the Pledge to.
 
 Although the request URI templates include IP address, scheme and port, in practice the CoAP request sent over the secure DTLS connection only encodes the request URI. For example, 
@@ -434,7 +437,7 @@ specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certific
 Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST-coaps server.
 
 {{brski-est-short-uri}} summarizes the resources used in cBRSKI. 
-It includes both the short-name BRSKI resources and the EST-coaps resources.
+It includes both the short-name cBRSKI resources and the EST-coaps resources.
 
 <!-- Table order can be changed -->
 
@@ -587,7 +590,7 @@ The Registrar indicates the voucher format it wants to receive from MASA using t
 This format MUST be the same as the format of the PVR, so that the Pledge can parse it.
 
 At the moment of writing the creation of coaps based MASAs is deemed unrealistic.
-The use of CoAP for the BRSKI-MASA connection can be the subject of another document.
+The use of CoAP for the BRSKI-MASA connection is out of scope but can be the subject of another document.
 Some consideration was made to specify CoAP support for consistency, but:
 
 * the Registrar is not expected to be so constrained that it cannot support HTTPS client connections.
@@ -1180,158 +1183,6 @@ It is possible that the Pledge will not enroll after obtaining a valid voucher, 
 How the Pledge discovers this method and details of such enrollment methods are out of scope of this document.
 
 
-# Pledge Discovery of Onboarding and Enrollment Options {#pledge-discovery-on-registrar}
-
-The functionality in this section is optional for a Pledge to implement. In typical cases, for a constrained Pledge that only supports a single onboarding and 
-enrollment method, this functionality is not needed.
-
-## Pledge Discovery Query for All BRSKI Resources
-
-A Pledge that wishes to discover the available BRSKI onboarding options/formats can do a discovery
-operation using CoAP discovery per {{Section 7 of RFC7252}} and {{Section 4 of RFC6690}}. It first sends a CoAP discovery query to the Registrar over the secured DTLS connection.
-The Registrar then responds with a CoRE Link Format payload containing the requested resources, if any.
-
-For example, if the Registrar supports a short BRSKI URL (/b) instead of just the longer "/.well-known" resources, and supports only the voucher format 
-"application/voucher+cose" (836), and status reporting in both CBOR and JSON formats,
-a CoAP resource discovery request and response may look as follows:
-
-~~~~
-  REQ: GET /.well-known/core?rt=brski*
-
-  RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b>;rt=brski,
-  </b/rv>;rt=brski.rv;ct=836,
-  </b/vs>;rt=brski.vs;ct="50 60",
-  </b/es>;rt=brski.es;ct="50 60"
-~~~~
-
-The Registrar is under no obligation to provide shorter URLs, and MAY respond to this query with only the "/.well-known/brski/\<short-name\>" resources for the short names as defined in
-{{brski-est-short-uri}}. This case is shown in the below interaction:
-
-~~~~
-  REQ: GET /.well-known/core?rt=brski*
-
-  RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </.well-known/brski>;rt=brski,
-  </.well-known/brski/rv>;rt=brski.rv;ct=836,
-  </.well-known/brski/vs>;rt=brski.vs;ct="50 60",
-  </.well-known/brski/es>;rt=brski.es;ct="50 60"
-~~~~
-
-However, for efficiency reasons it would be better if the Registrar would return shorter URLs instead.
-
-When responding to a discovery request for BRSKI resources, the Registrar MAY return 
-the full resource paths for all \<short-name\> resources and the content types which are supported by these resources (using ct attributes) as shown in the above examples.
-This is useful when multiple content types are specified for a particular resource on the Registrar and the discovering Pledge also supports multiple.
-
-Registrars that have implemented shorter URLs MUST process a request on the corresponding "/.well-known/brski/\<short-name\>" URL identically.
-In particular, a Pledge MAY use the longer (well-known) and shorter URLs in any combination.
-
-## Pledge Discovery Query for the Root BRSKI Resource
-
-In case the client queries for only rt=brski type resources, the Registrar responds with only the root path for the BRSKI resources (rt=brski, resource /b in earlier examples) and no others.
-(So, a query for rt=brski, without the wildcard character.) This is shown in the below example. The Pledge in this case requests only the BRSKI root resource of type rt=brski to check if BRSKI is 
-supported by the Registrar and if short names are supported or not. In this case, the Pledge is not interested to check what voucher request formats, or status telemetry formats -- 
-other than the mandatory default formats -- are supported. The compact response then shows that the Registrar indeed supports a short-name BRSKI resource at /b:
-
-~~~~
-  REQ: GET /.well-known/core?rt=brski
-
-  RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b>;rt=brski
-~~~~
-
-The Pledge can now start using any of the BRSKI resources /b/\<short-name\>. 
-In above example, the well-known resource present under /.well-known/brski is not returned because this is assumed to be well-known to the Pledge and would not require discovery anyway.
-
-As a follow-up example, the Pledge can now start the onboarding by sending its PVR:
-
-~~~~
-  REQ: POST /b/rv
-  Content-Format: 836
-  Accept: 836
-  Payload: (binary COSE-signed PVR)
-~~~~
-
-
-## Usage of ct Attribute
-
-The return of multiple content-types in the "ct" attribute by the Registrar allows the Pledge to choose the most appropriate one for a particular operation, and allows extension with new voucher formats.
-Note that only Content-Format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv), both as request payload and as response payload.
-
-Content-Format 836 MUST be supported by the Registrar for the /rv resource.
-If the "ct" attribute is not indicated for the /rv resource in the CoRE link format description, this implies that at least format 836 is supported and maybe more.
-
-Note that this specification allows for voucher+cose format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
-The burden for this flexibility is placed upon the Registrar.
-A Pledge on constrained hardware is expected to support a single format only.
-
-The Pledge and MASA need to support one or more formats (at least format 836) for the voucher and for the voucher request.
-The MASA needs to support all formats that the Pledge supports.
-
-In the below example, a Pledge queries specifically for the brski.rv resource type to learn what voucher formats are supported:
-
-~~~~
-  REQ: GET /.well-known/core?rt=brski.rv
-
-  RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b/rv>;rt=brski.rv;ct="836 65123 65124"
-~~~~
-
-The Registrar returns 3 supported voucher formats: 836, 65123, and 65124. The first is the mandatory "application/voucher+cose". The other two are numbers from the Experimental Use number range 
-of the CoAP Content-Formats sub-registry, which are used as mere examples. The Pledge can now make a selection between the supported formats.
-
-Note that if the Registrar only supports the default Content-Formats for each BRSKI resource as specified by this document, it may also omit the ct attributes in the discovery query response.
-For example as in the following interaction:
-
-~~~~
-  REQ: GET /.well-known/core?rt=brski*
-
-  RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b>;rt=brski,
-  </b/rv>;rt=brski.rv,
-  </b/vs>;rt=brski.vs,
-  </b/es>;rt=brski.es
-~~~~
-
-
-## EST-coaps Resource Discovery
-
-The Pledge can also use CoAP discovery to identify enrollment options, for example enrollment using EST-coaps or other methods.
-The below example shows a Pledge that wants to identify EST-coaps enrollment options by sending a discovery query:
-
-~~~~
-  REQ: GET /.well-known/core?rt=ace.est*
-
-  RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </e/crts>;rt=ace.est.crts;ct="62 281 287",
-  </e/sen>;rt=ace.est.sen;ct="281 287",
-  </e/sren>;rt=ace.est.sren;ct="281 287",
-  </e/att>;rt=ace.est.att,
-  </e/skg>;rt=ace.est.skg,
-  </e/skc>;rt=ace.est.skc
-~~~~
-
-The response indicates that EST-coaps enrollment (/sen) and re-enrollment (/sren) is supported, with a choice of two Content-Formats for the return payload:
-either a PKCS#7 container with a single LDevID certificate ("application/pkcs7-mime;smime-type=certs-only", content-format 281) or just a single LDevID certificate ("application/pkix-cert", content-format 287).
-
-For the EST cacerts resources (/crts) there are three Content-Formats supported: a multipart-core container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (287), or a single (most relevant) CA certificate.
-
-The Pledge can now send a CoAP request to one or more of the discovered resources, with the Accept Option to indicate which return payload format the Pledge wants to receive.
-
-
 # Security Considerations {#security}
 
 ## Duplicate serial-numbers
@@ -1342,9 +1193,9 @@ This would apply only to the case where a Manufacturer Authorized Signing Author
 For example, imagine the same manufacturer makes light bulbs as well as gas centrifuges,
 and said manufacturer does not uniquely allocate product serial numbers.
 This attack only works for nonceless vouchers.
-The attacker has obtained a light bulb which happens to have the same serial-number as a gas centrofuge which it wishes to obtain access.
-The attacker performs a normal BRSKI onboarding for the light bulb, but then uses the resulting voucher to onboard the gas centrofuge.
-The attack requires that the gas centrofuge be returned to a state where it is willing to perform a new onboarding operation.
+The attacker has obtained a light bulb which happens to have the same serial-number as a gas centrifuge which it wishes to obtain access.
+The attacker performs a normal BRSKI onboarding for the light bulb, but then uses the resulting voucher to onboard the gas centrifuge.
+The attack requires that the gas centrifuge be returned to a state where it is willing to perform a new onboarding operation.
 
 This attack is prevented by the mechanism of having the Registrar include the idevid-issuer in the RVR, and the MASA including it in the resulting voucher.
 The idevid-issuer is not included by default: a MASA needs to be aware if there are parts of the organization which duplicates serial numbers, and if so, include it.
@@ -1558,6 +1409,9 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 -25:
     Removed use of formal Extends/Amends Update-tags (#303, #304);
 
+-25:
+    Moved Section 14 to Appendix F (#302);
+    
 -24:
     Rephrased well-known URL requirement in 14.1 (#292, #293);
     Added paragraph on future certificate formats like C509 (#281, #294);
@@ -1619,9 +1473,9 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
     
 --- back
 
-#Library Support for BRSKI {#libsup}
+#Library Support for BRSKI/cBRSKI {#libsup}
 
-For the implementation of BRSKI, the use of a software library to manipulate PKIX certificates and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
+For the implementation of BRSKI/cBRSKI, the use of a software library to manipulate PKIX certificates and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
 
 Libraries do not support all known crypto algorithms. Before deciding on a library, it is important to look at their supported crypto algorithms and the roadmap for future support. Apart from availability, the library footprint, and the required execution cycles should be investigated beforehand.
 
@@ -1979,4 +1833,161 @@ The below table specifies the functions implemented in the three example Pledge 
 
 Notes: (*) means only possible via a factory-reset followed by a new cBRSKI onboarding procedure.
 
+
+# Pledge Discovery of Onboarding and Enrollment Options {#pledge-discovery-on-registrar}
+
+The functionality described in this section is informative only. In typical cases, for a constrained Pledge that only supports a single onboarding and 
+enrollment method, this functionality is not needed.
+
+## Pledge Discovery Query for All cBRSKI Resources
+
+A Pledge that wishes to discover the available cBRSKI onboarding options/formats can do a discovery
+operation using CoAP discovery per {{Section 7 of RFC7252}} and {{Section 4 of RFC6690}}. It first sends a CoAP discovery query to the Registrar over the secured DTLS connection.
+The Registrar then responds with a CoRE Link Format payload containing the requested resources, if any.
+
+For example, if the Registrar supports a short cBRSKI URL (/b) instead of just the longer "/.well-known" resources, and supports only the voucher format 
+"application/voucher+cose" (836), and status reporting in both CBOR and JSON formats,
+a CoAP resource discovery request and response may look as follows:
+
+~~~~
+  REQ: GET /.well-known/core?rt=brski*
+
+  RES: 2.05 Content
+  Content-Format: 40
+  Payload:
+  </b>;rt=brski,
+  </b/rv>;rt=brski.rv;ct=836,
+  </b/vs>;rt=brski.vs;ct="50 60",
+  </b/es>;rt=brski.es;ct="50 60"
+~~~~
+
+The Registrar is under no obligation to provide shorter URLs, and may respond to this query with only the "/.well-known/brski/\<short-name\>" resources for the short names as defined in
+{{brski-est-short-uri}}. This case is shown in the below interaction:
+
+~~~~
+  REQ: GET /.well-known/core?rt=brski*
+
+  RES: 2.05 Content
+  Content-Format: 40
+  Payload:
+  </.well-known/brski>;rt=brski,
+  </.well-known/brski/rv>;rt=brski.rv;ct=836,
+  </.well-known/brski/vs>;rt=brski.vs;ct="50 60",
+  </.well-known/brski/es>;rt=brski.es;ct="50 60"
+~~~~
+
+When responding to a discovery request for cBRSKI resources, the Registrar may return 
+the full resource paths for all \<short-name\> resources and the content types which are supported by these resources (using ct attributes) as shown in the above examples.
+This is useful when multiple content types are specified for a particular resource on the Registrar and the discovering Pledge also supports multiple.
+
+Registrars that have implemented shorter URLs must process a request on the corresponding "/.well-known/brski/\<short-name\>" URL identically.
+In particular, a Pledge may use the longer (well-known) and shorter URLs in any combination.
+
+A Registrar may also be implemented without support for the (optional) CoAP discovery. In that case, it may for example return a 4.04 Not Found as shown below. In such case, 
+the Pledge cannot discover any onboarding/enrollment options and so it has to rely on the default cBRSKI options and has to use the /.well-known/brski and /.well-known/est 
+resources.
+
+~~~~
+  REQ: GET /.well-known/core?rt=brski*
+
+  RES: 4.04 Not Found
+~~~~
+
+## Pledge Discovery Query for the Root cBRSKI Resource
+
+In case the client queries for only rt=brski type resources, the Registrar responds with only the root path for the cBRSKI resources (rt=brski, resource /b in earlier examples) and no others.
+(So, a query for rt=brski, without the wildcard character.) This is shown in the below example. The Pledge in this case requests only the cBRSKI root resource of type rt=brski to check if cBRSKI is 
+supported by the Registrar and if short names are supported or not. In this case, the Pledge is not interested to check what voucher request formats, or status telemetry formats -- 
+other than the mandatory default formats -- are supported. The compact response then shows that the Registrar indeed supports a short-name cBRSKI resource at /b:
+
+~~~~
+  REQ: GET /.well-known/core?rt=brski
+
+  RES: 2.05 Content
+  Content-Format: 40
+  Payload:
+  </b>;rt=brski
+~~~~
+
+The Pledge can now start using any of the cBRSKI resources /b/\<short-name\>. 
+In above example, the well-known resource present under /.well-known/brski is not returned because this is assumed to be well-known to the Pledge and would not require discovery anyway.
+
+As a follow-up example, the Pledge can now start the onboarding by sending its PVR:
+
+~~~~
+  REQ: POST /b/rv
+  Content-Format: 836
+  Accept: 836
+  Payload: (binary COSE-signed PVR)
+~~~~
+
+
+## Usage of ct Attribute
+
+The return of multiple content-types in the "ct" attribute by the Registrar allows the Pledge to choose the most appropriate one for a particular operation, and allows extension with new voucher formats.
+Note that only Content-Format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv), both as request payload and as response payload.
+If the "ct" attribute is not indicated for the /rv resource in the CoRE link format description, this implies that at least format 836 is supported and maybe more.
+
+Note that this specification allows for voucher+cose format requests and vouchers to be transmitted over HTTPS, as well as for voucher-cms+json and other formats yet to be defined over CoAP.
+The burden for this flexibility is placed upon the Registrar.
+A Pledge on constrained hardware is expected to support a single format only.
+
+The Pledge and MASA need to support one or more formats (at least format 836) for the voucher and for the voucher request.
+The MASA needs to support all formats that the Pledge supports.
+
+In the below example, a Pledge queries specifically for the brski.rv resource type to learn what voucher formats are supported:
+
+~~~~
+  REQ: GET /.well-known/core?rt=brski.rv
+
+  RES: 2.05 Content
+  Content-Format: 40
+  Payload:
+  </b/rv>;rt=brski.rv;ct="836 65123 65124"
+~~~~
+
+The Registrar returns 3 supported voucher formats: 836, 65123, and 65124. The first is the mandatory "application/voucher+cose". The other two are numbers from the Experimental Use number range 
+of the CoAP Content-Formats sub-registry, which are used as mere examples. The Pledge can now make a selection between the supported formats.
+
+Note that if the Registrar only supports the default Content-Formats for each cBRSKI resource as specified by this document, it may also omit the ct attributes in the discovery query response.
+For example as in the following interaction:
+
+~~~~
+  REQ: GET /.well-known/core?rt=brski*
+
+  RES: 2.05 Content
+  Content-Format: 40
+  Payload:
+  </b>;rt=brski,
+  </b/rv>;rt=brski.rv,
+  </b/vs>;rt=brski.vs,
+  </b/es>;rt=brski.es
+~~~~
+
+
+## EST-coaps Resource Discovery
+
+The Pledge can also use CoAP discovery to identify enrollment options, for example enrollment using EST-coaps or other methods.
+The below example shows a Pledge that wants to identify EST-coaps enrollment options by sending a discovery query:
+
+~~~~
+  REQ: GET /.well-known/core?rt=ace.est*
+
+  RES: 2.05 Content
+  Content-Format: 40
+  Payload:
+  </e/crts>;rt=ace.est.crts;ct="62 281 287",
+  </e/sen>;rt=ace.est.sen;ct="281 287",
+  </e/sren>;rt=ace.est.sren;ct="281 287",
+  </e/att>;rt=ace.est.att,
+  </e/skg>;rt=ace.est.skg,
+  </e/skc>;rt=ace.est.skc
+~~~~
+
+The response indicates that EST-coaps enrollment (/sen) and re-enrollment (/sren) is supported, with a choice of two Content-Formats for the return payload:
+either a PKCS#7 container with a single LDevID certificate ("application/pkcs7-mime;smime-type=certs-only", content-format 281) or just a single LDevID certificate ("application/pkix-cert", content-format 287).
+
+For the EST cacerts resources (/crts) there are three Content-Formats supported: a multipart-core container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (287), or a single (most relevant) CA certificate.
+
+The Pledge can now send a CoAP request to one or more of the discovered resources, with the Accept Option to indicate which return payload format the Pledge wants to receive.
 
