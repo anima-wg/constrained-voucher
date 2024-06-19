@@ -169,6 +169,9 @@ The following terms are defined in {{RFC8366bis}}, and are used identically as i
 artifact, domain, Join Registrar/Coordinator (JRC), malicious Registrar, Manufacturer Authorized Signing Authority
 (MASA), Pledge, Registrar, Onboarding, Owner, Voucher Data and Voucher.
 
+The protocol described in this document is referred to as cBRSKI where the constrained version must be constrasted with the non-constrained version described in {{RFC8995}}.
+
+
 The following terms from {{RFC8995}} are used identically as in that document:
 Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, nonceless, PKIX.
 
