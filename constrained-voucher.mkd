@@ -1403,17 +1403,17 @@ This section registers the "+cose" suffix in the IANA Structured Syntax Suffixes
 <contact initials="K." surname="Moriarty" fullname="Kathleen Moriarty"/>, <contact initials="X." surname="Liu" fullname="Xufeng Liu"/>
 and <contact initials="C." surname="Moberg" fullname="Karl Moberg"/> provided review feedback.
 </t><t>
-The BRSKI design team has met on many Tuesdays and Thursdays for document review. The team includes: <contact initials="A." surname="Schellenbaum" fullname="Aurelio Schellenbaum"/>, <contact initials="D." surname="von Oheimb" fullname="David von Oheimb"/>, <contact initials="S." surname="Fries" fullname="Steffen Fries"/>, <contact initials="T." surname="Werner" fullname="Thomas Werner"/> and <contact initials="T." surname="Eckert" fullname="Toerless Eckert"/>.
+The BRSKI design team has met on many Tuesdays and Thursdays for document review. The team includes: <contact initials="A." surname="Schellenbaum" fullname="Aurelio Schellenbaum"/>, <contact initials="D." surname="von Oheimb" fullname="David von Oheimb"/>, <contact initials="S." surname="Fries" fullname="Steffen Fries"/>, <contact initials="T." surname="Werner" fullname="Thomas Werner"/>, <contact initials="W." surname="Atwood" fullname="Bill Atwood"/> and <contact initials="T." surname="Eckert" fullname="Toerless Eckert"/>.
 </t><t>
 <contact initials="D." surname="Miller" fullname="Darrel Miller"/>, <contact initials="O." surname="Steele" fullname="Orie Steele"/> and <contact initials="M." surname="Sporny" fullname="Manu Sporny"/> provided review feedback on the registration of the +cose structured syntax suffix.
 </t>
 
 # Changelog
 -25:
+    Moved all software/library support info into Appendix A and added "open source" section;
     Removed use of formal Extends/Amends Update-tags (#303, #304);
-
--25:
-    Moved Section 14 to Appendix F (#302);
+    Moved Section 14 to Appendix E (#302);
+    Editorial improvements.
     
 -24:
     Rephrased well-known URL requirement in 14.1 (#292, #293);
@@ -1476,9 +1476,24 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
     
 --- back
 
-#Library Support for BRSKI/cBRSKI {#libsup}
+#Software and Library Support for cBRSKI
+This appendix lists software and security libraries that may be useful for implementing cBRSKI functionality.
 
-For the implementation of BRSKI/cBRSKI, the use of a software library to manipulate PKIX certificates and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
+## Open Source cBRSKI Implementations
+
+There are a few ongoing open source projects to support cBRSKI development and testing. These include:
+
+* OpenThread Registrar (OT Registrar) - a cBRSKI Registrar, test MASA server, and test Pledge written in Java.  
+  Link: https://github.com/EskoDijk/ot-registrar
+* OpenThread CCM (pre-alpha) - a cBRSKI Pledge and Join Proxy for OpenThread-based IoT nodes, written in C/C++.  
+  Link: https://github.com/EskoDijk/openthread/pull/7
+* OpenThread Network Simulator v2 (OTNS2) - a CLI + GUI simulator for OpenThread IoT nodes in 6LoWPAN mesh networks, able to accurately simulate cBRSKI Pledges onboarding (pre-alpha functionality) to a Thread mesh network via an OT Registrar.  
+  Link: https://github.com/EskoDijk/ot-ns/pull/165
+* Fountain - a BRSKI/6TiSCH Registrar with support for COSE-signed vouchers, written in Ruby.  
+  Link: https://github.com/AnimaGUS-minerva/fountain
+
+## Security Library Support {#libsup}
+For the implementation of BRSKI/cBRSKI, the use of a software library to manipulate PKIX certificates, estabilish secure (D)TLS connections, and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
 
 Libraries do not support all known crypto algorithms. Before deciding on a library, it is important to look at their supported crypto algorithms and the roadmap for future support. Apart from availability, the library footprint, and the required execution cycles should be investigated beforehand.
 
@@ -1486,16 +1501,29 @@ The handling of certificates usually includes the checking of a certificate chai
 
 A libary can be used to construct a (D)TLS connection. It is useful to realize that differences beetween (D)TLS implementations will occur due to the differences in the certicate checks supported by the library. On top of that, checks between client and server certificates enforced by (D)TLS are not always helpful for a BRSKI implementation. For example, the certificates of Pledge and Registrar are usually not related when the BRSKI protocol is started. It must be verified that checks on the relation between client and server certificates do not hamper a succeful DTLS connection establishment.
 
-## OpensSSL
+### OpensSSL Example Code
 
 From openssl's apps/verify.c :
 
 INSERT_C_FROM_FILE examples/openssl-verify.c END
 
-
-## mbedTLS
+### mbedTLS Example Code
 
 INSERT_C_FROM_FILE examples/mbedtls-verify.c END
+
+## Generating Certificates with OpenSSL {#appendix-gencerts}
+
+This informative appendix shows example Bash shell scripts to generate test PKIX certificates for the Pledge IDevID, the Registrar and the MASA.
+The shell scripts cannot be run stand-alone because they depend on input files which are not all included in this appendix. Nevertheless,
+these scripts may provide guidance on how OpenSSL can be configured for generating cBRSKI certificates.
+
+The scripts were tested with OpenSSL 3.0.2. Older versions may not work -- OpenSSL 1.1.1 for example does not support all extensions used.
+
+INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-Pledge.sh END
+INSERT_CODE_FROM_FILE examples/script-cose-examples/x509v3.ext END
+INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-Registrar.sh END
+INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-MASA.sh END
+
 
 #cBRSKI Message Examples
 
@@ -1767,20 +1795,6 @@ INSERT_CBORDIAG_FROM_FILE examples/cose-examples/voucher-nonsigned.txt END
 The largest element in the voucher is identified by key 8, which decodes to SID 2459 (pinned-domain-cert).
 It contains the complete PKIX (DER-encoded X.509v3) certificate of the Registrar's domain CA. This certificate is
 shown in {{cose-example-domain-ca-cert}}.
-
-# Generating Certificates with OpenSSL {#appendix-gencerts}
-
-This informative appendix shows example Bash shell scripts to generate test PKIX certificates for the Pledge IDevID, the Registrar and the MASA.
-The shell scripts cannot be run stand-alone because they depend on input files which are not all included in this appendix. Nevertheless,
-these scripts may provide guidance on how OpenSSL can be configured for generating cBRSKI certificates.
-
-The scripts were tested with OpenSSL 3.0.2. Older versions may not work -- OpenSSL 1.1.1 for example does not support all extensions used.
-
-INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-Pledge.sh END
-INSERT_CODE_FROM_FILE examples/script-cose-examples/x509v3.ext END
-INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-Registrar.sh END
-INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-MASA.sh END
-
 
 # Pledge Device Class Profiles {#appendix-pledge-profiles}
 
