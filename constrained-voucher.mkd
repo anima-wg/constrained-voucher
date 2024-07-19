@@ -29,7 +29,7 @@ author:
 - ins: P. van der Stok
   name: Peter van der Stok
   org: vanderstok consultancy
-  email: stokcons@bbhmail.nl
+  email: stokcons@kpnmail.nl
 
 - ins: P. Kampanakis
   name: Panos Kampanakis
