@@ -696,7 +696,7 @@ can in common cases be re-used as a Domain CA trust anchor during the EST enroll
 
 The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of {{RFC8995}}).
 
-Refering to {{fig-twoca}} of a domain with a two-level certification authority, the most specific CA ("Sub-CA") is the
+Referring to {{fig-twoca}} of a domain with a two-level certification authority, the most specific CA ("Sub-CA") is the
 identity that is pinned by MASA in a nonced voucher.
 A Registrar that wished to have only the Registrar's End-Entity certificate pinned would omit the "domain CA" and
 "Sub-CA" certificates from the RVR.
@@ -1016,7 +1016,7 @@ A Pledge that makes a voucher request to a Registrar that does not support that 
 
 Using CoAP discovery, a Pledge can discover a Join Proxy by sending a link-local multicast discovery message to the All CoAP Nodes address FF02::FD.
 Zero, one, or multiple Join Proxies may respond.
-The handling of multiple responses and absence of responses cases follow the guidelines of Section 4 of [RFC8995].
+The handling of multiple responses and absence of responses cases follow the guidelines of {{Section 4 of RFC8995}}.
 The discovery message is a CoAP GET request on the URI path "/.well-known/core" using a URI query "rt=brski.jp". This resource type (rt) is defined 
 in {{Section 8.3 of I-D.ietf-anima-constrained-join-proxy}}. 
 
@@ -1278,7 +1278,7 @@ For instance, this includes putting the IDevID private key in a Trusted Platform
 On smaller IoT devices, the cost and power budget for an extra part is often prohibitive.
 
 It is becoming more and more common for CPUs to have an internal set of one-time fuses that can be programmed (often they are "burnt" by a laser) at the factory.
-This section of memory is only accessible in some priviledged CPU state.
+This section of memory is only accessible in some privileged CPU state.
 The use of this kind of CPU is appropriate as it provides significant resistance against key disclosure even when the device can be disassembled by an attacker.
 
 In a number of industry verticals, there is increasing concern about counterfeit parts.
@@ -1313,7 +1313,7 @@ In {{Section 8 of RFC8366bis}} two compact alternative fields for proximity-regi
 The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields
 by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate.
 The MASA will not be able to detect such act by the Registrar. But since any 'other' certificate the Registrar could insert in this way still encodes its identity the additional risk
-of using the RPK alternatives is neglible.
+of using the RPK alternatives is negligible.
 
 When a Registrar sees a PVR that uses one of proximity-registrar-pubk or proximity-registrar-pubk-sha256 fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
 Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}.
@@ -1461,12 +1461,12 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 # Changelog
 -26:
     Updated I-D/RFC references to newer versions.
-    Corrected "sub-registry" terms to the official "registry", in IANA section.
+    Corrected "sub-registry" term to official "registry", in IANA section.
     Explicitly imported terminology from {{RFC7252}}.
-    Corrected incorrect "router" term in Thread/MLE section plus clarifications and {{Thread}} reference fix.
-    Moved references between "Informative" and "Normative" based on what's required to implement all optional features.
+    Corrected "router" term in Thread/MLE section, with clarifications, and {{Thread}} reference fix.
+    Moved references between "Informative" and "Normative" based on what's required to implement all the optional features.
     Removal of some lingering legacy text.
-    Editorial improvements and typo corrections.
+    Editorial improvements, bugfixes and typo corrections.
 
 -25:
     Moved all software/library support info into Appendix A and added "open source" section;
@@ -1768,7 +1768,7 @@ INSERT_HEX_FROM_FILE examples/cose-examples/masa_ca.hex END
 ## COSE-signed Pledge Voucher Request (PVR) {#pvr-example}
 
 In this example, the voucher request (PVR) has been signed by the Pledge using the IDevID private key of {{pledgepriv}},
-and has been sent to the link-local constrained Join Proxy (JP) over CoAPS to the JP's join port. The join port happens to
+and has been sent to the link-local constrained Join Proxy (JP) over CoAPS to JP's join port. The join port happens to
 use the default CoAPS UDP port 5684.
 
 ~~~
@@ -1782,7 +1782,7 @@ The payload signed_voucher_request is shown as hexadecimal dump (with lf added) 
 
 INSERT_HEX_FROM_FILE examples/cose-examples/pvr.hex END
 
-The representiation of signed_pvr in CBOR diagnostic format (with lf added) is:
+The representation of signed_pvr in CBOR diagnostic format (with lf added) is:
 
 INSERT_CBORDIAG_FROM_FILE examples/cose-examples/pvr.txt END
 
@@ -1842,7 +1842,7 @@ Below is the binary signed_voucher, encoded in hexadecimal (with lf added):
 
 INSERT_HEX_FROM_FILE examples/cose-examples/voucher.hex END
 
-The representiation of signed_voucher in CBOR diagnostic format (with lf added) is:
+The representation of signed_voucher in CBOR diagnostic format (with lf added) is:
 
 INSERT_CBORDIAG_FROM_FILE examples/cose-examples/voucher.txt END
 
