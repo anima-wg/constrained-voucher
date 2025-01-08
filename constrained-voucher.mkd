@@ -473,7 +473,7 @@ The 202 Retry process which may occur in the voucher request, is to be handled i
 This section defines extensions to EST-coaps for Pledges (during initial onboarding), EST-coaps clients (after initial onboarding) and Registrars (that implement an EST-coaps server).
 Note that a device that is already onboarded is not called "Pledge" in this section: it now acts in the role of an EST-coaps client.
 
-### Pledge enrollment procedure {#brski-est-extensions-pledge}
+### Pledge Enrollment Procedure {#brski-est-extensions-pledge}
 
 This section defines optimizations for the EST-coaps protocol as used by a Pledge. These aim to reduce payload sizes and the number of messages (round-trips) required for the initial EST enrollment.
 
@@ -502,7 +502,7 @@ A client without access to the current time cannot decide if trust anchor CA(s) 
 An EST-coaps server SHOULD include the CoAP ETag Option ({{RFC7252, Section 5.10.6}})in every response to a /crts request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
 The EST-coaps client SHOULD store the ETag resulting from a /crts response in memory and SHOULD use this value in an ETag Option in its next GET /crts request.
 
-### Change of domain trust anchor(s)
+### Change of Domain Trust Anchor(s)
 The domain trust anchor(s) may change over time. Such a change may happen due to relocation of the client device to a new domain, a new subdomain, or due to a key update of 
 a trust anchor as described in {{RFC4210, Section 4.4}}.
 
@@ -513,7 +513,7 @@ How the re-enrollment is explicitly triggered on the client by a domain entity, 
 The mechanism described in {{RFC7030, Section 4.1.3}} and {{RFC4210, Section 4.4}} for root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. Of these four, the OldWithOld certificate is already
 stored in the client's Explicit TA database. The other certificates will be provided to the client in a /crts response, during the EST-coaps re-enrollment procedure.
 
-### Re-enrollment procedure {#est-reenrollment}
+### Re-enrollment Procedure {#est-reenrollment}
 For re-enrollment, the EST-coaps client MUST support the following EST-coaps procedure. During this procedure the EST-coaps server MAY re-enroll the client into a new domain or into a new sub-CA within a larger domain.
 
 1. The client connects with DTLS to the EST-coaps server, and authenticates with its present domain certificate (LDevID) as usual. The EST-coaps server authenticates itself with its domain RA certificate that
@@ -769,7 +769,7 @@ used instead of the pinned-domain-cert field, for a smaller voucher data size.
 
 ## Example Artifacts
 
-### Example Pledge voucher request (PVR) artifact {#example-pvr}
+### Example Pledge Voucher Request (PVR) Artifact {#example-pvr}
 
 Below, example voucher data from a constrained voucher request (PVR) from a Pledge to a Registrar is shown in CBOR diagnostic notation.
 Long CBOR byte strings have been shortened for readability, using the ellipsis ("...") to indicate elided bytes. This notation is 
@@ -782,7 +782,7 @@ The Pledge has included the item proximity-registrar-pubk which carries the publ
 a proximity-registrar-cert item. This is done to reduce the size of the PVR. Also note that the Pledge did not include the created-on field since it lacks an
 internal real-time clock and has no knowledge of the current time at the moment of performing the onboarding.
 
-### Example Registrar voucher request (RVR) artifact {#example-rvr}
+### Example Registrar Voucher Request (RVR) Artifact {#example-rvr}
 
 Next, example voucher data from a constrained voucher request (RVR) from a Registrar to a MASA is shown in CBOR diagnostic notation.
 The Registrar has created this request triggered by the reception of the Pledge voucher request (PVR) of the previous example.
@@ -794,7 +794,7 @@ Note that the Registrar uses here the string data type for all key names, instea
 network between Registrar and MASA is an unconstrained network where data size is not critical.
 The constrained voucher request format supports both the string and SID key types, for PVR as well as RVR.
 
-### Example voucher artifacts {#example-voucher}
+### Example Voucher Artifacts {#example-voucher}
 
 Below, an example of constrained voucher data is shown in CBOR diagnostic notation. It was created by a MASA in response to
 receiving the Registrar Voucher Request (RVR) shown in {{example-rvr}}. The enum value of the assertion field is set to "proximity" (2),
@@ -813,7 +813,7 @@ The voucher is valid for one week. To verify the voucher's validity, the Pledge 
 or some external means of obtaining the current time, such as Network Time Protocol (NTP) or a radio time signal receiver.
 
 
-## Signing voucher and voucher request artifacts with COSE {#VR-COSE}
+## Signing Voucher and Voucher Request Artifacts with COSE {#VR-COSE}
 
 The COSE_Sign1 structure is discussed in {{Section 4.2 of RFC9052}}.
 The CBOR object that carries the body, the signature, and the information about the body and signature is called the COSE_Sign1 structure.
@@ -934,7 +934,7 @@ rekeying of the IDevID certification authority.
 
 In {{pvr-example}} a further example of a signed PVR is shown.
 
-### Signing of voucher by MASA
+### Signing of Voucher by MASA
 
 The MASA SHOULD NOT use a "kid" parameter in the voucher response, because the MASA's signing
 key is already known to the Pledge. Still, where needed the MASA MAY use
@@ -1103,7 +1103,7 @@ A Pledge uses an mDNS PTR query for the name "_brski-proxy._udp.local." to disco
 The label "_udp" here indicates a query for cBRSKI constrained Join Proxies, as opposed to "_tcp" defined in {{RFC8995}}
 which is for discovering BRSKI Proxies.
 
-## Thread networks using Mesh Link Establishment (MLE)
+## Thread Networks using Mesh Link Establishment (MLE)
 
 Thread {{Thread}} is a wireless mesh network protocol based on 6LoWPAN {{RFC6282}} and other IETF protocols. In Thread, a new device
 discovers potential Thread networks and Thread nodes to join by using the Mesh Link Establishment (MLE) {{I-D.ietf-6lo-mesh-link-establishment}} protocol.
@@ -1233,7 +1233,7 @@ How the Pledge discovers this method and details of such enrollment methods are 
 
 # Security Considerations {#security}
 
-## Duplicate serial-numbers
+## Duplicate Serial Numbers
 
 In the absense of correct use of idevid-issuer by the Registrar as detailed in {{registrar-idevid-issuer}}, it would be possible for a malicious Registrar to use an unauthorized voucher for a device.
 This would apply only to the case where a Manufacturer Authorized Signing Authority (MASA) is trusted by different products from the same manufacturer,
@@ -1249,7 +1249,7 @@ The attack requires that the gas centrifuge be returned to a state where it is w
 This attack is prevented by the mechanism of having the Registrar include the idevid-issuer in the RVR, and the MASA including it in the resulting voucher.
 The idevid-issuer is not included by default: a MASA needs to be aware if there are parts of the organization which duplicates serial numbers, and if so, include it.
 
-## IDevID security in Pledge
+## IDevID Security in the Pledge
 
 The security of this protocol depends upon the Pledge identifying itself to the Registrar using its manufacturer installed certificate: the IDevID certificate.
 Associated with this certificate is the IDevID private key, known only to the Pledge.
@@ -1286,7 +1286,7 @@ These may be look-alike parts created in a different factory, or parts which are
 The use of a manufacturer-signed IDevID certificate provides for discovery of the pedigree of each part, and this often justifies the cost of the security measures associated with storing the private key.
 
 
-## Security of CoAP and UDP protocols
+## Security of CoAP and UDP Protocols
 
 {{brski-masa-protocol-format}} explains that no CoAPS version of the BRSKI-MASA protocol is proposed.
 The connection from the Registrar to the MASA continues to be HTTPS as in {{RFC8995}}.
@@ -1299,7 +1299,7 @@ While DTLS contains an option to do a stateless challenge -- a process actually 
 It is for this reason that this document defines using HTTPS for the Registrar to MASA connection.
 
 
-## Registrar Certificate may be self-signed
+## Registrar Certificate May Be Self-signed
 
 The provisional (D)TLS connection formed by the Pledge with the Registrar does not authenticate the Registrar's identity.
 This Registrar's identity is validated by the {{RFC8366bis}} voucher that is issued by the MASA, signed with a trust anchor that was built-in to the Pledge.
@@ -1307,7 +1307,7 @@ This Registrar's identity is validated by the {{RFC8366bis}} voucher that is iss
 The Registrar may therefore use any certificate, including a self-signed one.
 The only restrictions on the certificate is that it MUST have EKU bits set as detailed in {{registrar-certificate-requirement-server}} and {{registrar-certificate-requirement-client}}.
 
-## Use of RPK alternatives to proximity-registrar-cert
+## Use of RPK Alternatives to proximity-registrar-cert
 
 In {{Section 8 of RFC8366bis}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256.
 The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields
@@ -1318,7 +1318,7 @@ of using the RPK alternatives is neglible.
 When a Registrar sees a PVR that uses one of proximity-registrar-pubk or proximity-registrar-pubk-sha256 fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
 Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}.
 
-## MASA support of CoAPS {#security-masa-coaps}
+## MASA Support of CoAPS {#security-masa-coaps}
 
 The use of CoAP for the BRSKI-MASA connection is not in scope of the current document.
 The following security considerations have led to this choice of scope:
@@ -1702,21 +1702,21 @@ a constrained PVR, RVR and voucher.
 This section documents the public and private keys used for all examples in this appendix. These keys are not used in any
 production system, and must only be used for testing purposes.
 
-### Pledge IDevID private key {#pledgepriv}
+### Pledge IDevID Private Key {#pledgepriv}
 
 INSERT_PEM_FROM_FILE examples/script-cose-examples/keys/privkey_pledge.pem END
 
 INSERT_X509_FROM_FILE examples/cose-examples/privkey_pledge.txt END
 
 
-### Registrar private key {#jrcpriv}
+### Registrar Private Key {#jrcpriv}
 
 INSERT_PEM_FROM_FILE examples/script-cose-examples/keys/privkey_registrar.pem END
 
 INSERT_X509_FROM_FILE examples/cose-examples/privkey_registrar.txt END
 
 
-### MASA private key {#masapriv}
+### MASA Private Key {#masapriv}
 
 INSERT_PEM_FROM_FILE examples/script-cose-examples/keys/privkey_masa_ca.pem END
 
