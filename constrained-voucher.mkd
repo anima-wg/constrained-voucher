@@ -666,7 +666,7 @@ Then, it pins a certificate selected from this chain.
 For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the voucher request has been signed by "Registrar", its signing structure includes two additional CA certificates.
 The arrows in the figure indicate the issuing of a certificate, i.e. author of (1) issued (2) and author of (2) issued (3).
 
-~~~~ ascii-art
+~~~~ aasvg
 {::include two-ca-chain.txt}
 ~~~~
 {: #fig-twoca title='Two-Level CA PKI'}
@@ -721,7 +721,7 @@ That can be either the End-Entity certificate of the Registrar, or the certifica
 However, if the Pledge is known by MASA to also support RPK pinning and the MASA intends to pin the Registrar in the voucher (and not the CA), then MASA SHOULD pin the 
 RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
 
-~~~~ ascii-art
+~~~~ aasvg
 {::include pinning-options.txt}
 ~~~~
 {: #fig-pinning title='Raw Public Key (RPK) pinning examples'}
