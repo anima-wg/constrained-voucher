@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI)
 abbrev: Constrained BRSKI (cBRSKI)
-docname: draft-ietf-anima-constrained-voucher-25
+docname: draft-ietf-anima-constrained-voucher-26
 
 stand_alone: true
 
@@ -169,8 +169,7 @@ The following terms are defined in {{RFC8366bis}}, and are used identically as i
 artifact, domain, Join Registrar/Coordinator (JRC), malicious Registrar, Manufacturer Authorized Signing Authority
 (MASA), Pledge, Registrar, Onboarding, Owner, Voucher Data and Voucher.
 
-The protocol described in this document is referred to as cBRSKI where the constrained version must be constrasted with the non-constrained version described in {{RFC8995}}.
-
+The protocol described in this document is referred to as cBRSKI, the constrained version of BRSKI which is described in {{RFC8995}}.
 
 The following terms from {{RFC8995}} are used identically as in that document:
 Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, nonceless, PKIX.
@@ -185,7 +184,7 @@ The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the v
 
 The term Registrar Voucher Request, or acronym RVR, is introduced to refer to the voucher request between the Registrar and the MASA.
 
-This document uses the term "PKIX Certificate" to refer to the X.509v3 profile described in {{RFC5280}}.
+This document uses the term "PKIX Certificate" or "certificate" to refer to the X.509v3 profile described in {{RFC5280}}.
 
 In code examples, the string "\<CODE BEGINS\>" denotes the start of a code example and "\<CODE ENDS\>" the end of the code example.
 
@@ -342,7 +341,7 @@ This consideration does not apply to the server function in the Registrar becaus
 
 * it typically uses IPv6, often {{RFC4193}} Unique Local Address, which are plentiful;
 
-* the server port number is typically discovered, so multiple tenants can be accomodated via unique UDP port numbers.
+* the server port number is typically discovered, so multiple tenants can be accommodated via unique UDP port numbers.
 
 ### Registrar Server Certificate Requirements {#registrar-certificate-requirement-server}
 
@@ -401,7 +400,7 @@ For example, a Pledge that skips resource discovery operations just sends the in
 ~~~~
 
 Note that only content-format 836 ("application/voucher+cose") is defined in this document for the payload sent to the voucher request resource (/rv).
-content-format 836 MUST be supported by the Registrar for the /rv resource and it MAY support additional formats.
+Content-format 836 MUST be supported by the Registrar for the /rv resource and it MAY support additional formats.
 The Pledge MAY also indicate in the request the desired format of the (voucher) response, using the Accept Option. An example of using this option in the request is as follows:
 
 ~~~~
@@ -421,7 +420,7 @@ A Pledge on constrained hardware is expected to support a single format only.
 The Pledge and MASA need to support one or more formats (at least format 836) for the voucher and for the voucher request.
 The MASA needs to support all formats that the Pledge supports.
 
-### RFC8995 Telemetry Returns {#telemetry}
+### Status Telemetry Returns {#telemetry}
 
 {{RFC8995}} defines two telemetry returns from the Pledge which are sent to the Registrar.
 These are the BRSKI Status Telemetry {{RFC8995, Section 5.7}} and the Enrollment Status Telemetry {{RFC8995, Section 5.9.4}}.
@@ -960,13 +959,13 @@ A Registrar MUST NOT remove the x5bag attribute from the unprotected COSE header
 In {{fig-cose-voucher}} an example is shown of a COSE-signed voucher. This example shows the common case where the "x5bag" attribute is not used.
 
 ~~~~ cbor-diag
-18(                    / tag for COSE_Sign1                          /
+18(                    / tag for COSE_Sign1                        /
  [
-   h'A10126',          / protected COSE header encoding: {1: -7}     /
-                       /            which means { "alg": ES256 }     /
-   {},                 / unprotected COSE header parameters          /
-   h'A119' ... '3839', / voucher payload wrapped in CBOR byte string /
-   h'2A2C' ... '7FBF'  / voucher binary Sign1 signature by MASA      /
+   h'A10126',          / protected COSE header encoding: {1: -7}   /
+                       /            which means { "alg": ES256 }   /
+   {},                 / unprotected COSE header parameters        /
+   h'A119' ... '3839', / voucher payload wrapped in CBOR byte str  /
+   h'2A2C' ... '7FBF'  / voucher binary Sign1 signature by MASA    /
  ]
 )
 ~~~~
@@ -1365,8 +1364,8 @@ signed with a COSE_Sign1 structure {{RFC9052}} as defined in this document.
     Interoperability considerations:  The format is designed to be
       broadly interoperable.
     Published specification:  [This RFC]
-    Applications that use this media type:  cBRSKI, ANIMA, 6TiSCH, and other
-      zero-touch onboarding systems
+    Applications that use this media type:  cBRSKI/ANIMA, 6TiSCH, and 
+      other zero-touch onboarding systems
     Fragment identifier considerations: N/A
     Additional information:
       Deprecated alias names for this type: N/A
