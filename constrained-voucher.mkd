@@ -94,7 +94,7 @@ informative:
   I-D.ietf-anima-constrained-join-proxy:
   I-D.ietf-anima-jws-voucher:
   I-D.ietf-cbor-edn-literals:
-  I-D.eckert-anima-brski-discovery:
+  I-D.ietf-anima-brski-discovery:
   I-D.ietf-cose-cbor-encoded-cert:
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry group"
@@ -380,7 +380,7 @@ See {{brski-est-short-uri}} for a summary of these resource names.
 
 The request URI formats defined here enable the Pledge to perform onboarding/enrollment without requiring discovery of the available onboarding options, voucher formats, 
 BRSKI/EST resources, enrollment protocols, and so on. This is helpful for the majority of constrained Pledges that would support only a single set of these options. However, for Pledges that do support multiple options, 
-{{I-D.eckert-anima-brski-discovery}} will define discovery methods so that a Pledge can select the optimal set of options for the current onboarding operation.
+{{I-D.ietf-anima-brski-discovery}} will define discovery methods so that a Pledge can select the optimal set of options for the current onboarding operation.
 
 Alternatively, a Pledge could also send CoAP discovery queries ({{Section 7 of RFC7252}}) to the Registrar to discover
 detailed options for onboarding and/or enrollment functions. Supporting these queries is
@@ -1007,7 +1007,7 @@ therefore protocol discovery is out of scope.
 For the discovery method, this section only defines unsecured CoAP discovery per {{Section 7 of RFC7252}} as the default method. This uses CoRE Link Format {{RFC6690}} payloads.
 
 {{discovery-considerations}} briefly mentions other methods that apply to specific deployment types or technologies.
-Details about these deployment-specific methods, or yet other methods, new payload formats, or more elaborate CoAP-based methods, may be defined in future documents such as {{I-D.eckert-anima-brski-discovery}}.
+Details about these deployment-specific methods, or yet other methods, new payload formats, or more elaborate CoAP-based methods, may be defined in future documents such as {{I-D.ietf-anima-brski-discovery}}.
 The more elaborate methods for example may include discovering only Join Proxies that support a particular desired onboarding protocol, voucher format, or cBRSKI variant.
 
 Note that identifying the format of the voucher request and the voucher is currently not a required part of the Pledge's discovery operation.
@@ -1071,7 +1071,7 @@ Further details on CoAP discovery of the Registrar by a Join Proxy are provided 
 # Deployment-specific Discovery Considerations {#discovery-considerations}
 
 This section details how discovery of a Join Proxy is done by the Pledge in specific deployment scenarios.
-Future work such as {{I-D.eckert-anima-brski-discovery}} may define more details on discovery operations in 
+Future work such as {{I-D.ietf-anima-brski-discovery}} may define more details on discovery operations in
 the specific deployments listed here.
 
 ## 6TiSCH Deployments
