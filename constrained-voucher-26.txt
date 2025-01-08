@@ -677,7 +677,7 @@ Internet-Draft         Constrained BRSKI (cBRSKI)           January 2025
    protocols, and so on.  This is helpful for the majority of
    constrained Pledges that would support only a single set of these
    options.  However, for Pledges that do support multiple options,
-   [I-D.eckert-anima-brski-discovery] will define discovery methods so
+   [I-D.ietf-anima-brski-discovery] will define discovery methods so
    that a Pledge can select the optimal set of options for the current
    onboarding operation.
 
@@ -1932,8 +1932,8 @@ Internet-Draft         Constrained BRSKI (cBRSKI)           January 2025
    deployment types or technologies.  Details about these deployment-
    specific methods, or yet other methods, new payload formats, or more
    elaborate CoAP-based methods, may be defined in future documents such
-   as [I-D.eckert-anima-brski-discovery].  The more elaborate methods
-   for example may include discovering only Join Proxies that support a
+   as [I-D.ietf-anima-brski-discovery].  The more elaborate methods for
+   example may include discovering only Join Proxies that support a
    particular desired onboarding protocol, voucher format, or cBRSKI
    variant.
 
@@ -2026,8 +2026,8 @@ Internet-Draft         Constrained BRSKI (cBRSKI)           January 2025
 
    This section details how discovery of a Join Proxy is done by the
    Pledge in specific deployment scenarios.  Future work such as
-   [I-D.eckert-anima-brski-discovery] may define more details on
-   discovery operations in the specific deployments listed here.
+   [I-D.ietf-anima-brski-discovery] may define more details on discovery
+   operations in the specific deployments listed here.
 
 11.1.  6TiSCH Deployments
 
@@ -3002,18 +3002,18 @@ Internet-Draft         Constrained BRSKI (cBRSKI)           January 2025
               group", 11 January 2017,
               <https://www.iana.org/assignments/cose/cose.xhtml>.
 
-   [I-D.eckert-anima-brski-discovery]
-              Eckert, T. T., von Oheimb, D., and E. Dijk, "Discovery for
-              BRSKI variations", Work in Progress, Internet-Draft,
-              draft-eckert-anima-brski-discovery-01, 23 October 2023,
-              <https://datatracker.ietf.org/doc/html/draft-eckert-anima-
-              brski-discovery-01>.
-
    [I-D.ietf-6lo-mesh-link-establishment]
               Kelsey, R., "Mesh Link Establishment", Work in Progress,
               Internet-Draft, draft-ietf-6lo-mesh-link-establishment-00,
               1 December 2015, <https://datatracker.ietf.org/doc/html/
               draft-ietf-6lo-mesh-link-establishment-00>.
+
+   [I-D.ietf-anima-brski-discovery]
+              Eckert, T. T. and E. Dijk, "BRSKI discovery and
+              variations", Work in Progress, Internet-Draft, draft-ietf-
+              anima-brski-discovery-05, 21 October 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-anima-
+              brski-discovery-05>.
 
    [I-D.ietf-anima-constrained-join-proxy]
               Richardson, M., Van der Stok, P., and P. Kampanakis, "Join
