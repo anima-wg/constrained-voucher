@@ -1,4 +1,5 @@
 .refcache
+/.idea
 ietf-cwt-voucher-tree.txt
 ietf-cwt-voucher-request-tree.txt
 ietf-cwt-voucher@*.yang
@@ -8,4 +9,4 @@ ietf-cwt-voucher@*.yang
 yang
 constrained-voucher.xml
 constrained-voucher.html
-examples/script-cose-examples/output
+/examples/script-cose-examples/output
