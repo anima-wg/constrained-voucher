@@ -1459,6 +1459,9 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 </t>
 
 # Changelog
+-27:
+    Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
+
 -26:
     Updated I-D/RFC references to newer versions.
     Corrected "sub-registry" term to official "registry", in IANA section.
