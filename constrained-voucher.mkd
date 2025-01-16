@@ -413,7 +413,7 @@ The Pledge MAY also indicate in the request the desired format of the (voucher) 
 If the Accept Option is omitted in the request, the response format follows from the request payload format (which is 836).
 
 Note that this specification allows for application/voucher+cose format requests and vouchers to be transported over HTTPS,
-as well as for voucher-cms+json and other formats yet to be defined over CoAP.
+as well as for application/voucher-cms+json and other formats yet to be defined over CoAP.
 The burden for this flexibility is placed upon the Registrar.
 A Pledge on constrained hardware is expected to support a single format only.
 
@@ -430,8 +430,8 @@ These are two CoAP POST requests made the by Pledge at two key steps in the proc
 This document extends this with an additional CBOR format, derived using the CDDL rules in {{RFC8610}}.
 
 The new CBOR telemetry format has CoAP content-format 60 ("application/cbor") and MUST be supported by the Registrar for both the /vs and /es resources.
-The existing JSON format has CoAP content-format 50 ("application/json") and also MUST be supported by the Registrar.
-A Pledge MUST support at least the new CBOR format and it MAY support the JSON format.
+The existing JSON format has CoAP content-format 50 ("application/json") and MAY also be supported by the Registrar.
+A Pledge MUST use the new CBOR format to send telemetry messages.
 
 
 ### CoAP Resources Table
@@ -1158,7 +1158,7 @@ A manufacturer of such device models may wish to have code only for the use of t
 including the IEEE 802.11 radio. For this radio, the software stack to support HTTP/TLS may be already integrated into the radio module hence it is
 attractive for the manufacturer to reuse this. This type of approach is supported by this document.
 In the case that HTTPS is used, the regular long {{RFC8995}} resource names are used, together with the new "application/voucher+cose" media type described in this document.
-For status telemetry requests, the Pledge may use either one or both of the formats defined in {{telemetry}}. A Registrar MUST support both formats.
+For status telemetry requests, the format and requirements defined in {{telemetry}} remain unchanged.
 
 Other combinations are possible, but they are not enumerated here.
 New work such as {{I-D.ietf-anima-jws-voucher}} provides new formats that may be usable over a number of different transports.
@@ -1459,6 +1459,9 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 </t>
 
 # Changelog
+-27:
+    Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
+
 -26:
     Updated I-D/RFC references to newer versions.
     Corrected "sub-registry" term to official "registry", in IANA section.
