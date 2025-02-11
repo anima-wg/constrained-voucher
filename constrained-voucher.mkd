@@ -833,7 +833,7 @@ Some hardware can accelerate only some algorithms with specific curves, other ha
 
 In general, the Pledge is expected to support only a single algorithm, while the Registrar, usually not constrained, is expected to support a wide variety of algorithms: both legacy ones and up-and-coming ones via regular software updates.
 
-An example of the supported COSE_Sign1 object structure containing a Pledge Voucher Request (PVR) is shown in {{fig-cose}}.
+An example of the supported COSE_Sign1 object structure containing a Pledge Voucher Request (PVR) is shown below.
 
 ~~~~ cbor-diag
 18(                   / tag for COSE_Sign1                       /
@@ -846,15 +846,14 @@ An example of the supported COSE_Sign1 object structure containing a Pledge Vouc
  ]
 )
 ~~~~
-{: #fig-cose title='COSE_Sign1 PVR example in CBOR diagnostic notation' align="left"}
 
-The {{COSE-registry}} specifies the integers/encoding for the "alg" field in {{fig-cose}}. The "alg"
+The {{COSE-registry}} specifies the integers/encoding for the "alg" field. The "alg"
 field restricts the key usage for verification of this COSE object to a particular cryptographic algorithm.
 
 ### Signing of Registrar Voucher Request (RVR)
 
 A Registrar MUST include a COSE "x5bag" structure in the RVR as explained in {{registrar-identity}}.
-{{fig-cose-rvr}} shows an example Registrar Voucher Request (RVR) that includes the x5bag as an unprotected
+Below, an example Registrar Voucher Request (RVR) is shown that includes the x5bag as an unprotected
 header parameter (32). The bag contains two certificates in this case.
 
 ~~~~ cbor-diag
@@ -870,7 +869,6 @@ header parameter (32). The bag contains two certificates in this case.
  ]
 )
 ~~~~
-{: #fig-cose-rvr title='COSE_Sign1 RVR example in CBOR diagnostic notation' align="left"}
 
 A "kid" (key ID) field is optionally present in the unprotected COSE header parameters map of a COSE object.
 If present, it identifies the public key of the key pair that was used to sign the
@@ -904,7 +902,7 @@ present, or it may be a hash of the public key, or anything else the Pledge vend
 A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA.
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
 
-The example in {{fig-cose-pvr-kid}} shows a PVR with the "kid" parameter present.
+The example below shows a PVR with the "kid" parameter present.
 
 ~~~~ cbor-diag
 18(                    / tag for COSE_Sign1                      /
@@ -919,8 +917,6 @@ The example in {{fig-cose-pvr-kid}} shows a PVR with the "kid" parameter present
  ]
 )
 ~~~~
-{: #fig-cose-pvr-kid title='COSE_Sign1 PVR example with "kid" field present' align="left"}
-
 
 The Pledge SHOULD NOT use the "x5bag" structure in the PVR.  A
 Registrar that processes a PVR with an "x5bag" structure MUST ignore
@@ -956,7 +952,7 @@ In BRSKI CMS signed vouchers {{RFC8995}}, the CMS structure has a place for such
 In the COSE-signed constrained vouchers described in this document, the x5bag attribute {{RFC9360}} is used to contain the needed certificates to form the chain.
 A Registrar MUST NOT remove the x5bag attribute from the unprotected COSE header parameters when sending the voucher back to the Pledge.
 
-In {{fig-cose-voucher}} an example is shown of a COSE-signed voucher. This example shows the common case where the "x5bag" attribute is not used.
+Below, an example is shown of a COSE-signed voucher. This example shows the common case where the "x5bag" attribute is not used.
 
 ~~~~ cbor-diag
 18(                    / tag for COSE_Sign1                        /
@@ -969,7 +965,6 @@ In {{fig-cose-voucher}} an example is shown of a COSE-signed voucher. This examp
  ]
 )
 ~~~~
-{: #fig-cose-voucher title='COSE_Sign1 signed voucher in CBOR diagnostic notation' align="left"}
 
 In {{voucher-example}} a further example of a signed voucher is shown.
 
@@ -1461,6 +1456,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 # Changelog
 -27:
     Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
+    Removed figure captions from code examples for consistency (#315).
 
 -26:
     Updated I-D/RFC references to newer versions.
