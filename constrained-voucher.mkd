@@ -1286,18 +1286,20 @@ These may be look-alike parts created in a different factory, or parts which are
 The use of a manufacturer-signed IDevID certificate provides for discovery of the pedigree of each part, and this often justifies the cost of the security measures associated with storing the private key.
 
 
-## Security of CoAP and UDP Protocols
+## Security of the BRSKI-MASA Protocol {#security-masa-coaps}
 
-{{brski-masa-protocol-format}} explains that no CoAPS version of the BRSKI-MASA protocol is proposed.
+{{brski-masa-protocol-format}} explains why no CoAPS version of the BRSKI-MASA protocol is specified.
 The connection from the Registrar to the MASA continues to be HTTPS as in {{RFC8995}}.
-This has been done to simplify the MASA deployment for the manufacturer, because no new protocol needs to be enabled on the server.
 
-The use of UDP protocols across the open Internet is sometimes fraught with security challenges.
+This choice enables the BRSKI-MASA protocol, which operates over the open Internet, to be secured using standard
+solutions that are commonly used for HTTPS over the Internet.
+The use of UDP protocols across the Internet is sometimes fraught with security challenges.
 Denial-of-service attacks against UDP based protocols are trivial as there is no three-way handshake as done for TCP.
 The three-way handshake of TCP guarantees that the node sending the connection request is reachable using the origin IP address.
 While DTLS contains an option to do a stateless challenge -- a process actually stronger than that done by TCP -- it is not yet common for this mechanism to be available in hardware at multigigabit speeds.
-It is for this reason that this document defines using HTTPS for the Registrar to MASA connection.
 
+Also, in many enterprise networks outgoing UDP connections can be treated as suspicious, which could effectively block CoAP connections for some firewall configurations.
+Reducing the complexity of MASA (i.e. less protocols supported) also reduces its potential attack surface, which is relevant since the MASA is 24/7 exposed on the Internet and accepting (untrusted) incoming connections.
 
 ## Registrar Certificate May Be Self-signed
 
@@ -1317,17 +1319,6 @@ of using the RPK alternatives is negligible.
 
 When a Registrar sees a PVR that uses one of proximity-registrar-pubk or proximity-registrar-pubk-sha256 fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
 Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}.
-
-## MASA Support of CoAPS {#security-masa-coaps}
-
-The use of CoAP for the BRSKI-MASA connection is not in scope of the current document.
-The following security considerations have led to this choice of scope:
-
-* the technology and experience to build secure Internet-scale HTTPS responders (which the MASA is) is common, while the experience in doing the same for CoAP is much less common.
-
-* in many enterprise networks, outgoing UDP connections are often treated as suspicious, which could effectively block CoAP connections for some firewall configurations.
-
-* reducing the complexity of MASA (i.e. less protocols supported) would also reduce its potential attack surface, which is relevant since the MASA is 24/7 exposed on the Internet and accepting (untrusted) incoming connections.
 
 
 # IANA Considerations {#iana}
