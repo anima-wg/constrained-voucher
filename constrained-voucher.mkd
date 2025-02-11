@@ -69,11 +69,11 @@ normative:
   RFC9360:
   RFC9525:
   ieee802-1AR:
-    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
-    title: "IEEE 802.1AR Secure Device Identifier"
+    target: "https://standards.ieee.org/ieee/802.1AR/6995/"
+    title: "IEEE 802.1AR Secure Device Identity"
     author:
-      ins: "IEEE Standard"
-    date: 2009
+    rc: "IEEE Standards Association"
+    date: 2018
 
 informative:
   RFC4443:
@@ -1461,6 +1461,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 # Changelog
 -27:
     Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
+    Update IEEE 802.1AR reference to 2018 version (#313).
 
 -26:
     Updated I-D/RFC references to newer versions.
