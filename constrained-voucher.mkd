@@ -69,11 +69,11 @@ normative:
   RFC9360:
   RFC9525:
   ieee802-1AR:
-    target: "http://standards.ieee.org/findstds/standard/802.1AR-2009.html"
-    title: "IEEE 802.1AR Secure Device Identifier"
+    target: "https://standards.ieee.org/ieee/802.1AR/6995/"
+    title: "IEEE 802.1AR Secure Device Identity"
     author:
-      ins: "IEEE Standard"
-    date: 2009
+    rc: "IEEE Standards Association"
+    date: 2018
 
 informative:
   RFC4443:
@@ -178,13 +178,17 @@ The following terms from {{RFC7030}} are used identically as in that document:
 Explicit Trust Anchor (TA), Explicit TA database, Third-party TA.
 
 The following terms from {{RFC7252}} are used identically as in that document:
-Confirmable (CON), Acknowledgement (ACK), Endpoint, ETag, Client, Server, Piggybacked Response, Resource Discovery, Content-Format.
+Confirmable (CON), Acknowledgement (ACK), Endpoint, ETag, Client, Server, Piggybacked Response, resource, Resource Discovery, Content-Format.
 
 The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the voucher request between the Pledge and the Registrar.
 
 The term Registrar Voucher Request, or acronym RVR, is introduced to refer to the voucher request between the Registrar and the MASA.
 
 This document uses the term "PKIX Certificate" or "certificate" to refer to the X.509v3 profile described in {{RFC5280}}.
+
+The term "base resource" is defined as a CoAP resource that can be used as a base
+to append an additional path segment to, where this segment is a short resource name ('short-name') as defined in
+{{resource-discovery}} and {{brski-est-short-uri-table}}.
 
 In code examples, the string "\<CODE BEGINS\>" denotes the start of a code example and "\<CODE ENDS\>" the end of the code example.
 
@@ -269,7 +273,9 @@ This document Updates {{RFC9148}} because it:
 
 * adds enrollment status telemetry to the certificate renewal procedure ({{est-reenrollment}}),
 
-* adds support for the media type "application/multipart-core" for the CA certificates (/crts) resource ({{multipart-core}}).
+* adds support for the media type "application/multipart-core" for the CA certificates (/crts) resource ({{multipart-core}}),
+
+* defines a resource type (rt) attribute value "ace.est" for the EST-coaps base resource ({{iana-core-rt}}).
 
 
 # BRSKI-EST Protocol {#brski-est}
@@ -374,7 +380,7 @@ used to offer the cBRSKI proxy functionality.
 
 \<short-name\> is the short resource name for the cBRSKI and EST-coaps resources. For EST-coaps, {{Section 5.1 of RFC9148}} defines the CoAP \<short-name\> resource names. 
 For cBRSKI, this document defines the short resource names based on the {{RFC8995}} long HTTP resource names.
-See {{brski-est-short-uri}} for a summary of these resource names.
+See {{brski-est-short-uri-table}} for a summary of these resource names.
 
 {{discovery-considerations}} details how the Pledge discovers a Join Proxy link-local address and port in different deployment scenarios.
 
@@ -440,7 +446,7 @@ This document inherits EST-coaps {{RFC9148}} functions:
 specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certification Authority certificates request (/crts).
 Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST-coaps server.
 
-{{brski-est-short-uri}} summarizes the resources used in cBRSKI. 
+{{brski-est-short-uri-table}} summarizes the resources used in cBRSKI.
 It includes both the short-name cBRSKI resources and the EST-coaps resources.
 
 <!-- Table order can be changed -->
@@ -456,7 +462,7 @@ It includes both the short-name cBRSKI resources and the EST-coaps resources.
 | /simplereenroll  | /sren   | est    | MUST
 | /serverkeygen    | /skg    | est    | MAY 
 | /serverkeygen    | /skc    | est    | MAY 
-{: #brski-est-short-uri title='BRSKI/EST resource name mapping to cBRSKI/EST-coaps short resource name'}
+{: #brski-est-short-uri-table title='BRSKI/EST resource name mapping to cBRSKI/EST-coaps short resource name'}
 
 
 ## CoAP Responses {#brski-coap-responses}
@@ -1327,22 +1333,28 @@ The following security considerations have led to this choice of scope:
 
 # IANA Considerations {#iana}
 
-## Resource Type Link Target Attribute Values Registry
+## Resource Type Link Target Attribute Values Registry {#iana-core-rt}
 
 Additions to the "Resource Type (rt=) Link Target Attribute Values" IANA registry, within the "CoRE Parameters"
 registry group are specified below.
 
 Reference: \[This RFC\]
 
-Attribute | Description
+Value    | Description
 |-|-|
-brski    | Base URI path of Bootstrapping Remote Secure Key Infrastructure (cBRSKI) resources
+brski    | Base resource of all Bootstrapping Remote Secure Key Infrastructure (cBRSKI) resources
 brski.rv | cBRSKI request voucher resource
 brski.vs | cBRSKI voucher status telemetry resource
 brski.es | cBRSKI enrollment status telemetry resource
-{: #iana-core-rt-values title='Resource Type (rt) link target attribute values for cBRSKI'}
+ace.est  | Base resource of all Enrollment over Secure Transport CoAPS (EST-coaps) resources
+{: #iana-core-rt-values title='Resource Type (rt) link target attribute values for cBRSKI and EST-coaps'}
 
-## Media Types Registry
+Note that the resource type "brski" identifies a base resource in a resource hierarchy on a CoAP server, where its
+sub-resources each have one of the resource types "brski.*" as defined by this specification.
+Similarly, the resource type "ace.est" identifies a base resource in a resource hierarchy, where its
+sub-resources each have one of the resource types "ace.est.*" as defined by {{RFC9148}}.
+
+## Media Types Registry {#iana-media-types}
 
 This section registers the media type "application/voucher+cose" in the "Media Types" IANA registry.
 This media type is used to indicate that the content is a CBOR voucher or voucher request
@@ -1396,7 +1408,7 @@ In case the "URI" resource is only used between Registrar and MASA, the value "N
 
 The contents of the registry including the new column are as follows:
 
-| URI    | Short URI | Description | Reference
+| URI    | Short URI | Description                                                     | Reference
 requestvoucher | rv  | Request voucher: Pledge to Registrar, and Registrar to MASA     | [RFC8995], \[This RFC\]
 voucher_status | vs  | Voucher status telemetry: Pledge to Registrar                   | [RFC8995], \[This RFC\]
 requestauditlog| N/A | Request audit log: Registrar to MASA                            | [RFC8995]
@@ -1457,6 +1469,8 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 -27:
     Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
     Removed figure captions from code examples for consistency (#315).
+    Add base resource type (rt) for "ace.est" and related terminology (#314).
+    Update IEEE 802.1AR reference to 2018 version (#313).
 
 -26:
     Updated I-D/RFC references to newer versions.
@@ -1923,8 +1937,8 @@ A Pledge that wishes to discover the available cBRSKI onboarding options/formats
 operation using CoAP discovery per {{Section 7 of RFC7252}} and {{Section 4 of RFC6690}}. It first sends a CoAP discovery query to the Registrar over the secured DTLS connection.
 The Registrar then responds with a CoRE Link Format payload containing the requested resources, if any.
 
-For example, if the Registrar supports a cBRSKI base URI path "/b" in addition to the longer "/.well-known/brski" base
-URI path, and supports only the voucher format "application/voucher+cose" (836), and status reporting in both
+For example, if the Registrar supports a cBRSKI base resource "/b" in addition to the longer "/.well-known/brski" base
+resource, and supports only the voucher format "application/voucher+cose" (836), and status reporting in both
 CBOR (60) and JSON (50) formats, a CoAP resource discovery request and response may look as follows:
 
 ~~~~
@@ -1940,12 +1954,12 @@ CBOR (60) and JSON (50) formats, a CoAP resource discovery request and response 
 ~~~~
 
 In this case, the Registrar returns only the shorter URI paths matching the query filter, which are located under the
-"/b" base URI path. The "/.well-known/brski" based URI paths are not returned, as these are assumed to be well-known
+"/b" base resource. The "/.well-known/brski" based URI paths are not returned, as these are assumed to be well-known
 (i.e. mandatory to support for a Registrar that offers this functionality under "/b".)
 
 The Registrar is however under no obligation to provide the shorter URLs under "/b", and may respond to this query with
 only the "/.well-known/brski/\<short-name\>" resources for the short names as defined in
-{{brski-est-short-uri}}, if these resources are not hosted anywhere else. This case is shown in the below interaction:
+{{brski-est-short-uri-table}}, if these resources are not hosted anywhere else. This case is shown in the below interaction:
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
@@ -1986,7 +2000,7 @@ resources (rt=brski, resource /b in earlier examples) and no others.
 (So, the query is "rt=brski", without the wildcard character.)
 This is shown in the below example.
 The Pledge in this case requests only the cBRSKI base resource of type rt=brski to check if cBRSKI is supported by the
-Registrar and if a shorter base URI path is supported or not.
+Registrar and if a shorter-length cBRSKI base resource path is supported or not.
 In this case, the Pledge is not interested to check what voucher request formats, or status telemetry formats --
 other than the mandatory default formats -- are supported.
 The compact response below then shows that the Registrar indeed supports a cBRSKI resource at /b:
