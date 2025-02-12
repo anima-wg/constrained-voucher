@@ -11,6 +11,7 @@ to the 'examples/cose-example' directory from where they will be included in the
 ## Required Tools
 
 ```
+faketime
 make
 cbor2diag.rb  (in Ruby, install with 'gem install cbor-diag' - see https://github.com/cabo/cbor-diag )
 xxd
