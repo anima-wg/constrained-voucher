@@ -1451,6 +1451,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 
 # Changelog
 -27:
+    Merged the very similar BRSKI-MASA security considerations sections (#312).
     Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
 
 -26:
