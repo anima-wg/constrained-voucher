@@ -191,6 +191,7 @@ to append an additional path segment to, where this segment is a short resource 
 {{resource-discovery}} and {{brski-est-short-uri-table}}.
 
 In code examples, the string "\<CODE BEGINS\>" denotes the start of a code example and "\<CODE ENDS\>" the end of the code example.
+"lf added" means that extra linefeed characters were added to an example to make lines fit in this document.
 
 The ellipsis ("...") in a CBOR diagnostic notation byte string denotes a further sequence of bytes that is not shown for brevity.
 This notation is defined in {{I-D.ietf-cbor-edn-literals}}.
@@ -1504,6 +1505,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Removed figure captions from code examples for consistency (#315).
     Add base resource type (rt) for "ace.est" and related terminology (#314).
     Update IEEE 802.1AR reference to 2018 version (#313).
+    Editorial updates.
 
 -26:
     Updated I-D/RFC references to newer versions.
