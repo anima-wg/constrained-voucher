@@ -191,6 +191,7 @@ to append an additional path segment to, where this segment is a short resource 
 {{resource-discovery}} and {{brski-est-short-uri-table}}.
 
 In code examples, the string "\<CODE BEGINS\>" denotes the start of a code example and "\<CODE ENDS\>" the end of the code example.
+"lf added" means that extra linefeed characters were added to an example to make lines fit in this document.
 
 The ellipsis ("...") in a CBOR diagnostic notation byte string denotes a further sequence of bytes that is not shown for brevity.
 This notation is defined in {{I-D.ietf-cbor-edn-literals}}.
@@ -240,7 +241,7 @@ C509 certificates ({{I-D.ietf-cose-cbor-encoded-cert}}) may provide data size sa
 The BRSKI architecture mandates that the MASA be aware of the capabilities of the Pledge.
 This is not a drawback as a Pledge is constructed by a manufacturer which also arranges for the MASA to be aware of the inventory of devices.
 The MASA therefore knows if the Pledge supports PKIX operations, or if it is limited to RPK operations only.
-Based upon this, the MASA can select which attributes to use in the voucher data for certain operations, like the pinning of the Registrar or domain identity.
+Based upon this, the MASA can select which attributes to use in the voucher for certain operations, like the pinning of the Registrar or domain identity.
 
 
 # Updates to RFC 8995 and RFC 9148
@@ -572,6 +573,11 @@ Knowing the overall progress of the data transfer may be helpful in certain case
 
 ## Registrar Extensions {#brski-extensions-registrar}
 
+Before a Registrar forwards a COSE-signed voucher from MASA to the Pledge, it MUST remove any "x5bag" or "x5chain"
+unprotected COSE header attributes (which are defined in {{RFC9360}}).
+The contents of these unprotected attributes are solely for validation/logging use by the Registrar.
+Removing these attributes reduces the voucher size on the constrained network path to the Pledge.
+
 The content-format 60 ("application/cbor") MUST be supported by the Registrar for the /vs and /es resources.
 
 Content-format 836 ("application/voucher+cose") MUST be supported by the Registrar for the /rv resource for CoAP POST requests, both as request payload and as response payload.
@@ -668,8 +674,10 @@ certificates in the voucher request (CMS) signing structure that participate in 
 
 The MASA is expected to evaluate the certificates included in an RVR, forming them into a chain with the Registrar's
 (signing) identity on one end.
-Then, it pins a certificate selected from this chain.
-For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the voucher request has been signed by "Registrar", its signing structure includes two additional CA certificates.
+Then, it pins a certificate selected from this chain according to its pinning policy ({{masa-pinning-policy}}).
+
+For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the RVR has been signed by "domain Registrar",
+the RVR includes the chain formed by the domain Registrar EE certificate, the domain Sub-CA certificate, and the domain CA trust anchor certificate.
 The arrows in the figure indicate the issuing of a certificate, i.e. author of (1) issued (2) and author of (2) issued (3).
 
 ~~~~ aasvg
@@ -678,22 +686,19 @@ The arrows in the figure indicate the issuing of a certificate, i.e. author of (
 {: #fig-twoca title='Two-Level CA PKI'}
 
 When the Registrar is using a COSE-signed RVR, the COSE_Sign1 object contains a protected and an unprotected header.
-The Registrar MUST place all the certificates needed to validate the signature chain from the Registrar on the RVR in an
- "x5bag" attribute in the unprotected header as defined in {{RFC9360}}.
-
-The "x5bag" attribute is very important as it provides the required signals from the Registrar to control what identity is pinned in the resulting voucher.
-This is explained in the next section.
+The Registrar MUST place all the certificates needed by MASA to validate the signature chain for its RVR in an
+ "x5bag" attribute in either the protected or the unprotected header as defined in {{Section 2 of RFC9360}}.
 
 ## MASA Pinning Policy {#masa-pinning-policy}
 
-The MASA, having assembled and verified the chain in the signing structure of the RVR needs to select a certificate to pin.
+The MASA, having assembled and verified the certificate chain that signed the RVR then needs to select a certificate to pin.
 (For the case that only the Registrar's End-Entity certificate is included, only this certificate can be selected and this section does not apply.)
 The BRSKI policy for pinning by the MASA as described in {{Section 5.5.2 of RFC8995}} leaves much flexibility to the manufacturer.
 
 The present document adds the following rules to the MASA pinning policy to reduce the network load on the constrained network side:
 
-1. for a voucher containing a nonce, it SHOULD select the most specific (lowest-level) CA certificate in the chain.
-2. for a nonceless voucher, it SHOULD select the least-specific (highest-level) CA certificate in the chain that is allowed under the MASA's policy for this specific domain.
+1. for a voucher containing a nonce, it SHOULD pin the most specific (lowest-level) CA certificate in the chain.
+2. for a nonceless voucher, it SHOULD pin the least-specific (highest-level) CA certificate in the chain that is allowed under the MASA's policy for this specific domain.
 
 The rationale for 1. is that in case of a voucher with nonce, the voucher is valid only in scope of the present DTLS connection between Pledge and Registrar anyway, so there is no
 benefit to pin a higher-level CA. By pinning the most specific CA the constrained Pledge can validate its DTLS connection using less crypto operations. The
@@ -702,10 +707,8 @@ can in common cases be re-used as a Domain CA trust anchor during the EST enroll
 
 The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of {{RFC8995}}).
 
-Referring to {{fig-twoca}} of a domain with a two-level certification authority, the most specific CA ("Sub-CA") is the
+Referring to the example of {{fig-twoca}} of a domain with a two-level certification authority, the most specific CA ("Sub-CA") is the
 identity that is pinned by MASA in a nonced voucher.
-A Registrar that wished to have only the Registrar's End-Entity certificate pinned would omit the "domain CA" and
-"Sub-CA" certificates from the RVR.
 
 In case of a nonceless voucher, depending on the trust level, the MASA pins the "Registrar" certificate (low trust in customer), or the "Sub-CA" certificate (in case of
 medium trust, implying that any Registrar of that sub-domain is acceptable), or even the "domain CA" certificate (in case of high trust in the customer, and possibly a pre-agreed need of the
@@ -716,15 +719,15 @@ customer to obtain flexible long-lived vouchers).
 Specifically for the most-constrained use cases, the pinning of the raw public key (RPK) of the Registrar is also supported in the constrained voucher, instead of a PKIX certificate.
 This is used by the RPK variant of cBRSKI described in {{rpk-considerations}}, but it can also be used in the default cBRSKI flow as a means to reduce voucher size.
 
-For both cases, if an RPK is pinned, it MUST be the RPK of the Registrar.
+For both cases, if an RPK is pinned, it MUST be the RPK of the Registrar, which equals the public key of the Registrar's EE certificate.
 
 When the Pledge is known by MASA to support the RPK variant only, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
 or "pinned-domain-pubk-sha256" field of the voucher data.
 This is described in more detail in {{RFC8366bis}} and {{rpk-considerations}}.
 
-When the Pledge is known by MASA to support PKIX certificates, the "pinned-domain-cert" field present in a voucher normally pins a domain certificate.
-That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA of the Registrar's domain as specified in {{masa-pinning-policy}}.
-However, if the Pledge is known by MASA to also support RPK pinning and the MASA intends to pin the Registrar in the voucher (and not the CA), then MASA SHOULD pin the 
+When the Pledge is known by MASA to support PKIX operations, the "pinned-domain-cert" field present in a voucher normally pins a domain certificate.
+That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA, as specified in {{masa-pinning-policy}}.
+However, if the Pledge is known by MASA to also support RPK pinning and the MASA policy intends to pin the Registrar in the voucher (and not a CA), then MASA SHOULD pin the
 RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
 
 ~~~~ aasvg
@@ -770,8 +773,8 @@ proximity-registrar-pubk and proximity-registrar-pubk-sha256.
 One of these is optionally used to replace the proximity-registrar-cert field, for a smaller voucher request data size -
 useful for the most constrained cases.
 
-The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256. One of these is optionally
-used instead of the pinned-domain-cert field, for a smaller voucher data size.
+The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256 to pin an RPK.
+One of these is optionally used instead of the pinned-domain-cert field, for a smaller voucher data size.
 
 ## Example Artifacts
 
@@ -835,7 +838,7 @@ Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware su
 This is keytype EDDSA (-8) from Table 2 of {{RFC9053}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
 
 A transition towards EdDSA is occurring in the industry.
-Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any eliptic curve algorithm.
+Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any elliptic curve algorithm.
 
 In general, the Pledge is expected to support only a single algorithm, while the Registrar, usually not constrained, is expected to support a wide variety of algorithms: both legacy ones and up-and-coming ones via regular software updates.
 
@@ -859,7 +862,7 @@ field restricts the key usage for verification of this COSE object to a particul
 ### Signing of Registrar Voucher Request (RVR)
 
 A Registrar MUST include a COSE "x5bag" structure in the RVR as explained in {{registrar-identity}}.
-Below, an example Registrar Voucher Request (RVR) is shown that includes the x5bag as an unprotected
+Below, an example Registrar Voucher Request (RVR) is shown that includes the "x5bag" unprotected
 header parameter (32). The bag contains two certificates in this case.
 
 ~~~~ cbor-diag
@@ -867,8 +870,8 @@ header parameter (32). The bag contains two certificates in this case.
  [
    h'A10126',          / protected COSE header encoding: {1: -7} /
                        /            which means { "alg": ES256 } /
-   {
-     32: [h'308202' ... '20AE', h'308201' ... '8CFF']  / x5bag   /
+   {                   / unprotected COSE header/
+     32: [h'308202' ... '20AE', h'308201' ... '8CFF']    / x5bag /
    },
    h'A178' ... '7FED', / RVR payload wrapped in CBOR byte string /
    h'E1B7' ... '2925'  / RVR binary Sign1 signature              /
@@ -876,14 +879,14 @@ header parameter (32). The bag contains two certificates in this case.
 )
 ~~~~
 
-A "kid" (key ID) field is optionally present in the unprotected COSE header parameters map of a COSE object.
+A "kid" (key ID) field is OPTIONAL in the unprotected COSE header parameters map of a COSE object.
 If present, it identifies the public key of the key pair that was used to sign the
 COSE message. The value of the key identifier "kid" parameter may be in any format agreed between signer and verifier.
 Usually a hash of the public key is used to identify the public key; but the choice of key identifier method is
 vendor-specific.
 
 By default, a Registrar does not include a "kid" parameter in the RVR since the signing key
-is already identified by the signing certificates included in the COSE "x5bag" structure.
+is already identified by the signing certificates chain included in the COSE "x5bag" structure.
 A Registrar nevertheless MAY use a "kid" parameter in its RVR to identify its signing key/identity.
 
 The method of generating such "kid" value is vendor-specific and SHOULD be configurable in the Registrar to
@@ -896,19 +899,19 @@ In {{rvr-example}} a further example of a signed RVR is shown.
 
 ### Signing of Pledge Voucher Request (PVR)
 
-Like in the RVR, a "kid" (key ID) field is also optionally present in the PVR. It can be used to identify the signing key/identity to
-the MASA.
+Like in the RVR, a "kid" (key ID) field is also OPTIONAL in the PVR. It can be used to identify the signing key/identity
+to the MASA.
 
 A Pledge by default SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified
 by the Pledge's unique serial number that is included in the PVR and (by the Registrar) in the RVR. This achieves the smallest possible
-PVR data size while still enabling the MASA to verify the PVR.
+PVR data size while still enabling the MASA to fully verify the PVR.
 Still, when required the Pledge MAY use a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur
 for example if a Pledge has multiple IDevID identities. The "kid" parameter in this case may be an integer byte identifying one out of N identities
 present, or it may be a hash of the public key, or anything else the Pledge vendor decides.
 A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA.
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
 
-The example below shows a PVR with the "kid" parameter present.
+The example below shows a PVR with the "kid" parameter present as an unprotected header parameter.
 
 ~~~~ cbor-diag
 18(                    / tag for COSE_Sign1                      /
@@ -924,48 +927,69 @@ The example below shows a PVR with the "kid" parameter present.
 )
 ~~~~
 
-The Pledge SHOULD NOT use the "x5bag" structure in the PVR.  A
-Registrar that processes a PVR with an "x5bag" structure MUST ignore
+The Pledge SHOULD NOT use the "x5bag" or "x5chain" COSE header parameters in the PVR.
+A Registrar that processes a PVR with such a structure MUST ignore
 it, and MUST use only the TLS Client Certificate extension for
 authentication of the Pledge.
 
-A situation where the Pledge MAY use the x5bag structure is for communication
+A situation where the Pledge MAY use the "x5bag" or "x5chain" structure is for communication
 of certificate chains to the MASA.  This would arise in some vendor-
 specific situations involving outsourcing of MASA functionality, or
 rekeying of the IDevID certification authority.
 
 In {{pvr-example}} a further example of a signed PVR is shown.
 
-### Signing of Voucher by MASA
+### Signing of Voucher by MASA {#sign-voucher-masa}
 
 The MASA SHOULD NOT use a "kid" parameter in the voucher response, because the MASA's signing
 key is already known to the Pledge. Still, where needed the MASA MAY use
 a "kid" parameter in the voucher response to help the Pledge identify the right MASA public key
 to verify against. This can occur for example if a Pledge has multiple IDevID identities.
 
-The MASA SHOULD NOT include an x5bag attribute in the voucher response - the exception is if the MASA knows
-that the Pledge doesn't pre-store the signing public key and certificate, and thus the MASA needs to provide
-a cert or cert chain that will enable linking the signing identity to the pre-stored Trust Anchor (CA) in the Pledge.
-This approach is not recommended, because including certificates in the x5bag attribute will significantly increase the size of the voucher
-which impacts operations on constrained networks.
+The MASA SHOULD NOT include an "x5bag" or "x5chain" attribute in the protected header of the voucher response, because
+normally a Pledge already stores the required public key for validation of the signed voucher.
+The exception case is if the MASA knows that the Pledge doesn't pre-store the MASA's public key used for signing, and thus the MASA needs to provide
+a certificate or certificate chain that will enable linking the signing identity to a pre-stored Trust Anchor (CA) in the Pledge.
+This approach is not recommended, because including certificates in the protected "x5bag" or "x5chain" COSE header attributes will
+significantly increase the size of the voucher which impacts cBRSKI operation on constrained networks.
 
-If the MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} Section 2.3), and the Pledge
+For example, if the MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} Section 2.3), and the Pledge
 only pre-stores a manufacturer (root) CA identity in its Trust Store which is not the identity that signs the voucher,
 then a certificate chain needs to be included with the voucher in order for the Pledge to validate the MASA signing CA's signature
 by validating the chain up to the CA in its Trust Store.
+In BRSKI CMS signed vouchers {{RFC8995}}, the CMS structure has a place for such a certificate chain.
+In the COSE-signed vouchers described in this document, the "x5bag" attribute {{RFC9360}} placed in the
+COSE protected header parameters is used to contain the needed certificates for the Pledge to form the chain.
 
-In BRSKI CMS signed vouchers {{RFC8995}}, the CMS structure has a place for such certificates.
-In the COSE-signed constrained vouchers described in this document, the x5bag attribute {{RFC9360}} is used to contain the needed certificates to form the chain.
-A Registrar MUST NOT remove the x5bag attribute from the unprotected COSE header parameters when sending the voucher back to the Pledge.
+To signal the complete chain of the MASA's signing identity to the Registrar, the MASA MUST include the complete
+chain of signing certificates in an "x5bag" attribute in the unprotected header of the voucher.
+This allows the Registrar to optionally validate the voucher before forwarding it to the Pledge, or to validate it for
+logging purposes.
+There is no voucher size impact of including this certificate chain in an unprotected "x5bag" COSE header attribute for
+constrained networks, because the Registrar will remove this unprotected attribute prior to forwarding the voucher
+response to the Pledge, as defined in {{brski-extensions-registrar}}.
 
-Below, an example is shown of a COSE-signed voucher. This example shows the common case where the "x5bag" attribute is not used.
+Note that cBRSKI currently does not support signing the voucher with an RPK for which there is no corresponding
+certificate at all.
+If the MASA wants to sign a voucher with an RPK that is not part of any PKIX hierarchy, it creates
+a single self-signed "placeholder" root CA certificate that uses the designated RPK as the public key.
+This "placeholder" certificate is then included as the sole certificate in an unprotected "x5bag" header attribute,
+as defined in the previous paragraph.
+
+Below, an example is shown of a COSE-signed voucher as created by MASA.
+This example shows the common case where a protected "x5bag" (32) attribute is not used, while an unprotected
+"x5bag" (32) attribute is used to communicate the MASA's signature certificate chain to the Registrar.
+The bag contains two certificates in this example. One of these is the identity of the signer of the
+COSE_Sign1 object, whose signature is stored as the last CBOR array element in the below example.
 
 ~~~~ cbor-diag
 18(                    / tag for COSE_Sign1                        /
  [
    h'A10126',          / protected COSE header encoding: {1: -7}   /
                        /            which means { "alg": ES256 }   /
-   {},                 / unprotected COSE header parameters        /
+   {                   / unprotected COSE header parameters        /
+     32: [h'308202' ... '20AE', h'308201' ... '8CFF']      / x5bag /
+   },
    h'A119' ... '3839', / voucher payload wrapped in CBOR byte str  /
    h'2A2C' ... '7FBF'  / voucher binary Sign1 signature by MASA    /
  ]
@@ -973,6 +997,22 @@ Below, an example is shown of a COSE-signed voucher. This example shows the comm
 ~~~~
 
 In {{voucher-example}} a further example of a signed voucher is shown.
+
+### Optional Validation of Voucher by Registrar
+
+For a Registrar, validation of the voucher and/or the signature of the voucher is optional, per {{Section 5.6 of RFC8995}}.
+However, if a Registrar does perform the validation of the signature chain, communicated in the "x5bag" unprotected
+COSE header attribute (see {{sign-voucher-masa}})), it MUST validate that one of the below cases hold:
+
+1. The signature chain is a single self-signed root CA certificate with a correct signature; and the public key in
+   this certificate is also the public key that signed the voucher. This represents the case where a voucher has been
+   effectively signed with an RPK.
+2. The signature chain consists of one or more certificates that can be chained to a known (preconfigured) trust root
+   in the Registrar.
+
+The above validation elements are needed only for cases where (nonceless) vouchers are communicated over potentially
+unsecure channels to the Registrar. Since the "x5bag" header parameter is not protected by the voucher's COSE
+signature, it could have been modified in transit.
 
 # Extensions to Discovery {#discovery}
 
@@ -1182,7 +1222,7 @@ This section introduces a cBRSKI variant to further reduce the data volume and c
 The use of a raw public key (RPK) in the pinning process can significantly reduce the number of bytes sent over the wire and the number of round trips, and reduce the code footprint in a Pledge.
 But it comes with a few significant operational limitations.
 
-One simplification that comes with RPK use is that a Pledge can avoid doing PKIX certificate operations, such as certificate chain validation.
+One simplification that comes with RPK use is that a Pledge can avoid doing PKIX operations, such as certificate chain validation.
 
 ## DTLS Connection and Registrar Trust Anchor
 
@@ -1194,7 +1234,7 @@ As the TLSServerCertificate object is never verified directly by the Pledge, sen
 So instead of using a (TLSServer)Certificate of type X509 (see {{Section 4.4.2 of RFC8446}}),
 a RawPublicKey object (as defined by {{RFC7250}}) is used.
 
-A Registrar operating in a mixed environment can determine whether to send a Certificate or a Raw Public Key to the Pledge: this is signaled by the Pledge.
+A Registrar operating in a mixed environment can determine whether to send a PKIX certificate chain or a Raw Public Key to the Pledge: this is signaled by the Pledge.
 In the case the Pledge needs an RPK, it includes the server\_certificate\_type of RawPublicKey.
 This is shown in {{Section 5 of RFC7250}}.
 
@@ -1210,9 +1250,9 @@ This approach reduces the size of the PVR significantly, compared to including t
 
 ## The Voucher Response
 
-A returned voucher will have a pinned-domain-pubk field with the identical key as was found in the proximity-registrar-pubk field above, as well as being identical to the
+A returned voucher will have a `pinned-domain-pubk` field with the identical key as was found in the `proximity-registrar-pubk` field above, as well as being identical to the
 Registrar's RPK in the currently active DTLS connection.
-(Or alternatively the MASA may include the "pinned-domain-pubk-sha256" field if it knows the Pledge supports this field.)
+(Or alternatively the MASA may include the `pinned-domain-pubk-sha256` field if it knows the Pledge supports this field.)
 
 Validation of this key by the Pledge is what takes the DTLS connection out of the provisional state; see {{Section 5.6.2 of RFC8995}} for more details.
 
@@ -1458,11 +1498,14 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 
 # Changelog
 -27:
+    Clarify x5bag for storing signing chain and Registrar removes unprotected x5bag/x5chain (#324, #323, #230).
+    Clarify RPK use with "placeholder" certificate.
     Merged the very similar BRSKI-MASA security considerations sections (#312).
     Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
     Removed figure captions from code examples for consistency (#315).
     Add base resource type (rt) for "ace.est" and related terminology (#314).
     Update IEEE 802.1AR reference to 2018 version (#313).
+    Editorial updates.
 
 -26:
     Updated I-D/RFC references to newer versions.
