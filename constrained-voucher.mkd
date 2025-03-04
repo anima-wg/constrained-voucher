@@ -1424,6 +1424,7 @@ IANA has allocated ID 836 from the "CoAP Content-Formats" registry as shown belo
 
 | Media type             | Encoding  | ID   | Reference
 application/voucher+cose | -         | 836  | \[This RFC\]
+{: #coap-cf-registry-additions title='Additions to the IANA CoAP Content-Formats Registry'}
 
 ## Update to BRSKI Well-Known URIs Registry {#iana-brski-param-registry}
 
