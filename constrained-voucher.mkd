@@ -43,7 +43,6 @@ author:
 
 
 normative:
-#  RFC2119:
   RFC4193:
   RFC4210:
   RFC5280:
@@ -51,10 +50,10 @@ normative:
   RFC6347:
   RFC6690:
   RFC6762:
+  RFC7030:
   RFC7250:
   RFC7252:
   RFC7959:
-  RFC8366bis: I-D.ietf-anima-rfc8366bis
   RFC8446:
   RFC8449:
   RFC8610:
@@ -64,10 +63,13 @@ normative:
   RFC9031: minimal-security
   RFC9032:
   RFC9052:
+  RFC9053:
   RFC9147:
   RFC9148:
   RFC9360:
   RFC9525:
+  RFC8366bis: I-D.ietf-anima-rfc8366bis
+  I-D.ietf-anima-constrained-join-proxy:
   ieee802-1AR:
     target: "https://standards.ieee.org/ieee/802.1AR/6995/"
     title: "IEEE 802.1AR Secure Device Identity"
@@ -79,19 +81,17 @@ informative:
   RFC4443:
   RFC5652:
   RFC6282:
+  RFC6775:
   RFC6838:
-  RFC7030:
   RFC7228:
   RFC7950:
   RFC8366:
   RFC8990:
-  RFC9053:
   RFC9334:
   RFC9528:
   RFC9595:
   I-D.ietf-6lo-mesh-link-establishment:
   I-D.richardson-anima-masa-considerations:
-  I-D.ietf-anima-constrained-join-proxy:
   I-D.ietf-anima-jws-voucher:
   I-D.ietf-cbor-edn-literals:
   I-D.ietf-anima-brski-discovery:
@@ -146,7 +146,7 @@ The cBRSKI protocol uses the CoAP-based version of EST (EST-coaps from {{RFC9148
 cBRSKI is itself scalable to multiple resource levels through the definition of optional functions. {{appendix-pledge-profiles}} illustrates this.
 
 In BRSKI, the {{RFC8366}} voucher data is by default serialized to JSON with a signature in CMS {{RFC5652}}.
-This document uses the CBOR {{RFC8949}} voucher data serialization, as defined by {{RFC8366bis}}, and applies a new COSE {{RFC9052}} signature format as
+cBRSKI uses the CBOR {{RFC8949}} voucher data serialization, as defined by {{RFC8366bis}}, and applies a new COSE {{RFC9052}} signature format as
 defined in {{artifacts}}.
 
 This COSE-signed CBOR-encoded voucher is transported using both secured CoAP {{RFC7252}} and HTTPS.
@@ -184,7 +184,7 @@ The term Pledge Voucher Request, or acronym PVR, is introduced to refer to the v
 
 The term Registrar Voucher Request, or acronym RVR, is introduced to refer to the voucher request between the Registrar and the MASA.
 
-This document uses the term "PKIX Certificate" or "certificate" to refer to the X.509v3 profile described in {{RFC5280}}.
+The terms "PKIX Certificate" and "certificate" both refer to the X.509v3 profile described in {{RFC5280}}.
 
 The term "base resource" is defined as a CoAP resource that can be used as a base
 to append an additional path segment to, where this segment is a short resource name ('short-name') as defined in
@@ -314,7 +314,7 @@ as detailed in {{VR-COSE}}.
 DTLS includes a mechanism to fragment handshake messages. This is described in {{Section 4.4 of RFC9147}}.
 cBRSKI will often be used with a Join Proxy, described in {{joinproxy}}, which relays each DTLS message to the Registrar.
 A stateless Join Proxy will need some additional space to wrap each DTLS message inside a Join Proxy UDP message, while the wrapped result needs to fit in the maximum IPv6
-MTU guaranteed on 6LoWPAN networks, which is 1280 bytes.
+MTU guaranteed on 6LoWPAN {{RFC6282}} networks, which is 1280 bytes.
 
 For this reason it is RECOMMENDED that a PMTU of 1024 bytes be assumed for the DTLS handshake and appropriate DTLS fragmentation is used.
 It is unlikely that any ICMPv6 Packet Too Big indications ({{RFC4443}}) will be relayed by the Join Proxy back to the Pledge.
@@ -443,7 +443,7 @@ A Pledge MUST use the new CBOR format to send telemetry messages.
 
 ### CoAP Resources Table
 
-This document inherits EST-coaps {{RFC9148}} functions: 
+cBRSKI inherits EST-coaps {{RFC9148}} functions:
 specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certification Authority certificates request (/crts).
 Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST-coaps server.
 
@@ -835,7 +835,9 @@ This is the ES256 (-7) keytype from Table 1 of {{RFC9053}}.
 Support for curve secp256k1 is OPTIONAL.
 
 Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware support is available.
-This is keytype EDDSA (-8) from Table 2 of {{RFC9053}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
+This is keytype EDDSA (-8) from Table 2 of {{RFC9053}}.
+A "crv" parameter is necessary to specify the Curve, for example value Ed25519 (6) from Table 18 of {{RFC9053}}.
+The 'kty' field MUST be present, and it MUST be 'OKP' (Table 17 of {{RFC9053}}).
 
 A transition towards EdDSA is occurring in the industry.
 Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any elliptic curve algorithm.
@@ -958,7 +960,7 @@ only pre-stores a manufacturer (root) CA identity in its Trust Store which is no
 then a certificate chain needs to be included with the voucher in order for the Pledge to validate the MASA signing CA's signature
 by validating the chain up to the CA in its Trust Store.
 In BRSKI CMS signed vouchers {{RFC8995}}, the CMS structure has a place for such a certificate chain.
-In the COSE-signed vouchers described in this document, the "x5bag" attribute {{RFC9360}} placed in the
+In cBRSKI COSE-signed vouchers, the "x5bag" attribute {{RFC9360}} placed in the
 COSE protected header parameters is used to contain the needed certificates for the Pledge to form the chain.
 
 To signal the complete chain of the MASA's signing identity to the Registrar, the MASA MUST include the complete
@@ -1024,7 +1026,7 @@ The case of one hop away can be considered as a degenerate case, because a Join 
 
 The degenerate case would be unusual in constrained wireless network deployments, because a Registrar would typically not have a wireless network interface of the type used by constrained devices.
 Rather, it would have a high-speed network interface.
-Nevertheless, the situation where the Registrar is one hop away from the Pledge could occur in various cases like wired IoT networks or in wireless constrained networks where the Pledge is in radio range of a 6LoWPAN Border Router (6LBR) and the 6LBR happens to host a Registrar.
+Nevertheless, the situation where the Registrar is one hop away from the Pledge could occur in various cases like wired IoT networks or in wireless constrained networks where the Pledge is in radio range of a 6LoWPAN Border Router (6LBR) ({{RFC6775}})and the 6LBR happens to host a Registrar.
 
 In order to support the degenerate case, the Registrar SHOULD announce itself as if it were a Join Proxy -- though it would actually announce its real (stateful) Registrar CoAPS endpoint.
 No actual Join Proxy functionality is then required on the Registrar.
@@ -1117,9 +1119,8 @@ the specific deployments listed here.
 
 ## 6TiSCH Deployments
 
-In 6TiSCH networks, the Constrained Join Proxy (CoJP) mechanism is used as described in {{RFC9031}}.
-Such networks are expected to use {{RFC9528}} for key management.
-This is the subject of future work.
+In 6TiSCH networks, the Constrained Join Protocol (CoJP) is used as described in {{RFC9031}}.
+Such networks are expected to use EDHOC {{RFC9528}} for key management, which is out of scope of this document.
 The IEEE 802.15.4 Enhanced Beacon has been extended in {{RFC9032}} to allow for discovery of a 6TiSCH-compliant Join Proxy.
 
 ## IP networks using GRASP
@@ -1497,6 +1498,11 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 </t>
 
 # Changelog
+-28:
+    Cleanup of normative/informative references, setting each to right category.
+    Bugfix in text around EdDSA Curve selection.
+    Editorial updates.
+
 -27:
     Clarify x5bag for storing signing chain and Registrar removes unprotected x5bag/x5chain (#324, #323, #230).
     Clarify RPK use with "placeholder" certificate.
@@ -1590,14 +1596,14 @@ This appendix lists software and security libraries that may be useful for imple
 
 There are a few ongoing open source projects to support cBRSKI development and testing. These include:
 
-* OpenThread Registrar (OT Registrar) - a cBRSKI Registrar, test MASA server, and test Pledge written in Java.  
-  Link: [https://github.com/EskoDijk/ot-registrar](https://github.com/EskoDijk/ot-registrar)
-* OpenThread CCM (pre-alpha) - a cBRSKI Pledge and Join Proxy for OpenThread-based IoT nodes, written in C/C++.  
-  Link: [https://github.com/EskoDijk/openthread/pull/7](https://github.com/EskoDijk/openthread/pull/7)
-* OpenThread Network Simulator v2 (OTNS2) - a CLI + GUI simulator for OpenThread IoT nodes in 6LoWPAN mesh networks, able to accurately simulate cBRSKI Pledges onboarding (pre-alpha functionality) to a Thread mesh network via an OT Registrar.  
-  Link: [https://github.com/EskoDijk/ot-ns/pull/165](https://github.com/EskoDijk/ot-ns/pull/165)
-* Fountain - a BRSKI/6TiSCH Registrar with support for COSE-signed vouchers, written in Ruby.  
-  Link: [https://github.com/AnimaGUS-minerva/fountain](https://github.com/AnimaGUS-minerva/fountain)
+* OpenThread Registrar (OT Registrar) - a cBRSKI Registrar, test MASA server, and test Pledge written in Java.
+  [Link](https://github.com/EskoDijk/ot-registrar)
+* OpenThread CCM (pre-alpha) - a cBRSKI Pledge and Join Proxy for OpenThread-based IoT nodes, written in C/C++. OpenThread nodes implement the {{Thread}} protocol.
+  [Link](https://github.com/EskoDijk/openthread/pull/7)
+* OpenThread Network Simulator v2 (OTNS2) - a CLI + GUI simulator for OpenThread IoT nodes in 6LoWPAN {{RFC6282}} mesh networks, able to accurately simulate cBRSKI Pledges onboarding (pre-alpha functionality) to a Thread mesh network via an OT Registrar.
+  [Link](https://github.com/EskoDijk/ot-ns/pull/165)
+* Fountain - a BRSKI/6TiSCH Registrar with support for COSE-signed vouchers, written in Ruby.
+  [Link](https://github.com/AnimaGUS-minerva/fountain)
 
 ## Security Library Support {#libsup}
 For the implementation of BRSKI/cBRSKI, the use of a software library to manipulate PKIX certificates, establish secure (D)TLS connections, and use crypto algorithms is often beneficial. Two C-based examples are OpenSSL and mbedtls. Others more targeted to specific platforms or languages exist. It is important to realize that the library interfaces differ significantly between libraries.
@@ -1954,6 +1960,7 @@ The below table specifies the functions implemented in the three example Pledge 
 |Pro-active re-enrollment at own initiative | - | - | Y
 |Periodic trust anchor retrieval GET /crts | - (*) | Y | Y
 |Supports change of Registrar identity | - (*) | Y | Y
+{: #comparison-pledge-classes-table title='Comparison Chart of Pledge Classes Min, Typ and Full'}
 
 Notes: (*) means only possible via a factory-reset followed by a new cBRSKI onboarding procedure.
 
@@ -2067,7 +2074,7 @@ As a follow-up example, the Pledge can now start the onboarding by sending its P
 
 The return of multiple content-formats in the "ct" attribute by the Registrar allows the Pledge to choose the most appropriate one for a particular operation, and allows extension with new voucher formats.
 Note that only content-format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv), both as request payload and as response payload.
-If the "ct" attribute is not indicated for the /rv resource in the CoRE link format description, this implies that at least format 836 is supported and maybe more.
+If the "ct" attribute is not indicated for the /rv resource in the CoRE Link Format description, this implies that at least format 836 is supported and maybe more.
 
 Note that this specification allows for application/voucher+cose payloads to be transmitted over HTTPS, as well as for
 application/voucher-cms+json and other formats yet to be defined over CoAP.
