@@ -274,7 +274,7 @@ This document Updates {{RFC9148}} because it:
 
 * adds enrollment status telemetry to the certificate renewal procedure ({{est-reenrollment}}),
 
-* adds support for the media type "application/multipart-core" for the CA certificates (/crts) resource ({{multipart-core}}),
+* adds support for the media type "application/multipart-core" for the CA certificates (`/crts`) resource ({{multipart-core}}),
 
 * defines a resource type (rt) attribute value "ace.est" for the EST-coaps base resource ({{iana-core-rt}}).
 
@@ -406,8 +406,8 @@ For example, a Pledge that skips resource discovery operations just sends the in
     Payload       : (COSE-signed Pledge Voucher Request, PVR)
 ~~~~
 
-Note that only content-format 836 ("application/voucher+cose") is defined in this document for the payload sent to the voucher request resource (/rv).
-Content-format 836 MUST be supported by the Registrar for the /rv resource and it MAY support additional formats.
+Note that only content-format 836 ("application/voucher+cose") is defined in this document for the payload sent to the voucher request resource (`/rv`).
+Content-format 836 MUST be supported by the Registrar for the `/rv` resource and it MAY support additional formats.
 The Pledge MAY also indicate in the request the desired format of the (voucher) response, using the Accept Option. An example of using this option in the request is as follows:
 
 ~~~~
@@ -436,7 +436,7 @@ These are two CoAP POST requests made the by Pledge at two key steps in the proc
 {{RFC8995}} defines the content of these POST operations in CDDL, which are serialized as JSON.
 This document extends this with an additional CBOR format, derived using the CDDL rules in {{RFC8610}}.
 
-The new CBOR telemetry format has CoAP content-format 60 ("application/cbor") and MUST be supported by the Registrar for both the /vs and /es resources.
+The new CBOR telemetry format has CoAP content-format 60 ("application/cbor") and MUST be supported by the Registrar for both the `/vs` and `/es` resources.
 The existing JSON format has CoAP content-format 50 ("application/json") and MAY also be supported by the Registrar.
 A Pledge MUST use the new CBOR format to send telemetry messages.
 
@@ -444,8 +444,8 @@ A Pledge MUST use the new CBOR format to send telemetry messages.
 ### CoAP Resources Table
 
 This document inherits EST-coaps {{RFC9148}} functions: 
-specifically, the mandatory Simple (Re-)Enrollment (/sen and /sren) and Certification Authority certificates request (/crts).
-Support for CSR Attributes Request (/att) and server-side key generation (/skg, /skc) remains optional for the EST-coaps server.
+specifically, the mandatory Simple (Re-)Enrollment (`/sen` and `/sren`) and Certification Authority certificates request (`/crts`).
+Support for CSR Attributes Request (`/att`) and server-side key generation (`/skg`, `/skc`) remains optional for the EST-coaps server.
 
 {{brski-est-short-uri-table}} summarizes the resources used in cBRSKI.
 It includes both the short-name cBRSKI resources and the EST-coaps resources.
@@ -484,7 +484,7 @@ Note that a device that is already onboarded is not called "Pledge" in this sect
 
 This section defines optimizations for the EST-coaps protocol as used by a Pledge. These aim to reduce payload sizes and the number of messages (round-trips) required for the initial EST enrollment.
 
-A Pledge SHOULD NOT perform the optional EST-coaps "CSR attributes request" (/att). Instead, the Pledge selects the attributes to include in the CSR as specified below.
+A Pledge SHOULD NOT perform the optional EST-coaps "CSR attributes request" (`/att`). Instead, the Pledge selects the attributes to include in the CSR as specified below.
 
 One or more Subject Distinguished Name fields MUST be included in the CSR.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, which is the common case, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
@@ -492,22 +492,22 @@ Note that a Pledge MAY receive such specific information via the voucher data (e
 
 A Pledge uses the following optimized EST-coaps procedure:
 
-1. If the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, as if it were the result of a "CA certificates request" (/crts) to the Registrar.
+1. If the voucher, that validates the current Registrar, contains a single pinned domain CA certificate, the Pledge provisionally considers this certificate as the EST trust anchor, as if it were the result of a "CA certificates request" (`/crts`) to the Registrar.
 
-2. Using this CA certificate as trust anchor it proceeds with EST simple enrollment (/sen) to obtain a provisionally trusted LDevID certificate.
+2. Using this CA certificate as trust anchor it proceeds with EST simple enrollment (`/sen`) to obtain a provisionally trusted LDevID certificate.
 
 3. If the Pledge determines that the pinned domain CA is (1) a root CA certificate and (2) signer of the LDevID certificate, the Pledge accepts the pinned domain CA certificate as the legitimate trust anchor root CA for the Registrar's domain. It also accepts the LDevID certificate as its new LDevID identity. And steps 4 and 5 are skipped.
 
-4. Otherwise, if the step 3 condition was not met, the Pledge MUST perform a "CA certificates request" (/crts) to the EST server to obtain the full set of EST CA trust anchors. It then MUST attempt to chain the LDevID certificate to one of the CAs in the set.
+4. Otherwise, if the step 3 condition was not met, the Pledge MUST perform a "CA certificates request" (`/crts`) to the EST server to obtain the full set of EST CA trust anchors. It then MUST attempt to chain the LDevID certificate to one of the CAs in the set.
 
-5. If the Pledge cannot obtain the set of CA certificates, or it is unable to create the chain as defined in step 4, the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (/es).
+5. If the Pledge cannot obtain the set of CA certificates, or it is unable to create the chain as defined in step 4, the Pledge MUST abort the enrollment process and report the error using the enrollment status telemetry (`/es`).
 
 
 ### Renewal of CA certificates {#est-renewal-crts}
-An EST-coaps client that has an idea of the current time (internally, or via Network Time Protocol) SHOULD consider the validity time of the trust anchor CA(s), and MAY begin requesting new trust anchor certificates(s) using the /crts request when the CA has 50% of it's validity time (notAfter - notBefore) left.
-A client without access to the current time cannot decide if trust anchor CA(s) have expired, and SHOULD poll periodically for a new trust anchor certificate(s) using the /crts request at an interval of approximately 1 month.
-An EST-coaps server SHOULD include the CoAP ETag Option ({{RFC7252, Section 5.10.6}})in every response to a /crts request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
-The EST-coaps client SHOULD store the ETag resulting from a /crts response in memory and SHOULD use this value in an ETag Option in its next GET /crts request.
+An EST-coaps client that has an idea of the current time (internally, or via Network Time Protocol) SHOULD consider the validity time of the trust anchor CA(s), and MAY begin requesting new trust anchor certificates(s) using the `/crts` request when the CA has 50% of it's validity time (notAfter - notBefore) left.
+A client without access to the current time cannot decide if trust anchor CA(s) have expired, and SHOULD poll periodically for a new trust anchor certificate(s) using the `/crts` request at an interval of approximately 1 month.
+An EST-coaps server SHOULD include the CoAP ETag Option ({{RFC7252, Section 5.10.6}})in every response to a `/crts` request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
+The EST-coaps client SHOULD store the ETag resulting from a `/crts` response in memory and SHOULD use this value in an ETag Option in its next GET `/crts` request.
 
 ### Change of Domain Trust Anchor(s)
 The domain trust anchor(s) may change over time. Such a change may happen due to relocation of the client device to a new domain, a new subdomain, or due to a key update of 
@@ -518,7 +518,7 @@ operating under the old domain CA to acquire a new LDevID certificate issued by 
 How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification.
 
 The mechanism described in {{RFC7030, Section 4.1.3}} and {{RFC4210, Section 4.4}} for root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. Of these four, the OldWithOld certificate is already
-stored in the client's Explicit TA database. The other certificates will be provided to the client in a /crts response, during the EST-coaps re-enrollment procedure.
+stored in the client's Explicit TA database. The other certificates will be provided to the client in a `/crts` response, during the EST-coaps re-enrollment procedure.
 
 ### Re-enrollment Procedure {#est-reenrollment}
 For re-enrollment, the EST-coaps client MUST support the following EST-coaps procedure. During this procedure the EST-coaps server MAY re-enroll the client into a new domain or into a new sub-CA within a larger domain.
@@ -527,23 +527,23 @@ For re-enrollment, the EST-coaps client MUST support the following EST-coaps pro
 is currently trusted by the client, i.e. it chains to a trust anchor CA that the client has stored in its Explicit TA database. This is the OldWithOld trust anchor. 
 The client checks that the server is a Registration Authority (RA) of the domain as required by {{Section 3.6.1 of RFC7030}} before proceeding.
 
-2. The client performs the simple re-enrollment request (/sren) and upon success it obtains a new LDevID certificate.
+2. The client performs the simple re-enrollment request (`/sren`) and upon success it obtains a new LDevID certificate.
 
-3. The client verifies the new LDevID certificate against its Explicit TA database. If the new LDevID chains successfully to a TA, this means trust anchors did not significantly change and the client MAY skip retrieving the current CA certificates using the "CA certificates request" (/crts). If it does not chain successfully, it means trust anchor(s) were changed significantly and the client MUST retrieve the new domain trust anchors using the "CA certificates request" (/crts).
+3. The client verifies the new LDevID certificate against its Explicit TA database. If the new LDevID chains successfully to a TA, this means trust anchors did not significantly change and the client MAY skip retrieving the current CA certificates using the "CA certificates request" (`/crts`). If it does not chain successfully, it means trust anchor(s) were changed significantly and the client MUST retrieve the new domain trust anchors using the "CA certificates request" (`/crts`).
 
-4. If the client retrieved new trust anchor(s) in step 3, then it MUST verify that the new LDevID certificate it obtained in step 2 chains with the new trust anchor(s). If it chains successfully, the client stores the new trust anchor(s) in its Explicit TA database, accepts the new LDevID certificate and stops using its prior LDevID certificate. If it does not chain successfully, the client MUST NOT update its LDevID certificate, and it MUST NOT update its Explicit TA database, and the client MUST abort the enrollment process and MUST attempt to report the error to the EST-coaps server using enrollment status telemetry (/es).
+4. If the client retrieved new trust anchor(s) in step 3, then it MUST verify that the new LDevID certificate it obtained in step 2 chains with the new trust anchor(s). If it chains successfully, the client stores the new trust anchor(s) in its Explicit TA database, accepts the new LDevID certificate and stops using its prior LDevID certificate. If it does not chain successfully, the client MUST NOT update its LDevID certificate, and it MUST NOT update its Explicit TA database, and the client MUST abort the enrollment process and MUST attempt to report the error to the EST-coaps server using enrollment status telemetry (`/es`).
 
-Note that even though the EST-coaps client may skip the /crts request in step 3 at this time, it SHOULD still support renewal of the trust anchors as detailed in {{est-renewal-crts}}.
+Note that even though the EST-coaps client may skip the `/crts` request in step 3 at this time, it SHOULD still support renewal of the trust anchors as detailed in {{est-renewal-crts}}.
 
-Note that an EST-coaps server that is also a Registrar will already support the enrollment status telemetry resource (/es) in step 4, while an EST-coaps server that purely implements {{RFC9148}}, and not the present specification, will not support this resource.
+Note that an EST-coaps server that is also a Registrar will already support the enrollment status telemetry resource (`/es`) in step 4, while an EST-coaps server that purely implements {{RFC9148}}, and not the present specification, will not support this resource.
 
-### Multipart Content-Format for CA certificates (/crts) Resource {#multipart-core}
+### Multipart Content-Format for CA certificates (`/crts`) Resource {#multipart-core}
 In EST-coaps {{RFC9148}} the PKCS#7 container format is used for CA certificates distribution. Because the PKCS#7 format is only used as a certificate container and no additional security is applied on the container, it 
 becomes attractive to replace this format by something simpler, on a constrained Pledge: so that additional PKCS#7 code is avoided. Therefore, this document defines a container format using the {{RFC8710}} 
 "application/multipart-core" media type (CoAP content-format 62). This is beneficial since a Pledge necessarily already supports CBOR parsing, so there is little code overhead to support this CBOR-based
 container format.
 
-A Registrar or EST-coaps server MUST support content-format 62 for the /crts resource.
+A Registrar or EST-coaps server MUST support content-format 62 for the `/crts` resource.
 The multipart collection MUST contain the individual CA certificates, each encoded as an "application/pkix-cert" (287) representation. Future documents may define other certificate formats: the multipart collection can handle any future types. 
 The order of CA certificates MUST be in the CA hierarchy order starting from the issuer of the client's LDevID first, up to the highest-level domain CA, then optionally followed by any further CA certificates that are not part of this hierarchy.
 These further CA certificates may be Third-party TAs as defined in {{RFC7030}}. The highest-level domain CA may or may not be a root CA certificate.
@@ -562,7 +562,7 @@ Encoded as an "application/multipart-core" CBOR array this is (shown in CBOR dia
 
 The total number of CA certificates SHOULD be 1, 2 or 3 and not higher to prevent constrained Pledges from running out of memory for the trust anchor storage (Explicit TA database).
 However if a domain operator can guarantee that any Pledges enrolled in its network can support larger sets of CA certificates, the total number MAY be configured as higher than 3.
-To facilitate a reliable transfer of large payloads over constrained networks, the server MUST support CoAP Block-wise transfer for the /crts response. The server MUST also support 
+To facilitate a reliable transfer of large payloads over constrained networks, the server MUST support CoAP Block-wise transfer for the `/crts` response. The server MUST also support
 the Size2 Option {{RFC7959}} to provide the total resource length in bytes, when requested by a client.
 
 Implementation notes: a client that receives the first block of payload data from the server, can already inspect the total number of CA certificates by decoding the first byte of the payload.
@@ -578,13 +578,13 @@ unprotected COSE header attributes (which are defined in {{RFC9360}}).
 The contents of these unprotected attributes are solely for validation/logging use by the Registrar.
 Removing these attributes reduces the voucher size on the constrained network path to the Pledge.
 
-The content-format 60 ("application/cbor") MUST be supported by the Registrar for the /vs and /es resources.
+The content-format 60 ("application/cbor") MUST be supported by the Registrar for the `/vs` and `/es` resources.
 
-Content-format 836 ("application/voucher+cose") MUST be supported by the Registrar for the /rv resource for CoAP POST requests, both as request payload and as response payload.
+Content-format 836 ("application/voucher+cose") MUST be supported by the Registrar for the `/rv` resource for CoAP POST requests, both as request payload and as response payload.
 
-Content-format 287 ("application/pkix-cert") MUST be supported by the Registrar as a response payload for the /sen and /sren resources.
+Content-format 287 ("application/pkix-cert") MUST be supported by the Registrar as a response payload for the `/sen` and `/sren` resources.
 
-When a Registrar receives a "CA certificates request" (/crts) request with a CoAP Accept Option with value 287 ("application/pkix-cert") it MUST return only the
+When a Registrar receives a "CA certificates request" (`/crts`) request with a CoAP Accept Option with value 287 ("application/pkix-cert") it MUST return only the
 single CA certificate that is the envisioned or actual CA authority for the current, authenticated Pledge making the request. An exception to this rule is when 
 the domain has been configured to operate with multiple CA trust anchors exclusively: then the Registrar returns a 4.06 Not Acceptable error to signal to the client that it
 needs to request another content-format that supports retrieval of multiple CA certificates.
@@ -769,12 +769,12 @@ That document also assigns SID values to YANG elements in accordance with {{RFC9
 The present section provides some examples of these artifacts and defines a new signature format for these, using COSE.
 
 Compared to the first voucher request definition done in {{RFC8995}}, the constrained voucher request adds the fields
-proximity-registrar-pubk and proximity-registrar-pubk-sha256.
-One of these is optionally used to replace the proximity-registrar-cert field, for a smaller voucher request data size -
+"proximity-registrar-pubk" and "proximity-registrar-pubk-sha256".
+One of these is optionally used to replace the "proximity-registrar-cert" field, for a smaller voucher request data size -
 useful for the most constrained cases.
 
-The constrained voucher adds the fields pinned-domain-pubk and pinned-domain-pubk-sha256 to pin an RPK.
-One of these is optionally used instead of the pinned-domain-cert field, for a smaller voucher data size.
+The constrained voucher adds the fields "pinned-domain-pubk" and "pinned-domain-pubk-sha256" to pin an RPK.
+One of these is optionally used instead of the "pinned-domain-cert" field, for a smaller voucher data size.
 
 ## Example Artifacts
 
@@ -787,8 +787,8 @@ defined in {{I-D.ietf-cbor-edn-literals}}. The enum value of the assertion field
 
 INSERT_CBORDIAG_FROM_FILE examples/voucher-request-example1.txt END
 
-The Pledge has included the item proximity-registrar-pubk which carries the public key of the Registrar, instead of including the full Registrar certificate in
-a proximity-registrar-cert item. This is done to reduce the size of the PVR. Also note that the Pledge did not include the created-on field since it lacks an
+The Pledge has included the item "proximity-registrar-pubk" which carries the public key of the Registrar, instead of including the full Registrar certificate in
+a "proximity-registrar-cert" item. This is done to reduce the size of the PVR. Also note that the Pledge did not include the "created-on" field since it lacks an
 internal real-time clock and has no knowledge of the current time at the moment of performing the onboarding.
 
 ### Example Registrar Voucher Request (RVR) Artifact {#example-rvr}
@@ -806,14 +806,14 @@ The constrained voucher request format supports both the string and SID key type
 ### Example Voucher Artifacts {#example-voucher}
 
 Below, an example of constrained voucher data is shown in CBOR diagnostic notation. It was created by a MASA in response to
-receiving the Registrar Voucher Request (RVR) shown in {{example-rvr}}. The enum value of the assertion field is set to "proximity" (2),
+receiving the Registrar Voucher Request (RVR) shown in {{example-rvr}}. The enum value of the "assertion" field is set to "proximity" (2),
 to acknowledge to both the Pledge and the Registrar that the proximity of the Pledge to the Registrar is considered proven.
 
 INSERT_CBORDIAG_FROM_FILE examples/voucher-example1.txt END
 
 While the above example voucher data includes the nonce from the PVR, the next example is for a nonce-less voucher. Instead of a nonce, it
-includes an expires-on field with the date and time on which the voucher expires. Because the MASA did not verify the proximity of
-the Pledge and Registrar in this case, the assertion enum field contains a weaker assertion of "verified" (0).
+includes an "expires-on" field with the date and time on which the voucher expires. Because the MASA did not verify the proximity of
+the Pledge and Registrar in this case, the "assertion" field contains a weaker assertion of "verified" (0).
 This indicates that the MASA verified the domain's ownership of the Pledge via some other means.
 
 INSERT_CBORDIAG_FROM_FILE examples/voucher-example2.txt END
@@ -835,7 +835,8 @@ This is the ES256 (-7) keytype from Table 1 of {{RFC9053}}.
 Support for curve secp256k1 is OPTIONAL.
 
 Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware support is available.
-This is keytype EDDSA (-8) from Table 2 of {{RFC9053}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.  The 'kty' field MUST be present, and it MUST be 'OKP'. (Table 17)
+This is keytype EDDSA (-8) from Table 2 of {{RFC9053}}.  A "crv" parameter is necessary to specify the Curve, which from Table 18.
+The "kty" field MUST be present, and its value MUST be "OKP". (Table 17)
 
 A transition towards EdDSA is occurring in the industry.
 Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any elliptic curve algorithm.
@@ -911,7 +912,7 @@ present, or it may be a hash of the public key, or anything else the Pledge vend
 A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA.
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
 
-The example below shows a PVR with the "kid" parameter present as an unprotected header parameter.
+The example below shows a PVR with "kid" present as an unprotected header parameter.
 
 ~~~~ cbor-diag
 18(                    / tag for COSE_Sign1                      /
@@ -1058,7 +1059,7 @@ A Pledge that makes a voucher request to a Registrar that does not support that 
 Using CoAP discovery, a Pledge can discover a Join Proxy by sending a link-local multicast discovery message to the All CoAP Nodes address FF02::FD.
 Zero, one, or multiple Join Proxies may respond.
 The handling of multiple responses and absence of responses cases follow the guidelines of {{Section 4 of RFC8995}}.
-The discovery message is a CoAP GET request on the URI path "/.well-known/core" using a URI query "rt=brski.jp". This resource type (rt) is defined 
+The discovery message is a CoAP GET request on the URI path `/.well-known/core` using a URI query "`rt=brski.jp`". This resource type (rt) is defined
 in {{Section 8.3 of I-D.ietf-anima-constrained-join-proxy}}. 
 
 ### Examples
@@ -1140,8 +1141,8 @@ discovery by Join Proxies in mesh networks, because the Registrar is typically n
 in that case. For this, another mechanism is needed, which is out of scope of this document and may be defined in 
 future work. 
 
-A Pledge uses an mDNS PTR query for the name "_brski-proxy._udp.local." to discover link-local constrained Join Proxies.
-The label "_udp" here indicates a query for cBRSKI constrained Join Proxies, as opposed to "_tcp" defined in {{RFC8995}}
+A Pledge uses an mDNS PTR query for the name "`_brski-proxy._udp.local.`" to discover link-local constrained Join Proxies.
+The label "`_udp`" here indicates a query for cBRSKI constrained Join Proxies, as opposed to "`_tcp`" defined in {{RFC8995}}
 which is for discovering BRSKI Proxies.
 
 ## Thread Networks using Mesh Link Establishment (MLE)
@@ -1178,7 +1179,7 @@ The MASA in that case is required to generate the voucher data for that Pledge u
 Yet, this MASA implementation MUST still support both SID integers and strings, to be able to process the field names in the RVR.
 
 ## CoAP Usage
-A successful POST request to the Registrar's telemetry resources (/vs, /es) returns a 2.04 Changed response with empty payload.
+A successful POST request to the Registrar's telemetry resources (`/vs`, `/es`) returns a 2.04 Changed response with empty payload.
 
 A CoAP client sending a request should be aware that the server, even in case of an empty payload, may use either a piggybacked
 CoAP response (for example ACK with code 2.04) but may also respond with a separate CoAP response.
@@ -1242,17 +1243,17 @@ The Pledge MUST send a client\_certificate\_type of X509 (not an RPK), so that t
 
 ## The Pledge Voucher Request
 
-The Pledge puts the Registrar's public key into the proximity-registrar-pubk field of the Pledge Voucher Request (PVR).
-(The proximity-registrar-pubk-sha256 can alternatively be used for efficiency, if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.)
+The Pledge puts the Registrar's public key into the "proximity-registrar-pubk" field of the Pledge Voucher Request (PVR).
+The "proximity-registrar-pubk-sha256" can alternatively be used for efficiency, if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.
 
-As the format of this pubk field is identical to the TLS RawPublicKey data object, no manipulation at all is needed to insert this field into the PVR.
+As the format of the "proximity-registrar-pubk" field is identical to the TLS RawPublicKey data object, no manipulation at all is needed to insert this field into the PVR.
 This approach reduces the size of the PVR significantly, compared to including the full certificate.
 
 ## The Voucher Response
 
-A returned voucher will have a `pinned-domain-pubk` field with the identical key as was found in the `proximity-registrar-pubk` field above, as well as being identical to the
+A returned voucher will have a "pinned-domain-pubk" field with the identical key as was found in the "proximity-registrar-pubk" field above, as well as being identical to the
 Registrar's RPK in the currently active DTLS connection.
-(Or alternatively the MASA may include the `pinned-domain-pubk-sha256` field if it knows the Pledge supports this field.)
+(Or alternatively the MASA may include the "pinned-domain-pubk-sha256" field if it knows the Pledge supports this field.)
 
 Validation of this key by the Pledge is what takes the DTLS connection out of the provisional state; see {{Section 5.6.2 of RFC8995}} for more details.
 
@@ -1350,15 +1351,15 @@ This Registrar's identity is validated by the {{RFC8366bis}} voucher that is iss
 The Registrar may therefore use any certificate, including a self-signed one.
 The only restrictions on the certificate is that it MUST have EKU bits set as detailed in {{registrar-certificate-requirement-server}} and {{registrar-certificate-requirement-client}}.
 
-## Use of RPK Alternatives to proximity-registrar-cert
+## Use of RPK Alternatives to "proximity-registrar-cert"
 
-In {{Section 8 of RFC8366bis}} two compact alternative fields for proximity-registrar-cert are defined that include an RPK: proximity-registrar-pubk and proximity-registrar-pubk-sha256.
+In {{Section 8 of RFC8366bis}} two compact alternative fields for "proximity-registrar-cert" are defined that include an RPK: "proximity-registrar-pubk" and "proximity-registrar-pubk-sha256".
 The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields
 by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate.
-The MASA will not be able to detect such act by the Registrar. But since any 'other' certificate the Registrar could insert in this way still encodes its identity the additional risk
+The MASA will not be able to detect such act by the Registrar. But since any certificate the Registrar could insert in this way still encodes its own identity the additional risk
 of using the RPK alternatives is negligible.
 
-When a Registrar sees a PVR that uses one of proximity-registrar-pubk or proximity-registrar-pubk-sha256 fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
+When a Registrar sees a PVR that uses one of "proximity-registrar-pubk" or "proximity-registrar-pubk-sha256" fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
 Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}.
 
 
@@ -1527,7 +1528,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Added paragraph on future certificate formats like C509 (#281, #294);
     Add formal specification for CoAP discovery of Join Proxy by Pledge, instead of only showing examples (#296, #300);
     Enable mDNS discovery of Join Proxy by Pledge (also in mesh networks) and list service name to use (#297, #299);
-    Add requirement to support content-format 287 in /sen and /sren response (#295, #298).
+    Add requirement to support content-format 287 in `/sen` and `/sren` response (#295, #298).
     
 -23:     
     Removed Update tag for RFC 8366 (#285, #288); 
@@ -1535,7 +1536,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Added Update tag for RFC 9148 (#283, #289); 
     Keep CoAP discovery as only mechanism and refer to future discovery work (#279, #282, #290); 
     Introduce formal CBOR diagnostics ellipsis elision syntax (#281, #287); 
-    Support for multi-tier CAs by introducing multipart-core /crts format (#275, #291); 
+    Support for multi-tier CAs by introducing multipart-core `/crts` format (#275, #291);
     Terminology updated for consistency with RFC 8366-bis (#274, #280); 
     Rename voucher media type to application/voucher+cose and register +cose SSS (#264, #277); 
     Editorial changes including section restructuring.
@@ -1684,7 +1685,7 @@ The above binary CBOR enrollstatus payload looks as follows in CBOR diagnostic n
    }
 ~~~
 
-Alternatively the payload could look as follows in case of enrollment failure, using the reason field to describe the failure:
+Alternatively the payload could look as follows in case of enrollment failure, using the "reason" field to describe the failure:
 
 ~~~
   Payload = A36776657273696F6E0166737461747573F466726561736F6E782A3C
@@ -1839,7 +1840,7 @@ The COSE payload is the PVR voucher data, encoded as a CBOR byte string. The dia
 INSERT_CBORDIAG_FROM_FILE examples/cose-examples/pvr-nonsigned.txt END
 
 The Pledge uses the "proximity" (key '1', SID 2502, enum value 2) assertion together with an included
-proximity-registrar-pubk field (key '12', SID 2513) to inform MASA about its proximity to the specific Registrar.
+"proximity-registrar-pubk" field (key '12', SID 2513) to inform MASA about its proximity to the specific Registrar.
 
 ## COSE-signed Registrar Voucher Request (RVR)  {#rvr-example}
 
@@ -1945,14 +1946,14 @@ The below table specifies the functions implemented in the three example Pledge 
 |**EST-coaps**|   |   |   
 |Explicit TA database size (#certs) | 0 | 3 | 8
 |CoAP discovery for rt=ace.est* | - | - | Y
-|GET /att and response parsing | - | - | Y
-|GET /crts format 62 (multiple CA certs) | - | Y | Y
-|GET /crts format 281 (multiple CA certs) | - | - | Y
-|ETag handling support for GET /crts | - | Y | Y
+|GET `/att` and response parsing | - | - | Y
+|GET `/crts` format 62 (multiple CA certs) | - | Y | Y
+|GET `/crts` format 281 (multiple CA certs) | - | - | Y
+|ETag handling support for GET `/crts` | - | Y | Y
 |Re-enrollment supported | - (*) | Y | Y
 |{{brski-est-extensions-pledge}} optimized procedure | Y | Y | -
 |Pro-active re-enrollment at own initiative | - | - | Y
-|Periodic trust anchor retrieval GET /crts | - (*) | Y | Y
+|Periodic trust anchor retrieval GET `/crts` | - (*) | Y | Y
 |Supports change of Registrar identity | - (*) | Y | Y
 
 Notes: (*) means only possible via a factory-reset followed by a new cBRSKI onboarding procedure.
@@ -1972,7 +1973,7 @@ A Pledge that wishes to discover the available cBRSKI onboarding options/formats
 operation using CoAP discovery per {{Section 7 of RFC7252}} and {{Section 4 of RFC6690}}. It first sends a CoAP discovery query to the Registrar over the secured DTLS connection.
 The Registrar then responds with a CoRE Link Format payload containing the requested resources, if any.
 
-For example, if the Registrar supports a cBRSKI base resource "/b" in addition to the longer "/.well-known/brski" base
+For example, if the Registrar supports a cBRSKI base resource `/b` in addition to the longer `/.well-known/brski` base
 resource, and supports only the voucher format "application/voucher+cose" (836), and status reporting in both
 CBOR (60) and JSON (50) formats, a CoAP resource discovery request and response may look as follows:
 
@@ -1989,11 +1990,11 @@ CBOR (60) and JSON (50) formats, a CoAP resource discovery request and response 
 ~~~~
 
 In this case, the Registrar returns only the shorter URI paths matching the query filter, which are located under the
-"/b" base resource. The "/.well-known/brski" based URI paths are not returned, as these are assumed to be well-known
-(i.e. mandatory to support for a Registrar that offers this functionality under "/b".)
+`/b` base resource. The `/.well-known/brski` based URI paths are not returned, as these are assumed to be well-known
+(i.e. mandatory to support for a Registrar that offers this functionality under `/b`.)
 
-The Registrar is however under no obligation to provide the shorter URLs under "/b", and may respond to this query with
-only the "/.well-known/brski/\<short-name\>" resources for the short names as defined in
+The Registrar is however under no obligation to provide the shorter URLs under `/b`, and may respond to this query with
+only the `/.well-known/brski/\<short-name\>` resources for the short names as defined in
 {{brski-est-short-uri-table}}, if these resources are not hosted anywhere else. This case is shown in the below interaction:
 
 ~~~~
@@ -2012,15 +2013,15 @@ When responding to a discovery request for cBRSKI resources, the Registrar may r
  \<short-name\> resources and the content-formats supported by these resources (using ct attributes) as shown in the above examples.
 This is useful when multiple content-formats are supported for a particular resource on the Registrar and the discovering Pledge also supports multiple.
 
-Registrars that have implemented any cBRSKI or EST-coaps URI paths outside of "/.well-known" must process a request on
-the corresponding "/.well-known/brski/\<short-name\>" or "/.well-known/est/\<short-name\>" URI paths identically.
+Registrars that have implemented any cBRSKI or EST-coaps URI paths outside of `/.well-known` must process a request on
+the corresponding `/.well-known/brski/\<short-name\>` or `/.well-known/est/\<short-name\>` URI paths identically.
 In particular, a Pledge may use the longer (well-known) and shorter URI paths in any combination.
 
 A Registrar may also be implemented without support for the (optional) CoAP discovery.
 In that case, it may for example return a 4.04 Not Found as shown in the example below, in case the Registrar does not
-host the resource "/.well-known/core" at all.
+host the resource `/.well-known/core` at all.
 In such case, the Pledge cannot discover any onboarding/enrollment options and so it has to rely on the default cBRSKI
-options and has to use the "/.well-known/..." resources.
+options and has to use the `/.well-known/...` resources.
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
@@ -2031,14 +2032,14 @@ options and has to use the "/.well-known/..." resources.
 ## Pledge Discovery Query for the cBRSKI Base Resource
 
 In case the client queries for only rt=brski type resources, the Registrar responds with only the base path for the cBRSKI
-resources (rt=brski, resource /b in earlier examples) and no others.
-(So, the query is "rt=brski", without the wildcard character.)
+resources (rt=brski, resource `/b` in earlier examples) and no others.
+(So, the query is "`rt=brski`", without the wildcard character.)
 This is shown in the below example.
 The Pledge in this case requests only the cBRSKI base resource of type rt=brski to check if cBRSKI is supported by the
 Registrar and if a shorter-length cBRSKI base resource path is supported or not.
 In this case, the Pledge is not interested to check what voucher request formats, or status telemetry formats --
 other than the mandatory default formats -- are supported.
-The compact response below then shows that the Registrar indeed supports a cBRSKI resource at /b:
+The compact response below then shows that the Registrar indeed supports a cBRSKI resource at `/b`:
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski
@@ -2049,9 +2050,9 @@ The compact response below then shows that the Registrar indeed supports a cBRSK
   </b>;rt=brski
 ~~~~
 
-The Pledge can now start using any of the cBRSKI resources /b/\<short-name\> in a next CoAP request to the Registrar.
-In above example, again the well-known resource present under /.well-known/brski is not returned because this is
-assumed to be well-known to the Pledge and mandatory to support for a Registrar that offers this functionality under "/b".
+The Pledge can now start using any of the cBRSKI resources `/b/\<short-name\>` in a next CoAP request to the Registrar.
+In above example, again the well-known resource present under `/.well-known/brski` is not returned because this is
+assumed to be well-known to the Pledge and mandatory to support for a Registrar that offers this functionality under `/b`.
 
 As a follow-up example, the Pledge can now start the onboarding by sending its PVR:
 
@@ -2066,8 +2067,8 @@ As a follow-up example, the Pledge can now start the onboarding by sending its P
 ## Usage of ct Attribute
 
 The return of multiple content-formats in the "ct" attribute by the Registrar allows the Pledge to choose the most appropriate one for a particular operation, and allows extension with new voucher formats.
-Note that only content-format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (/rv), both as request payload and as response payload.
-If the "ct" attribute is not indicated for the /rv resource in the CoRE link format description, this implies that at least format 836 is supported and maybe more.
+Note that only content-format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (`/rv`), both as request payload and as response payload.
+If the "ct" attribute is not indicated for the `/rv` resource in the CoRE link format description, this implies that at least format 836 is supported and maybe more.
 
 Note that this specification allows for application/voucher+cose payloads to be transmitted over HTTPS, as well as for
 application/voucher-cms+json and other formats yet to be defined over CoAP.
@@ -2129,13 +2130,13 @@ This is done either before or after the voucher has been validated.
   </e/skc>;rt=ace.est.skc
 ~~~~
 
-The response from the Registrar indicates that EST-coaps enrollment (/sen) and re-enrollment (/sren) is supported,
+The response from the Registrar indicates that EST-coaps enrollment (`/sen`) and re-enrollment (`/sren`) is supported,
 with a choice of two content-formats for the response payload:
 either a PKCS#7 container with a single LDevID certificate ("application/pkcs7-mime;smime-type=certs-only", content-format 281)
 which is the BRSKI {{RFC8995}} encoding, or just a single LDevID certificate ("application/pkix-cert", content-format 287)
 which is the default cBRSKI encoding.
 
-For the EST "cacerts" resource (/crts) there are three content-formats supported:
+For the EST "cacerts" resource (`/crts`) there are three content-formats supported:
 an application/multipart-core container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (287),
 or a single (most relevant) CA certificate (281).
 
