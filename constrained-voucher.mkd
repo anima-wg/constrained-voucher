@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI)
 abbrev: Constrained BRSKI (cBRSKI)
-docname: draft-ietf-anima-constrained-voucher-27
+docname: draft-ietf-anima-constrained-voucher-28
 
 stand_alone: true
 
@@ -705,7 +705,7 @@ benefit to pin a higher-level CA. By pinning the most specific CA the constraine
 rationale for pinning a CA instead of the Registrar's End-Entity certificate directly is based on the following benefit on constrained networks: the pinned certificate in the voucher
 can in common cases be re-used as a Domain CA trust anchor during the EST enrollment and during the operational phase that follows after EST enrollment, as explained in {{brski-est-extensions-pledge}}.
 
-The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.* and 7.4.1 of {{RFC8995}}).
+The rationale for 2. follows from the flexible BRSKI trust model for, and purpose of, nonceless vouchers (Sections 5.5.\* and 7.4.1 of {{RFC8995}}).
 
 Referring to the example of {{fig-twoca}} of a domain with a two-level certification authority, the most specific CA ("Sub-CA") is the
 identity that is pinned by MASA in a nonced voucher.
@@ -1382,9 +1382,9 @@ ace.est  | Base resource of all Enrollment over Secure Transport CoAPS (EST-coap
 {: #iana-core-rt-values title='Resource Type (rt) link target attribute values for cBRSKI and EST-coaps'}
 
 Note that the resource type "brski" identifies a base resource in a resource hierarchy on a CoAP server, where its
-sub-resources each have one of the resource types "brski.*" as defined by this specification.
+sub-resources each have one of the resource types "brski.\*" as defined by this specification.
 Similarly, the resource type "ace.est" identifies a base resource in a resource hierarchy, where its
-sub-resources each have one of the resource types "ace.est.*" as defined by {{RFC9148}}.
+sub-resources each have one of the resource types "ace.est.\*" as defined by {{RFC9148}}.
 
 ## Media Types Registry {#iana-media-types}
 
@@ -1399,9 +1399,8 @@ signed with a COSE_Sign1 structure {{RFC9052}} as defined in this document.
     Required parameters:  N/A
     Optional parameters:  N/A
     Encoding considerations:  binary (CBOR)
-    Security considerations:  Security Considerations of [This RFC].
-    Interoperability considerations:  The format is designed to be
-      broadly interoperable.
+    Security considerations:  Section 14 of [This RFC].
+    Interoperability considerations:  N/A
     Published specification:  [This RFC]
     Applications that use this media type:  cBRSKI/ANIMA, 6TiSCH, and 
       other zero-touch onboarding systems
@@ -1424,28 +1423,28 @@ signed with a COSE_Sign1 structure {{RFC9052}} as defined in this document.
 
 IANA has allocated ID 836 from the "CoAP Content-Formats" registry as shown below.
 
-    Media type                     Encoding   ID   Reference
-    -----------------------------  --------- ----  ----------
-    application/voucher+cose       -          836  [This RFC]
+| Media type             | Encoding  | ID   | Reference
+application/voucher+cose | -         | 836  | \[This RFC\]
+{: #coap-cf-registry-additions title='Additions to the IANA CoAP Content-Formats Registry'}
 
-
-## Update to BRSKI Well-known URIs Registry {#iana-brski-param-registry}
+## Update to BRSKI Well-Known URIs Registry {#iana-brski-param-registry}
 
 This section updates the "BRSKI Well-Known URIs" IANA registry of the Bootstrapping Remote Secure Key Infrastructures
-(BRSKI) Parameters Registry group, by adding a new column "Short URI".
-The contents of this field MUST be specified for any newly registered URI as follows:
+(BRSKI) Parameters Registry group, by adding a new column "Short Path Segment", clarifying existing "Description" values,
+and renaming the column "URI" to "Path Segment".
 
-Short URI: A short name for the "URI" resource that can be used by a client in a CoAP request to a BRSKI Registrar.
-In case the "URI" resource is only used between Registrar and MASA, the value "N/A" is registered denoting that a short name is not applicable.
+The new "Short Path Segment" field denotes a shorter alternative to Path Segment for the resource that can be used by a client
+in a CoAP request on a well-known BRSKI resource.
+A value "N/A" can be registered to denote that there is no short path segment defined.
 
-The contents of the registry including the new column are as follows:
+The contents of the registry with these changes applied are as follows:
 
-| URI    | Short URI | Description                                                     | Reference
-requestvoucher | rv  | Request voucher: Pledge to Registrar, and Registrar to MASA     | [RFC8995], \[This RFC\]
-voucher_status | vs  | Voucher status telemetry: Pledge to Registrar                   | [RFC8995], \[This RFC\]
-requestauditlog| N/A | Request audit log: Registrar to MASA                            | [RFC8995]
-enrollstatus   | es  | Enrollment status telemetry: Pledge to Registrar                | [RFC8995], \[This RFC\]
-{: #brski-wellknown-uri title='Update of the BRSKI Well-Known URIs Registry'}
+| Path Segment  | Short Path Segment | Description                                                  | Reference
+requestvoucher  | rv                 | Request voucher: Pledge to Registrar, and Registrar to MASA  | [RFC8995], \[This RFC\]
+voucher_status  | vs                 | Voucher status telemetry: Pledge to Registrar                | [RFC8995], \[This RFC\]
+requestauditlog | N/A                | Request audit log: Registrar to MASA                         | [RFC8995]
+enrollstatus    | es                 | Enrollment status telemetry: Pledge to Registrar             | [RFC8995], \[This RFC\]
+{: #brski-wellknown-uri-registry title='Update of the IANA BRSKI Well-Known URIs Registry'}
 
 ## Structured Syntax Suffixes Registry
 
@@ -1474,8 +1473,8 @@ This section registers the "+cose" suffix in the "Structured Syntax Suffixes" IA
     Fragment identifier considerations: N/A
     Security considerations: see [RFC9052]
     Contact:   
-      IETF COSE Working Group (cose@ietf.org) or IESG 
-      (iesg@ietf.org)
+      IETF COSE Working Group (cose@ietf.org) or
+      IESG (iesg@ietf.org)
     Author/Change controller: 
       IETF ANIMA Working Group (anima@ietf.org).
       IESG has change control over this registration.
@@ -1497,7 +1496,12 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 <contact initials="D." surname="Miller" fullname="Darrel Miller"/>, <contact initials="O." surname="Steele" fullname="Orie Steele"/> and <contact initials="M." surname="Sporny" fullname="Manu Sporny"/> provided review feedback on the registration of the +cose structured syntax suffix.
 </t>
 
+
 # Changelog
+-28:
+    Updates to BRSKI Well-Known URIs registry, including a rename of the "URI" column (#326).
+    Text formatting updates.
+
 -27:
     Clarify x5bag for storing signing chain and Registrar removes unprotected x5bag/x5chain (#324, #323, #230).
     Clarify RPK use with "placeholder" certificate.
