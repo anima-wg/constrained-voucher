@@ -1496,117 +1496,6 @@ This section registers the "+cose" suffix in the "Structured Syntax Suffixes" IA
       IESG has change control over this registration.
 
 
-# Acknowledgements
-
-<t>We are very grateful to <contact initials="J." surname="Schaad" fullname="Jim Schaad"/> for explaining COSE/CMS choices and for correcting early versions of the COSE_Sign1 objects.
-</t><t>
-<contact initials="M." surname="Veillette" fullname="Michel Veillette"/> did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
-</t><t>
-<contact initials="R." surname="Housley" fullname="Russ Housley"/>, <contact initials="D." surname="Franke" fullname="Daniel Franke"/>, <contact initials="H." surname="Birkholtz" fullname="Henk Birkholtz"/>, 
-<contact initials="K." surname="Moriarty" fullname="Kathleen Moriarty"/>, <contact initials="X." surname="Liu" fullname="Xufeng Liu"/>
-and <contact initials="C." surname="Moberg" fullname="Karl Moberg"/> provided review feedback.
-</t><t>
-The BRSKI design team has met on many Tuesdays and Thursdays for document review.
-The team includes the authors and: <contact initials="A." surname="Schellenbaum" fullname="Aurelio Schellenbaum"/>, <contact initials="D." surname="von Oheimb" fullname="David von Oheimb"/>, <contact initials="S." surname="Fries" fullname="Steffen Fries"/>, <contact initials="T." surname="Werner" fullname="Thomas Werner"/>, <contact initials="W." surname="Atwood" fullname="Bill Atwood"/> and <contact initials="T." surname="Eckert" fullname="Toerless Eckert"/>.
-</t><t>
-<contact initials="D." surname="Miller" fullname="Darrel Miller"/>, <contact initials="O." surname="Steele" fullname="Orie Steele"/> and <contact initials="M." surname="Sporny" fullname="Manu Sporny"/> provided review feedback on the registration of the +cose structured syntax suffix.
-</t>
-
-
-# Changelog
-
--28:
-    Cleanup of normative/informative references, setting each to right category.
-    Bugfix and clarification in text around EdDSA Curve selection.
-    Added section on additional information in COSE header with 'iat' CWT timestamp example.
-    Updates to BRSKI Well-Known URIs registry, including a rename of the "URI" column (#326).
-    Unify COSE header parameters terminology (#330).
-    Text formatting and editorial updates.
-
--27:
-    Clarify x5bag for storing signing chain and Registrar removes unprotected x5bag/x5chain (#324, #323, #230).
-    Clarify RPK use with "placeholder" certificate.
-    Merged the very similar BRSKI-MASA security considerations sections (#312).
-    Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
-    Removed figure captions from code examples for consistency (#315).
-    Add base resource type (rt) for "ace.est" and related terminology (#314).
-    Update IEEE 802.1AR reference to 2018 version (#313).
-    Editorial updates.
-
--26:
-    Updated I-D/RFC references to newer versions.
-    Corrected "sub-registry" term to official "registry", in IANA section.
-    Explicitly imported terminology from {{RFC7252}}.
-    Corrected "router" term in Thread/MLE section, with clarifications, and {{Thread}} reference fix.
-    Moved references between "Informative" and "Normative" based on what's required to implement all the optional features.
-    Removal of some lingering legacy text.
-    Editorial improvements, bugfixes and typo corrections.
-
--25:
-    Moved all software/library support info into Appendix A and added "open source" section;
-    Removed use of formal Extends/Amends Update-tags (#303, #304);
-    Moved Section 14 to Appendix E (#302);
-    Editorial improvements.
-
--24:
-    Rephrased well-known URL requirement in 14.1 (#292, #293);
-    Added paragraph on future certificate formats like C509 (#281, #294);
-    Add formal specification for CoAP discovery of Join Proxy by Pledge, instead of only showing examples (#296, #300);
-    Enable mDNS discovery of Join Proxy by Pledge (also in mesh networks) and list service name to use (#297, #299);
-    Add requirement to support content-format 287 in `/sen` and `/sren` response (#295, #298).
-
--23:
-    Removed Update tag for RFC 8366 (#285, #288);
-    Introduced cBRSKI acronym (#284, #286);
-    Added Update tag for RFC 9148 (#283, #289);
-    Keep CoAP discovery as only mechanism and refer to future discovery work (#279, #282, #290);
-    Introduce formal CBOR diagnostics ellipsis elision syntax (#281, #287);
-    Support for multi-tier CAs by introducing multipart-core `/crts` format (#275, #291);
-    Terminology updated for consistency with RFC 8366-bis (#274, #280);
-    Rename voucher media type to application/voucher+cose and register +cose SSS (#264, #277);
-    Editorial changes including section restructuring.
-
--22:
-    Streamlined text to focus mostly on the default flow, with optional functions moved to their own sections (#269, #273);
-    For DTLS 1.3 client, use the record_size_limit extensions RFC 8449 (#270);
-    Editorial updates;
-    Reference rfc6125bis updated to RFC 9525.
-
--11 to -21:
-    (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues , related Pull Requests and commits.)
-
--10:
-    Design considerations extended; Examples made consistent.
-
--08:
-    Examples for cose_sign1 are completed and improved.
-
--06:
-    New SID values assigned; regenerated examples.
-
--04:
-    voucher and request-voucher MUST be signed;
-    examples for signed request are added in appendix;
-    IANA SID registration is updated;
-    SID values in examples are aligned;
-    signed cms examples aligned with new SIDs.
-
--03:
-    Examples are inverted.
-
--02:
-    Example of requestvoucher with unsigned appllication/cbor is added;
-    attributes of voucher "refined" to optional;
-    CBOR serialization of vouchers improved;
-    Discovery port numbers are specified.
-
--01:
-    application/json is optional, application/cbor is compulsory;
-    Cms and cose mediatypes are introduced.
-
--00:
-    Initial version.
-
 --- back
 
 #Software and Library Support for cBRSKI
@@ -2168,3 +2057,116 @@ or a single (most relevant) CA certificate (281).
 
 The Pledge can now send a CoAP request to one of the discovered resources, with the Accept Option to indicate
 which return payload content-format the Pledge wants to receive.
+
+# Acknowledgements
+{:numbered="false"}
+
+<t>We are very grateful to <contact initials="J." surname="Schaad" fullname="Jim Schaad"/> for explaining COSE/CMS choices and for correcting early versions of the COSE_Sign1 objects.
+</t><t>
+<contact initials="M." surname="Veillette" fullname="Michel Veillette"/> did extensive work on _pyang_ to extend it to support the SID allocation process, and this document was among its first users.
+</t><t>
+<contact initials="R." surname="Housley" fullname="Russ Housley"/>, <contact initials="D." surname="Franke" fullname="Daniel Franke"/>, <contact initials="H." surname="Birkholtz" fullname="Henk Birkholtz"/>,
+<contact initials="K." surname="Moriarty" fullname="Kathleen Moriarty"/>, <contact initials="X." surname="Liu" fullname="Xufeng Liu"/>
+and <contact initials="C." surname="Moberg" fullname="Karl Moberg"/> provided review feedback.
+</t><t>
+The BRSKI design team has met on many Tuesdays and Thursdays for document review.
+The team includes the authors and: <contact initials="A." surname="Schellenbaum" fullname="Aurelio Schellenbaum"/>, <contact initials="D." surname="von Oheimb" fullname="David von Oheimb"/>, <contact initials="S." surname="Fries" fullname="Steffen Fries"/>, <contact initials="T." surname="Werner" fullname="Thomas Werner"/>, <contact initials="W." surname="Atwood" fullname="Bill Atwood"/> and <contact initials="T." surname="Eckert" fullname="Toerless Eckert"/>.
+</t><t>
+<contact initials="D." surname="Miller" fullname="Darrel Miller"/>, <contact initials="O." surname="Steele" fullname="Orie Steele"/> and <contact initials="M." surname="Sporny" fullname="Manu Sporny"/> provided review feedback on the registration of the +cose structured syntax suffix.
+</t>
+
+
+# Changelog
+{:numbered="false"}
+
+-28:
+    Cleanup of normative/informative references, setting each to right category.
+    Bugfix and clarification in text around EdDSA Curve selection.
+    Added section on additional information in COSE header with 'iat' CWT timestamp example.
+    Updates to BRSKI Well-Known URIs registry, including a rename of the "URI" column (#326).
+    Unify COSE header parameters terminology (#330).
+    Text formatting and editorial updates.
+
+-27:
+    Clarify x5bag for storing signing chain and Registrar removes unprotected x5bag/x5chain (#324, #323, #230).
+    Clarify RPK use with "placeholder" certificate.
+    Merged the very similar BRSKI-MASA security considerations sections (#312).
+    Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
+    Removed figure captions from code examples for consistency (#315).
+    Add base resource type (rt) for "ace.est" and related terminology (#314).
+    Update IEEE 802.1AR reference to 2018 version (#313).
+    Editorial updates.
+
+-26:
+    Updated I-D/RFC references to newer versions.
+    Corrected "sub-registry" term to official "registry", in IANA section.
+    Explicitly imported terminology from {{RFC7252}}.
+    Corrected "router" term in Thread/MLE section, with clarifications, and {{Thread}} reference fix.
+    Moved references between "Informative" and "Normative" based on what's required to implement all the optional features.
+    Removal of some lingering legacy text.
+    Editorial improvements, bugfixes and typo corrections.
+
+-25:
+    Moved all software/library support info into Appendix A and added "open source" section;
+    Removed use of formal Extends/Amends Update-tags (#303, #304);
+    Moved Section 14 to Appendix E (#302);
+    Editorial improvements.
+
+-24:
+    Rephrased well-known URL requirement in 14.1 (#292, #293);
+    Added paragraph on future certificate formats like C509 (#281, #294);
+    Add formal specification for CoAP discovery of Join Proxy by Pledge, instead of only showing examples (#296, #300);
+    Enable mDNS discovery of Join Proxy by Pledge (also in mesh networks) and list service name to use (#297, #299);
+    Add requirement to support content-format 287 in `/sen` and `/sren` response (#295, #298).
+
+-23:
+    Removed Update tag for RFC 8366 (#285, #288);
+    Introduced cBRSKI acronym (#284, #286);
+    Added Update tag for RFC 9148 (#283, #289);
+    Keep CoAP discovery as only mechanism and refer to future discovery work (#279, #282, #290);
+    Introduce formal CBOR diagnostics ellipsis elision syntax (#281, #287);
+    Support for multi-tier CAs by introducing multipart-core `/crts` format (#275, #291);
+    Terminology updated for consistency with RFC 8366-bis (#274, #280);
+    Rename voucher media type to application/voucher+cose and register +cose SSS (#264, #277);
+    Editorial changes including section restructuring.
+
+-22:
+    Streamlined text to focus mostly on the default flow, with optional functions moved to their own sections (#269, #273);
+    For DTLS 1.3 client, use the record_size_limit extensions RFC 8449 (#270);
+    Editorial updates;
+    Reference rfc6125bis updated to RFC 9525.
+
+-11 to -21:
+    (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues , related Pull Requests and commits.)
+
+-10:
+    Design considerations extended; Examples made consistent.
+
+-08:
+    Examples for cose_sign1 are completed and improved.
+
+-06:
+    New SID values assigned; regenerated examples.
+
+-04:
+    voucher and request-voucher MUST be signed;
+    examples for signed request are added in appendix;
+    IANA SID registration is updated;
+    SID values in examples are aligned;
+    signed cms examples aligned with new SIDs.
+
+-03:
+    Examples are inverted.
+
+-02:
+    Example of requestvoucher with unsigned appllication/cbor is added;
+    attributes of voucher "refined" to optional;
+    CBOR serialization of vouchers improved;
+    Discovery port numbers are specified.
+
+-01:
+    application/json is optional, application/cbor is compulsory;
+    Cms and cose mediatypes are introduced.
+
+-00:
+    Initial version.
