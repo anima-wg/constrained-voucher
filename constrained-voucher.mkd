@@ -86,10 +86,12 @@ informative:
   RFC7228:
   RFC7950:
   RFC8366:
+  RFC8392:
   RFC8990:
   RFC9334:
   RFC9528:
   RFC9595:
+  RFC9597:
   I-D.ietf-6lo-mesh-link-establishment:
   I-D.richardson-anima-masa-considerations:
   I-D.ietf-anima-jws-voucher:
@@ -1016,6 +1018,20 @@ The above validation elements are needed only for cases where (nonceless) vouche
 unsecure channels to the Registrar. Since the "x5bag" header parameter is not protected by the voucher's COSE
 signature, it could have been modified in transit.
 
+### Additional Information in the COSE Header
+
+The COSE header of the signed voucher can contain COSE header parameters with additional information,
+to be used by the Pledge.
+This information is additional to, and separate from, the voucher data defined by {{RFC8366bis}}.
+
+An example of how this additional information can be used is adding a CBOR Web Token (CWT, {{RFC8392}}) claim in the COSE
+header as defined by {{RFC9597}}, to encode the COSE signing time as an integer value in an '`iat`' (Issued At) CWT claim.
+This information in an integer format may be useful for a Pledge that does not have date/time parsing functions, so
+it is unable to parse the date/time string value contained in the voucher.
+Many other types of CWT claims can be included in a voucher in the same way, as needed for particular use cases.
+
+Such additional information can also be included in a COSE header of a voucher request by a Pledge, to be used by the MASA.
+
 # Extensions to Discovery {#discovery}
 
 It is assumed that a Join Proxy ({{joinproxy}}) seamlessly provides a relayed DTLS connection between the Pledge and the Registrar.
@@ -1498,9 +1514,11 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 
 
 # Changelog
+
 -28:
     Cleanup of normative/informative references, setting each to right category.
     Bugfix and clarification in text around EdDSA Curve selection.
+    Added section on additional information in COSE header with 'iat' CWT timestamp example.
     Updates to BRSKI Well-Known URIs registry, including a rename of the "URI" column (#326).
     Unify COSE header parameters terminology (#330).
     Text formatting and editorial updates.
@@ -1529,66 +1547,66 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Removed use of formal Extends/Amends Update-tags (#303, #304);
     Moved Section 14 to Appendix E (#302);
     Editorial improvements.
-    
+
 -24:
     Rephrased well-known URL requirement in 14.1 (#292, #293);
     Added paragraph on future certificate formats like C509 (#281, #294);
     Add formal specification for CoAP discovery of Join Proxy by Pledge, instead of only showing examples (#296, #300);
     Enable mDNS discovery of Join Proxy by Pledge (also in mesh networks) and list service name to use (#297, #299);
     Add requirement to support content-format 287 in `/sen` and `/sren` response (#295, #298).
-    
--23:     
-    Removed Update tag for RFC 8366 (#285, #288); 
-    Introduced cBRSKI acronym (#284, #286); 
-    Added Update tag for RFC 9148 (#283, #289); 
-    Keep CoAP discovery as only mechanism and refer to future discovery work (#279, #282, #290); 
-    Introduce formal CBOR diagnostics ellipsis elision syntax (#281, #287); 
+
+-23:
+    Removed Update tag for RFC 8366 (#285, #288);
+    Introduced cBRSKI acronym (#284, #286);
+    Added Update tag for RFC 9148 (#283, #289);
+    Keep CoAP discovery as only mechanism and refer to future discovery work (#279, #282, #290);
+    Introduce formal CBOR diagnostics ellipsis elision syntax (#281, #287);
     Support for multi-tier CAs by introducing multipart-core `/crts` format (#275, #291);
-    Terminology updated for consistency with RFC 8366-bis (#274, #280); 
-    Rename voucher media type to application/voucher+cose and register +cose SSS (#264, #277); 
+    Terminology updated for consistency with RFC 8366-bis (#274, #280);
+    Rename voucher media type to application/voucher+cose and register +cose SSS (#264, #277);
     Editorial changes including section restructuring.
 
--22:    
+-22:
     Streamlined text to focus mostly on the default flow, with optional functions moved to their own sections (#269, #273);
     For DTLS 1.3 client, use the record_size_limit extensions RFC 8449 (#270);
-    Editorial updates; 
+    Editorial updates;
     Reference rfc6125bis updated to RFC 9525.
-    
--11 to -21:   
+
+-11 to -21:
     (For change details see GitHub issues https://github.com/anima-wg/constrained-voucher/issues , related Pull Requests and commits.)
 
--10:   
+-10:
     Design considerations extended; Examples made consistent.
 
--08:   
+-08:
     Examples for cose_sign1 are completed and improved.
 
--06:   
+-06:
     New SID values assigned; regenerated examples.
 
--04:   
-    voucher and request-voucher MUST be signed; 
-    examples for signed request are added in appendix; 
-    IANA SID registration is updated; 
-    SID values in examples are aligned; 
+-04:
+    voucher and request-voucher MUST be signed;
+    examples for signed request are added in appendix;
+    IANA SID registration is updated;
+    SID values in examples are aligned;
     signed cms examples aligned with new SIDs.
 
--03:   
+-03:
     Examples are inverted.
 
--02:   
-    Example of requestvoucher with unsigned appllication/cbor is added; 
-    attributes of voucher "refined" to optional; 
-    CBOR serialization of vouchers improved; 
+-02:
+    Example of requestvoucher with unsigned appllication/cbor is added;
+    attributes of voucher "refined" to optional;
+    CBOR serialization of vouchers improved;
     Discovery port numbers are specified.
 
--01:      
-    application/json is optional, application/cbor is compulsory; 
+-01:
+    application/json is optional, application/cbor is compulsory;
     Cms and cose mediatypes are introduced.
 
--00:   
+-00:
     Initial version.
-    
+
 --- back
 
 #Software and Library Support for cBRSKI
