@@ -952,7 +952,7 @@ The MASA SHOULD NOT include an "x5bag" or "x5chain" attribute in the protected h
 normally a Pledge already stores the required public key for validation of the signed voucher.
 The exception case is if the MASA knows that the Pledge doesn't pre-store the MASA's public key used for signing, and thus the MASA needs to provide
 a certificate or certificate chain that will enable linking the signing identity to a pre-stored Trust Anchor (CA) in the Pledge.
-This approach is not recommended, because including certificates in the protected "x5bag" or "x5chain" COSE header attributes will
+This approach is not recommended, because including certificates in the protected "x5bag" or "x5chain" COSE header parameters will
 significantly increase the size of the voucher which impacts cBRSKI operation on constrained networks.
 
 For example, if the MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} Section 2.3), and the Pledge
@@ -967,7 +967,7 @@ To signal the complete chain of the MASA's signing identity to the Registrar, th
 chain of signing certificates in an "x5bag" attribute in the unprotected header of the voucher.
 This allows the Registrar to optionally validate the voucher before forwarding it to the Pledge, or to validate it for
 logging purposes.
-There is no voucher size impact of including this certificate chain in an unprotected "x5bag" COSE header attribute for
+There is no voucher size impact of including this certificate chain in an unprotected "x5bag" COSE header parameter for
 constrained networks, because the Registrar will remove this unprotected attribute prior to forwarding the voucher
 response to the Pledge, as defined in {{brski-extensions-registrar}}.
 
@@ -975,7 +975,7 @@ Note that cBRSKI currently does not support signing the voucher with an RPK for 
 certificate at all.
 If the MASA wants to sign a voucher with an RPK that is not part of any PKIX hierarchy, it creates
 a single self-signed "placeholder" root CA certificate that uses the designated RPK as the public key.
-This "placeholder" certificate is then included as the sole certificate in an unprotected "x5bag" header attribute,
+This "placeholder" certificate is then included as the sole certificate in an unprotected "x5bag" header parameter,
 as defined in the previous paragraph.
 
 Below, an example is shown of a COSE-signed voucher as created by MASA.
@@ -1004,7 +1004,7 @@ In {{voucher-example}} a further example of a signed voucher is shown.
 
 For a Registrar, validation of the voucher and/or the signature of the voucher is optional, per {{Section 5.6 of RFC8995}}.
 However, if a Registrar does perform the validation of the signature chain, communicated in the "x5bag" unprotected
-COSE header attribute (see {{sign-voucher-masa}})), it MUST validate that one of the below cases hold:
+COSE header parameter (see {{sign-voucher-masa}})), it MUST validate that one of the below cases hold:
 
 1. The signature chain is a single self-signed root CA certificate with a correct signature; and the public key in
    this certificate is also the public key that signed the voucher. This represents the case where a voucher has been
@@ -1502,6 +1502,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Cleanup of normative/informative references, setting each to right category.
     Bugfix and clarification in text around EdDSA Curve selection.
     Updates to BRSKI Well-Known URIs registry, including a rename of the "URI" column (#326).
+    Unify COSE header parameters terminology (#330).
     Text formatting and editorial updates.
 
 -27:
