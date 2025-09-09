@@ -1936,7 +1936,7 @@ A Registrar may also be implemented without support for the (optional) CoAP disc
 In that case, it may for example return a 4.04 Not Found as shown in the example below, in case the Registrar does not
 host the resource `/.well-known/core` at all.
 In such case, the Pledge cannot discover any onboarding/enrollment options and so it has to rely on the default cBRSKI
-options and has to use the `/.well-known/...` resources.
+resources under `/.well-known/brski/...` and `/.well-known/est/...`.
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski*
