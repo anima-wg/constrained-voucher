@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI)
 abbrev: Constrained BRSKI (cBRSKI)
-docname: draft-ietf-anima-constrained-voucher-28
+docname: draft-ietf-anima-constrained-voucher-29
 
 stand_alone: true
 
@@ -109,7 +109,7 @@ informative:
     target: "https://www.threadgroup.org/"
     author:
       ins: "Thread Group, Inc."
-    date: "accessed 2025-01-08"
+    date: "accessed 2025-10-11"
 
 venue:
   mail: anima@ietf.org
@@ -404,7 +404,7 @@ For example, a Pledge that skips resource discovery operations just sends the in
 
 ~~~~
   REQ: POST /.well-known/brski/rv
-    Content-Format: 836
+    Content-Format: 836 (application/voucher+cose)
     Payload       : (COSE-signed Pledge Voucher Request, PVR)
 ~~~~
 
@@ -414,8 +414,8 @@ The Pledge MAY also indicate in the request the desired format of the (voucher) 
 
 ~~~~
   REQ: POST /.well-known/brski/rv
-    Content-Format: 836
-    Accept        : 836
+    Content-Format: 836 (application/voucher+cose)
+    Accept        : 836 (application/voucher+cose)
     Payload       : (COSE-signed Pledge Voucher Request, PVR)
 ~~~~
 
@@ -1089,7 +1089,9 @@ Proxy has a dedicated port 8485 open for DTLS connections of Pledges.
   REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
 
   RES: 2.05 Content
-  <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
+    Content-Format: 40 (application/link-format)
+    Payload:
+      <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
 ~~~~
 
 The next example shows a Join Proxy that uses the default CoAPS port 5684 for DTLS connections of Pledges. In this case, the Join Proxy host
@@ -1100,7 +1102,9 @@ of Pledges.
   REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
 
   RES: 2.05 Content
-  <coaps://[fe80::c78:e3c4:58a0:a4ad]>;rt=brski.jp
+    Content-Format: 40 (application/link-format)
+    Payload:
+      <coaps://[fe80::c78:e3c4:58a0:a4ad]>;rt=brski.jp
 ~~~~
 
 In the following example, two Join Proxies respond to the multicast query. The Join Proxies each use a slightly different CoRE Link Format
@@ -1111,10 +1115,14 @@ two Join Proxies for initiating its DTLS connection.
   REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
+    Content-Format: 40 (application/link-format)
+    Payload:
+      <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
 
   RES: 2.05 Content
-  <coaps://[fe80::d359:3813:f382:3b23]:63245>;rt="brski.jp"
+    Content-Format: 40 (application/link-format)
+    Payload:
+      <coaps://[fe80::d359:3813:f382:3b23]:63245>;rt="brski.jp"
 ~~~~
 
 
@@ -1558,8 +1566,8 @@ A coaps enrollstatus message from Pledge to Registrar can be as follows:
 
 ~~~~
   REQ: POST coaps://192.0.2.1:8085/b/es
-  Content-Format: 60
-  Payload: <binary CBOR encoding of an enrollstatus map>
+    Content-Format: 60 (application/cbor)
+    Payload: <binary CBOR encoding of an enrollstatus map>
 ~~~~
 
 The corresponding CoAP header fields for this request are shown below.
@@ -1638,8 +1646,8 @@ A coaps voucher_status message from Pledge to Registrar can be as follows:
 
 ~~~~
   REQ: POST coaps://[2001:db8::2:1]/.well-known/brski/vs
-  Content-Format: 60 (application/cbor)
-  Payload =
+    Content-Format: 60 (application/cbor)
+    Payload:
 INSERT_TEXT_FROM_FILE examples/voucher-status.hex END
 ~~~~
 
@@ -1650,7 +1658,7 @@ INSERT_CBORDIAG_FROM_FILE examples/voucher-statusdiag.txt END
 A success response without payload will then be sent by the Registrar back to the Pledge to indicate reception of the telemetry report:
 
 ~~~~
-  2.04 Changed
+  RES: 2.04 Changed
 ~~~~
 
 
@@ -1736,8 +1744,8 @@ use the default CoAPS UDP port 5684.
 
 ~~~
   REQ: POST coaps://[JP-link-local-address]/b/rv
-  Content-Format: 836
-  Payload: <signed_pvr>
+    Content-Format: 836 (application/voucher+cose)
+    Payload: <signed_pvr>
 ~~~
 
 When the Join Proxy receives the DTLS handshake messages from the Pledge, it will relay these messages to the Registrar.
@@ -1766,9 +1774,9 @@ Because the Pledge used this format in the PVR, the JRC must also use this forma
 
 ~~~
   REQ: POST https://masa.stok.nl/.well-known/brski/requestvoucher
-  Content-Type: application/voucher+cose
-  Accept: application/voucher+cose
-  Body: <signed_rvr>
+    Content-Type: application/voucher+cose
+    Accept: application/voucher+cose
+    Body: <signed_rvr>
 ~~~
 
 The payload signed_rvr is shown as hexadecimal dump (with lf added):
@@ -1786,16 +1794,16 @@ The resulting voucher is created by the MASA and returned to the Registrar:
 
 ~~~
   RES: 200 OK
-  Content-Type: application/voucher+cose
-  Body: <signed_voucher>
+    Content-Type: application/voucher+cose
+    Body: <signed_voucher>
 ~~~
 
 The Registrar then returns the voucher to the Pledge:
 
 ~~~
   RES: 2.04 Changed
-  Content-Format: 836
-  Body: <signed_voucher>
+    Content-Format: 836 (application/voucher+cose)
+    Payload: <signed_voucher>
 ~~~
 
 It is signed by the MASA's private key (see {{masapriv}}) and can be
@@ -1896,12 +1904,12 @@ CBOR (60) and JSON (50) formats, a CoAP resource discovery request and response 
   REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b>;rt=brski,
-  </b/rv>;rt=brski.rv;ct=836,
-  </b/vs>;rt=brski.vs;ct="50 60",
-  </b/es>;rt=brski.es;ct="50 60"
+    Content-Format: 40 (application/link-format)
+    Payload:
+      </b>;rt=brski,
+      </b/rv>;rt=brski.rv;ct=836,
+      </b/vs>;rt=brski.vs;ct="50 60",
+      </b/es>;rt=brski.es;ct="50 60"
 ~~~~
 
 In this case, the Registrar returns only the shorter URI paths matching the query filter, which are located under the
@@ -1916,12 +1924,12 @@ only the `/.well-known/brski/\<short-name\>` resources for the short names as de
   REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </.well-known/brski>;rt=brski,
-  </.well-known/brski/rv>;rt=brski.rv;ct=836,
-  </.well-known/brski/vs>;rt=brski.vs;ct="50 60",
-  </.well-known/brski/es>;rt=brski.es;ct="50 60"
+    Content-Format: 40 (application/link-format)
+    Payload:
+      </.well-known/brski>;rt=brski,
+      </.well-known/brski/rv>;rt=brski.rv;ct=836,
+      </.well-known/brski/vs>;rt=brski.vs;ct="50 60",
+      </.well-known/brski/es>;rt=brski.es;ct="50 60"
 ~~~~
 
 When responding to a discovery request for cBRSKI resources, the Registrar may return the full resource paths for all
@@ -1960,9 +1968,9 @@ The compact response below then shows that the Registrar indeed supports a cBRSK
   REQ: GET /.well-known/core?rt=brski
 
   RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b>;rt=brski
+    Content-Format: 40 (application/link-format)
+    Payload:
+      </b>;rt=brski
 ~~~~
 
 The Pledge can now start using any of the cBRSKI resources `/b/\<short-name\>` in a next CoAP request to the Registrar.
@@ -1973,9 +1981,9 @@ As a follow-up example, the Pledge can now start the onboarding by sending its P
 
 ~~~~
   REQ: POST /b/rv
-  Content-Format: 836
-  Accept: 836
-  Payload: (binary COSE-signed PVR)
+    Content-Format: 836 (application/voucher+cose)
+    Accept: 836 (application/voucher+cose)
+    Payload: <binary COSE-signed PVR>
 ~~~~
 
 
@@ -1999,9 +2007,9 @@ In the below example, a Pledge queries specifically for the brski.rv resource ty
   REQ: GET /.well-known/core?rt=brski.rv
 
   RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b/rv>;rt=brski.rv;ct="836 65123 65124"
+    Content-Format: 40 (application/link-format)
+    Payload:
+      </b/rv>;rt=brski.rv;ct="836 65123 65124"
 ~~~~
 
 The Registrar returns 3 supported voucher formats: 836, 65123, and 65124.
@@ -2016,12 +2024,12 @@ For example as in the following interaction:
   REQ: GET /.well-known/core?rt=brski*
 
   RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </b>;rt=brski,
-  </b/rv>;rt=brski.rv,
-  </b/vs>;rt=brski.vs,
-  </b/es>;rt=brski.es
+    Content-Format: 40 (application/link-format)
+    Payload:
+      </b>;rt=brski,
+      </b/rv>;rt=brski.rv,
+      </b/vs>;rt=brski.vs,
+      </b/es>;rt=brski.es
 ~~~~
 
 
@@ -2035,14 +2043,14 @@ This is done either before or after the voucher has been validated.
   REQ: GET /.well-known/core?rt=ace.est*
 
   RES: 2.05 Content
-  Content-Format: 40
-  Payload:
-  </e/crts>;rt=ace.est.crts;ct="62 281 287",
-  </e/sen>;rt=ace.est.sen;ct="281 287",
-  </e/sren>;rt=ace.est.sren;ct="281 287",
-  </e/att>;rt=ace.est.att,
-  </e/skg>;rt=ace.est.skg,
-  </e/skc>;rt=ace.est.skc
+    Content-Format: 40 (application/link-format)
+    Payload:
+      </e/crts>;rt=ace.est.crts;ct="62 281 287",
+      </e/sen>;rt=ace.est.sen;ct="281 287",
+      </e/sren>;rt=ace.est.sren;ct="281 287",
+      </e/att>;rt=ace.est.att,
+      </e/skg>;rt=ace.est.skg,
+      </e/skc>;rt=ace.est.skc
 ~~~~
 
 The response from the Registrar indicates that EST-coaps enrollment (`/sen`) and re-enrollment (`/sren`) is supported,
@@ -2078,6 +2086,9 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 
 # Changelog
 {:numbered="false"}
+
+-29:
+    Updated CoAP request/response formatting of examples.
 
 -28:
     Cleanup of normative/informative references, setting each to right category.
