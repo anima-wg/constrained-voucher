@@ -1077,7 +1077,7 @@ Using CoAP discovery, a Pledge can discover a Join Proxy by sending a link-local
 Zero, one, or multiple Join Proxies may respond.
 The handling of multiple responses and absence of responses cases follow the guidelines of {{Section 4 of RFC8995}}.
 The discovery message is a CoAP GET request on the URI path `/.well-known/core` using a URI query "`rt=brski.jp`". This resource type (rt) is defined
-in {{Section 8.3 of I-D.ietf-anima-constrained-join-proxy}}. 
+in {{Section 8.1 of I-D.ietf-anima-constrained-join-proxy}}.
 
 ### Examples
 
@@ -2081,6 +2081,8 @@ The BRSKI design team has met on many Tuesdays and Thursdays for document review
 The team includes the authors and: <contact initials="A." surname="Schellenbaum" fullname="Aurelio Schellenbaum"/>, <contact initials="D." surname="von Oheimb" fullname="David von Oheimb"/>, <contact initials="S." surname="Fries" fullname="Steffen Fries"/>, <contact initials="T." surname="Werner" fullname="Thomas Werner"/>, <contact initials="W." surname="Atwood" fullname="Bill Atwood"/> and <contact initials="T." surname="Eckert" fullname="Toerless Eckert"/>.
 </t><t>
 <contact initials="D." surname="Miller" fullname="Darrel Miller"/>, <contact initials="O." surname="Steele" fullname="Orie Steele"/> and <contact initials="M." surname="Sporny" fullname="Manu Sporny"/> provided review feedback on the registration of the +cose structured syntax suffix.
+</t><t>
+<contact initials="C." surname="Bormann" fullname="Carsten Bormann"/> suggested the use of CBOR Web Token (CWT) claims in the voucher's COSE header.
 </t>
 
 
