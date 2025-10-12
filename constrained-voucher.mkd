@@ -1079,7 +1079,7 @@ The handling of multiple responses and absence of responses cases follow the gui
 The discovery message is a CoAP GET request on the URI path `/.well-known/core` using a URI query "`rt=brski.jp`". This resource type (rt) is defined
 in {{Section 8.1 of I-D.ietf-anima-constrained-join-proxy}}.
 
-### Examples
+### Examples {#pledge-discovery-examples}
 
 Below, a typical example is provided showing the Pledge's CoAP request and the Join Proxy's CoAP response. The Join Proxy responds with a link-local
 source address, which is the same address as indicated in the URI-reference element ({{RFC6690}}) in the discovery response payload. The Join
@@ -1125,12 +1125,41 @@ two Join Proxies for initiating its DTLS connection.
       <coaps://[fe80::d359:3813:f382:3b23]:63245>;rt="brski.jp"
 ~~~~
 
+In the final example, a single Join Proxy host responds with two distinct cBRSKI endpoints.
+The Pledge may now select one of the two CoAP endpoints for initiating its DTLS connection.
+
+~~~~
+  REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski*
+
+  RES: 2.05 Content
+    Content-Format: 40 (application/link-format)
+    Payload:
+      <coaps://[fe80::d359:3813:f382:3b23]:61616>;rt=brski.jp
+      <coaps://[fe80::d359:3813:f382:3b23]:61617>;rt=brski.jp;var="c509 v2"
+~~~~
+
+The first endpoint on port 61616 supports only the cBRSKI protocol as defined by this document.
+The second endpoint, on port 61617, supports the same cBRSKI protocol as well as additional variations or extensions.
+In this example, these variations/extensions are encoded using string values in a single attribute "var".
+This information may be also encoded using other attributes defined by a future specification.
+
+A Pledge not aware of these variations can safely ignore these values, because the base cBRSKI protocol is supported
+by both endpoints, as indicated by the resource type (rt).
+If however a Pledge is aware of these variations, it can select the endpoint with the variation it prefers, in case multiple options are discovered.
+The use of attributes with a single base resource type allows future extensibility of cBRSKI, and enables the
+Join Proxies to support cBRSKI variants that are unknown to them.
+
 
 ## Discovery Operations by a Join Proxy
 
 A Join Proxy needs to discover a Registrar, either at the moment it needs to relay data (of a Pledge) towards the Registrar, or prior to that moment. For example, it may start Registrar 
 discovery as soon as it is requested to be enabled in a Join Proxy role. It may periodically redo this discovery, or periodically or on-demand check that the Registrar is still available 
 in the network at the discovered IP address.
+
+As shown in the final example in {{pledge-discovery-examples}}, a Join Proxy can discover multiple Registrars in its network
+and present these options to the Pledge.
+Each of these Registrars may support specific variations/extensions of cBRSKI - which may be defined in future documents.
+It is up to the administrator of the network how many Registrars are enabled.
 
 Further details on CoAP discovery of the Registrar by a Join Proxy are provided in {{Section 5.1.1 of I-D.ietf-anima-constrained-join-proxy}}.
 
