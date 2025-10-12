@@ -1083,6 +1083,11 @@ Responding Join Proxies return a CoRE Link Format document with one or more link
 Each link indicates one CoAPS endpoint that offers cBRSKI Join Proxy functionality.
 Formally, each link indicates a CoAP root resource (`/`) tagged with the "`brski.jp`" type, hosted on a CoAPS endpoint.
 
+In case a Pledge selects a particular Join Proxy for cBRSKI onboarding, it MUST use the link-local source address of
+the Join Proxy's discovery response as the destination IP address for its subsequent onboarding attempt.
+This implies that the UTF-8 encoded link-local address literal that appears in the host subcomponent of each returned
+link is not used for determining the destination IP address of the onboarding attempt.
+
 ### Examples {#pledge-discovery-examples}
 
 Below, a typical example is provided showing the Pledge's CoAP request and the Join Proxy's CoAP response. The Join Proxy responds with a link-local
@@ -1097,6 +1102,9 @@ The Join Proxy has a dedicated UDP port 8485 open for DTLS connections of Pledge
     Payload:
       <coaps://[fe80::c78:e3c4:58a0:a4ad]:8485>;rt=brski.jp
 ~~~~
+
+Note that the Pledge would use the port number from the link in this response, but not the IPv6 literal in the host
+subcomponent (`[fe80::c78:e3c4:58a0:a4ad]`), as defined by the above discovery operation steps.
 
 The next example shows a Join Proxy that uses the default CoAPS port 5684 for DTLS connections of Pledges. In this case, the Join Proxy host
 is not using port 5684 for any other purposes, so it has the port available exclusively for accepting DTLS connections
@@ -2124,6 +2132,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 
 -29:
     Clarify that each brski.jp link indicates a root resource (/) (#335).
+    Clarify that Pledge uses IP link-local address of JP's discovery response, instead of the UTF-8 encoded IP address literal (#334).
     Add example of Join Proxy offering multiple Registrars (endpoints) (#333).
     Updated CoAP request/response formatting of examples.
     Updated acknowledgements (#331).
