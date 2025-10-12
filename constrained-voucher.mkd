@@ -1594,7 +1594,7 @@ The CoAP headers are only fully worked out for the first example, enrollstatus.
 A coaps enrollstatus message from Pledge to Registrar can be as follows:
 
 ~~~~
-  REQ: POST coaps://192.0.2.1:8085/b/es
+  REQ: POST /b/es
     Content-Format: 60 (application/cbor)
     Payload: <binary CBOR encoding of an enrollstatus map>
 ~~~~
@@ -1674,7 +1674,7 @@ Which in case of a piggybacked response has the following CoAP header fields:
 A coaps voucher_status message from Pledge to Registrar can be as follows:
 
 ~~~~
-  REQ: POST coaps://[2001:db8::2:1]/.well-known/brski/vs
+  REQ: POST /.well-known/brski/vs
     Content-Format: 60 (application/cbor)
     Payload:
 INSERT_TEXT_FROM_FILE examples/voucher-status.hex END
@@ -2119,7 +2119,10 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 {:numbered="false"}
 
 -29:
+    Add example of Join Proxy offering multiple Registrars (endpoints) (#333).
     Updated CoAP request/response formatting of examples.
+    Updated acknowledgements (#331).
+    Editorial updates.
 
 -28:
     Cleanup of normative/informative references, setting each to right category.
