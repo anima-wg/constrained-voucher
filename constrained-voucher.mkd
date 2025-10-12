@@ -1079,11 +1079,15 @@ The handling of multiple responses and absence of responses cases follow the gui
 The discovery message is a CoAP GET request on the URI path `/.well-known/core` using a URI query "`rt=brski.jp`". This resource type (rt) is defined
 in {{Section 8.1 of I-D.ietf-anima-constrained-join-proxy}}.
 
+Responding Join Proxies return a CoRE Link Format document with one or more links.
+Each link indicates one CoAPS endpoint that offers cBRSKI Join Proxy functionality.
+Formally, each link indicates a CoAP root resource (`/`) tagged with the "`brski.jp`" type, hosted on a CoAPS endpoint.
+
 ### Examples {#pledge-discovery-examples}
 
 Below, a typical example is provided showing the Pledge's CoAP request and the Join Proxy's CoAP response. The Join Proxy responds with a link-local
-source address, which is the same address as indicated in the URI-reference element ({{RFC6690}}) in the discovery response payload. The Join
-Proxy has a dedicated port 8485 open for DTLS connections of Pledges.
+source address, which is the same address as indicated in the URI-reference element ({{RFC6690}}) in the link in the discovery response payload.
+The Join Proxy has a dedicated UDP port 8485 open for DTLS connections of Pledges:
 
 ~~~~
   REQ: GET coap://[ff02::fd]/.well-known/core?rt=brski.jp
@@ -2119,6 +2123,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 {:numbered="false"}
 
 -29:
+    Clarify that each brski.jp link indicates a root resource (/) (#335).
     Add example of Join Proxy offering multiple Registrars (endpoints) (#333).
     Updated CoAP request/response formatting of examples.
     Updated acknowledgements (#331).
