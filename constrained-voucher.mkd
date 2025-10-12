@@ -1147,7 +1147,8 @@ The Pledge may now select one of the two CoAP endpoints for initiating its DTLS 
     Content-Format: 40 (application/link-format)
     Payload:
       <coaps://[fe80::d359:3813:f382:3b23]:61616>;rt=brski.jp
-      <coaps://[fe80::d359:3813:f382:3b23]:61617>;rt=brski.jp;var="c509 v2"
+      <coaps://[fe80::d359:3813:f382:3b23]:61617>;rt=brski.jp;
+                                                  var="c509 v2"
 ~~~~
 
 The first endpoint on port 61616 supports only the cBRSKI protocol as defined by this document.
