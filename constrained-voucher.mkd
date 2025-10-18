@@ -685,7 +685,7 @@ The arrows in the figure indicate the issuing of a certificate, i.e. author of (
 ~~~~ aasvg
 {::include two-ca-chain.txt}
 ~~~~
-{: #fig-twoca title='Two-Level CA PKI'}
+{: #fig-twoca title='Two-Level CA PKI' align='center'}
 
 When the Registrar is using a COSE-signed RVR, the COSE_Sign1 object contains a protected and an unprotected header.
 The Registrar MUST place all the certificates needed by MASA to validate the signature chain for its RVR in an
@@ -735,7 +735,7 @@ RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-En
 ~~~~ aasvg
 {::include pinning-options.txt}
 ~~~~
-{: #fig-pinning title='Raw Public Key (RPK) pinning examples'}
+{: #fig-pinning title='Raw Public Key (RPK) pinning examples' align='center'}
 
 ## Considerations for use of IDevID-Issuer {#registrar-idevid-issuer}
 
