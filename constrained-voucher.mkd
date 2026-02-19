@@ -137,8 +137,8 @@ experience frequent packet loss. In addition, its nodes may be constrained by en
 
 The Bootstrapping Remote Secure Key Infrastructure (BRSKI) protocol described in {{RFC8995}}
 provides a solution for secure zero-touch (automated) onboarding of new (unconfigured) devices.
-In it, these new devices are called "pledges", equipped with a factory-installed Initial Device Identifier (IDevID) (see {{ieee802-1AR}}).
-Using the IDevID the pledges are securely enrolled into a network.
+These new devices are called "Pledges", equipped with a factory-installed Initial Device Identifier (IDevID) (see {{ieee802-1AR}}).
+Using the IDevID, a Pledge is securely enrolled into a network.
 
 The BRSKI solution described in {{RFC8995}} was designed to be modular, and this document describes a version scaled to the constraints of IoT deployments.
 This document uses the constrained voucher and voucher request artifacts defined in {{RFC8366bis}} for a constrained
@@ -741,7 +741,7 @@ RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-En
 {{RFC8366bis}} and {{RFC8995}} define the idevid-issuer attribute for voucher and voucher-request (respectively), but they summarily explain when to use it.
 
 The use of idevid-issuer is provided so that the serial-number to which the issued voucher pertains can be relative to the entity that issued the devices' IDevID.
-In most cases there is a one to one relationship between the trust anchor that signs vouchers (and is trusted by the pledge), and the Certification Authority that signs the IDevID.
+In most cases there is a one to one relationship between the trust anchor that signs vouchers (and is trusted by the Pledge), and the Certification Authority that signs the IDevID.
 In that case, the serial-number in the voucher data must refer to the same device as the serial-number that is in the IDevID certificate.
 
 However, there are situations where the one to one relationship may be broken.
@@ -753,10 +753,10 @@ It is not possible for the Pledge or the Registrar to know which situation appli
 The question to be answered is whether or not to include the idevid-issuer in the PVR and the RVR.
 A second question arises as to what the format of the idevid-issuer contents are.
 
-Analysis of the situation shows that the pledge never needs to include the idevid-issuer in it's PVR, because the pledge's IDevID certificate is available to the Registrar, and the Authority Key Identifier is contained within that IDevID certificate.
-The pledge therefore has no need to repeat this.
+Analysis of the situation shows that the Pledge never needs to include the idevid-issuer in it's PVR, because the Pledge's IDevID certificate is available to the Registrar, and the Authority Key Identifier is contained within that IDevID certificate.
+The Pledge therefore has no need to repeat this.
 
-For the RVR, the Registrar has to examine the pledge's IDevID certificate to discover the serial number to use in the
+For the RVR, the Registrar has to examine the Pledge's IDevID certificate to discover the serial number to use in the
 Registrar's Voucher Request (RVR).
 This is clear in {{Section 5.5 of RFC8995}}.
 That section also clarifies that the idevid-issuer is to be included in the RVR.
@@ -2133,6 +2133,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 -30:
     Update section references draft-ietf-anima-8366bis to latest version.
     Remove reference to the to-be-deprecated RFC 8366.
+    Editorial (wording) updates.
 
 -29:
     Clarify that each brski.jp link indicates a root resource (/) (#335).
