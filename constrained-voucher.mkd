@@ -66,6 +66,7 @@ normative:
   RFC9053:
   RFC9147:
   RFC9148:
+  RFC9254:
   RFC9360:
   RFC9525:
   RFC8366bis: I-D.ietf-anima-rfc8366bis
@@ -766,7 +767,7 @@ Concerning the Authority Key Identifier, {{RFC8366bis}} specifies that the entir
 # Artifacts {#artifacts}
 
 The YANG ({{RFC7950}}) module and CBOR serialization for the constrained voucher as used by cBRSKI are described in {{RFC8366bis}}.
-That document also assigns SID values to YANG elements in accordance with {{RFC9595}}.
+That document also assigns SID values to YANG elements in accordance with {{RFC9254}} and {{RFC9595}}.
 The present section provides some examples of these artifacts and defines a new signature format for these, using COSE.
 
 Compared to the first voucher request definition done in {{RFC8995}}, the constrained voucher request adds the fields
@@ -1237,11 +1238,12 @@ indicates that new device commissioning is allowed.
 
 The design considerations for vouchers from {{Section 10 of RFC8366bis}} apply. Specifically for CBOR encoding of voucher data,
 one key difference with JSON encoding is that the names of the leaves in the YANG definition do not affect the size of the resulting CBOR,
-as the SID ({{RFC9595}}) translation process assigns integers to the names.
+if the SID ({{RFC9254}}, {{RFC9595}}) translation process is used that assigns integers to the names.
 
 To obtain the lowest code size and RAM use on the Pledge, it is recommended that a Pledge is designed to only process/generate these SID integers and not the lengthy strings.
 The MASA in that case is required to generate the voucher data for that Pledge using only SID integers.
-Yet, this MASA implementation MUST still support both SID integers and strings, to be able to process the field names in the RVR.
+Yet, this MASA implementation MUST still support both SID integers and strings, to be able to process field names in the RVR
+in case the Registrar uses names instead of SIDs.
 
 ## CoAP Usage
 A successful POST request to the Registrar's telemetry resources (`/vs`, `/es`) returns a 2.04 Changed response with empty payload.
@@ -1457,15 +1459,16 @@ This section registers the media type "application/voucher+cose" in the "Media T
 This media type is used to indicate that the content is a CBOR voucher or voucher request
 signed with a COSE_Sign1 structure {{RFC9052}} as defined in this document.
 
-### application/voucher+cose
+### `application/voucher+cose`
 
     Type name:  application
     Subtype name:  voucher+cose
     Required parameters:  N/A
     Optional parameters:  N/A
     Encoding considerations:  binary (CBOR)
-    Security considerations:  Section 14 of [This RFC].
-    Interoperability considerations:  N/A
+    Security considerations:  Section 14 of [This RFC], and Section 12
+      of [RFC 9052] for the COSE_Sign1 structured that is used.
+    Interoperability considerations:  Section 15.2.2 of [This RFC]
     Published specification:  [This RFC]
     Applications that use this media type:  cBRSKI/ANIMA, 6TiSCH, and 
       other zero-touch onboarding systems
@@ -1483,6 +1486,23 @@ signed with a COSE_Sign1 structure {{RFC9052}} as defined in this document.
     Author:  ANIMA WG
     Change controller:  IETF
     Provisional registration? (standards tree only):  NO
+
+### Interoperability Considerations for `application/voucher+cose`
+
+The media type defined here does not have any parameter to indicate whether names are used, or SID integers are used,
+or both can be mixed within a voucher data item.
+In absence of any specific further knowledge about this, a mixed use of SID integers and names MUST be assumed, which
+is equivalent to the `application/yang-data+cbor` media type ({{RFC9254}}) without the optional '`id`' parameter.
+
+Furthermore,
+
+* a Registrar assumes that mixed SIDs/names MAY be present in a received PVR or voucher;
+* a MASA assumes that mixed SIDs/names MAY be present in a received RVR;
+* a Pledge assumes, depending on its implementation, that SIDs are present only, or names are present only, or mixed
+  SIDs/names are present in a received voucher.
+
+Because the MASA and Pledge are under control (either directly or by contract) of the same manufacturer, they can be
+co-developed regarding the type of identifiers produced and identifiers consumed in order to guarantee interoperability.
 
 ## CoAP Content-Formats Registry
 
@@ -1863,7 +1883,8 @@ When decoded, it can be represented by the following CBOR diagnostic notation:
 
 INSERT_CBORDIAG_FROM_FILE examples/cose-examples/voucher-nonsigned.txt END
 
-The largest element in the voucher is identified by key 8, which decodes to SID 2459 (pinned-domain-cert).
+The largest element in the voucher is identified by key 8, which decodes to SID 2459 (pinned-domain-cert) based
+on the delta encoding defined by {{RFC9254}}.
 It contains the complete PKIX (DER-encoded X.509v3) certificate of the Registrar's domain CA. This certificate is
 shown in {{cose-example-domain-ca-cert}}.
 
