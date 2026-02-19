@@ -737,33 +737,6 @@ RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-En
 ~~~~
 {: #fig-pinning title='Raw Public Key (RPK) pinning examples' align='center'}
 
-## Considerations for use of IDevID-Issuer {#registrar-idevid-issuer}
-
-{{RFC8366bis}} and {{RFC8995}} define the `idevid-issuer` attribute for voucher and voucher-request (respectively), but they summarily explain when to use it.
-
-The use of `idevid-issuer` is provided so that the serial-number to which the issued voucher pertains can be relative to the entity that issued the devices' IDevID.
-In most cases there is a one to one relationship between the trust anchor that signs vouchers (and is trusted by the Pledge), and the Certification Authority that signs the IDevID.
-In that case, the serial-number in the voucher data must refer to the same device as the serial-number that is in the IDevID certificate.
-
-However, there are situations where the one to one relationship may be broken.
-This occurs whenever a manufacturer has a common MASA, but different products (on different assembly lines) are produced with identical serial numbers.
-A system of serial numbers which is just a simple counter is a good example of this.
-A system of serial numbers where there is some prefix relating the product type does not fit into this, even if the lower digits are a counter.
-
-It is not possible for the Pledge or the Registrar to know which situation applies.
-The question to be answered is whether or not to include the `idevid-issuer` attribute in the PVR and the RVR.
-A second question arises as to what the format of the `idevid-issuer` contents are.
-
-Analysis of the situation shows that the Pledge never needs to include the `idevid-issuer` in it's PVR, because the Pledge's IDevID certificate is available to the Registrar, and the Authority Key Identifier is contained within that IDevID certificate.
-The Pledge therefore has no need to repeat this.
-
-For the RVR, the Registrar has to examine the Pledge's IDevID certificate to discover the serial number to use in the
-Registrar's Voucher Request (RVR).
-This is clear in {{Section 5.5 of RFC8995}}.
-That section also clarifies that the `idevid-issuer` is to be included in the RVR.
-
-Concerning the Authority Key Identifier, {{RFC8366bis}} specifies that the entire object i.e. the extnValue OCTET STRING is to be included: comprising the AuthorityKeyIdentifier, SEQUENCE, Choice as well as the OCTET STRING that is the keyIdentifier.
-
 # Artifacts {#artifacts}
 
 The YANG ({{RFC7950}}) module and CBOR serialization for the constrained voucher as used by cBRSKI are described in {{RFC8366bis}}.
@@ -1344,19 +1317,24 @@ How the Pledge discovers this method and details of such enrollment methods are 
 
 ## Duplicate Serial Numbers
 
-In the absense of correct use of `idevid-issuer` by the Registrar as detailed in {{registrar-idevid-issuer}}, it would be possible for a malicious Registrar to use an unauthorized voucher for a device.
-This would apply only to the case where a Manufacturer Authorized Signing Authority (MASA) is trusted by different products from the same manufacturer,
-and the manufacturer has duplicated serial numbers as a result of a merger, acquisition or mis-management.
+If a manufacturer sold products with duplicated serial numbers, that use the same MASA CA as their root of trust, a
+customer of one of these products can potentially perform an attack where it uses a voucher created for product 1 to
+onboard product 2. This attack only works for nonceless vouchers.
+
+Note that such a situation could only arise due to manufacturer mis-management or oversight.
 
 For example, imagine the same manufacturer makes light bulbs as well as gas centrifuges,
 and said manufacturer does not uniquely allocate product serial numbers.
-This attack only works for nonceless vouchers.
-The attacker has obtained a light bulb which happens to have the same serial-number as an operational gas centrifuge which it wishes to obtain access to.
-The attacker performs a normal BRSKI onboarding for the light bulb, but then uses the resulting voucher to onboard the gas centrifuge.
+The attacker has obtained a light bulb which happens to have the same serial number as an operational gas centrifuge which it wishes to obtain access to.
+The attacker performs a normal BRSKI onboarding for the light bulb, but then uses the resulting nonceless voucher to onboard the gas centrifuge.
 The attack requires that the gas centrifuge be returned to a state where it is willing to perform a new onboarding operation.
+For example, a factory reset.
 
-This attack is prevented by the mechanism of having the Registrar include the `idevid-issuer` in the RVR, and the MASA including it in the resulting voucher.
-The `idevid-issuer` is not included by default: a MASA needs to be aware if there are parts of the organization which duplicates serial numbers, and if so, include it.
+This attack is normally prevented by the mechanisms of using different trust root CAs for different product lines, and/or
+using unique serial numbers within a single MASA CA scope.
+
+{{Section 6.2 of RFC8366bis}} discusses cases of duplicated serial numbers in products across different CAs and the role of
+the '`idevid-issuer`' attribute in the RVR and in the voucher to disambiguate these products.
 
 ## IDevID Security in the Pledge
 
@@ -2152,6 +2130,8 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 {:numbered="false"}
 
 -30:
+    Move 'idevid-issuer' clarification text to draft-8366bis.
+    Update the duplicate serial number attack to focus only on the case where the attack could be successful (equal CAs).
     Update section references draft-ietf-anima-8366bis to latest version.
     Remove reference to the to-be-deprecated RFC 8366.
     Align terms and notation with draft-ietf-anima-8366bis.
