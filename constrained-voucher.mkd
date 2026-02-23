@@ -168,10 +168,10 @@ Registrar provides. Implementing these methods is optional for a Pledge.
 # Terminology          {#Terminology}
 
 The following terms are defined in {{RFC8366bis}}, and are used identically as in that document:
-artifact, domain, Join Registrar/Coordinator (JRC), malicious Registrar, Manufacturer Authorized Signing Authority
-(MASA), Pledge, Registrar, Onboarding, Owner, Voucher Data and Voucher.
+Artifact, Attribute, Domain, Join Registrar and Coordinator (JRC), Malicious Registrar, Manufacturer Authorized Signing Authority
+(MASA), Pledge, Registrar, Onboarding, Owner, Voucher Data, Voucher Request and Voucher.
 
-The protocol described in this document is referred to as cBRSKI, the constrained version of BRSKI which is described in {{RFC8995}}.
+The protocol described in this document is referred to as cBRSKI, the constrained version of BRSKI {{RFC8995}}.
 
 The following terms from {{RFC8995}} are used identically as in that document:
 Domain CA, enrollment, IDevID, Join Proxy, LDevID, manufacturer, nonced, nonceless, PKIX.
@@ -264,7 +264,7 @@ This document Updates {{RFC8995}} because it:
 
 * makes some BRSKI messages optional to send if the results can be inferred from other validations ({{brski-est-extensions}}),
 
-* extends the BRSKI-EST/BRSKI-MASA protocols ({{brski-est}}, {{brski-masa}}, {{VR-COSE}}) to carry the new "application/voucher+cose" format.
+* extends the BRSKI-EST/BRSKI-MASA protocols ({{brski-est}}, {{brski-masa}}, {{VR-COSE}}) to carry the new "`application/voucher+cose`" format.
 
 This document Updates {{RFC9148}} because it:
 
@@ -272,13 +272,13 @@ This document Updates {{RFC9148}} because it:
 
 * details how an EST-coaps client handles certificate renewal and re-enrollment ({{brski-est-extensions}}),
 
-* details how an EST-coaps server processes a "CA certificates" request for content-format 287 ("application/pkix-cert") ({{brski-extensions-registrar}}).
+* details how an EST-coaps server processes a "CA certificates" request for content-format 287 ("`application/pkix-cert`") ({{brski-extensions-registrar}}).
 
 * adds enrollment status telemetry to the certificate renewal procedure ({{est-reenrollment}}),
 
-* adds support for the media type "application/multipart-core" for the CA certificates (`/crts`) resource ({{multipart-core}}),
+* adds support for the media type "`application/multipart-core`" for the CA certificates (`/crts`) resource ({{multipart-core}}),
 
-* defines a resource type (rt) attribute value "ace.est" for the EST-coaps base resource ({{iana-core-rt}}).
+* defines a resource type ('`rt`') attribute value "`ace.est`" for the EST-coaps base resource ({{iana-core-rt}}).
 
 
 # BRSKI-EST Protocol {#brski-est}
@@ -322,10 +322,10 @@ For this reason it is RECOMMENDED that a PMTU of 1024 bytes be assumed for the D
 It is unlikely that any ICMPv6 Packet Too Big indications ({{RFC4443}}) will be relayed by the Join Proxy back to the Pledge.
 
 During the operation of the EST-coaps protocol, the CoAP Block-wise transfer mechanism {{RFC7959}} will be automatically used when message sizes exceed the PMTU.
-A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragment length extension ("max_fragment_length") defined in {{Section 4 of RFC6066}} with the maximum fragment length set to a value of either 2^9 or 2^10,
+A Pledge/EST-client on a constrained network MUST use the (D)TLS maximum fragment length extension ('`max_fragment_length`') defined in {{Section 4 of RFC6066}} with the maximum fragment length set to a value of either 2^9 or 2^10,
 when operating as a DTLS 1.2 client.
 
-A Pledge/EST-client operating as DTLS 1.3 client, MUST use the (D)TLS record size limit extensions ("record_size_limit")
+A Pledge/EST-client operating as DTLS 1.3 client, MUST use the (D)TLS record size limit extensions ('`record_size_limit`')
 defined in {{Section 4 of RFC8449}}, with RecordSizeLimit set to a value between 512 and 1024 (inclusive).
 
 ### Registrar and the Server Name Indicator (SNI) {#sni}
@@ -408,7 +408,7 @@ For example, a Pledge that skips resource discovery operations just sends the in
     Payload       : (COSE-signed Pledge Voucher Request, PVR)
 ~~~~
 
-Note that only content-format 836 ("application/voucher+cose") is defined in this document for the payload sent to the voucher request resource (`/rv`).
+Note that only content-format 836 ("`application/voucher+cose`") is defined in this document for the payload sent to the voucher request resource (`/rv`).
 Content-format 836 MUST be supported by the Registrar for the `/rv` resource and it MAY support additional formats.
 The Pledge MAY also indicate in the request the desired format of the (voucher) response, using the Accept Option. An example of using this option in the request is as follows:
 
@@ -421,8 +421,8 @@ The Pledge MAY also indicate in the request the desired format of the (voucher) 
 
 If the Accept Option is omitted in the request, the response format follows from the request payload format (which is 836).
 
-Note that this specification allows for application/voucher+cose format requests and vouchers to be transported over HTTPS,
-as well as for application/voucher-cms+json and other formats yet to be defined over CoAP.
+Note that this specification allows for "`application/voucher+cose`" format requests and vouchers to be transported over HTTPS,
+as well as for "`application/voucher-cms+json`" and other formats yet to be defined over CoAP.
 The burden for this flexibility is placed upon the Registrar.
 A Pledge on constrained hardware is expected to support a single format only.
 
@@ -438,8 +438,8 @@ These are two CoAP POST requests made the by Pledge at two key steps in the proc
 {{RFC8995}} defines the content of these POST operations in CDDL, which are serialized as JSON.
 This document extends this with an additional CBOR format, derived using the CDDL rules in {{RFC8610}}.
 
-The new CBOR telemetry format has CoAP content-format 60 ("application/cbor") and MUST be supported by the Registrar for both the `/vs` and `/es` resources.
-The existing JSON format has CoAP content-format 50 ("application/json") and MAY also be supported by the Registrar.
+The new CBOR telemetry format has CoAP content-format 60 ("`application/cbor`") and MUST be supported by the Registrar for both the `/vs` and `/es` resources.
+The existing JSON format has CoAP content-format 50 ("`application/json`") and MAY also be supported by the Registrar.
 A Pledge MUST use the new CBOR format to send telemetry messages.
 
 
@@ -542,11 +542,11 @@ Note that an EST-coaps server that is also a Registrar will already support the 
 ### Multipart Content-Format for CA certificates (`/crts`) Resource {#multipart-core}
 In EST-coaps {{RFC9148}} the PKCS#7 container format is used for CA certificates distribution. Because the PKCS#7 format is only used as a certificate container and no additional security is applied on the container, it 
 becomes attractive to replace this format by something simpler, on a constrained Pledge: so that additional PKCS#7 code is avoided. Therefore, this document defines a container format using the {{RFC8710}} 
-"application/multipart-core" media type (CoAP content-format 62). This is beneficial since a Pledge necessarily already supports CBOR parsing, so there is little code overhead to support this CBOR-based
+"`application/multipart-core`" media type (CoAP content-format 62). This is beneficial since a Pledge necessarily already supports CBOR parsing, so there is little code overhead to support this CBOR-based
 container format.
 
 A Registrar or EST-coaps server MUST support content-format 62 for the `/crts` resource.
-The multipart collection MUST contain the individual CA certificates, each encoded as an "application/pkix-cert" (287) representation. Future documents may define other certificate formats: the multipart collection can handle any future types. 
+The multipart collection MUST contain the individual CA certificates, each encoded as an "`application/pkix-cert`" (287) representation. Future documents may define other certificate formats: the multipart collection can handle any future types.
 The order of CA certificates MUST be in the CA hierarchy order starting from the issuer of the client's LDevID first, up to the highest-level domain CA, then optionally followed by any further CA certificates that are not part of this hierarchy.
 These further CA certificates may be Third-party TAs as defined in {{RFC7030}}. The highest-level domain CA may or may not be a root CA certificate.
 
@@ -556,7 +556,7 @@ As an example, for the two-level CA domain PKI of {{fig-twoca}} the multipart co
 [ <domain sub-CA cert (2)> , <domain CA cert (1)> ]
 ~~~~
 
-Encoded as an "application/multipart-core" CBOR array this is (shown in CBOR diagnostic notation):
+Encoded as an "`application/multipart-core`" CBOR array this is (shown in CBOR diagnostic notation):
 
 ~~~~
 [ 287, h'3082' ... 'd713', 287, h'3082' ... 'a034' ]
@@ -575,18 +575,18 @@ Knowing the overall progress of the data transfer may be helpful in certain case
 
 ## Registrar Extensions {#brski-extensions-registrar}
 
-Before a Registrar forwards a COSE-signed voucher from MASA to the Pledge, it MUST remove any "x5bag" or "x5chain"
+Before a Registrar forwards a COSE-signed voucher from MASA to the Pledge, it MUST remove any '`x5bag`' or '`x5chain`'
 unprotected COSE header attributes (which are defined in {{RFC9360}}).
 The contents of these unprotected attributes are solely for validation/logging use by the Registrar.
 Removing these attributes reduces the voucher size on the constrained network path to the Pledge.
 
-The content-format 60 ("application/cbor") MUST be supported by the Registrar for the `/vs` and `/es` resources.
+The content-format 60 ("`application/cbor`") MUST be supported by the Registrar for the `/vs` and `/es` resources.
 
-Content-format 836 ("application/voucher+cose") MUST be supported by the Registrar for the `/rv` resource for CoAP POST requests, both as request payload and as response payload.
+Content-format 836 ("`application/voucher+cose`") MUST be supported by the Registrar for the `/rv` resource for CoAP POST requests, both as request payload and as response payload.
 
-Content-format 287 ("application/pkix-cert") MUST be supported by the Registrar as a response payload for the `/sen` and `/sren` resources.
+Content-format 287 ("`application/pkix-cert`") MUST be supported by the Registrar as a response payload for the `/sen` and `/sren` resources.
 
-When a Registrar receives a "CA certificates request" (`/crts`) request with a CoAP Accept Option with value 287 ("application/pkix-cert") it MUST return only the
+When a Registrar receives a "CA certificates request" (`/crts`) request with a CoAP Accept Option with value 287 ("`application/pkix-cert`") it MUST return only the
 single CA certificate that is the envisioned or actual CA authority for the current, authenticated Pledge making the request. An exception to this rule is when 
 the domain has been configured to operate with multiple CA trust anchors exclusively: then the Registrar returns a 4.06 Not Acceptable error to signal to the client that it
 needs to request another content-format that supports retrieval of multiple CA certificates.
@@ -604,7 +604,7 @@ This document does not change that.
 The MASA only needs to support formats for which it has constructed Pledges that use that format.
 
 The Registrar MUST use the same format for the RVR as the Pledge used for its PVR.
-Specifically, the Registrar MUST use the media type "application/voucher+cose" for its voucher request to MASA,
+Specifically, the Registrar MUST use the media type "`application/voucher+cose`" for its voucher request to MASA,
 when the Pledge used content-format 836 in the payload of its request to the Registrar.
 
 The Registrar indicates the voucher format (by media type) it wants to receive from MASA using the HTTP Accept header.
@@ -629,7 +629,7 @@ reducing the complexity would also seem to reduce the cost of that function.
 
 ## Registrar Voucher Request {#brski-masa-rvr}
 
-If the PVR contains a proximity assertion, the Registrar MUST propagate this assertion into the RVR by including the "assertion" field with the value "proximity".
+If the PVR contains a proximity assertion, the Registrar MUST propagate this assertion into the RVR by including the '`assertion`' attribute with the value "proximity".
 This conforms to the example in {{Section 3.3 of RFC8995}} of carrying the assertion forward.
 
 ## MASA and the Server Name Indicator (SNI) {#sni-masa}
@@ -689,7 +689,7 @@ The arrows in the figure indicate the issuing of a certificate, i.e. author of (
 
 When the Registrar is using a COSE-signed RVR, the COSE_Sign1 object contains a protected and an unprotected header.
 The Registrar MUST place all the certificates needed by MASA to validate the signature chain for its RVR in an
- "x5bag" attribute in either the protected or the unprotected header as defined in {{Section 2 of RFC9360}}.
+ '`x5bag`' attribute in either the protected or the unprotected header as defined in {{Section 2 of RFC9360}}.
 
 ## MASA Pinning Policy {#masa-pinning-policy}
 
@@ -723,11 +723,11 @@ This is used by the RPK variant of cBRSKI described in {{rpk-considerations}}, b
 
 For both cases, if an RPK is pinned, it MUST be the RPK of the Registrar, which equals the public key of the Registrar's EE certificate.
 
-When the Pledge is known by MASA to support the RPK variant only, the voucher produced by the MASA pins the RPK of the Registrar in either the "pinned-domain-pubk"
-or "pinned-domain-pubk-sha256" field of the voucher data.
+When the Pledge is known by MASA to support the RPK variant only, the voucher produced by the MASA pins the RPK of the Registrar in either the '`pinned-domain-pubk`'
+or '`pinned-domain-pubk-sha256`' attribute of the voucher data.
 This is described in more detail in {{RFC8366bis}} and {{rpk-considerations}}.
 
-When the Pledge is known by MASA to support PKIX operations, the "pinned-domain-cert" field present in a voucher normally pins a domain certificate.
+When the Pledge is known by MASA to support PKIX operations, the '`pinned-domain-cert`' attribute present in a voucher normally pins a domain certificate.
 That can be either the End-Entity certificate of the Registrar, or the certificate of a domain CA, as specified in {{masa-pinning-policy}}.
 However, if the Pledge is known by MASA to also support RPK pinning and the MASA policy intends to pin the Registrar in the voucher (and not a CA), then MASA SHOULD pin the
 RPK (RPK3 in {{fig-pinning}}) of the Registrar instead of the Registrar's End-Entity certificate to save space in the voucher.
@@ -770,13 +770,13 @@ The YANG ({{RFC7950}}) module and CBOR serialization for the constrained voucher
 That document also assigns SID values to YANG elements in accordance with {{RFC9254}} and {{RFC9595}}.
 The present section provides some examples of these artifacts and defines a new signature format for these, using COSE.
 
-Compared to the first voucher request definition done in {{RFC8995}}, the constrained voucher request adds the fields
-"proximity-registrar-pubk" and "proximity-registrar-pubk-sha256".
-One of these is optionally used to replace the "proximity-registrar-cert" field, for a smaller voucher request data size -
+Compared to the first voucher request definition done in {{RFC8995}}, the constrained voucher request adds the attributes
+'`proximity-registrar-pubk`' and '`proximity-registrar-pubk-sha256`'.
+One of these is optionally used to replace the '`proximity-registrar-cert`' attribute, for a smaller voucher request data size -
 useful for the most constrained cases.
 
-The constrained voucher adds the fields "pinned-domain-pubk" and "pinned-domain-pubk-sha256" to pin an RPK.
-One of these is optionally used instead of the "pinned-domain-cert" field, for a smaller voucher data size.
+The constrained voucher adds the attributes '`pinned-domain-pubk`' and '`pinned-domain-pubk-sha256`' to pin an RPK.
+One of these is optionally used instead of the '`pinned-domain-cert`' attribute, for a smaller voucher data size.
 
 ## Example Artifacts
 
@@ -784,13 +784,13 @@ One of these is optionally used instead of the "pinned-domain-cert" field, for a
 
 Below, example voucher data from a constrained voucher request (PVR) from a Pledge to a Registrar is shown in CBOR diagnostic notation.
 Long CBOR byte strings have been shortened for readability, using the ellipsis ("...") to indicate elided bytes. This notation is 
-defined in {{I-D.ietf-cbor-edn-literals}}. The enum value of the assertion field is
-2 for the "proximity" assertion as defined in {{Section 8.3 of RFC8366bis}}.
+defined in {{I-D.ietf-cbor-edn-literals}}. The enum value of the assertion attribute is
+2 for the '`proximity`' assertion as defined in {{Section 8.3 of RFC8366bis}}.
 
 INSERT_CBORDIAG_FROM_FILE examples/voucher-request-example1.txt END
 
-The Pledge has included the item "proximity-registrar-pubk" which carries the public key of the Registrar, instead of including the full Registrar certificate in
-a "proximity-registrar-cert" item. This is done to reduce the size of the PVR. Also note that the Pledge did not include the "created-on" field since it lacks an
+The Pledge has included the attribute '`proximity-registrar-pubk`' which carries the public key of the Registrar, instead of including the full Registrar certificate in
+a '`proximity-registrar-cert`' attribute. This is done to reduce the size of the PVR. Also note that the Pledge did not include the '`created-on`' attribute since it lacks an
 internal real-time clock and has no knowledge of the current time at the moment of performing the onboarding.
 
 ### Example Registrar Voucher Request (RVR) Artifact {#example-rvr}
@@ -808,14 +808,14 @@ The constrained voucher request format supports both the string and SID key type
 ### Example Voucher Artifacts {#example-voucher}
 
 Below, an example of constrained voucher data is shown in CBOR diagnostic notation. It was created by a MASA in response to
-receiving the Registrar Voucher Request (RVR) shown in {{example-rvr}}. The enum value of the "assertion" field is set to "proximity" (2),
+receiving the Registrar Voucher Request (RVR) shown in {{example-rvr}}. The enum value of the '`assertion`' attribute is set to "proximity" (2),
 to acknowledge to both the Pledge and the Registrar that the proximity of the Pledge to the Registrar is considered proven.
 
 INSERT_CBORDIAG_FROM_FILE examples/voucher-example1.txt END
 
 While the above example voucher data includes the nonce from the PVR, the next example is for a nonce-less voucher. Instead of a nonce, it
-includes an "expires-on" field with the date and time on which the voucher expires. Because the MASA did not verify the proximity of
-the Pledge and Registrar in this case, the "assertion" field contains a weaker assertion of "verified" (0).
+includes an '`expires-on`' attribute with the date and time on which the voucher expires. Because the MASA did not verify the proximity of
+the Pledge and Registrar in this case, the '`assertion`' attribute contains a weaker assertion of "verified" (0).
 This indicates that the MASA verified the domain's ownership of the Pledge via some other means.
 
 INSERT_CBORDIAG_FROM_FILE examples/voucher-example2.txt END
@@ -838,8 +838,8 @@ Support for curve secp256k1 is OPTIONAL.
 
 Support for EdDSA using Curve 25519 is RECOMMENDED in new designs if hardware support is available.
 This is keytype EDDSA (-8) from Table 2 of {{RFC9053}}.
-A "crv" parameter is necessary to specify the Curve, for example value Ed25519 (6) from Table 18 of {{RFC9053}}.
-The "kty" field MUST be present, and it MUST be "OKP" (Table 17 of {{RFC9053}}).
+A '`crv`' parameter is necessary to specify the Curve, for example value Ed25519 (6) from Table 18 of {{RFC9053}}.
+The '`kty`' field MUST be present, and it MUST be "OKP" (Table 17 of {{RFC9053}}).
 
 A transition towards EdDSA is occurring in the industry.
 Some hardware can accelerate only some algorithms with specific curves, other hardware can accelerate any curve, and still other kinds of hardware provide a tool kit for acceleration of any elliptic curve algorithm.
@@ -860,13 +860,13 @@ An example of the supported COSE_Sign1 object structure containing a Pledge Vouc
 )
 ~~~~
 
-The {{COSE-registry}} specifies the integers/encoding for the "alg" field. The "alg"
+The {{COSE-registry}} specifies the integers/encoding for the '`alg`' field. The '`alg`'
 field restricts the key usage for verification of this COSE object to a particular cryptographic algorithm.
 
 ### Signing of Registrar Voucher Request (RVR)
 
-A Registrar MUST include a COSE "x5bag" structure in the RVR as explained in {{registrar-identity}}.
-Below, an example Registrar Voucher Request (RVR) is shown that includes the "x5bag" unprotected
+A Registrar MUST include a COSE '`x5bag`' structure in the RVR as explained in {{registrar-identity}}.
+Below, an example Registrar Voucher Request (RVR) is shown that includes the '`x5bag`' unprotected
 header parameter (32). The bag contains two certificates in this case.
 
 ~~~~ cbor-diag
@@ -883,39 +883,39 @@ header parameter (32). The bag contains two certificates in this case.
 )
 ~~~~
 
-A "kid" (key ID) field is OPTIONAL in the unprotected COSE header parameters map of a COSE object.
+A '`kid`' (key ID) field is OPTIONAL in the unprotected COSE header parameters map of a COSE object.
 If present, it identifies the public key of the key pair that was used to sign the
-COSE message. The value of the key identifier "kid" parameter may be in any format agreed between signer and verifier.
+COSE message. The value of the key identifier '`kid`' parameter may be in any format agreed between signer and verifier.
 Usually a hash of the public key is used to identify the public key; but the choice of key identifier method is
 vendor-specific.
 
-By default, a Registrar does not include a "kid" parameter in the RVR since the signing key
-is already identified by the signing certificates chain included in the COSE "x5bag" structure.
-A Registrar nevertheless MAY use a "kid" parameter in its RVR to identify its signing key/identity.
+By default, a Registrar does not include a '`kid`' parameter in the RVR since the signing key
+is already identified by the signing certificates chain included in the COSE '`x5bag`' structure.
+A Registrar nevertheless MAY use a '`kid`' parameter in its RVR to identify its signing key/identity.
 
-The method of generating such "kid" value is vendor-specific and SHOULD be configurable in the Registrar to
+The method of generating such '`kid`' value is vendor-specific and SHOULD be configurable in the Registrar to
 support commonly used methods. In order to support future business cases and supply chain integrations,
-a Registrar using the "kid" field MUST be configurable, on a per-manufacturer basis,
-to select a particular method for generating the "kid" value such that it is compatible with the method that
-the manufacturer expects. Note that the "kid" field always has a CBOR byte string (bstr) format.
+a Registrar using the '`kid`' field MUST be configurable, on a per-manufacturer basis,
+to select a particular method for generating the '`kid`' value such that it is compatible with the method that
+the manufacturer expects. Note that the '`kid`' field always has a CBOR byte string (bstr) format.
 
 In {{rvr-example}} a further example of a signed RVR is shown.
 
 ### Signing of Pledge Voucher Request (PVR)
 
-Like in the RVR, a "kid" (key ID) field is also OPTIONAL in the PVR. It can be used to identify the signing key/identity
+Like in the RVR, a '`kid`' (key ID) field is also OPTIONAL in the PVR. It can be used to identify the signing key/identity
 to the MASA.
 
-A Pledge by default SHOULD NOT use a "kid" parameter in its PVR, because its signing key is already identified
+A Pledge by default SHOULD NOT use a '`kid`' parameter in its PVR, because its signing key is already identified
 by the Pledge's unique serial number that is included in the PVR and (by the Registrar) in the RVR. This achieves the smallest possible
 PVR data size while still enabling the MASA to fully verify the PVR.
-Still, when required the Pledge MAY use a "kid" parameter in its PVR to help the MASA identify the right public key to verify against. This can occur
-for example if a Pledge has multiple IDevID identities. The "kid" parameter in this case may be an integer byte identifying one out of N identities
+Still, when required the Pledge MAY use a '`kid`' parameter in its PVR to help the MASA identify the right public key to verify against. This can occur
+for example if a Pledge has multiple IDevID identities. The '`kid`' parameter in this case may be an integer byte identifying one out of N identities
 present, or it may be a hash of the public key, or anything else the Pledge vendor decides.
-A Registrar normally SHOULD ignore a "kid" parameter used in a received PVR, as this information is intended for the MASA.
+A Registrar normally SHOULD ignore a '`kid`' parameter used in a received PVR, as this information is intended for the MASA.
 In other words, there is no need for the Registrar to verify the contents of this field, but it may include it in an audit log.
 
-The example below shows a PVR with "kid" present as an unprotected header parameter.
+The example below shows a PVR with '`kid`' present as an unprotected header parameter.
 
 ~~~~ cbor-diag
 18(                    / tag for COSE_Sign1                      /
@@ -931,12 +931,12 @@ The example below shows a PVR with "kid" present as an unprotected header parame
 )
 ~~~~
 
-The Pledge SHOULD NOT use the "x5bag" or "x5chain" COSE header parameters in the PVR.
+The Pledge SHOULD NOT use the '`x5bag`' or '`x5chain`' COSE header parameters in the PVR.
 A Registrar that processes a PVR with such a structure MUST ignore
 it, and MUST use only the TLS Client Certificate extension for
 authentication of the Pledge.
 
-A situation where the Pledge MAY use the "x5bag" or "x5chain" structure is for communication
+A situation where the Pledge MAY use the '`x5bag`' or '`x5chain`' structure is for communication
 of certificate chains to the MASA.  This would arise in some vendor-
 specific situations involving outsourcing of MASA functionality, or
 rekeying of the IDevID certification authority.
@@ -945,16 +945,16 @@ In {{pvr-example}} a further example of a signed PVR is shown.
 
 ### Signing of Voucher by MASA {#sign-voucher-masa}
 
-The MASA SHOULD NOT use a "kid" parameter in the voucher response, because the MASA's signing
+The MASA SHOULD NOT use a '`kid`' parameter in the voucher response, because the MASA's signing
 key is already known to the Pledge. Still, where needed the MASA MAY use
-a "kid" parameter in the voucher response to help the Pledge identify the right MASA public key
+a '`kid`' parameter in the voucher response to help the Pledge identify the right MASA public key
 to verify against. This can occur for example if a Pledge has multiple IDevID identities.
 
-The MASA SHOULD NOT include an "x5bag" or "x5chain" attribute in the protected header of the voucher response, because
+The MASA SHOULD NOT include an '`x5bag`' or '`x5chain`' attribute in the protected header of the voucher response, because
 normally a Pledge already stores the required public key for validation of the signed voucher.
 The exception case is if the MASA knows that the Pledge doesn't pre-store the MASA's public key used for signing, and thus the MASA needs to provide
 a certificate or certificate chain that will enable linking the signing identity to a pre-stored Trust Anchor (CA) in the Pledge.
-This approach is not recommended, because including certificates in the protected "x5bag" or "x5chain" COSE header parameters will
+This approach is not recommended, because including certificates in the protected '`x5bag`' or '`x5chain`' COSE header parameters will
 significantly increase the size of the voucher which impacts cBRSKI operation on constrained networks.
 
 For example, if the MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} Section 2.3), and the Pledge
@@ -962,14 +962,14 @@ only pre-stores a manufacturer (root) CA identity in its Trust Store which is no
 then a certificate chain needs to be included with the voucher in order for the Pledge to validate the MASA signing CA's signature
 by validating the chain up to the CA in its Trust Store.
 In BRSKI CMS signed vouchers {{RFC8995}}, the CMS structure has a place for such a certificate chain.
-In cBRSKI COSE-signed vouchers, the "x5bag" attribute {{RFC9360}} placed in the
+In cBRSKI COSE-signed vouchers, the '`x5bag`' attribute {{RFC9360}} placed in the
 COSE protected header parameters is used to contain the needed certificates for the Pledge to form the chain.
 
 To signal the complete chain of the MASA's signing identity to the Registrar, the MASA MUST include the complete
-chain of signing certificates in an "x5bag" attribute in the unprotected header of the voucher.
+chain of signing certificates in an '`x5bag`' attribute in the unprotected header of the voucher.
 This allows the Registrar to optionally validate the voucher before forwarding it to the Pledge, or to validate it for
 logging purposes.
-There is no voucher size impact of including this certificate chain in an unprotected "x5bag" COSE header parameter for
+There is no voucher size impact of including this certificate chain in an unprotected '`x5bag`' COSE header parameter for
 constrained networks, because the Registrar will remove this unprotected attribute prior to forwarding the voucher
 response to the Pledge, as defined in {{brski-extensions-registrar}}.
 
@@ -977,12 +977,12 @@ Note that cBRSKI currently does not support signing the voucher with an RPK for 
 certificate at all.
 If the MASA wants to sign a voucher with an RPK that is not part of any PKIX hierarchy, it creates
 a single self-signed "placeholder" root CA certificate that uses the designated RPK as the public key.
-This "placeholder" certificate is then included as the sole certificate in an unprotected "x5bag" header parameter,
+This "placeholder" certificate is then included as the sole certificate in an unprotected '`x5bag`' header parameter,
 as defined in the previous paragraph.
 
 Below, an example is shown of a COSE-signed voucher as created by MASA.
-This example shows the common case where a protected "x5bag" (32) attribute is not used, while an unprotected
-"x5bag" (32) attribute is used to communicate the MASA's signature certificate chain to the Registrar.
+This example shows the common case where a protected '`x5bag`' (32) attribute is not used, while an unprotected
+'`x5bag`' (32) attribute is used to communicate the MASA's signature certificate chain to the Registrar.
 The bag contains two certificates in this example. One of these is the identity of the signer of the
 COSE_Sign1 object, whose signature is stored as the last CBOR array element in the below example.
 
@@ -1005,7 +1005,7 @@ In {{voucher-example}} a further example of a signed voucher is shown.
 ### Optional Validation of Voucher by Registrar
 
 For a Registrar, validation of the voucher and/or the signature of the voucher is optional, per {{Section 5.6 of RFC8995}}.
-However, if a Registrar does perform the validation of the signature chain, communicated in the "x5bag" unprotected
+However, if a Registrar does perform the validation of the signature chain, communicated in the '`x5bag`' unprotected
 COSE header parameter (see {{sign-voucher-masa}})), it MUST validate that one of the below cases hold:
 
 1. The signature chain is a single self-signed root CA certificate with a correct signature; and the public key in
@@ -1015,7 +1015,7 @@ COSE header parameter (see {{sign-voucher-masa}})), it MUST validate that one of
    in the Registrar.
 
 The above validation elements are needed only for cases where (nonceless) vouchers are communicated over potentially
-unsecure channels to the Registrar. Since the "x5bag" header parameter is not protected by the voucher's COSE
+unsecure channels to the Registrar. Since the '`x5bag`' header parameter is not protected by the voucher's COSE
 signature, it could have been modified in transit.
 
 ### Additional Information in the COSE Header
@@ -1076,7 +1076,7 @@ A Pledge that makes a voucher request to a Registrar that does not support that 
 Using CoAP discovery, a Pledge can discover a Join Proxy by sending a link-local multicast discovery message to the All CoAP Nodes address FF02::FD.
 Zero, one, or multiple Join Proxies may respond.
 The handling of multiple responses and absence of responses cases follow the guidelines of {{Section 4 of RFC8995}}.
-The discovery message is a CoAP GET request on the URI path `/.well-known/core` using a URI query "`rt=brski.jp`". This resource type (rt) is defined
+The discovery message is a CoAP GET request on the URI path `/.well-known/core` using a URI query "`rt=brski.jp`". This resource type (`rt`) is defined
 in {{Section 8.1 of I-D.ietf-anima-constrained-join-proxy}}.
 
 Responding Join Proxies return a CoRE Link Format document with one or more links.
@@ -1120,7 +1120,7 @@ of Pledges.
 ~~~~
 
 In the following example, two Join Proxies respond to the multicast query. The Join Proxies each use a slightly different CoRE Link Format
-'rt' value encoding. While the first encoding is more compact, both encodings are allowed per {{RFC6690}}. The Pledge may now select one of the
+'`rt`' value encoding. While the first encoding is more compact, both encodings are allowed per {{RFC6690}}. The Pledge may now select one of the
 two Join Proxies for initiating its DTLS connection.
 
 ~~~~
@@ -1153,11 +1153,11 @@ The Pledge may now select one of the two CoAP endpoints for initiating its DTLS 
 
 The first endpoint on port 61616 supports only the cBRSKI protocol as defined by this document.
 The second endpoint, on port 61617, supports the same cBRSKI protocol as well as additional variations or extensions.
-In this example, these variations/extensions are encoded using string values in a single attribute "var".
+In this example, these variations/extensions are encoded using string values in a single attribute '`var`'.
 This information may be also encoded using other attributes defined by a future specification.
 
 A Pledge not aware of these variations can safely ignore these values, because the base cBRSKI protocol is supported
-by both endpoints, as indicated by the resource type (rt).
+by both endpoints, as indicated by the resource type ('`rt`').
 If however a Pledge is aware of these variations, it can select the endpoint with the variation it prefers, in case multiple options are discovered.
 The use of attributes with a single base resource type allows future extensibility of cBRSKI, and enables the
 Join Proxies to support cBRSKI variants that are unknown to them.
@@ -1242,8 +1242,8 @@ if the SID ({{RFC9254}}, {{RFC9595}}) translation process is used that assigns i
 
 To obtain the lowest code size and RAM use on the Pledge, it is recommended that a Pledge is designed to only process/generate these SID integers and not the lengthy strings.
 The MASA in that case is required to generate the voucher data for that Pledge using only SID integers.
-Yet, this MASA implementation MUST still support both SID integers and strings, to be able to process field names in the RVR
-in case the Registrar uses names instead of SIDs.
+Yet, this MASA MUST still support both SID integers and strings, to be able to process attribute (string)
+names in the RVR which the Registrar may use.
 
 ## CoAP Usage
 A successful POST request to the Registrar's telemetry resources (`/vs`, `/es`) returns a 2.04 Changed response with empty payload.
@@ -1266,7 +1266,7 @@ having only an IEEE 802.11 (Wi-Fi) radio, or a model having both these radios.
 A manufacturer of such device models may wish to have code only for the use of the constrained voucher format (COSE), and use it on all supported radios
 including the IEEE 802.11 radio. For this radio, the software stack to support HTTP/TLS may be already integrated into the radio module hence it is
 attractive for the manufacturer to reuse this. This type of approach is supported by this document.
-In the case that HTTPS is used, the regular long {{RFC8995}} resource names are used, together with the new "application/voucher+cose" media type described in this document.
+In the case that HTTPS is used, the regular long {{RFC8995}} resource names are used, together with the new "`application/voucher+cose`" media type described in this document.
 For status telemetry requests, the format and requirements defined in {{telemetry}} remain unchanged.
 
 Other combinations are possible, but they are not enumerated here.
@@ -1310,17 +1310,17 @@ The Pledge MUST send a client\_certificate\_type of X509 (not an RPK), so that t
 
 ## The Pledge Voucher Request
 
-The Pledge puts the Registrar's public key into the "proximity-registrar-pubk" field of the Pledge Voucher Request (PVR).
-The "proximity-registrar-pubk-sha256" can alternatively be used for efficiency, if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.
+The Pledge puts the Registrar's public key into the '`proximity-registrar-pubk`' attribute of the Pledge Voucher Request (PVR).
+The '`proximity-registrar-pubk-sha256`' can alternatively be used for efficiency, if the 32-bytes of a SHA256 hash turns out to be smaller than a typical ECDSA key.
 
-As the format of the "proximity-registrar-pubk" field is identical to the TLS RawPublicKey data object, no manipulation at all is needed to insert this field into the PVR.
+As the format of the '`proximity-registrar-pubk`' attribute is identical to the TLS RawPublicKey data object, no manipulation at all is needed to insert this attribute into the PVR.
 This approach reduces the size of the PVR significantly, compared to including the full certificate.
 
 ## The Voucher Response
 
-A returned voucher will have a "pinned-domain-pubk" field with the identical key as was found in the "proximity-registrar-pubk" field above, as well as being identical to the
+A returned voucher will have a '`pinned-domain-pubk`' attribute with the identical key as was found in the '`proximity-registrar-pubk`' attribute above, as well as being identical to the
 Registrar's RPK in the currently active DTLS connection.
-(Or alternatively the MASA may include the "pinned-domain-pubk-sha256" field if it knows the Pledge supports this field.)
+(Or alternatively the MASA may include the '`pinned-domain-pubk-sha256`' attribute if it knows the Pledge supports this attribute.)
 
 Validation of this key by the Pledge is what takes the DTLS connection out of the provisional state; see {{Section 5.6.2 of RFC8995}} for more details.
 
@@ -1418,15 +1418,15 @@ This Registrar's identity is validated by the {{RFC8366bis}} voucher that is iss
 The Registrar may therefore use any certificate, including a self-signed one.
 The only restrictions on the certificate is that it MUST have EKU bits set as detailed in {{registrar-certificate-requirement-server}} and {{registrar-certificate-requirement-client}}.
 
-## Use of RPK Alternatives to "proximity-registrar-cert"
+## Use of RPK Alternatives to '`proximity-registrar-cert`'
 
-In {{Section 9 of RFC8366bis}} two compact alternative fields for "proximity-registrar-cert" are defined that include an RPK: "proximity-registrar-pubk" and "proximity-registrar-pubk-sha256".
-The Pledge can use these fields in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these fields
+In {{Section 9 of RFC8366bis}} two compact alternative attributes for '`proximity-registrar-cert`' are defined that include an RPK: '`proximity-registrar-pubk`' and '`proximity-registrar-pubk-sha256`'.
+The Pledge can use these attributes in its PVR to identify the Registrar based on its public key only. Since the full certificate of the proximate Registrar is not included, use of these attributes
 by a Pledge implies that a Registrar could insert another certificate with the same public key identity into the RVR. For example, an older or a newer version of its certificate.
 The MASA will not be able to detect such act by the Registrar. But since any certificate the Registrar could insert in this way still encodes its own identity the additional risk
 of using the RPK alternatives is negligible.
 
-When a Registrar sees a PVR that uses one of "proximity-registrar-pubk" or "proximity-registrar-pubk-sha256" fields, this implies the Registrar must include the certificate identified by these fields into its RVR.
+When a Registrar sees a PVR that uses one of '`proximity-registrar-pubk`' or '`proximity-registrar-pubk-sha256`' attributes, this implies the Registrar must include the certificate identified by these attributes into its RVR.
 Otherwise, the MASA is unable to verify proximity. This requirement is already implied by the "MUST" requirement in {{registrar-identity}}.
 
 
@@ -1439,23 +1439,23 @@ registry group are specified below.
 
 Reference: \[This RFC\]
 
-Value    | Description
+Value      | Description
 |-|-|
-brski    | Base resource of all Bootstrapping Remote Secure Key Infrastructure (cBRSKI) resources
-brski.rv | cBRSKI request voucher resource
-brski.vs | cBRSKI voucher status telemetry resource
-brski.es | cBRSKI enrollment status telemetry resource
-ace.est  | Base resource of all Enrollment over Secure Transport CoAPS (EST-coaps) resources
+`brski`    | Base resource of all Bootstrapping Remote Secure Key Infrastructure (cBRSKI) resources
+`brski.rv` | cBRSKI request voucher resource
+`brski.vs` | cBRSKI voucher status telemetry resource
+`brski.es` | cBRSKI enrollment status telemetry resource
+`ace.est`  | Base resource of all Enrollment over Secure Transport CoAPS (EST-coaps) resources
 {: #iana-core-rt-values title='Resource Type (rt) link target attribute values for cBRSKI and EST-coaps'}
 
-Note that the resource type "brski" identifies a base resource in a resource hierarchy on a CoAP server, where its
-sub-resources each have one of the resource types "brski.\*" as defined by this specification.
-Similarly, the resource type "ace.est" identifies a base resource in a resource hierarchy, where its
-sub-resources each have one of the resource types "ace.est.\*" as defined by {{RFC9148}}.
+Note that the resource type "`brski`" identifies a base resource in a resource hierarchy on a CoAP server, where its
+sub-resources each have one of the resource types "`brski.*`" as defined by this specification.
+Similarly, the resource type "`ace.est`" identifies a base resource in a resource hierarchy, where its
+sub-resources each have one of the resource types "`ace.est.*`" as defined by {{RFC9148}}.
 
 ## Media Types Registry {#iana-media-types}
 
-This section registers the media type "application/voucher+cose" in the "Media Types" IANA registry.
+This section registers the media type "`application/voucher+cose`" in the "Media Types" IANA registry.
 This media type is used to indicate that the content is a CBOR voucher or voucher request
 signed with a COSE_Sign1 structure {{RFC9052}} as defined in this document.
 
@@ -1508,8 +1508,8 @@ co-developed regarding the type of identifiers produced and identifiers consumed
 
 IANA has allocated ID 836 from the "CoAP Content-Formats" registry as shown below.
 
-| Media type             | Encoding  | ID   | Reference
-application/voucher+cose | -         | 836  | \[This RFC\]
+| Media type               | Encoding  | ID   | Reference
+`application/voucher+cose` | -         | 836  | \[This RFC\]
 {: #coap-cf-registry-additions title='Additions to the IANA CoAP Content-Formats Registry'}
 
 ## Update to BRSKI Well-Known URIs Registry {#iana-brski-param-registry}
@@ -1518,7 +1518,7 @@ This section updates the "BRSKI Well-Known URIs" IANA registry of the Bootstrapp
 (BRSKI) Parameters Registry group, by adding a new column "Short Path Segment", clarifying existing "Description" values,
 and renaming the column "URI" to "Path Segment".
 
-The new "Short Path Segment" field denotes a shorter alternative to Path Segment for the resource that can be used by a client
+The new "Short Path Segment" entry denotes a shorter alternative to Path Segment for the resource that can be used by a client
 in a CoAP request on a well-known BRSKI resource.
 A value "N/A" can be registered to denote that there is no short path segment defined.
 
@@ -1668,7 +1668,7 @@ The above binary CBOR enrollstatus payload looks as follows in CBOR diagnostic n
    }
 ~~~
 
-Alternatively the payload could look as follows in case of enrollment failure, using the "reason" field to describe the failure:
+Alternatively the payload could look as follows in case of enrollment failure, using the '`reason`' map item value to describe the failure:
 
 ~~~
   Payload = A36776657273696F6E0166737461747573F466726561736F6E782A3C
@@ -1822,8 +1822,8 @@ The COSE payload is the PVR voucher data, encoded as a CBOR byte string. The dia
 
 INSERT_CBORDIAG_FROM_FILE examples/cose-examples/pvr-nonsigned.txt END
 
-The Pledge uses the "proximity" (key '1', SID 2502, enum value 2) assertion together with an included
-"proximity-registrar-pubk" field (key '12', SID 2513) to inform MASA about its proximity to the specific Registrar.
+The Pledge uses the '`proximity`' (key '1', SID 2502, enum value 2) assertion together with an included
+'`proximity-registrar-pubk`' attribute (key '12', SID 2513) to inform MASA about its proximity to the specific Registrar.
 
 ## COSE-signed Registrar Voucher Request (RVR)  {#rvr-example}
 
@@ -1923,13 +1923,13 @@ The below table specifies the functions implemented in the three example Pledge 
 |Support other onboarding method(s)| - | - | Y
 |Real-time clock and cert time checks| - | - | Y
 |**cBRSKI** |   |   |   
-|CoAP discovery for rt=brski* | - | - | Y
+|CoAP discovery for `rt=brski*` | - | - | Y
 |Support pinned Registrar public key (RPK) | Y | - | Y
 |Support pinned Registrar certificate | - | Y | Y
 |Support pinned Domain CA | - | Y | Y
 |**EST-coaps**|   |   |   
 |Explicit TA database size (#certs) | 0 | 3 | 8
-|CoAP discovery for rt=ace.est* | - | - | Y
+|CoAP discovery for `rt=ace.est*` | - | - | Y
 |GET `/att` and response parsing | - | - | Y
 |GET `/crts` format 62 (multiple CA certs) | - | Y | Y
 |GET `/crts` format 281 (multiple CA certs) | - | - | Y
@@ -1959,7 +1959,7 @@ operation using CoAP discovery per {{Section 7 of RFC7252}} and {{Section 4 of R
 The Registrar then responds with a CoRE Link Format payload containing the requested resources, if any.
 
 For example, if the Registrar supports a cBRSKI base resource `/b` in addition to the longer `/.well-known/brski` base
-resource, and supports only the voucher format "application/voucher+cose" (836), and status reporting in both
+resource, and supports only the voucher format "`application/voucher+cose`" (836), and status reporting in both
 CBOR (60) and JSON (50) formats, a CoAP resource discovery request and response may look as follows:
 
 ~~~~
@@ -2016,11 +2016,11 @@ resources under `/.well-known/brski/...` and `/.well-known/est/...`.
 
 ## Pledge Discovery Query for the cBRSKI Base Resource
 
-In case the client queries for only rt=brski type resources, the Registrar responds with only the base path for the cBRSKI
-resources (rt=brski, resource `/b` in earlier examples) and no others.
+In case the client queries for only `rt=brski` type resources, the Registrar responds with only the base path for the cBRSKI
+resources (`rt=brski`, resource `/b` in earlier examples) and no others.
 (So, the query is "`rt=brski`", without the wildcard character.)
 This is shown in the below example.
-The Pledge in this case requests only the cBRSKI base resource of type rt=brski to check if cBRSKI is supported by the
+The Pledge in this case requests only the cBRSKI base resource of type `rt=brski` to check if cBRSKI is supported by the
 Registrar and if a shorter-length cBRSKI base resource path is supported or not.
 In this case, the Pledge is not interested to check what voucher request formats, or status telemetry formats --
 other than the mandatory default formats -- are supported.
@@ -2049,11 +2049,11 @@ As a follow-up example, the Pledge can now start the onboarding by sending its P
 ~~~~
 
 
-## Usage of ct Attribute
+## Usage of `ct` Attribute
 
-The return of multiple content-formats in the "ct" attribute by the Registrar allows the Pledge to choose the most appropriate one for a particular operation, and allows extension with new voucher formats.
-Note that only content-format 836 ("application/voucher+cose") is defined in this document for the voucher request resource (`/rv`), both as request payload and as response payload.
-If the "ct" attribute is not indicated for the `/rv` resource in the CoRE Link Format description, this implies that at least format 836 is supported and maybe more.
+The return of multiple content-formats in the '`ct`' link format attribute by the Registrar allows the Pledge to choose the most appropriate one for a particular operation, and allows extension with new voucher formats.
+Note that only content-format 836 ("`application/voucher+cose`") is defined in this document for the voucher request resource (`/rv`), both as request payload and as response payload.
+If the '`ct`' attribute is not indicated for the `/rv` resource in the CoRE Link Format description, this implies that at least format 836 is supported and maybe more.
 
 Note that this specification allows for application/voucher+cose payloads to be transmitted over HTTPS, as well as for
 application/voucher-cms+json and other formats yet to be defined over CoAP.
@@ -2063,7 +2063,7 @@ A Pledge on constrained hardware is expected to support a single format only.
 The Pledge needs to support one or more formats for the PVR and resulting voucher.
 The MASA needs to support all formats that the associated Pledges use.
 
-In the below example, a Pledge queries specifically for the brski.rv resource type to learn what voucher formats are supported:
+In the below example, a Pledge queries specifically for the `brski.rv` resource type to learn what voucher formats are supported:
 
 ~~~~
   REQ: GET /.well-known/core?rt=brski.rv
@@ -2075,7 +2075,7 @@ In the below example, a Pledge queries specifically for the brski.rv resource ty
 ~~~~
 
 The Registrar returns 3 supported voucher formats: 836, 65123, and 65124.
-The first is the mandatory "application/voucher+cose". The other two are numbers from the Experimental Use number range
+The first is the mandatory "`application/voucher+cose`". The other two are numbers from the Experimental Use number range
 of the CoAP Content-Formats sub-registry, which are used as mere examples. The Pledge can now make a selection between the supported formats.
 
 Note that if the Registrar only supports the default content-formats for each cBRSKI resource as specified by this document,
@@ -2117,12 +2117,12 @@ This is done either before or after the voucher has been validated.
 
 The response from the Registrar indicates that EST-coaps enrollment (`/sen`) and re-enrollment (`/sren`) is supported,
 with a choice of two content-formats for the response payload:
-either a PKCS#7 container with a single LDevID certificate ("application/pkcs7-mime;smime-type=certs-only", content-format 281)
-which is the BRSKI {{RFC8995}} encoding, or just a single LDevID certificate ("application/pkix-cert", content-format 287)
+either a PKCS#7 container with a single LDevID certificate ("`application/pkcs7-mime;smime-type=certs-only`", content-format 281)
+which is the BRSKI {{RFC8995}} encoding, or just a single LDevID certificate ("`application/pkix-cert`", content-format 287)
 which is the default cBRSKI encoding.
 
-For the EST "cacerts" resource (`/crts`) there are three content-formats supported:
-an application/multipart-core container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (287),
+For the EST `cacerts` resource (`/crts`) there are three content-formats supported:
+an "`application/multipart-core`" container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (287),
 or a single (most relevant) CA certificate (281).
 
 The Pledge can now send a CoAP request to one of the discovered resources, with the Accept Option to indicate
@@ -2154,10 +2154,11 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 -30:
     Update section references draft-ietf-anima-8366bis to latest version.
     Remove reference to the to-be-deprecated RFC 8366.
+    Align terms and notation with draft-ietf-anima-8366bis.
     Editorial (wording) updates.
 
 -29:
-    Clarify that each brski.jp link indicates a root resource (/) (#335).
+    Clarify that each brski.jp link indicates a root resource (`/`) (#335).
     Clarify that Pledge uses IP link-local address of JP's discovery response, instead of the UTF-8 encoded IP address literal (#334).
     Add example of Join Proxy offering multiple Registrars (endpoints) (#333).
     Updated CoAP request/response formatting of examples.
@@ -2167,7 +2168,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 -28:
     Cleanup of normative/informative references, setting each to right category.
     Bugfix and clarification in text around EdDSA Curve selection.
-    Added section on additional information in COSE header with 'iat' CWT timestamp example.
+    Added section on additional information in COSE header with '`iat`' CWT timestamp example.
     Updates to BRSKI Well-Known URIs registry, including a rename of the "URI" column (#326).
     Unify COSE header parameters terminology (#330).
     Text formatting and editorial updates.
@@ -2178,7 +2179,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Merged the very similar BRSKI-MASA security considerations sections (#312).
     Require CBOR format for Pledge's/EST-client's telemetry (#309, #317).
     Removed figure captions from code examples for consistency (#315).
-    Add base resource type (rt) for "ace.est" and related terminology (#314).
+    Add base resource type (`rt`) for "`ace.est`" and related terminology (#314).
     Update IEEE 802.1AR reference to 2018 version (#313).
     Editorial updates.
 
@@ -2212,7 +2213,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Introduce formal CBOR diagnostics ellipsis elision syntax (#281, #287);
     Support for multi-tier CAs by introducing multipart-core `/crts` format (#275, #291);
     Terminology updated for consistency with RFC 8366-bis (#274, #280);
-    Rename voucher media type to application/voucher+cose and register +cose SSS (#264, #277);
+    Rename voucher media type to `application/voucher+cose` and register +cose SSS (#264, #277);
     Editorial changes including section restructuring.
 
 -22:
@@ -2244,13 +2245,13 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Examples are inverted.
 
 -02:
-    Example of requestvoucher with unsigned appllication/cbor is added;
+    Example of requestvoucher with unsigned `application/cbor` is added;
     attributes of voucher "refined" to optional;
     CBOR serialization of vouchers improved;
     Discovery port numbers are specified.
 
 -01:
-    application/json is optional, application/cbor is compulsory;
+    `application/json` is optional, `application/cbor` is compulsory;
     Cms and cose mediatypes are introduced.
 
 -00:
