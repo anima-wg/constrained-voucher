@@ -71,6 +71,7 @@ normative:
   RFC9525:
   RFC8366bis: I-D.ietf-anima-rfc8366bis
   I-D.ietf-anima-constrained-join-proxy:
+  I-D.ietf-core-uri-path-abbrev:
   ieee802-1AR:
     target: "https://standards.ieee.org/ieee/802.1AR/6995/"
     title: "IEEE 802.1AR Secure Device Identity"
@@ -467,6 +468,10 @@ It includes both the short-name cBRSKI resources and the EST-coaps resources.
 | `/serverkeygen`   | `/skc`    | est    | MAY
 {: #brski-est-short-uri-table title='BRSKI/EST resource name mapping to cBRSKI/EST-coaps short resource name'}
 
+### CoAP Uri-Path Abbreviation
+
+To minimize the size of CoAP request packets on constrained networks, the CoAP Uri-Path-Abbrev Option
+defined in {{I-D.ietf-core-uri-path-abbrev}} MUST be supported by the Registrar.
 
 ## CoAP Responses {#brski-coap-responses}
 
@@ -2130,6 +2135,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 {:numbered="false"}
 
 -30:
+    Add support for CoAP Uri-Path-Abbrev Option.
     Move 'idevid-issuer' clarification text to draft-8366bis.
     Update the duplicate serial number attack to focus only on the case where the attack could be successful (equal CAs).
     Update section references draft-ietf-anima-8366bis to latest version.
