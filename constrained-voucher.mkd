@@ -861,6 +861,21 @@ header parameter (32). The bag contains two certificates in this case.
 )
 ~~~~
 
+Besides storing the Registrar's own RVR-signing certificate chain (per {{registrar-identity}}), the Registrar MUST
+include in the same '`x5bag`' structure all the certificates that the Pledge used to identify
+itself in the Pledge/Registrar DTLS handshake, including the End-Entity (IDevID) certificate and all CAs up to the
+root CA.
+This serves two purposes:
+
+1. A MASA that does not store the IDevIDs for all Pledges and their related sub-CAs is still able to reconstruct the
+   certificate chain for a given Pledge and validate the Pledge's signature on the PVR based purely on the root CA of
+   the Pledge's manufacturer that the MASA is storing.
+2. Diagnostic/debugging purposes: since the PVR's COSE signature does not store any certificates related to the signer,
+   but only the signature itself, it can be useful for the MASA to log or inspect the Pledge's certificate chain in
+   case the onboarding attempt fails.
+   Having the complete signing certificate chain at hand facilitates finding the root cause of the problem and helps
+   in the communication with the customer.
+
 A '`kid`' (key ID) field is OPTIONAL in the unprotected COSE header parameters map of a COSE object.
 If present, it identifies the public key of the key pair that was used to sign the
 COSE message. The value of the key identifier '`kid`' parameter may be in any format agreed between signer and verifier.
@@ -2135,7 +2150,8 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 {:numbered="false"}
 
 -30:
-    Add support for CoAP Uri-Path-Abbrev Option.
+    Require Pledge's DTLS cert chain to be included in RVR '`x5bag`' (#343).
+    Add support for CoAP Uri-Path-Abbrev Option (#336).
     Move 'idevid-issuer' clarification text to draft-8366bis.
     Update the duplicate serial number attack to focus only on the case where the attack could be successful (equal CAs).
     Update section references draft-ietf-anima-8366bis to latest version.
