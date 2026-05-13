@@ -329,9 +329,15 @@ when operating as a DTLS 1.2 client.
 A Pledge/EST-client operating as DTLS 1.3 client, MUST use the (D)TLS record size limit extensions ('`record_size_limit`')
 defined in {{Section 4 of RFC8449}}, with RecordSizeLimit set to a value between 512 and 1024 (inclusive).
 
-### Registrar and the Server Name Indicator (SNI) {#sni}
+### Registrar Server Certificate Requirements {#registrar-certificate-requirement-server}
 
-The SNI issue described below affects {{RFC8995}} as well, and is reported in errata: [https://www.rfc-editor.org/errata/eid6648](https://www.rfc-editor.org/errata/eid6648)
+As per {{Section 3.6.1 of RFC7030}}, the Registrar certificate MUST have the Extended Key Usage (EKU) id-kp-cmcRA.
+This certificate is also used as a TLS Server Certificate, so it MUST also have the EKU id-kp-serverAuth.
+
+See {{cosesign-registrar-cert}} for an example of a Registrar certificate with these EKUs set.
+See {{registrar-certificate-requirement-client}} for Registrar client certificate requirements.
+
+## Registrar and the Server Name Indicator (SNI) {#sni}
 
 As the Registrar is discovered by IP address, and typically connected via a Join Proxy, the hostname of the Registrar is not known to the Pledge.
 Therefore, it cannot do DNS-ID validation ({{RFC9525}}) on the Registrar's certificate.
@@ -342,7 +348,7 @@ Therefore the Pledge SHOULD omit the SNI extension as per {{Section 9.2 of RFC84
 
 In some cases, particularly while testing BRSKI, a Pledge may be given the hostname of a particular Registrar to connect to directly.
 Such a bypass of the discovery process may result in the Pledge taking a different code branch to establish a DTLS connection, and may result in the SNI being inserted by a library.
-For this reason, the Registrar MUST ignore any SNI it receives from a Pledge.
+For this reason and other possible situations where the SNI can not be turned off, the Registrar MUST ignore any SNI it receives from a Pledge.
 
 A primary motivation for making the SNI ubiquitous in the public web is because it allows for multi-tenant hosting of HTTPS sites on a single (scarce) IPv4 address.
 This consideration does not apply to the server function in the Registrar because:
@@ -353,13 +359,9 @@ This consideration does not apply to the server function in the Registrar becaus
 
 * the server port number is typically discovered, so multiple tenants can be accommodated via unique UDP port numbers.
 
-### Registrar Server Certificate Requirements {#registrar-certificate-requirement-server}
-
-As per {{Section 3.6.1 of RFC7030}}, the Registrar certificate MUST have the Extended Key Usage (EKU) id-kp-cmcRA.
-This certificate is also used as a TLS Server Certificate, so it MUST also have the EKU id-kp-serverAuth.
-
-See {{cosesign-registrar-cert}} for an example of a Registrar certificate with these EKUs set.
-See {{registrar-certificate-requirement-client}} for Registrar client certificate requirements.
+The SNI issue described above also affects {{RFC8995}} as well, and is reported in errata: [https://www.rfc-editor.org/errata/eid6648](https://www.rfc-editor.org/errata/eid6648)
+The advice to omit the SNI (if practical) in the pledge applies, as the bytes are not useful.
+The advice to ignore the SNI above applies to {{RFC8995}} as well, and this is an Update to that document.
 
 
 ## cBRSKI Join Proxy {#joinproxy}
