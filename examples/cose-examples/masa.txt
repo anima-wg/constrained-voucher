@@ -1,0 +1,42 @@
+Certificate:
+Data:
+ Version: 3 (0x2)
+ Serial Number:
+   a7:b4:1c:90:d5:f2:38:6b
+ Signature Algorithm: ecdsa-with-SHA256
+ Issuer: CN = masa.stok.nl, O = vanderstok, L = Helmond, 
+         C = NL
+ Validity
+   Not Before: May 26 22:31:41 2026 GMT
+   Not After : May 25 22:31:41 2029 GMT
+ Subject: CN = masa-server.stok.nl, O = vanderstok, L = Helmond, 
+         C = NL
+ Subject Public Key Info:
+   Public Key Algorithm: id-ecPublicKey
+     Public-Key: (256 bit)
+     pub:
+       04:ce:27:8a:c8:e4:37:fa:c2:77:88:9c:20:f9:a3:
+       43:21:9c:e0:74:65:36:7c:a3:be:42:67:6e:75:8f:
+       20:8d:4c:fa:1a:56:ec:e8:f4:7e:c9:6d:43:fd:73:
+       01:cd:05:3e:ed:73:65:17:d1:57:cb:f9:9c:d5:e2:
+       10:9e:b1:6f:95
+     ASN1 OID: prime256v1
+     NIST CURVE: P-256
+ X509v3 extensions:
+   X509v3 Key Usage: critical
+     Digital Signature, Non Repudiation, Key Encipherment, 
+             Data Encipherment
+   X509v3 Basic Constraints: 
+     CA:FALSE
+   X509v3 Subject Key Identifier: 
+     A6:00:1C:D5:C7:FF:50:63:D7:0C:25:7E:91:AA:01:AF:DB:8A:6E:08
+   X509v3 Authority Key Identifier: 
+     CB:8D:98:CA:74:C5:1B:58:DD:E7:AC:EF:86:9A:94:43:A8:D6:66:A6
+   X509v3 Extended Key Usage: critical
+     TLS Web Server Authentication, TLS Web Client Authentication
+Signature Algorithm: ecdsa-with-SHA256
+Signature Value:
+ 30:45:02:21:00:e8:62:32:36:49:1e:61:84:12:3e:26:51:6f:
+ da:f0:71:ff:c4:64:a5:51:5a:d0:53:c0:29:38:c8:b1:98:32:
+ 8c:02:20:7f:2d:80:da:6e:29:6d:9d:66:5d:be:1e:74:ad:c2:
+ a5:5e:a4:85:f5:88:4b:c8:2b:2a:f5:da:89:4a:72:21:46

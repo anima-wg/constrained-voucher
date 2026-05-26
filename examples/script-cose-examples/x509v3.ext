@@ -33,6 +33,16 @@ basicConstraints=critical,CA:TRUE
 # SKI MUST be non-critical
 subjectKeyIdentifier=hash
 
+[ masa_ext ]
+keyUsage = critical, digitalSignature, nonRepudiation, \
+           keyEncipherment, dataEncipherment
+basicConstraints=CA:FALSE
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid
+# Set TLS server (and client) usage for the MASA's TLS endpoint.
+#  see www.openssl.org/docs/man1.1.1/man5/x509v3_config.html
+extendedKeyUsage = critical, serverAuth, clientAuth
+
 [ registrar_ext ]
 keyUsage = critical, digitalSignature, nonRepudiation, \
            keyEncipherment, dataEncipherment
