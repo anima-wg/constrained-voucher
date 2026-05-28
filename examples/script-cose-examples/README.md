@@ -11,10 +11,9 @@ to the 'examples/cose-example' directory from where they will be included in the
 ## Required Tools
 
 ```
-faketime
 make
 cbor2diag.rb  (in Ruby, install with 'gem install cbor-diag' - see https://github.com/cabo/cbor-diag )
 xxd
 hexdump
-openssl
+openssl (tested on 3.0.13 - earlier and later versions can have significant API/CLI differences)
 ```
