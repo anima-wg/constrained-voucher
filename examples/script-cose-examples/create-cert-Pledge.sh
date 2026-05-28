@@ -2,12 +2,12 @@
 # File: create-cert-Pledge.sh
 # Create new cert for: Pledge IDevID
 
-# days certificate is valid - aim for the last day of 9999, to approximate
+# days certificate is valid - aim for the last day of 9999, near
 # the 802.1AR "does not expire" end date 9999-12-31 23:59:59Z.
-# notBefore defaults to 'now', and openssl x509 can only add whole days, so
-# notAfter lands on 9999-12-31 at the current time-of-day. Truncating the
-# day count keeps notAfter at or below the X.509 max date (going past it
-# makes OpenSSL silently emit an empty cert).
+# notBefore defaults to 'now', and openssl x509 requires whole days,
+# notAfter lands on 9999-12-31 at the current time-of-day. Truncating
+# day count keeps notAfter at or below the X.509 max date (going past
+# it makes OpenSSL silently emit an empty cert).
 SECONDS1=`date +%s` # time now (= cert notBefore)
 SECONDS2=`date --date="9999-12-31 23:59:59Z" +%s` # target end date
 let VALIDITY="(${SECONDS2}-${SECONDS1})/(24*3600)"
@@ -22,7 +22,7 @@ NAME=pledge
 openssl req -new -key keys/privkey_pledge.pem -out $NAME.csr -subj \
              "/CN=Stok IoT sensor Y-42/serialNumber=JADA123456789"
 
-# sign csr - notBefore defaults to 'now', notAfter = now + VALIDITY days
+# sign csr - notBefore defaults to 'now', notAfter = now + VALIDITY
 openssl x509 -set_serial 32429 -CAform PEM -CA output/masa_ca.pem \
   -CAkey keys/privkey_masa_ca.pem -extfile x509v3.ext -extensions \
   pledge_ext -req -in $NAME.csr -out output/$NAME.pem \
