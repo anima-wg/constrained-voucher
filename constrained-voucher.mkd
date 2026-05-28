@@ -1,7 +1,7 @@
 ---
 title: Constrained Bootstrapping Remote Secure Key Infrastructure (cBRSKI)
 abbrev: Constrained BRSKI (cBRSKI)
-docname: draft-ietf-anima-constrained-voucher-30
+docname: draft-ietf-anima-constrained-voucher-31
 
 stand_alone: true
 
@@ -251,33 +251,34 @@ Based upon this, the MASA can select which attributes to use in the voucher for 
 
 This section details the ways in which this document updates other RFCs.
 
-This document Updates {{RFC8995}} because it:
+This document Updates {{RFC8995}} because it adds normative requirements on:
 
-* clarifies how pinning in vouchers is done ({{pinning}}),
+* how pinning in vouchers is done ({{pinning}}),
 
-* clarifies the use of TLS Server Name Indicator (SNI) ({{sni}}, {{sni-masa}}),
+* the use of TLS Server Name Indicator (SNI) ({{sni}}, {{sni-masa}}),
 
-* clarifies when new trust anchors should be retrieved by a Pledge ({{brski-est-extensions-pledge}}),
+* when new trust anchors should be retrieved by a Pledge ({{brski-est-extensions-pledge}}),
 
-* clarifies what kinds of Extended Key Usage attributes are appropriate for each certificate ({{registrar-certificate-requirement-server}}, {{registrar-certificate-requirement-client}}),
+* what Extended Key Usage attributes are required for each certificate ({{registrar-certificate-requirement-server}}, {{registrar-certificate-requirement-client}}),
 
-* extends BRSKI with the use of CoAP,
+* extending BRSKI with CoAP support,
 
-* makes some BRSKI messages optional to send if the results can be inferred from other validations ({{brski-est-extensions}}),
+* reducing the BRSKI/EST data traffic size and post-onboarding (EST) certificate maintenance ({{brski-est-extensions}}),
 
-* extends the BRSKI-EST/BRSKI-MASA protocols ({{brski-est}}, {{brski-masa}}, {{VR-COSE}}) to carry the new `application/voucher+cose` format.
+* extending the BRSKI-EST/BRSKI-MASA protocols ({{brski-est}}, {{brski-masa}}, {{VR-COSE}}) to carry the new `application/voucher+cose` format.
+
 
 This document Updates {{RFC9148}} because it:
 
 * defines stricter DTLS requirements ({{brski-est-dtls}})),
 
-* details how an EST-coaps client handles certificate renewal and re-enrollment ({{brski-est-extensions}}),
+* normatively details how an EST-coaps client handles certificate renewal and re-enrollment ({{brski-est-extensions}}),
 
-* details how an EST-coaps server processes a "CA certificates" request for content-format 287 (`application/pkix-cert`) ({{brski-extensions-registrar}}).
+* normatively details how an EST-coaps server processes a "CA certificates" request for content-format 287 (`application/pkix-cert`) ({{brski-extensions-registrar}}).
 
-* adds enrollment status telemetry to the certificate renewal procedure ({{est-reenrollment}}),
+* defines enrollment status telemetry for the certificate renewal procedure ({{est-reenrollment}}),
 
-* adds support for the media type `application/multipart-core` for the CA certificates (`/crts`) resource ({{multipart-core}}),
+* adds support for the media type `application/multipart-core` for the EST-CoAPS CA certificates (`/crts`) resource ({{multipart-core}}),
 
 * defines a resource type ('`rt`') attribute value "`ace.est`" for the EST-coaps base resource ({{iana-core-rt}}).
 
@@ -304,10 +305,10 @@ client connections. However, for security reasons the Registrar MAY be administr
 An EST-coaps server {{RFC9148}} (if present as a separate entity from above Registrar) that implements this specification also MUST support both DTLS 1.3 and DTLS 1.2 client connections by default.
 However, for security reasons the EST-coaps server MAY be administratively configured to support only a particular DTLS version or higher.
 
-### TLS Client Certificates: IDevID authentication
+### DTLS Client Certificates: IDevID authentication
 
 As described in {{Section 5.1 of RFC8995}}, the Pledge makes a connection to the Registrar using a TLS Client Certificate for authentication.
-This is the Pledge's IDevID certificate.
+This is the Pledge's IDevID certificate, which is now used for DTLS.
 
 Subsequently the Pledge will send a Pledge Voucher Request (PVR). Further elements of Pledge authentication may be present in the PVR,
 as detailed in {{VR-COSE}}.
@@ -329,17 +330,19 @@ when operating as a DTLS 1.2 client.
 A Pledge/EST-client operating as DTLS 1.3 client, MUST use the (D)TLS record size limit extensions ('`record_size_limit`')
 defined in {{Section 4 of RFC8449}}, with RecordSizeLimit set to a value between 512 and 1024 (inclusive).
 
-### Registrar Server Certificate Requirements {#registrar-certificate-requirement-server}
+## Registrar Server Certificate Requirements {#registrar-certificate-requirement-server}
 
 As per {{Section 3.6.1 of RFC7030}}, the Registrar certificate MUST have the Extended Key Usage (EKU) id-kp-cmcRA.
-This certificate is also used as a TLS Server Certificate, so it MUST also have the EKU id-kp-serverAuth.
+This certificate is also used as a TLS Server Certificate (BRSKI) or DTLS Server Certificate (cBRSKI), so it MUST also have the EKU id-kp-serverAuth.
+This requirement is an update to {{RFC8995}}, which does not mention this EKU.
 
 See {{cosesign-registrar-cert}} for an example of a Registrar certificate with these EKUs set.
 See {{registrar-certificate-requirement-client}} for Registrar client certificate requirements.
 
 ## Registrar and the Server Name Indicator (SNI) {#sni}
 
-As the Registrar is discovered by IP address, and typically connected via a Join Proxy, the hostname of the Registrar is not known to the Pledge.
+As the Pledge discovers the Registrar by (link-local) IP address, and the Registrar is typically connected via a Join Proxy,
+the hostname of the Registrar is not known to the Pledge.
 Therefore, it cannot do DNS-ID validation ({{RFC9525}}) on the Registrar's certificate.
 Instead, it must do validation using the voucher.
 
@@ -347,21 +350,19 @@ Without knowing the hostname, the Pledge cannot put any reasonable value into th
 Therefore the Pledge SHOULD omit the SNI extension as per {{Section 9.2 of RFC8446}}.
 
 In some cases, particularly while testing BRSKI, a Pledge may be given the hostname of a particular Registrar to connect to directly.
-Such a bypass of the discovery process may result in the Pledge taking a different code branch to establish a DTLS connection, and may result in the SNI being inserted by a library.
+Such a bypass of the discovery process may result in the Pledge taking a different code branch to establish a (D)TLS connection, and may result in the SNI being inserted by a library.
 For this reason and other possible situations where the SNI can not be turned off, the Registrar MUST ignore any SNI it receives from a Pledge.
 
 A primary motivation for making the SNI ubiquitous in the public web is because it allows for multi-tenant hosting of HTTPS sites on a single (scarce) IPv4 address.
 This consideration does not apply to the server function in the Registrar because:
 
-* it uses DTLS and CoAP, not HTTPS;
-
 * it typically uses IPv6, often {{RFC4193}} Unique Local Address, which are plentiful;
 
-* the server port number is typically discovered, so multiple tenants can be accommodated via unique UDP port numbers.
+* the server port number is either discovered or configured, so multiple tenants can be accommodated via unique UDP port numbers.
 
 The SNI issue described above also affects {{RFC8995}} as well, and is reported in errata: [https://www.rfc-editor.org/errata/eid6648](https://www.rfc-editor.org/errata/eid6648)
-The advice to omit the SNI (if practical) in the pledge applies, as the bytes are not useful.
-The advice to ignore the SNI above applies to {{RFC8995}} as well, and this is an Update to that document.
+The advice to omit the SNI (if practical) in the Pledge applies, as the SNI bytes are not useful.
+The advice for the Registrar to ignore the SNI above applies to {{RFC8995}} as well, and this is an Update to that document.
 
 
 ## cBRSKI Join Proxy {#joinproxy}
@@ -669,6 +670,7 @@ If the certificate that the Registrar uses is marked as a id-kp-cmcRA certificat
 In summary, for typical Registrar use, where a single Registrar certificate is used for both client and server roles,
 the certificate MUST have an EKU set with at least all of id-kp-cmcRA, id-kp-serverAuth, and id-kp-clientAuth.
 
+These requirements update (and clarify) {{RFC8995}}.
 
 # Pinning in Voucher Artifacts {#pinning}
 
@@ -2150,6 +2152,11 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 
 # Changelog
 {:numbered="false"}
+
+-31:
+    Move BRSKI/cBRSKI generic functions and RFC 8995 updates out of the cBRSKI-specific DTLS section (#352).
+    Better formulation on how RFC 8995 is updated and where.
+    Bugfix to Pledge IDevID cert creation script (avoid 'faketime' process which had a conditional bug).
 
 -30:
     Require Pledge's DTLS cert chain to be included in RVR '`x5bag`' (#343).
