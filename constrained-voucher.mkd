@@ -1086,7 +1086,7 @@ the Join Proxy's discovery response as the destination IP address for its subseq
 ### Examples {#pledge-discovery-examples}
 
 Below, a typical example is provided showing the Pledge's CoAP request and the Join Proxy's CoAP response.
-he Join Proxy responds from its link-local source address, which is not included in the discovery response payload.
+The Join Proxy responds from its link-local source address, which is not included in the discovery response payload.
 The Join Proxy has a dedicated UDP port 8485 open for DTLS connections of Pledges to be used for cBRSKI:
 
 ~~~~
