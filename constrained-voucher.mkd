@@ -94,7 +94,7 @@ informative:
   RFC9595:
   RFC9597:
   I-D.ietf-6lo-mesh-link-establishment:
-  I-D.richardson-anima-masa-considerations:
+  I-D.ietf-anima-masa-considerations:
   I-D.ietf-anima-jws-voucher:
   I-D.ietf-cbor-edn-literals:
   I-D.ietf-anima-brski-discovery:
@@ -111,7 +111,7 @@ informative:
     target: "https://www.threadgroup.org/"
     author:
       ins: "Thread Group, Inc."
-    date: "accessed 2026-02-16"
+    date: "accessed 2026-06-08"
 
 venue:
   mail: anima@ietf.org
@@ -1005,7 +1005,7 @@ a certificate or certificate chain that will enable linking the signing identity
 This approach is not recommended, because including certificates in the protected '`x5bag`' or '`x5chain`' COSE header parameters will
 significantly increase the size of the voucher which impacts cBRSKI operation on constrained networks.
 
-For example, if the MASA signing key is based upon a PKI (see {{I-D.richardson-anima-masa-considerations}} Section 2.3), and the Pledge
+For example, if the MASA signing key is based upon a PKI (see {{I-D.ietf-anima-masa-considerations}} Section 2.3), and the Pledge
 only pre-stores a manufacturer (root) CA identity in its Trust Store which is not the identity that signs the voucher,
 then a certificate chain needs to be included with the voucher in order for the Pledge to validate the MASA signing CA's signature
 by validating the chain up to the CA in its Trust Store.
@@ -2192,6 +2192,7 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
     Replace 'rt=brski.jp' discovery query by 'brski-jp=*' per #88 of draft-ietf-anima-constrained-join-proxy.
     Added cipher suite details for DTLS 1.2 and 1.3.
     Bugfix to Pledge IDevID cert creation script (avoid 'faketime' process which had a conditional bug).
+    Updated masa-considerations reference to the adopted WG draft.
 
 -30:
     Require Pledge's DTLS cert chain to be included in RVR '`x5bag`' (#343).
