@@ -99,6 +99,7 @@ informative:
   I-D.ietf-cbor-edn-literals:
   I-D.ietf-anima-brski-discovery:
   I-D.ietf-cose-cbor-encoded-cert:
+  I-D.ietf-uta-tls13-iot-profile:
   COSE-registry:
     title: "CBOR Object Signing and Encryption (COSE) registry group"
     target: "https://www.iana.org/assignments/cose/cose.xhtml"
@@ -303,8 +304,8 @@ be used is in a Pledge that uses a software platform where a DTLS 1.3 client is 
 device gets software-upgraded to support cBRSKI. For this reason, a Registrar MUST by default support both DTLS 1.3 and DTLS 1.2
 client connections. However, for security reasons the Registrar MAY be administratively configured to support only a particular DTLS version or higher.
 
-A Pledge that implements DTLS 1.3 MUST NOT additionally implement DTLS 1.2.
-This prevents a rogue Registrar from forcing the Pledge onto DTLS 1.2, reduces the DTLS code and attack surface on the
+A Pledge that implements DTLS 1.3 MUST NOT additionally support DTLS 1.2.
+This prevents a rogue Registrar from forcing the Pledge onto DTLS 1.2, reduces the DTLS code's attack surface on the
 constrained Pledge, and keeps more handshake metadata encrypted.
 
 An EST-coaps server {{RFC9148}}, if present as a separate CoAP endpoint from above Registrar, that implements this specification
@@ -344,14 +345,16 @@ curve group X25519 (see {{RFC8446}}).
 
 Note that per {{Section 4.5.3 of RFC9147}} the cipher suite TLS_AES_128_CCM_8_SHA256 cannot be used unless specific
 measures are taken against packet forgery attacks.
+See {{Section 20 of I-D.ietf-uta-tls13-iot-profile}} for a more detailed explanation of this topic.
 These measures are needed on both the DTLS 1.3 client and server.
 In the context of the cBRSKI protocol, the RECOMMENDED safeguard measure is to limit the number of records that can
 fail authentication to at most 2^7, as defined in {{Appendix B.3 of RFC9147}}.
-If that limit is reached, the DTLS connection is closed.
+If this measure is applied and the limit is reached, the DTLS connection is closed.
 This is a suitable measure because all cBRSKI and EST-coaps operations are relatively short-lived sessions that only require
 a few, or a few 10s of, DTLS records.
 
-A Pledge using DTLS 1.3 MUST implement at least one of the above cipher suites and MAY implement others.
+A Pledge using DTLS 1.3 MUST implement at least one of the above cipher suites supported by the Registrar and MAY
+implement multiple of these.
 
 ### DTLS Client Certificates: IDevID authentication
 
