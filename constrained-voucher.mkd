@@ -43,7 +43,6 @@ author:
 
 
 normative:
-  RFC4193:
   RFC4210:
   RFC5280:
   RFC6066:
@@ -493,6 +492,8 @@ See also {{discovery}} for more details on discovery of a Join Proxy by a Pledge
 
 ## Request URIs, Resource Discovery and Content-Formats {#resource-discovery}
 
+### Request URIs
+
 cBRSKI operates using CoAP over DTLS, with request URIs using the coaps scheme. The Pledge operates in CoAP client role.
 To keep the protocol messages small, the EST-coaps and cBRSKI request URIs are shorter than the respective EST and BRSKI URIs.
 
@@ -510,18 +511,8 @@ used to offer the cBRSKI proxy functionality.
 For cBRSKI, this document defines the short resource names based on the {{RFC8995}} long HTTP resource names.
 See {{brski-est-short-uri-table}} for a summary of these resource names.
 
-{{discovery-considerations}} details how the Pledge discovers a Join Proxy link-local address and port in different deployment scenarios.
-
-The request URI formats defined here enable the Pledge to perform onboarding/enrollment without requiring discovery of the available onboarding options, voucher formats,
-BRSKI/EST resources, enrollment protocols, and so on. This is helpful for the majority of constrained Pledges that would support only a single set of these options. However, for Pledges that do support multiple options,
-{{I-D.ietf-anima-brski-discovery}} will define discovery methods so that a Pledge can select the optimal set of options for the current onboarding operation.
-
-Alternatively, a Pledge could also send CoAP discovery queries ({{Section 7 of RFC7252}}) to the Registrar to discover
-detailed options for onboarding and/or enrollment functions. Supporting these queries is
-OPTIONAL for both the Pledge and the Registrar. To clarify which options in particular can be discovered, {{pledge-discovery-on-registrar}} provides an informative overview of what can be
-discovered and how to discover it.
-
-Because a Pledge only has indirect access to the Registrar via a single port on the Join Proxy, the Registrar MUST host all cBRSKI/EST-coaps resources on the same (UDP) server IPv6 address and port.
+Because a Pledge only builds a single DTLS connection (potentially via a Join Proxy), the Registrar MUST host all
+cBRSKI/EST-coaps resources on the same server IPv6 address and UDP port.
 This is the address and port where a Join Proxy would relay DTLS records from the Pledge to.
 
 Although the request URI templates include IPv6 address, scheme and port, in practice the CoAP request message sent over the secure DTLS connection only encodes the URI path explicitly.
@@ -533,7 +524,22 @@ For example, a Pledge that skips resource discovery operations just sends the in
     Payload       : (COSE-signed Pledge Voucher Request, PVR)
 ~~~~
 
-Note that only content-format 836 (`application/voucher+cose`) is defined in this document for the payload sent to the voucher request resource (`/rv`).
+### Resource Discovery {#resource-discovery-sub}
+
+{{discovery-considerations}} details how the Pledge discovers a Join Proxy link-local address and port in different deployment scenarios.
+
+The request URI formats defined here enable the Pledge to perform onboarding/enrollment without requiring discovery of the available onboarding options, voucher formats,
+BRSKI/EST resources, enrollment protocols, and so on. This is helpful for the majority of constrained Pledges that would support only a single set of these options. However, for Pledges that do support multiple options,
+{{I-D.ietf-anima-brski-discovery}} will define discovery methods so that a Pledge can select the optimal set of options for the current onboarding operation.
+
+Alternatively, a Pledge could also send CoAP discovery queries ({{Section 7 of RFC7252}}) to the Registrar to discover
+detailed options for onboarding and/or enrollment functions. Supporting these queries is
+OPTIONAL for both the Pledge and the Registrar. To clarify which options in particular can be discovered, {{pledge-discovery-on-registrar}} provides an informative overview of what can be
+discovered and how to discover it.
+
+### Content-Formats
+
+Content-format 836 (`application/voucher+cose`) is defined in this document for the payload sent to the voucher request resource (`/rv`).
 Content-format 836 MUST be supported by the Registrar for the `/rv` resource and it MAY support additional formats.
 The Pledge MAY also indicate in the request the desired format of the (voucher) response, using the Accept Option. An example of using this option in the request is as follows:
 
@@ -546,25 +552,46 @@ The Pledge MAY also indicate in the request the desired format of the (voucher) 
 
 If the Accept Option is omitted in the request, the response format follows from the request payload format (which is 836).
 
-Note that this specification allows for `application/voucher+cose` format requests and vouchers to be transported over HTTPS,
-as well as for `application/voucher-cms+json` and other formats yet to be defined over CoAP.
-The burden for this flexibility is placed upon the Registrar.
-A Pledge on constrained hardware is expected to support a single format only.
+Note that this specification implies that `application/voucher+cose` format voucher requests and vouchers are
+transported over HTTPS between Registrar and MASA, if the Pledge uses this format over CoAP.
+But a Pledge could equally well implement a cBRSKI variation that uses, for example, the `application/voucher-cms+json`
+format or other formats that are yet to be defined.
+The burden for this flexibility is placed upon the Registrar: it needs to support all formats that any Pledges to be
+onboarded into its domain might use.
 
-The Pledge and MASA need to support one or more formats (at least format 836) for the voucher and for the voucher request.
-The MASA needs to support all formats that the Pledge supports.
+Any such (format) variation may be beneficial for a
+specific class of Pledges: for example, a product line that reuses pre-existing
+software components that include support for creation, parsing and validation of the specific format.
+When this applies, the manufacturer may want to implement only this format/variation for that class of Pledges.
+
+In general, the Pledge needs to support one or more formats (such as the default content-format 836) for the voucher
+and for the voucher request.
+The associated MASA MUST support all formats that the Pledge supports.
+A Pledge on constrained hardware is expected to support a single content-format only.
+
+Although the use of (and optional discovery of) a content-format other than 836 by a Pledge is fully defined by this
+specification and is in scope of it,
+the details of the non-default content-formats themselves, their format, and their semantics are fully out of scope
+of this specification.
+See {{RFC8366bis}} for the definition of the `application/voucher-cms+json` format.
+
+Apart from the content-format, any other variations of elements/resources/procedures of the cBRSKI protocol are
+outside the scope of this specification. The discovery of Registrars
+supporting specific cBRSKI variations is covered in [I-D.ietf-anima-brski-discovery].
 
 ### Status Telemetry Returns {#telemetry}
 
 {{RFC8995}} defines two telemetry returns from the Pledge which are sent to the Registrar.
-These are the BRSKI Status Telemetry {{RFC8995, Section 5.7}} and the Enrollment Status Telemetry {{RFC8995, Section 5.9.4}}.
+These are the BRSKI Status Telemetry ({{RFC8995, Section 5.7}}) and the Enrollment Status Telemetry ({{RFC8995, Section 5.9.4}}).
 These are two CoAP POST requests made the by Pledge at two key steps in the process.
 
-{{RFC8995}} defines the content of these POST operations in CDDL, which are serialized as JSON.
-This document extends this with an additional CBOR format, derived using the CDDL rules in {{RFC8610}}.
+{{Sections 5.7 and 5.9.4 of RFC8995}} define the content of these POST operations in the Concise Data Definition
+Language (CDDL), which are serialized as JSON.
+For use with CoAPS, this document replaces this with a new CBOR format, derived from the same CDDL definitions
+using the CDDL rules in {{RFC8610}}.
 
-The new CBOR telemetry format has CoAP content-format 60 (`application/cbor`) and MUST be supported by the Registrar for both the `/vs` and `/es` resources.
-The existing JSON format has CoAP content-format 50 (`application/json`) and MAY also be supported by the Registrar.
+The CBOR telemetry format has CoAP content-format 60 (`application/cbor`) and MUST be supported by the Registrar for
+the `/vs` and `/es` resources.
 A Pledge MUST use the new CBOR format to send telemetry messages.
 
 
@@ -601,11 +628,11 @@ A separate EST-coaps server endpoint MUST also support this option.
 
 ## CoAP Responses {#brski-coap-responses}
 
-{{RFC8995, Section 5}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
+{{Section 5 of RFC8995}} defines a number of HTTP response codes that the Registrar is to return when certain conditions occur.
 
-The 401, 403, 404, 406 and 415 response codes map directly to CoAP codes 4.01, 4.03, 4.04, 4.06 and 4.15 respectively.
+The 401, 403, 404, 406 and 415 HTTP response codes map directly to CoAP codes 4.01, 4.03, 4.04, 4.06 and 4.15 respectively.
 
-The 202 Retry process which may occur in the voucher request, is to be handled in the same way as the {{Section 5.7 of RFC9148}} process for Delayed Responses.
+The 202 Retry process which may occur in a voucher request, is to be handled in the same way as the {{Section 5.7 of RFC9148}} process for Delayed Responses.
 
 
 ## Extensions to EST-coaps {#brski-est-extensions}
@@ -619,6 +646,9 @@ Note that a device that is already onboarded is not called "Pledge" in this sect
 This section defines optimizations for the EST-coaps protocol as used by a Pledge. These aim to reduce payload sizes and the number of messages (round-trips) required for the initial EST enrollment.
 
 A Pledge SHOULD NOT perform the optional EST-coaps "CSR attributes request" (`/att`). Instead, the Pledge selects the attributes to include in the CSR as specified below.
+The reasons to avoid doing a CSR attributes request are the substantial code overhead of the parser for the
+CSR attributes response (handling the many different fields and field combinations that may be present there),
+and the substantial increase of interoperability testing efforts that would result from using it.
 
 One or more Subject Distinguished Name fields MUST be included in the CSR.
 If the Pledge has no specific information on what attributes/fields are desired in the CSR, which is the common case, it MUST use the Subject Distinguished Name fields from its IDevID unmodified.
@@ -644,17 +674,45 @@ into {{Section 4 of RFC9148}}:
 
 #### NEW Text for New Section 4.9 of RFC 9148
 
-An EST-coaps client that has an idea of the current time (internally, or via Network Time Protocol) SHOULD consider the validity time of the trust anchor CA(s), and MAY begin requesting new trust anchor certificates(s) using the `/crts` request when the CA has 50% of it's validity time (notAfter - notBefore) left.
-A client without access to the current time cannot decide if trust anchor CA(s) have expired, and SHOULD poll periodically for a new trust anchor certificate(s) using the `/crts` request at an interval of approximately 1 month.
-An EST-coaps server SHOULD include the CoAP ETag Option ({{RFC7252, Section 5.10.6}}) in every response to a `/crts` request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
-The EST-coaps client SHOULD store the ETag resulting from a `/crts` response in memory and SHOULD use this value in an ETag Option in its next GET `/crts` request.
+An EST-coaps client stores one or more trust anchor CA certificates in its Explicit TA database and uses them to validate
+its own LDevID certificate chain and to authenticate an EST-coaps server or any other domain peers.
+Each such CA certificate has a limited validity period.
+A domain operator therefore re-issues its CA certificate(s) from
+time to time — commonly with the same key pair and an extended validity period — in order to keep the domain operational.
+A client needs to obtain such a re-issued CA certificate before its stored prior CA certificate expires:
+once the stored certificate's `notAfter` time has passed, the client can no longer validate its existing LDevID certificate,
+nor authenticate an EST-coaps server or a domain peer,
+even though no key material has changed and the LDevID may still be within its own validity period.
+This renewal of a trust anchor is independent of LDevID renewal; the distinct case in
+which the domain CA key itself changes, which also requires the client to obtain a new LDevID,
+is addressed during re-enrollment (Section 4.10).
+
+An EST-coaps client that has an idea of the current absolute time (for example via a clock synchronization protocol such as
+NTP, or a real-time clock) SHOULD consider the validity time of the trust anchor CA(s), and MAY begin requesting new
+trust anchor certificates(s)
+using the `/crts` request when the CA has less than 20% of it's validity time (`notAfter - notBefore`) left.
+A client without an idea of the current absolute time cannot decide if trust anchor CA(s) are nearing expiry, and
+therefore SHOULD poll periodically for new trust anchor certificate(s) using the `/crts` request at intervals
+of approximately 1 month.
+
+This assumes that the client is able to keep track of relative time since its last trust anchor poll/update.
+If the client is also not able to reliably keep track of this relative time, it reverts to the above polling method
+where a poll is executed based on implementation-specific, infrequent triggering events on the device.
+The reboot of the device is an example of such a trigger.
+
+An EST-coaps server SHOULD include the CoAP ETag Option ({{RFC7252, Section 5.10.6}}) in every response to a `/crts`
+request, to enable clients to perform low-overhead validation whether their stored trust anchor CA is still valid.
+The EST-coaps client SHOULD store the ETag resulting from a `/crts` response in memory and SHOULD use this value in an
+ETag Option in its next GET `/crts` request.
 
 ### Change of Domain Trust Anchor(s)
-The domain trust anchor(s) may change over time. Such a change may happen due to relocation of the client device to a new domain, a new subdomain, or due to a key update of
+
+The domain trust anchor(s) may change over time. Such a change may happen due to relocation of the client device to
+a new domain, a new subdomain, or due to a key update of
 a trust anchor as described in {{RFC4210, Section 4.4}}.
 
 From the client's viewpoint, a trust anchor change happens during EST-coaps re-enrollment: since a change of domain CA requires all devices
-operating under the old domain CA to acquire a new LDevID certificate issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as an instruction to re-enroll sent by a domain entity, or an imminent expiry of its LDevID certificate, or other.
+operating under the old domain CA to acquire a new LDevID certificate issued by the new domain CA. A client's re-enrollment may be triggered by various events, such as an instruction to re-enroll sent by a domain entity, or an imminent expiry of its LDevID certificate, or an imminent expiry of its trust anchor CA certificate, or other.
 How the re-enrollment is explicitly triggered on the client by a domain entity, such as a commissioner or a Registrar, is out of scope of this specification.
 
 The mechanism described in {{RFC7030, Section 4.1.3}} and {{RFC4210, Section 4.4}} for root CA key update requires four certificates: OldWithOld, OldWithNew, NewWithOld, and NewWithNew. Of these four, the OldWithOld certificate is already
@@ -692,7 +750,7 @@ During this procedure the EST-coaps server MAY re-enroll the client into a new d
    Explicit TA database, and the client MUST abort the enrollment process and MUST attempt to report the error to the
    EST-coaps server using enrollment status telemetry (`/es`).
 
-Note that even though the EST-coaps client may skip the `/crts` request in step 3 at this time, it SHOULD still support
+Note that even though the EST-coaps client may skip the `/crts` request in step 3 at this time, it MUST still support
 renewal of the trust anchors as detailed in Section 4.9.
 
 ### Multipart Content-Format for CA certificates (`/crts`) Resource {#multipart-core}
