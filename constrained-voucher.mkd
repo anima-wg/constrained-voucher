@@ -2157,8 +2157,8 @@ which is the BRSKI {{RFC8995}} encoding, or just a single LDevID certificate (`a
 which is the default cBRSKI encoding.
 
 For the EST `cacerts` resource (`/crts`) there are three content-formats supported:
-an `application/multipart-core` container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (287),
-or a single (most relevant) CA certificate (281).
+an `application/multipart-core` container (62) per {{multipart-core}}, a PKCS#7 container with all CA certificates (281),
+or a single (most relevant) CA certificate (287).
 
 The Pledge can now send a CoAP request to one of the discovered resources, with the Accept Option to indicate
 which return payload content-format the Pledge wants to receive.
