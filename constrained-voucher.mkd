@@ -90,6 +90,7 @@ informative:
   RFC8392:
   RFC8990:
   RFC9334:
+  RFC9483:
   RFC9528:
   RFC9595:
   RFC9597:
@@ -1177,13 +1178,15 @@ The Pledge may now select one of the two CoAP endpoints for initiating its DTLS 
     Content-Format: 40 (application/link-format)
     Payload:
       <>;brski-jp=61616,
-      <>;brski-jp=61617;var="c509 v2"
+      <>;brski-jp=61617;var=",cmp"
 ~~~~
 
-The first endpoint on port 61616 supports only the cBRSKI protocol as defined by this document.
-The second endpoint, on port 61617, supports the same cBRSKI protocol as well as additional variations or extensions.
-In this example, these variations/extensions are encoded using string values in a single attribute '`var`'.
-This information may be also encoded using other attributes defined by a future specification.
+The first endpoint on port 61616 supports only the default cBRSKI protocol variation as defined by this document.
+The second endpoint, on port 61617, supports the same default variation as well as the variation "cmp",
+enrollment using the Lightweight CMP Profile {{RFC9483}} instead of EST-coaps.
+These supported variations are indicated by the '`var`' target attribute defined by [I-D.ietf-anima-brski-discovery].
+The value of '`var`' is a comma-separated list of Variation Strings, in which the empty first element indicates
+the default cBRSKI variation.
 
 A Pledge not aware of these variations can safely ignore these values, because the base cBRSKI protocol is supported
 by both endpoints, as indicated by the target attribute ('`brski-jp`').
