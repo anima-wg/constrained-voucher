@@ -137,11 +137,11 @@ This document Updates RFC 8995 and RFC 9148.
 
 Secure enrollment of new nodes into constrained networks with constrained nodes presents unique challenges.
 As explained in {{RFC7228}}, such networks may have limited data throughput or may
-experience frequent packet loss. In addition, its nodes may be constrained by energy availability, memory space, and code size.
+experience frequent packet loss. In addition, their nodes may be constrained by energy availability, memory space, and code size.
 
 The Bootstrapping Remote Secure Key Infrastructure (BRSKI) protocol described in {{RFC8995}}
 provides a solution for secure zero-touch (automated) onboarding of new (unconfigured) devices.
-These new devices are called "Pledges", equipped with a factory-installed Initial Device Identifier (IDevID) (see {{ieee802-1AR}}).
+These new devices, called "Pledges", are equipped with a factory-installed Initial Device Identifier (IDevID) (see {{ieee802-1AR}}).
 Using the IDevID, a Pledge is securely enrolled into a network.
 
 The BRSKI solution described in {{RFC8995}} was designed to be modular, and this document describes a version scaled to the constraints of IoT deployments.
@@ -207,7 +207,7 @@ This notation is defined in {{I-D.ietf-cbor-edn-literals}}.
 
 # Overview of Protocol {#overview}
 
-{{RFC8366bis}} defines a voucher that can assert proximity, authenticates the Registrar, and can offer varying levels of anti-replay protection.
+{{RFC8366bis}} defines a voucher that can assert proximity, authenticate the Registrar, and offer varying levels of anti-replay protection.
 The proximity proof provided by a voucher is an assertion that the Pledge and the Registrar are believed to be close together, from a network topology point of view.
 Similar to BRSKI {{RFC8995}}, proximity is proven by making a DTLS connection between a Pledge and a Registrar.
 The Pledge initiates this connection using a link-local source address.
@@ -230,7 +230,7 @@ Most Pledges using constrained vouchers will be online during enrollment and wil
 {{RFC8366bis}} defines the CBOR voucher data encoding for the constrained voucher and the constrained voucher request, which are used by cBRSKI.
 
 The constrained voucher request MUST be signed by the Pledge. COSE {{RFC9052}} is used for signing as defined in {{VR-COSE}}.
-It signs using the private key of its IDevID.
+The Pledge signs using the private key of its IDevID.
 The constrained voucher MUST be signed by the MASA. Also in this case, COSE is used for signing.
 
 For the constrained voucher request (PVR) the default method for the Pledge to identify the Registrar is using the
@@ -272,16 +272,16 @@ This document Updates {{RFC8995}} because it adds normative requirements on:
 
 This document Updates {{RFC9148}} because it:
 
-* defines stricter DTLS requirements ({{brski-est-dtls}})), including mandatory DTLS 1.3 cipher suites
+* defines stricter DTLS requirements ({{brski-est-dtls}}), including mandatory DTLS 1.3 cipher suites
   ({{dtls-ciphersuites}}),
 
 * normatively details how an EST-coaps client handles certificate renewal and re-enrollment ({{brski-est-extensions}}),
 
-* normatively details how an EST-coaps server processes a "CA certificates" request for content-format 287 (`application/pkix-cert`) ({{brski-extensions-registrar}}).
+* normatively details how an EST-coaps server processes a "CA certificates" request for content-format 287 (`application/pkix-cert`) ({{brski-extensions-registrar}}),
 
 * defines enrollment status telemetry for the certificate renewal procedure ({{est-reenrollment}}),
 
-* adds support for the media type `application/multipart-core` for the EST-CoAPS CA certificates (`/crts`) resource ({{multipart-core}}),
+* adds support for the media type `application/multipart-core` for the EST-coaps CA certificates (`/crts`) resource ({{multipart-core}}),
 
 * defines a resource type ('`rt`') attribute value "`ace.est`" for the EST-coaps base resource ({{iana-core-rt}}).
 
@@ -352,7 +352,7 @@ In the context of the cBRSKI protocol, the RECOMMENDED safeguard measure is to l
 fail authentication to at most 2^7, as defined in {{Appendix B.3 of RFC9147}}.
 If this measure is applied and the limit is reached, the DTLS connection is closed.
 This is a suitable measure because all cBRSKI and EST-coaps operations are relatively short-lived sessions that only require
-a few, or a few 10s of, DTLS records.
+a few, or a few tens of, DTLS records.
 
 A Pledge using DTLS 1.3 MUST implement at least one of the above cipher suites supported by the Registrar and MAY
 implement multiple of these.
@@ -408,11 +408,11 @@ For this reason and other possible situations where the SNI can not be turned of
 A primary motivation for making the SNI ubiquitous in the public web is because it allows for multi-tenant hosting of HTTPS sites on a single (scarce) IPv4 address.
 This consideration does not apply to the server function in the Registrar because:
 
-* it typically uses IPv6, often {{RFC4193}} Unique Local Address, which are plentiful;
+* it typically uses IPv6, often {{RFC4193}} Unique Local Addresses, which are plentiful;
 
 * the server port number is either discovered or configured, so multiple tenants can be accommodated via unique UDP port numbers.
 
-The SNI issue described above also affects {{RFC8995}} as well, and is reported in errata: [https://www.rfc-editor.org/errata/eid6648](https://www.rfc-editor.org/errata/eid6648)
+The SNI issue described above affects {{RFC8995}} as well, and is reported in errata: [https://www.rfc-editor.org/errata/eid6648](https://www.rfc-editor.org/errata/eid6648)
 The advice to omit the SNI (if practical) in the Pledge applies, as the SNI bytes are not useful.
 The advice for the Registrar to ignore the SNI above applies to {{RFC8995}} as well, and this is an Update to that document.
 
@@ -489,7 +489,7 @@ The MASA needs to support all formats that the Pledge supports.
 
 {{RFC8995}} defines two telemetry returns from the Pledge which are sent to the Registrar.
 These are the BRSKI Status Telemetry {{RFC8995, Section 5.7}} and the Enrollment Status Telemetry {{RFC8995, Section 5.9.4}}.
-These are two CoAP POST requests made the by Pledge at two key steps in the process.
+These are two CoAP POST requests made by the Pledge at two key steps in the process.
 
 {{RFC8995}} defines the content of these POST operations in CDDL, which are serialized as JSON.
 This document extends this with an additional CBOR format, derived using the CDDL rules in {{RFC8610}}.
@@ -566,9 +566,9 @@ A Pledge uses the following optimized EST-coaps procedure:
 
 
 ### Renewal of CA certificates {#est-renewal-crts}
-An EST-coaps client that has an idea of the current time (internally, or via Network Time Protocol) SHOULD consider the validity time of the trust anchor CA(s), and MAY begin requesting new trust anchor certificates(s) using the `/crts` request when the CA has 50% of it's validity time (notAfter - notBefore) left.
+An EST-coaps client that has an idea of the current time (internally, or via Network Time Protocol) SHOULD consider the validity time of the trust anchor CA(s), and MAY begin requesting new trust anchor certificates(s) using the `/crts` request when the CA has 50% of its validity time (notAfter - notBefore) left.
 A client without access to the current time cannot decide if trust anchor CA(s) have expired, and SHOULD poll periodically for a new trust anchor certificate(s) using the `/crts` request at an interval of approximately 1 month.
-An EST-coaps server SHOULD include the CoAP ETag Option ({{RFC7252, Section 5.10.6}})in every response to a `/crts` request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
+An EST-coaps server SHOULD include the CoAP ETag Option ({{RFC7252, Section 5.10.6}}) in every response to a `/crts` request, to enable clients to perform low-overhead validation whether their trust anchor CA is still valid.
 The EST-coaps client SHOULD store the ETag resulting from a `/crts` response in memory and SHOULD use this value in an ETag Option in its next GET `/crts` request.
 
 ### Change of Domain Trust Anchor(s)
@@ -670,7 +670,7 @@ when the Pledge used content-format 836 in the payload of its request to the Reg
 The Registrar indicates the voucher format (by media type) it wants to receive from MASA using the HTTP Accept header.
 This format MUST be the same as the format of the PVR, so that the Pledge can parse the resulting voucher.
 
-At the moment of writing the creation of CoAPS based MASAs is deemed unrealistic and unnecessary.
+At the moment of writing the creation of CoAPS-based MASAs is deemed unrealistic and unnecessary.
 The use of CoAP for the BRSKI-MASA connection is out of scope but can be the subject of another document.
 Some consideration was made to specify CoAP support for consistency, but:
 
@@ -741,7 +741,7 @@ Then, it pins a certificate selected from this chain according to its pinning po
 
 For instance, for a domain with a two-level certification authority (see {{fig-twoca}}, also {{?I-D.irtf-t2trg-taxonomy-manufacturer-anchors, Section 5.1}}), where the RVR has been signed by "domain Registrar",
 the RVR includes the chain formed by the domain Registrar EE certificate, the domain Sub-CA certificate, and the domain CA trust anchor certificate.
-The arrows in the figure indicate the issuing of a certificate, i.e. author of (0) issued (1) and author of (1) issued (2).
+The arrows in the figure indicate the issuing of a certificate, i.e. the owner of (0) issued (1) and the owner of (1) issued (2).
 
 ~~~~ aasvg
 {::include two-ca-chain.txt}
@@ -866,7 +866,7 @@ It is used when only one signature is used on the body.
 
 Support for ECDSA with SHA2-256 using curve secp256r1 (aka prime256v1) is RECOMMENDED.
 Most current low power hardware has support for acceleration of this algorithm.
-Future hardware designs could omit this in favour of a newer algorithms.
+Future hardware designs could omit this in favour of newer algorithms.
 This is the ES256 (-7) keytype from Table 1 of {{RFC9053}}.
 Support for curve secp256k1 is OPTIONAL.
 
@@ -1055,7 +1055,7 @@ In {{voucher-example}} a further example of a signed voucher is shown.
 
 For a Registrar, validation of the voucher and/or the signature of the voucher is optional, per {{Section 5.6 of RFC8995}}.
 However, if a Registrar does perform the validation of the signature chain, communicated in the '`x5bag`' unprotected
-COSE header parameter (see {{sign-voucher-masa}})), it MUST validate that one of the below cases hold:
+COSE header parameter (see {{sign-voucher-masa}}), it MUST validate that one of the below cases hold:
 
 1. The signature chain is a single self-signed root CA certificate with a correct signature; and the public key in
    this certificate is also the public key that signed the voucher. This represents the case where a voucher has been
@@ -1091,7 +1091,7 @@ The case of one hop away can be considered as a degenerate case, because a Join 
 
 The degenerate case would be unusual in constrained wireless network deployments, because a Registrar would typically not have a wireless network interface of the type used by constrained devices.
 Rather, it would have a high-speed network interface.
-Nevertheless, the situation where the Registrar is one hop away from the Pledge could occur in various cases like wired IoT networks or in wireless constrained networks where the Pledge is in radio range of a 6LoWPAN Border Router (6LBR) ({{RFC6775}})and the 6LBR happens to host a Registrar.
+Nevertheless, the situation where the Registrar is one hop away from the Pledge could occur in various cases like wired IoT networks or in wireless constrained networks where the Pledge is in radio range of a 6LoWPAN Border Router (6LBR) ({{RFC6775}}) and the 6LBR happens to host a Registrar.
 
 In order to support the degenerate case, the Registrar SHOULD announce itself as if it were a Join Proxy -- though it would actually announce its real (stateful) Registrar CoAPS endpoint.
 No actual Join Proxy functionality is then required on the Registrar.
@@ -1291,7 +1291,7 @@ See {{RFC7252}} for details.
 
 This specification contains two major extensions to {{RFC8995}}: a constrained voucher format (COSE), and a constrained transfer protocol (CoAP).
 
-On constrained networks with constrained devices, it make senses to use both together.
+On constrained networks with constrained devices, it makes sense to use both together.
 However, this document does not mandate that this be the only way.
 
 A given constrained device design and software may be re-used for multiple device models, such as a model having only an IEEE 802.15.4 radio, or a model
@@ -1328,7 +1328,7 @@ One simplification that comes with RPK use is that a Pledge can avoid doing PKIX
 ## DTLS Connection and Registrar Trust Anchor
 
 When the Pledge first connects to the Registrar, the connection to the Registrar is provisional, as explained in {{Section 5.6.2 of RFC8995}}.
-The Registrar normally provides its public key in a TLSServerCertificate, and the Pledge uses that to validate that integrity of the DTLS connection, but it does not validate the identity of
+The Registrar normally provides its public key in a TLSServerCertificate, and the Pledge uses that to validate the integrity of the DTLS connection, but it does not validate the identity of
 the provided certificate.
 
 As the TLSServerCertificate object is never verified directly by the Pledge, sending it can be considered superfluous.
@@ -1505,7 +1505,7 @@ signed with a COSE_Sign1 structure {{RFC9052}} as defined in this document.
     Optional parameters:  N/A
     Encoding considerations:  binary (CBOR)
     Security considerations:  Section 14 of [This RFC], and Section 12
-      of [RFC 9052] for the COSE_Sign1 structured that is used.
+      of [RFC 9052] for the COSE_Sign1 structure that is used.
     Interoperability considerations:  Section 15.2.2 of [This RFC]
     Published specification:  [This RFC]
     Applications that use this media type:  cBRSKI/ANIMA, 6TiSCH, and
@@ -1605,7 +1605,7 @@ This section registers the "+cose" suffix in the "Structured Syntax Suffixes" IA
 
 --- back
 
-#Software and Library Support for cBRSKI
+# Software and Library Support for cBRSKI
 This appendix lists software and security libraries that may be useful for implementing cBRSKI functionality.
 
 ## Open Source cBRSKI Implementations
@@ -1626,11 +1626,11 @@ For the implementation of BRSKI/cBRSKI, the use of a software library to manipul
 
 Libraries do not support all known crypto algorithms. Before deciding on a library, it is important to look at their supported crypto algorithms and the roadmap for future support. Apart from availability, the library footprint, and the required execution cycles should be investigated beforehand.
 
-The handling of certificates usually includes the checking of a certificate chain. In some libraries, chains are constructed and verified on the basis of a set of certificates, the trust anchor (usually a self signed root CA), and the target certificate. In other libraries, the chain must be constructed beforehand and obey ordering criteria. Verification always includes the checking of the signatures. Less frequent is the checking the validity of the dates or checking the existence of a revoked certificate in the chain against a set of revoked certificates. Checking the chain on the consistency of the certificate extensions which specify the use of the certificate usually needs to be programmed explicitly.
+The handling of certificates usually includes the checking of a certificate chain. In some libraries, chains are constructed and verified on the basis of a set of certificates, the trust anchor (usually a self signed root CA), and the target certificate. In other libraries, the chain must be constructed beforehand and obey ordering criteria. Verification always includes the checking of the signatures. Less frequent is the checking of the validity of the dates or checking the existence of a revoked certificate in the chain against a set of revoked certificates. Checking the chain on the consistency of the certificate extensions which specify the use of the certificate usually needs to be programmed explicitly.
 
-A library can be used to construct a (D)TLS connection. It is useful to realize that differences between (D)TLS implementations will occur due to the differences in the certificate checks supported by the library. On top of that, checks between client and server certificates enforced by (D)TLS are not always helpful for a BRSKI implementation. For example, the certificates of Pledge and Registrar are usually not related when the BRSKI protocol is started. It must be verified that checks on the relation between client and server certificates do not hamper a succeful DTLS connection establishment.
+A library can be used to construct a (D)TLS connection. It is useful to realize that differences between (D)TLS implementations will occur due to the differences in the certificate checks supported by the library. On top of that, checks between client and server certificates enforced by (D)TLS are not always helpful for a BRSKI implementation. For example, the certificates of Pledge and Registrar are usually not related when the BRSKI protocol is started. It must be verified that checks on the relation between client and server certificates do not hamper a succesful DTLS connection establishment.
 
-### OpensSSL Example Code
+### OpenSSL Example Code
 
 From OpenSSL's apps/verify.c :
 
@@ -1654,12 +1654,12 @@ INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-Registrar.sh END
 INSERT_SH_FROM_FILE examples/script-cose-examples/create-cert-MASA.sh END
 
 
-#cBRSKI Message Examples
+# cBRSKI Message Examples
 
 This appendix extends the EST-coaps message examples from Appendix A of {{RFC9148}} with cBRSKI messages.
 The CoAP headers are only fully worked out for the first example, enrollstatus.
 
-##enrollstatus {#es}
+## enrollstatus {#es}
 
 A coaps enrollstatus message from Pledge to Registrar can be as follows:
 
@@ -1739,7 +1739,7 @@ Which in case of a piggybacked response has the following CoAP header fields:
   Token = 0x4d
 ~~~
 
-##voucher_status
+## voucher_status
 
 A coaps voucher_status message from Pledge to Registrar can be as follows:
 
@@ -1942,7 +1942,7 @@ The Minimal Pledge profile (Min) aims to reduce code size and hardware cost to a
 * No support for change of Registrar: for this case, a factory reset followed by a new onboarding process is required.
 
 This profile would be appropriate for single-use devices which must be replaced rather than re-deployed.
-That might  include medical devices, but also sensors used during construction, such as concrete temperature  sensors.
+That might include medical devices, but also sensors used during construction, such as concrete temperature sensors.
 
 ## Typical Pledge {#profile-typ}
 The Typical Pledge profile (Typ) aims to support a typical cBRSKI feature set including EST re-enrollment support and Registrar changes.
@@ -2191,8 +2191,8 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 
 -32:
     Update cBRSKI variations discovery example to latest encoding in the BRSKI discovery draft (#359).
-    Fix number switchup 281/287 in Appendix.
-    Add informative ref for the two-level CA definition; and minor updates.
+    Add informative ref for the two-level CA definition; and minor numbering/wording updates.
+    Editorial improvements and fixes.
 
 -31:
     Move BRSKI/cBRSKI generic functions and RFC 8995 updates out of the cBRSKI-specific DTLS section (#352).
