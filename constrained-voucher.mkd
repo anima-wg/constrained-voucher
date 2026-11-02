@@ -2189,6 +2189,11 @@ The team includes the authors and: <contact initials="A." surname="Schellenbaum"
 # Changelog
 {:numbered="false"}
 
+-32:
+    Update cBRSKI variations discovery example to latest encoding in the BRSKI discovery draft (#359).
+    Fix number switchup 281/287 in Appendix.
+    Add informative ref for the two-level CA definition; and minor updates.
+
 -31:
     Move BRSKI/cBRSKI generic functions and RFC 8995 updates out of the cBRSKI-specific DTLS section (#352).
     Better formulation on how RFC 8995 and RFC 9148 are updated and where.
