@@ -738,9 +738,9 @@ The MASA is expected to evaluate the certificates included in an RVR, forming th
 (signing) identity on one end.
 Then, it pins a certificate selected from this chain according to its pinning policy ({{masa-pinning-policy}}).
 
-For instance, for a domain with a two-level certification authority (see {{fig-twoca}}), where the RVR has been signed by "domain Registrar",
+For instance, for a domain with a two-level certification authority (see {{fig-twoca}}, also {{?I-D.irtf-t2trg-taxonomy-manufacturer-anchors, Section 5.1}}), where the RVR has been signed by "domain Registrar",
 the RVR includes the chain formed by the domain Registrar EE certificate, the domain Sub-CA certificate, and the domain CA trust anchor certificate.
-The arrows in the figure indicate the issuing of a certificate, i.e. author of (1) issued (2) and author of (2) issued (3).
+The arrows in the figure indicate the issuing of a certificate, i.e. author of (0) issued (1) and author of (1) issued (2).
 
 ~~~~ aasvg
 {::include two-ca-chain.txt}
